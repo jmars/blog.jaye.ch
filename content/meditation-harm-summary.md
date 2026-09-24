@@ -46,8 +46,8 @@ The short version:
 That last point is the useful one. If it is right, the reporting gap will not close with
 better questionnaires. It closes with **relocated measurement** — the body, behavior, an
 external observer — and with the provision the traditions built and modern delivery dropped:
-a **frame before you arrive, community around you, and pace metered**, plus a holder who can
-act when the state cannot act for itself.
+a **frame before you arrive, community around you, and pace metered**, plus a holder
+chosen in advance who can act when the state cannot act for itself.
 
 ---
 

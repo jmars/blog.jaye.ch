@@ -291,6 +291,18 @@ from exactly the under-reported cases §1 describes.
 4. **Label with care.** The same state is "insight" or "disorder" (§2). That is an
    appraisal, not a mechanism — and it is where a common failure mode becomes invisible.
 
+**The guard on that third point, because "regardless of consent" is the one line here that
+could be read as license.** It means one specific thing, and it is not a general warrant.
+The decision is made *in advance*, while the person can still make it — because the state
+cannot initiate its own exit, the choice has to be made before arrival, and honouring it
+afterwards is what an advance directive is for. So the provision is not authority *over*
+someone; it is their own authority, exercised at the only point it is exercisable. It
+presupposes all three of a state recognised as severe, an existing relationship, and a
+holder who knows the signs — and the input is the outward pull itself (presence, contact,
+ordinary life), not a course of action substituted for theirs. Without those, the sentence
+reads as license. The mechanism licenses no one: it says only that the exit cannot come
+from inside the state.
+
 ---
 
 ## 9. The claim, and its boundary
