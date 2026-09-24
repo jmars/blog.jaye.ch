@@ -1,0 +1,41 @@
+# License — the posts and pages
+
+Copyright (c) 2026 Jaye Timothy Marshall
+
+The writing on this blog — the posts (`content/`), the home page text, and the
+rendered pages (`dist/`) — is licensed under the Creative Commons Attribution
+4.0 International license (CC-BY-4.0).
+
+Canonical deed: <https://creativecommons.org/licenses/by/4.0/>
+
+You are free to share and adapt the material for any purpose, including
+commercial use, provided you give appropriate credit, provide a link to the
+license, and indicate if changes were made. Full terms are in the deed linked
+above. Quotation with attribution is welcome.
+
+Attribution: **Jaye Timothy Marshall, "Meditation can harm — and it does so
+invisibly" / the mechanism and implications series, blog.jaye.ch**, with a link
+to the page the material came from.
+
+---
+
+## Third-party material quoted in the posts
+
+Some posts quote material that is licensed by others, and **that material keeps
+its own licence** — the CC-BY-4.0 above applies to the original writing here,
+not to quotations from third parties.
+
+- **Source Library** (https://sourcelibrary.org) — historical texts and their
+  AI-generated translations, used in "What the Traditions Knew", are
+  **CC-BY-SA-4.0**. Attribution: *Source Library (https://sourcelibrary.org)*.
+  The share-alike term attaches to reuse of those translations: if you reuse the
+  quoted passages, the CC-BY-SA-4.0 conditions apply to them. Each passage in
+  the post carries a link to its source page.
+- **Academic works** cited in the posts (journal articles, books, and their
+  figures or tables) remain under their own copyright, and quotation here is
+  short-form with attribution.
+
+## Code and tooling
+
+The build tooling (`build.sh`, `tools/`, `elm/`) is licensed under the MIT
+license; see the file `LICENSE`.

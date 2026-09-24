@@ -11,6 +11,24 @@ The fork carries the whole look, including the long-form reading layer
 (`.prose` serif typography, blockquotes, tables, footnotes); the blog adds no
 page-level CSS.
 
+## Licensing
+
+Split by content type, and consistent with the paper bundle (`~/thing` / the Zenodo
+deposit), which uses the same division:
+
+| what | licence | file |
+|---|---|---|
+| the writing — `content/`, the home page text, and the rendered pages in `dist/` | **CC-BY-4.0** | `LICENSE-content` |
+| the build tooling — `build.sh`, `tools/`, `elm/` | **MIT** | `LICENSE` |
+| the design fork (`vendor/blog-design`, a submodule) | MIT | its own repo |
+
+**Quotation with attribution is welcome** — CC-BY-4.0 asks only for credit, a link to
+the licence, and an indication of changes. Attribution text and the terms for
+third-party material quoted inside posts (notably Source Library's CC-BY-SA-4.0
+translations in *What the Traditions Knew*) are in `LICENSE-content`.
+
+---
+
 ## Scope — what belongs in this repo, and what does not
 
 **This repo is the blog. Only the blog.** It holds the words of the posts
