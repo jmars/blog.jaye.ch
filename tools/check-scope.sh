@@ -51,8 +51,9 @@ if [ -n "$bad_str" ]; then
 fi
 
 # --- 4. content/ shape --------------------------------------------------------
-# The blog's own words only: the two expected files, nothing else.
-unexpected="$(find content -type f 2>/dev/null | sort | grep -vE '^content/(meditation-harm|meditation-harm-summary)\.md$' || true)"
+# The blog's own words only: the expected posts (in nav order per posts.json),
+# nothing else.
+unexpected="$(find content -type f 2>/dev/null | sort | grep -vE '^content/(meditation-harm|meditation-harm-summary|anxiety-damping)\.md$' || true)"
 if [ -n "$unexpected" ]; then
   echo "SCOPE VIOLATION — unexpected files under content/:" >&2
   printf '  %s\n' $unexpected >&2

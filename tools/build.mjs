@@ -9,7 +9,15 @@
  * is needed any more. No JS, no iframes, no external runtime deps; links are
  * absolute (/…).
  *
+ * What gets built is governed by posts.json (repo root) — the release
+ * manifest: it lists the home file and the posts IN NAV ORDER, each with its
+ * nav label and `published` state. Published posts build to dist/<slug>/;
+ * unpublished ones are staged drafts — not written to dist at all and absent
+ * from every nav. Flipping `"published": true` is the whole release step.
+ *
  *   node tools/build.mjs            (run from the repo root)
+ *   PREVIEW=1 node tools/build.mjs  build drafts too — LOCAL PREVIEW ONLY,
+ *                                   never deploy a preview build
  */
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
@@ -21,25 +29,32 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const DIST = join(ROOT, 'dist');
 const CSS = join(ROOT, 'design', 'blog.css');
+const MANIFEST = join(ROOT, 'posts.json');
 const PANDOC = process.env.PANDOC || 'pandoc';
+const PREVIEW = process.env.PREVIEW === '1';
 
 const log = (msg) => console.log(`[build] ${new Date().toISOString()} ${msg}`);
+const warn = (msg) => console.warn(`[build] WARNING: ${msg}`);
 
 /* ---------- chrome (fixpoint-linux design markup) ---------- */
 
-/** Sticky top nav. `home` highlights the current page's link (a.home). */
-function nav(current) {
+/** Sticky top nav, driven by the release manifest: home, then each published
+ * post in manifest order (a draft never appears here). `current` highlights
+ * the current page's link (a.home). */
+function nav(current, navPosts) {
   const link = (url, cls, label) =>
     `<a${cls ? ` class="${cls}"` : ''} href="${url}">${label}</a>`;
   const here = (url, label) =>
     link(url, current === url ? 'home' : '', label);
+  const posts = navPosts
+    .map((p) => here(`/${p.slug}/`, p.navLabel))
+    .join('');
   return (
     `<nav><div class="wrap">` +
     `<span class="brand"><span><span class="fx">fx</span>://blog</span></span>` +
     `<span class="links">` +
     here('/', 'short cut') +
-    here('/meditation-harm/', 'full post') +
-    link('https://fixpointlinux.org', '', 'fixpoint-linux') +
+    posts +
     `</span></div></nav>`
   );
 }
@@ -88,7 +103,7 @@ function footer() {
 const PAGE_CSS = ``;
 
 /** Full self-contained document. */
-function page({ title, description, prompt, heroTitle, tagline, body, navCurrent }) {
+function page({ title, description, prompt, heroTitle, tagline, body, navCurrent }, navPosts) {
   const designCss = readFileSync(CSS, 'utf8');
   return `<!DOCTYPE html>
 <html lang="en">
@@ -102,7 +117,7 @@ ${designCss}</style>
 <style>${PAGE_CSS}</style>
 </head>
 <body>
-${nav(navCurrent)}
+${nav(navCurrent, navPosts)}
 ${hero({ prompt, title: heroTitle, tagline })}
 ${body}
 ${footer()}
@@ -125,8 +140,8 @@ const read = (...p) => readFileSync(join(ROOT, ...p), 'utf8');
 
 /* ---------- pages ---------- */
 
-function buildHome() {
-  const md = read('content', 'meditation-harm-summary.md');
+function buildHome(manifest) {
+  const md = read('content', manifest.home.file);
   let body = mdToHtml(md);
 
   // the summary's own H1 becomes the hero title, so it must not repeat in the
@@ -136,10 +151,13 @@ function buildHome() {
   body = body.slice(h1[0].length);
   const titleHtml = h1[1].replace(/\s+/g, ' ').trim();
 
-  const cta =
-    `<div class="cta-banner">` +
-    `<span><strong>Read the full post</strong> — evidence, mechanism, and why it hides.</span>` +
-    `<a class="cta-btn" href="/meditation-harm/">the long version →</a></div>`;
+  // CTA banner: link to the first published post, in manifest order
+  const first = manifest.posts.find((p) => p.published);
+  const cta = first
+    ? `<div class="cta-banner">` +
+      `<span><strong>Read the full post</strong> — evidence, mechanism, and why it hides.</span>` +
+      `<a class="cta-btn" href="/${first.slug}/">the long version →</a></div>`
+    : '';
 
   const html =
     `<section><div class="wrap">` +
@@ -161,58 +179,144 @@ function buildHome() {
   };
 }
 
-function buildPost() {
-  const md = read('content', 'meditation-harm.md');
+/** Per-post page metadata (hero prompt/title/tagline stay code-side, not in
+ * the manifest — the manifest governs order, nav label, published only). */
+const POST_META = {
+  'meditation-harm': {
+    prompt: 'cat meditation-harm.md',
+    tagline: 'the <b>full mechanism</b>: the evidence, the model, the notes.',
+    hint: '<a href="/">← short cut</a> · the full mechanism, with notes',
+    description:
+      'The full post: why meditation harm is under-counted — a measured control-theoretic model of the runaway, the border-collision fold, and why the failure hides itself.',
+    accent: 'Failure Mode',
+  },
+  'anxiety-damping': {
+    prompt: 'cat anxiety-damping.md',
+    tagline: 'the <b>prediction</b>: one variable, two readings, and the test that settles it.',
+    hint: '<a href="/">← short cut</a> · the prediction, with notes',
+    description:
+      'A prediction, not a result: anxiety-proneness read as low damping — two readings of one variable — and the cheap settling/tolerance test that would settle it.',
+    accent: 'Damping',
+  },
+};
+
+function buildPost(post) {
+  const meta = POST_META[post.slug];
+  if (!meta) throw new Error(`no POST_META entry for slug '${post.slug}'`);
+  const md = read('content', post.file);
   let body = mdToHtml(md);
 
-  // the long post's own H1 becomes the hero title, so it must not repeat in
-  // the body; relocate its inner HTML verbatim (pandoc keeps the source's
-  // line wrap inside <h1>, so normalize whitespace runs to single spaces)
+  // the post's own H1 becomes the hero title, so it must not repeat in the
+  // body; relocate its inner HTML verbatim (pandoc keeps the source's line
+  // wrap inside <h1>, so normalize whitespace runs to single spaces)
   const h1 = /^<h1[^>]*>([\s\S]*?)<\/h1>\n?/.exec(body);
-  if (!h1) throw new Error('long post: no leading <h1> found');
+  if (!h1) throw new Error(`${post.slug}: no leading <h1> found`);
   body = body.slice(h1[0].length);
   const titleHtml = h1[1].replace(/\s+/g, ' ').trim();
-  const fxTitle = titleHtml.replace(/Failure Mode/, '<span class="fx">Failure Mode</span>');
+  const fxTitle = titleHtml.replace(meta.accent, `<span class="fx">${meta.accent}</span>`);
 
-  // readable notes: keep pandoc's footnote <section>, swap its bare <hr> for
-  // the '## Notes' heading already in the source (pandoc 3.x emits
-  // class="footnotes footnotes-end" without an epigraph)
+  // readable notes: keep pandoc's footnote <section> but canonicalize it to
+  // class="footnotes" role="doc-endnotes" and drop its bare <hr> — the '## Notes'
+  // heading in the source already separates it. (Current pandoc emits
+  // '<section id="footnotes" class="footnotes footnotes-end-of-document"\nrole=…>'
+  // with the attributes split over two lines, so match the tag loosely.)
   body = body.replace(
-    /<section class="footnotes[^"]*">\s*<hr\s*\/?>/,
+    /<section\b[^>]*class="footnotes[^"]*"[^>]*>\s*<hr\s*\/?>/,
     '<section class="footnotes" role="doc-endnotes">',
   );
+  if (!body.includes('<section class="footnotes" role="doc-endnotes">')) {
+    throw new Error(`${post.slug}: footnotes section not found/converted`);
+  }
 
   // the section hint already links back to the summary — no extra back-link
-  const html =
-    section('The full post', '<a href="/">← short cut</a> · the full mechanism, with notes', body);
+  const html = section('The full post', meta.hint, body);
 
   return {
     title: `${titleHtml} — blog.jaye.ch`,
-    description:
-      'The full post: why meditation harm is under-counted — a measured control-theoretic model of the runaway, the border-collision fold, and why the failure hides itself.',
-    prompt: 'cat meditation-harm.md',
+    description: meta.description,
+    prompt: meta.prompt,
     heroTitle: fxTitle,
-    tagline: 'the <b>full mechanism</b>: the evidence, the model, the notes.',
+    tagline: meta.tagline,
     body: html,
-    navCurrent: '/meditation-harm/',
+    navCurrent: `/${post.slug}/`,
   };
+}
+
+/* ---------- release safety: a built page must not link a draft ---------- */
+
+/** Scan every written page for href="/<slug>/" pointing at an UNPUBLISHED
+ * slug — a deployable page must never expose a draft's URL. (In a PREVIEW
+ * build the nav itself links drafts, which is expected and reported as such.) */
+function checkLinks(pages, manifest) {
+  const drafts = manifest.posts.filter((p) => !p.published);
+  const problems = [];
+  for (const { rel, html } of pages) {
+    for (const d of drafts) {
+      const needle = `href="/${d.slug}/"`;
+      if (html.includes(needle)) problems.push(`${rel} links ${needle}`);
+    }
+  }
+  if (problems.length === 0) {
+    log(`link check ok — no page references an unpublished slug (${drafts.length} draft(s) staged)`);
+  } else if (PREVIEW) {
+    log(`link check: ${problems.length} reference(s) to unpublished slugs — expected in a PREVIEW build (the nav includes drafts); never deploy a preview build`);
+  } else {
+    warn('built pages link UNPUBLISHED posts — do not deploy this build:');
+    for (const p of problems) warn(`  ${p}`);
+  }
+  return problems;
 }
 
 /* ---------- main ---------- */
 
-function writePage(rel, pageDef) {
+function writePage(rel, pageDef, navPosts) {
   const out = join(DIST, rel);
   mkdirSync(dirname(out), { recursive: true });
-  const html = page(pageDef);
+  const html = page(pageDef, navPosts);
   writeFileSync(out, html);
   log(`wrote ${rel} (${Buffer.byteLength(html)} bytes)`);
+  return html;
 }
 
 log('building dist/');
 if (!existsSync(CSS)) {
   throw new Error(`missing ${CSS} — run tools/extract-css.mjs (or ./build.sh) first`);
 }
+
+const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8'));
+// In a PREVIEW build drafts appear in the nav too — that is what makes the
+// preview navigable; a deployable build's nav carries published posts only.
+const navPosts = PREVIEW ? manifest.posts : manifest.posts.filter((p) => p.published);
+
+if (PREVIEW) {
+  console.log(
+    '\n' +
+    '***********************************************************************\n' +
+    '*  PREVIEW BUILD — includes UNPUBLISHED drafts (not for deployment)  *\n' +
+    '***********************************************************************\n',
+  );
+  for (const p of manifest.posts.filter((p) => !p.published)) {
+    log(`PREVIEW: including unpublished draft '/${p.slug}/'`);
+  }
+}
+const postsToBuild = PREVIEW ? manifest.posts : navPosts;
+
 rmSync(DIST, { recursive: true, force: true });
-writePage('index.html', buildHome());
-writePage('meditation-harm/index.html', buildPost());
+const written = [];
+written.push({ rel: 'index.html', html: writePage('index.html', buildHome(manifest), navPosts) });
+for (const post of postsToBuild) {
+  written.push({
+    rel: `${post.slug}/index.html`,
+    html: writePage(`${post.slug}/index.html`, buildPost(post), navPosts),
+  });
+}
+
+checkLinks(written, manifest);
+if (PREVIEW) {
+  console.log(
+    '***********************************************************************\n' +
+    '*  PREVIEW BUILD — includes UNPUBLISHED drafts (not for deployment)  *\n' +
+    '***********************************************************************',
+  );
+}
 log('done');

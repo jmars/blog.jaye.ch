@@ -1,0 +1,7 @@
+{
+  "home":  { "file": "meditation-harm-summary.md" },
+  "posts": [
+    { "slug": "meditation-harm", "file": "meditation-harm.md", "navLabel": "the failure mode", "published": true },
+    { "slug": "anxiety-damping", "file": "anxiety-damping.md", "navLabel": "the damping dial", "published": false }
+  ]
+}
