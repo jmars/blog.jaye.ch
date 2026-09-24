@@ -46,15 +46,32 @@ function nav(current, navPosts) {
     `<a${cls ? ` class="${cls}"` : ''} href="${url}">${label}</a>`;
   const here = (url, label) =>
     link(url, current === url ? 'home' : '', label);
-  const posts = navPosts
-    .map((p) => here(`/${p.slug}/`, p.navLabel))
-    .join('');
+
+  // Two series, grouped so the measured work and the arguments are never a
+  // flat list. Labels match the home page's section names exactly. A series
+  // with nothing published contributes nothing (a draft never appears here).
+  const SERIES = [
+    { key: 'mechanism', label: 'the mechanism' },
+    { key: 'implications', label: 'the implications' },
+  ];
+  const dropdown = (s) => {
+    const items = navPosts.filter((p) => p.series === s.key);
+    if (items.length === 0) return '';
+    const menu = items
+      .map((p) => link(`/${p.slug}/`, current === `/${p.slug}/` ? 'home' : '', p.navLabel))
+      .join('');
+    return (
+      `<span class="dropdown"><button class="toggle" aria-haspopup="true">${s.label} ▾</button>` +
+      `<span class="menu" role="menu">${menu}</span></span>`
+    );
+  };
+
   return (
     `<nav><div class="wrap">` +
     `<span class="brand">blog.<span class="fx">jaye</span>.ch</span>` +
     `<span class="links">` +
     here('/', 'home') +
-    posts +
+    SERIES.map(dropdown).join('') +
     `</span></div></nav>`
   );
 }
