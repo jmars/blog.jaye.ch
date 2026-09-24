@@ -226,7 +226,7 @@ const POST_META = {
     hint: '<a href="/">← home</a> · the procedure, and the inversion, with notes',
     description:
       'Coercive groups induce the same collapse deliberately and hold you on the far side of it — the same three guardrails the traditions supply, with two of them flipped.',
-    accent: 'Crossing',
+    accent: 'Collapse',
   },
   'sacred-science': {
     prompt: 'cat sacred-science.md',

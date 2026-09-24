@@ -1,4 +1,4 @@
-# Manufacturing the Crossing
+# Manufacturing the Collapse
 
 ### Coercive groups run the same collapse deliberately — and stand on the far side of it
 
@@ -18,7 +18,7 @@ someone you love, the sources in the notes are the right place to start — not 
 
 ## 1. The question the first posts left open
 
-The first post ended on a structural fact: **the crossing supplies nothing.** What determines
+The first post ended on a structural fact: **the collapse supplies nothing.** What determines
 whether the same event wrecks a person or changes them is what is already around them when
 they arrive — a frame to land in, people who are not the loop, and a pace their system can
 absorb. We called the person who supplies that, and who acts on your behalf when the state
@@ -157,7 +157,7 @@ this emptiness is the goal, so go deeper."
 
 That is the thing the first post called the trap — *the state that most needs care is the
 state that feels like the destination* — made into policy. The traditions read the same event
-as a crossing to be held carefully. The group reads it as an achievement to be repeated.
+as a collapse to be held carefully. The group reads it as an achievement to be repeated.
 
 **And the appraisal is easier to install than it sounds, because it already exists in the
 wider culture.** The most common form is the one usually called **"love and light"** — the
@@ -196,7 +196,7 @@ worth naming without anyone in particular in mind.
 
 Here is the finding that makes this more than an analogy.
 
-The first post ended with three guardrails the traditions supply **before** the crossing — and
+The first post ended with three guardrails the traditions supply **before** the collapse — and
 they are the anti-induction structure, because a coercive group supplies **the same three
 things** and inverts the two that decide the outcome.
 
@@ -206,7 +206,7 @@ things** and inverts the two that decide the outcome.
 | **Community present** | people who are not the loop | people — but nobody else | **exclusivity** — the group becomes the only holder |
 | **Pace metered** | load slower than adaptation | fasting, sleep loss, chanting, relentless contact | **rate** — the load is deliberately run faster than the system can absorb |
 
-So the group is not a different phenomenon from the crossing. **It is the unheld crossing,
+So the group is not a different phenomenon from the collapse. **It is the unheld collapse,
 engineered, with a malignant holder standing where the traditions put a benign one** — and it
 is a *better* description of why those three guardrails exist than any account that treats
 them as folk wisdom. They are not decoration on a path. They are the load-bearing

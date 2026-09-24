@@ -93,17 +93,17 @@ The word doing the work is **"observer."** Both claims are about an observer:
   possibility — the observer is the thing that makes the world definite, and (in the strong
   version) the thing that makes it at all.
 - In the contemplative claim: the observer — the witness, the self — **dissolves**. The
-  crossing the first post described is precisely the loss of the one who observes.
+  collapse the first post described is precisely the loss of the one who observes.
 
 Put them side by side and the pun is visible, and so is the *inversion*. In the physics
-story, the observer **makes things definite**; in the crossing, the definite self **comes
+story, the observer **makes things definite**; in the collapse, the definite self **comes
 apart**. The two "observers" are not even pointed the same way — one is the maximum of
 agency, the other is its extinction.
 
 They are not the same thing. They are the same **word**, at the same **locus**: the observer,
 and its relation to what is real. That is why the borrowing works. Quantum mysticism is not
 popular because it gets the physics right — it is popular because the measurement problem and
-the contemplative crossing are genuinely *about the same question*, "what is the status of the
+the contemplative collapse are genuinely *about the same question*, "what is the status of the
 one who observes?", so a vocabulary built for one slides onto the other with almost no
 resistance.
 
@@ -119,7 +119,7 @@ Now the reason this is not merely a bad argument but a **steering device**.
 The first post established something easy to miss: the collapse has **no inherent ending
 point**. In the model, the generator falls to a low level and *stays there*. There is no
 ascent, no union, no destination — only a state that persists and cannot see itself. The
-crossing is a *shape*, not a story.
+collapse is a *shape*, not a story.
 
 A story has to be added. And "union with God" is a story — **the** story the borrowed frame is
 best suited to tell. Because if the observer is the thing that makes reality, then the
@@ -132,7 +132,7 @@ definition.**
 This is the appraisal lever of the third post in its metaphysical dress. There, the group
 pre-installed the story that harm is resistance. Here, the frame pre-installs the story that
 dissolution is **union** — and it does it *upstream of experience*, so that the person
-approaches the crossing already knowing what it will mean when they arrive.
+approaches the collapse already knowing what it will mean when they arrive.
 
 That is the steering. **The collapse is aimed, by the frame, at a destination the frame
 supplied.**
@@ -143,7 +143,7 @@ supplied.**
 
 A destination is a location. A location can be owned.
 
-If the crossing ends in *union with God*, and if the tradition you are in holds that God is
+If the collapse ends in *union with God*, and if the tradition you are in holds that God is
 reached through the teacher, the lineage, the transmission, the group — then the *endpoint of
 your collapse belongs to them*. They are not merely describing where you are going. They are
 the **mediators of the destination**.

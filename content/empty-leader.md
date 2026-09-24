@@ -12,7 +12,7 @@ dissociation of cognitive from affective empathy in depersonalization, and the s
 dissociation in psychopathy. **The joining of them — that the leader and the collapsed
 follower are the same dissociation pointing in opposite directions — is this series'
 argument**, offered as such. It names no leader, no group, and no diagnosis. "Psychopath" is
-lay language for a dimensional construct, used here as shorthand for the cold, instrumental
+lay language for a dimensional construct, used here as shorthand for the depersonalized, instrumental
 end of the Dark Triad.
 
 ---
@@ -95,7 +95,7 @@ of the second.
 | | self-content (`G`) | attention (`a`) | what it produces |
 |---|---|---|---|
 | **collapsed follower** | low | captured **inward** (held by the switch) | withdrawal; no outward pull; a mind with no one in it |
-| **cold leader** | low | **outward**, instrumental | reach; action; a mind using others with nothing of himself in the way |
+| **depersonalized leader** | low | **outward**, instrumental | reach; action; a mind using others with nothing of himself in the way |
 
 Read the table carefully, because it corrects the intuition in §1. **The leader is not
 *un*scathed — he is not in the healthy state either.** He is low on the same variable the
@@ -106,8 +106,8 @@ and an outward vector, and the outward vector is what makes the hole useful.
 
 Which reframes the whole structure. The follower's collapse is *reached* — induced, by the
 third post's techniques, from a system that had a self. The leader's is *inhabited* — a
-developmental emptiness at the cold end of the Dark Triad, not necessarily reached by any
-crossing at all. **Same destination variable, different roads.** The leader did not have to
+developmental emptiness at the depersonalized end of the Dark Triad, not necessarily reached by any
+collapse at all. **Same destination variable, different roads.** The leader did not have to
 be collapsed to get there; he may simply never have had much there to begin with.
 
 But whatever the road, they end up in the same place on the axis that matters, and that is

@@ -253,7 +253,7 @@ who could not answer it. The raging in that poem is not the dying man's. It is t
 the *living*, aimed at someone who has stopped being able to supply it for himself. That is
 the tragedy, and it is structural.
 
-The crossing is the same shape. The state does not rage — it goes *gentle*: an effortless,
+The collapse is the same shape. The state does not rage — it goes *gentle*: an effortless,
 contentless, locked openness with the switch held on (§7), felt as peace, misappraised as
 arrival. The faculty that could feel the urgency, object, or ask for help is exactly the one
 sitting at baseline, seeing nothing wrong (§6). **So "do not go gentle" cannot be addressed
@@ -271,7 +271,7 @@ they are a stability spec, not mysticism:
 | supplied *beforehand* | model term | what it prevents |
 |---|---|---|
 | **A frame before, not after** | — (meaning inherited, not built in-collapse) | having to derive a model of what is happening *from inside the failure* |
-| **Community present** | external coupling, `u_ext` | the coupling being improvised, alone, from the cold state |
+| **Community present** | external coupling, `u_ext` | the coupling being improvised, alone, from the depersonalized state |
 | **Pace metered** | slow drive ramp vs. the 66-unit threshold | the load arriving faster than adaptation |
 
 The model says why these matter structurally. `u_ext` is literally the outward pull that

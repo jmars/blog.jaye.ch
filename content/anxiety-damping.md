@@ -8,7 +8,7 @@ measure.*
 
 *Status — read this first, because this post is a different kind of thing.* The first post
 reported measured results. **This one is a prediction.** The central claim — that
-anxiety-prone temperament and vulnerability to an unheld contemplative crossing are two
+anxiety-prone temperament and vulnerability to an unheld contemplative collapse are two
 readings of the same underlying variable — is **not in the data it derives from**. That
 source names trait profiles; it does not name anxiety. The step from one to the other is an
 inference, stated here as a hypothesis, with the test that would settle it. Where something
@@ -44,7 +44,7 @@ return.**
 The source framing is blunt about what loss of it produces: heightened sensitivity to input,
 larger and faster state swings, **slow or absent return to baseline**, and reachability of
 an extreme low-throughput state. That last item is the one the first post called the
-crossing.
+collapse.
 
 The important structural point is that damping is the **single** control parameter in this
 account. Everything else — practice style, intensity, belief, intention — modulates *how
@@ -123,9 +123,9 @@ The source draws its risk stratification **by damping profile, not by diagnosis*
 | profile | disposition |
 |---|---|
 | **High damping** | standard practice, low risk |
-| **Low damping, not yet crossed** | **the prevention window** |
-| Low damping, crossed | the survival protocol |
-| Cold / machine-adjacent | identification matters (the warmth test becomes a measure) |
+| **Low damping, not yet collapsed** | **the prevention window** |
+| Low damping, collapsed | the survival protocol |
+| **Depersonalized** | identification matters — whether the affective loop is still firing becomes a measure, not an impression |
 
 Read the middle row carefully, because it is the whole point of this post. **Low damping is
 not a disqualification. It is the prevention window.** It does not mean "do not practice."

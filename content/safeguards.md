@@ -1,6 +1,6 @@
 # The Safeguards
 
-### What the traditions that survive the crossing wrote down — and why it is a safety specification, not folk wisdom
+### What the traditions that survive the collapse wrote down — and why it is a safety specification, not folk wisdom
 
 *Sixth and last in the series. It has been a dark run: [the collapse](/meditation-harm/), [who
 is at risk](/anxiety-damping/), [the groups that engineer it](/manufacturing-the-crossing/),
@@ -206,7 +206,7 @@ required conditions, in contemplative vocabulary.
 | **Discernment as procedure** | Ignatius, *Exercises* 313–336; John of the Cross; spiritual direction | the state cannot read itself — an external read is required |
 | **The endpoint is not named** | apophatic theology; *nettī netti* | removes the telos a frame would otherwise steer the collapse toward |
 
-Six safeguards, one function: **they keep the crossing un-owned.** The frame is not supplied
+Six safeguards, one function: **they keep the collapse un-owned.** The frame is not supplied
 by the person who benefits from it, the community cannot be monopolised, the pace cannot be
 accelerated by someone else's urgency, the teacher cannot become the destination, the state
 cannot be read from inside, and the end cannot be named. Each is a closed door on one of the
