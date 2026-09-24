@@ -108,11 +108,49 @@ Now the parts that are uncomfortable:
   came from **Robert Lifton's** criteria for totalistic communities and from **Margaret
   Singer**, who testified in support of the brainwashing defence at Patty Hearst's trial.[^acm]
 
+**A distinction that is the whole lesson, so it must be stated precisely: Lifton and Singer did
+not run deprogrammings.** They were scholars and clinicians — Lifton an academic psychiatrist
+whose fieldwork on thought reform was careful and whose criteria were *descriptive*, and Singer
+a clinician who worked with families in genuine distress. What the ACM took from them was the
+**vocabulary**: a set of observations about how coercive environments operate, converted into a
+warrant for action. The researchers supplied concepts; a movement supplied the inference —
+*if a person's agency has been overborne, then acting on their behalf without their consent is
+rescue* — and the state supplied the force. Holding the two apart is not a courtesy to the
+scholarship. It is the entire mechanism by which good description becomes harm: **not in the
+observation, but in the step from "this is what coercion looks like" to "therefore this person
+cannot choose."**
+
 So the third post's authorities — Lifton, Singer, and the thought-reform tradition — are also
 the intellectual supply of a movement that kidnapped people. That does not make the third
 post wrong. Lifton's *description* of milieu control and confession can be accurate while the
 *use* made of it was harmful; the same lifeguard can be misused as a weapon. But a series that
 leans on these sources owes the reader this paragraph, and here it is.
+
+The movement's origins are worth holding too, because they are not villainous. The ACM was
+largely **frightened parents** — not operatives. Their adult children had joined groups they
+could not understand, and they wanted them back. The coercive-explanation was *consoling*
+precisely because it removed the blame from everyone: the child had not chosen this, the parent
+had not driven them to it. Sincere people, trying to help, built the apparatus. That is the
+uncomfortable shape of it — and it is the same shape as the third post's own finding, that
+sincerity makes a harmful frame *worse*, because a sincere holder cannot see what a cynical one
+would.
+
+**And this pattern is not rare — it is the ordinary failure mode of a helping framework.** The
+same decades produced the recovered-memory and ritual-abuse panic: clinicians, many of them
+sincere and some of them good, working from a theory that memories of abuse are commonly
+repressed and that recovering them is healing. The result was false memories, destroyed
+families, and a concept that is still radioactive. Nobody who started it set out to harm
+anyone. The theory was *believable*, it *explained* suffering, and it *licensed* an
+intervention — and that triad is the whole danger. A framework that is believable, explanatory,
+and actionable will be acted on, and its errors will be acted on at the same scale.
+
+What saved the field in both cases was not better intentions. It was **scholarship and
+courts**: researchers who dismantled the brainwashing theory (Anthony, Robbins, and others),
+civil-liberties litigation, and clinicians who documented the harm done by their own
+profession's practice. The same culture that generated the useful concepts generated their
+limits — slowly, and after the damage. That is the only self-correcting structure anyone has,
+and it is worth saying plainly in a series whose whole argument is that careful measurement
+beats confident assertion.
 
 ---
 
