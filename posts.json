@@ -67,6 +67,15 @@
       "series": "implications"
     },
     {
+      "slug": "what-the-traditions-knew",
+      "file": "what-the-traditions-knew.md",
+      "navLabel": "what the traditions knew",
+      "kind": "argument",
+      "series": "implications",
+      "summary": "Seven contemplative traditions, with no contact with each other, named this failure and prescribed the same five safeguards — primary-source passages.",
+      "published": false
+    },
+    {
       "slug": "safeguards",
       "file": "safeguards.md",
       "navLabel": "the safeguards",

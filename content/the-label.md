@@ -2,7 +2,7 @@
 
 ### "Cult" is a category that does harm — including to the people it is meant to protect. Why this series names mechanisms instead.
 
-*Fifth of the implications, and a coda — arguments built on the model, as distinct from the
+*Sixth of the implications, and a coda — arguments built on the model, as distinct from the
 model itself. [The mechanism post](/meditation-harm/) sets out the model;
 [the coercion post](/manufacturing-the-collapse/) describes the groups that engineer it.
 This one is about the **word** — and about a debt that limitation owes, because the sources it

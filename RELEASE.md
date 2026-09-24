@@ -27,7 +27,7 @@ essays.
 | series | posts | status | audience |
 |---|---|---|---|
 | **The mechanism** | 1 `meditation-harm` (measured), 2 `anxiety-damping` (prediction), 3 `what-actually-works` (measured), 4 `recovery-is-not-immunity` (measured) | a measured model, a falsifiable prediction, and two measured follow-ups (rescue; relapse) | researchers, clinicians — **this is what gets sent** |
-| **The implications** | 3 `manufacturing-the-collapse`, 4 `sacred-science`, 5 `empty-leader`, 6 `safeguards`, 7 `the-label` | arguments built on cited literature | general readers, practitioners, cult / spiritual-abuse community |
+| **The implications** | 3 `manufacturing-the-collapse`, 4 `sacred-science`, 5 `empty-leader`, 6 `what-the-traditions-knew`, 7 `safeguards`, 8 `the-label` | arguments built on cited literature | general readers, practitioners, cult / spiritual-abuse community |
 
 **Do not send the implications series to a researcher before they have engaged with the
 mechanism series.** A reader who meets *Sacred Science* or *Empty Leader* first will discount
@@ -46,6 +46,7 @@ Reading order **is** release order, in manifest order within each series.
 | 5 | implications | `manufacturing-the-collapse` | argument | ~2–3 weeks after #4 |
 | 6 | implications | `sacred-science` | argument | ~1–2 weeks after #5 |
 | 7 | implications | `empty-leader` | argument | ~1–2 weeks after #6 |
+| 7 | implications | `what-the-traditions-knew` | argument | ~1–2 weeks after #6 — the evidence |
 | 8 | implications | `safeguards` | argument | ~1–2 weeks after #7 — the resolution |
 | 9 | implications | `the-label` | argument | last |
 

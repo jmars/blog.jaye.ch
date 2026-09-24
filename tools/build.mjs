@@ -306,6 +306,14 @@ const POST_META = {
       'A full rescue buys the recovered state nothing against the next trigger — the threshold that recovery restores is the threshold the next episode drains.',
     accent: 'Immunity',
   },
+  'what-the-traditions-knew': {
+    prompt: 'cat what-the-traditions-knew.md',
+    tagline: 'the <b>evidence</b>: seven traditions named it, before any mechanism.',
+    hint: '<a href="/">← home</a> · the primary sources, with citations',
+    description:
+      'Seven contemplative traditions, with no contact with each other, independently named this failure, described its features, and prescribed the same safeguards — primary-source passages.',
+    accent: 'Knew',
+  },
   'safeguards': {
     prompt: 'cat safeguards.md',
     tagline: 'the <b>countermeasures</b>: what the traditions wrote down, and why it works.',
