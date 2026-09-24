@@ -15,6 +15,8 @@ Benefit and Failure: A Control-Theoretic Model of Self-Regulation.* Zenodo.
 doi:[10.5281/zenodo.22943641](https://doi.org/10.5281/zenodo.22943641)** — every measurement
 in this post is traceable to it.
 
+Record: <https://zenodo.org/records/22943641>
+
 ---
 
 ## 1. Start with the evidence, not the model

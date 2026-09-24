@@ -2,7 +2,7 @@
 
 *Summary — the full post is at [`/meditation-harm/`](/meditation-harm/).*
 
-*The underlying paper is published: [Marshall (2026), doi:10.5281/zenodo.22943641](https://doi.org/10.5281/zenodo.22943641).*
+*The underlying paper is published: [Marshall (2026), doi:10.5281/zenodo.22943641](https://doi.org/10.5281/zenodo.22943641) · [record](https://zenodo.org/records/22943641).*
 
 ---
 
