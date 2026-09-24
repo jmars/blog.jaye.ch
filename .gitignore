@@ -1,27 +1,12 @@
+# Generated output
 dist/
 elm-stuff/
 elm/ExtractCss.js
 screenshots/
 
-# scope guard — the paper project (model, experiments, raw/personal material)
-# lives in the separate `thing` folder and must never appear in this repo
-report/
-staged-report.md
-practical.md
-continuity.md
-followup-tracker.md
-claim-audit.md
-what-held.md
-dual-control.md
-survivability.md
-logical-english.md
-arch-open-plan.md
-architecture.md
-dpdr/
-dpdr-public/
-cache/
-csd/
-figures/
-experiments/
+# Local, unpublished scope rules (specific names live here, not in the repo)
+.scope-local
+
+# Belt-and-braces: artifact types that must never be committed
 *.npz
 *.jsonl

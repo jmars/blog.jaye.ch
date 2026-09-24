@@ -13,8 +13,8 @@ page-level CSS.
 
 ## Licensing
 
-Split by content type, and consistent with the paper bundle (`~/thing` / the Zenodo
-deposit), which uses the same division:
+Split by content type, and consistent with the paper bundle (the Zenodo deposit),
+which uses the same division:
 
 | what | licence | file |
 |---|---|---|
@@ -34,29 +34,30 @@ translations in *What the Traditions Knew*) are in `LICENSE-content`.
 **This repo is the blog. Only the blog.** It holds the words of the posts
 (`content/`), the build tooling, and the design package pin. Nothing else.
 
-The **model, the paper, and every experiment live in the separate `thing`
-project** (the paper folder). They are *referenced* from here, never copied in:
-the posts describe measured results and cite the published paper, but no
-model code, no caches, no figures, no drafts, and no raw or personal material
-belong in this repo.
-
-    thing/            the paper project  — model, experiments, drafts, data
-    blog.jaye.ch      this repo         — the blog: words + build + design pin
+The **model, the paper, and every experiment live in a separate paper project**
+and are *referenced* from here, never copied in: the posts describe measured
+results and cite the published paper, but no model code, no caches, no figures,
+no drafts, and no raw or personal material belong in this repo.
 
 **The posts are authored here, in `content/`.** That is the source of record for
-the blog's words — there is no second copy in the paper project (or anywhere
-else). If you are looking for the model, the paper, or an experiment, they are
-in `thing/`; if you are looking for the blog, everything is in this repo.
+the blog's words — there is no second copy elsewhere.
 
-Two independent guards enforce the boundary, so it does not depend on anyone
-remembering:
+Two guards enforce the boundary, so it does not depend on anyone remembering:
 
-1. `tools/check-scope.sh` — fails the build if a paper-project path (e.g.
-   `dpdr/`, `paper.md`, `cache/`, `report/`, `*.npz`) or a forbidden internal
-   string is tracked, or if `content/` holds anything other than the expected
-   posts. `build.sh` runs it first.
-2. `.gitignore` — belt-and-braces entries for the same paths, so an accidental
-   `git add .` cannot stage them.
+1. `tools/check-scope.sh` — fails the build if an artifact file (result dumps,
+   generated documents, numbered experiment outputs) is tracked, if a forbidden
+   string appears (a raw-transcript reference, or an ORCID-style identifier), if
+   `content/` holds anything the manifest does not list, or if a post the
+   manifest lists is missing. `build.sh` runs it first. **The checks are generic
+   by design**; the project-specific names it should also reject live in a
+   **local, untracked** file, `.scope-local`, which the guard sources if present.
+   That keeps this script publishable without listing another project's private
+   filenames. (Copy `.scope-local` from a private backup if you need the extra
+   checks on a fresh clone.)
+2. `.gitignore` — belt-and-braces entries for generated output and artifact
+   types, so an accidental `git add .` cannot stage them. Local-only ignore
+   rules for private material live in `.git/info/exclude`, which is never
+   committed.
 
     ./tools/check-scope.sh        # run the guard alone
 
