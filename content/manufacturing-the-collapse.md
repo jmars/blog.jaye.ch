@@ -37,7 +37,62 @@ literature for sixty-five years.
 
 ---
 
-## 2. The procedure, as the literature records it
+## 2. Who they look for
+
+Before any of the procedure comes the selection, and this part is less speculative than it
+sounds — because in at least one well-documented case, the criteria are written down.
+
+**The case, and why it is usable.** In October 2024 *Guardian Australia* obtained the training
+videos and documents of **Shincheonji**, a Korean church former members describe as coercive.
+The materials describe how recruiters work: they approach people **who are on their own**, in
+cafés, on dating apps, at universities; they ask screening questions that are mostly there to
+test eligibility ("90% of the questions were trying to see if I met the criteria," one recruit
+said); and they have names for the roles — recruits are **"fruit"**, recruiters are
+**"leaves."**[^shincheonji]
+
+The criteria themselves are the point:
+
+| they screen **out** | they screen **in** |
+|---|---|
+| no interest in religion | **being lonely** |
+| LGBTQ+ | religious, or open to religion |
+| **doing a PhD** (too busy to attend) | **newly moved**, on the path to residency |
+| temporary visa · in debt | — |
+
+**Read that against the model, and something specific shows up.** Look at what the inclusion
+criteria actually are. *Lonely*. *Newly moved.* And the behavioural rule: **approach people on
+their own.** None of those is a psychological trait. They are the **absence of external
+content** — which is precisely the model's gate: the collapse requires *no external content*
+**and** no terminator. A person who is alone, recently relocated, and not already embedded in a
+community is a person with **no holder present**. That is what is being selected.
+
+Notice also what this implies about how the criteria were arrived at. *A PhD student is too
+busy to attend* is not a theory of mind. It is an **observation**, recorded and operationalised
+— which is what you would expect from a selection function refined by practice rather than by
+understanding. The groups do not need a model of why a lonely newcomer is more convertible.
+They only need the correlation, and they have it.
+
+**The dispositional half is weaker but real.** Not everything targeted is situational. A
+review of recruitment research (Curtis, 1993) lists the susceptibility factors as generalized
+emotional vulnerability, **a propensity toward dissociative states**, and tenuous social ties
+— and that middle one is the model's damping axis, named as recruitment-relevant thirty years
+ago.[^curtis] Older work points the same way: Lofland and Stark's foundational study (1965) held that
+**"a state of acutely-felt tension or frustration is a necessary predisposing condition for
+conversion"**[^lofland] — which is roughly the approach phase this series describes.
+
+**Two honest corrections before this gets used as a checklist.** First, the field is
+explicit that **anyone can be targeted**: these groups are *proactive*, and their inclusion
+criteria select for *absence of protection*, not for a type of person. That reading is both
+better supported and less cruel. Second, **some groups do not select at all** — they are simply
+present and responsive, and take whoever arrives. Selection is one strategy among several.
+
+It is worth naming what the criteria are *not*: they are not moral judgements about who
+deserves what, and they are not the group's own explanation. They are an operational filter,
+and it is drawn at exactly the place the mechanism predicts a person is unprotected.
+
+---
+
+## 3. The procedure, as the literature records it
 
 **Edgar Schein**[^schein], studying the thought reform of American prisoners of war, set out three
 phases — borrowed from Lewin's model of change — and they map onto our problem with
@@ -81,9 +136,9 @@ and legal context — Singer's conditions for thought reform and Hassan's BITE m
 
 ---
 
-## 3. The self-attack
+## 4. The self-attack
 
-Read §2 with the mechanism post's model in hand and the first step is unmistakable. Take a person
+Read §3 with the mechanism post's model in hand and the first step is unmistakable. Take a person
 whose self-content is produced by a generator (`G`), and whose attention (`a`) can be turned
 inward or outward. Then:
 
@@ -106,7 +161,7 @@ slowed — until the healthy branch is annihilated on contact with the switching
 
 ---
 
-## 4. The hold
+## 5. The hold
 
 Inducing a collapse gets you a collapsed person, not a member. That is the part the model
 makes non-optional, and it is the part the literature has already solved.
@@ -134,7 +189,7 @@ caught — by the hand that pushed.
 
 ---
 
-## 5. The indoctrination
+## 6. The indoctrination
 
 Now the system is open, and it is held. What gets installed is Schein's **refreezing** and
 Lifton's **sacred science**, **loading the language**, and **doctrine over person**:
@@ -192,7 +247,7 @@ worth naming without anyone in particular in mind.
 
 ---
 
-## 6. The inversion: same three supplies, two of them flipped
+## 7. The inversion: same three supplies, two of them flipped
 
 Here is the finding that makes this more than an analogy.
 
@@ -237,7 +292,7 @@ separates a holder from a captor.
 
 ---
 
-## 7. What follows, and what this is not
+## 8. What follows, and what this is not
 
 **What follows.** The inversions are also the recognisable pattern, and they are checkable
 without any expertise: is the frame being supplied *during* the destabilisation, and does it
@@ -325,6 +380,25 @@ Contemplative Experience dataset — 97% of practitioners and 97% of experts cit
 student–teacher relationship as an influencing factor "including their onset"; 71% were
 working with a teacher at onset; support rated −3 to +3.
 https://www.tandfonline.com/doi/full/10.1080/14639947.2025.2485677
+
+[^shincheonji]: *Guardian Australia* (17 Oct 2024), "Inside the bizarre recruitment tactics of
+the Shincheonji 'doomsday' church" — based on training videos and documents obtained by the
+Guardian: recruiters approach people on their own in cafés, on dating apps and on campuses;
+screening questions test eligibility; recruits are called "fruit" and recruiters "leaves";
+stated exclusions (no religious interest, LGBTQ+, PhD study, temporary visa, debt) and
+inclusions (being lonely, religious or open to religion, newly moved and on the path to
+residency). Former members describe the practice as coercive control.
+https://www.theguardian.com/world/2024/oct/17/how-the-shincheonji-doomsday-church-targets-and-recruits-people-in-australia-ntwnfb
+
+[^curtis]: Curtis, J. M., & Curtis, M. J. (1993). "Factors related to susceptibility and
+recruitment by cults." *Psychological Reports* — susceptibility variables listed as generalized
+ego-weakness and emotional vulnerability, propensities toward dissociative states, and
+tenuous/deteriorated social ties. Read at abstract level.
+https://pubmed.ncbi.nlm.nih.gov/8234595
+
+[^lofland]: Lofland, J., & Stark, R. (1965). "Becoming a World-Saver: A Theory of Conversion to
+a Deviant Perspective." *American Sociological Review* 30(6):862–875 — "a state of acutely-felt
+tension or frustration is a necessary predisposing condition for conversion."
 
 [^welwood]: Welwood, J. (2000/2011). *Toward a Psychology of Awakening* — the essay that
 coined "spiritual bypassing": using spiritual ideas and practices to sidestep unresolved
