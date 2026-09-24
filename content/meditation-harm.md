@@ -137,6 +137,15 @@ That `χ·c` term is the trap. **The failure captures the attention that drives 
 focus lowers `G`; low `G` arms `c`; `c` pulls attention *further* inward; further inward
 drops `G` more. A positive feedback loop, one direction, no brake built in.
 
+**One clarification, because the intuition runs the other way and it is easy to reverse:** the
+thing that runs away is the **capture**, not the self. There is no generator in overdrive, no
+self running hot — that is the folk reading, and the model does the opposite. Attention is
+held in place by the failure it feeds, while the generator is *consumed*: `G` falls from 0.886
+to 0.049 and stays there. This is a self **switched off and held off**, unable to notice —
+not a self amplified. (The distinction matters for what follows: the intuitive picture
+predicts a runaway *upward*, and would look for overactivity. The measured one predicts
+absence — and, per §6, an absent self is exactly what no instrument is watching for.)
+
 Run the canonical episode — inward drive `a_hold = 0.9` held past a duration threshold:
 
 | quantity | healthy | after the transition |
