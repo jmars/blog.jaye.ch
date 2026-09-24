@@ -53,7 +53,7 @@ function nav(current, navPosts) {
     `<nav><div class="wrap">` +
     `<span class="brand"><span><span class="fx">fx</span>://blog</span></span>` +
     `<span class="links">` +
-    here('/', 'short cut') +
+    here('/', 'home') +
     posts +
     `</span></div></nav>`
   );
@@ -173,7 +173,7 @@ function buildHome(manifest) {
       'Meditation-related harm is common and systematically under-reported: the evidence, and a measured control-theoretic account of why it hides.',
     prompt: 'cat summary.md',
     heroTitle: 'Meditation can harm — and it does so <span class="fx">invisibly</span>',
-    tagline: 'the <b>short cut</b>: the evidence-first summary, minus the machinery.',
+    tagline: 'the <b>summary</b>: the evidence-first version, minus the machinery.',
     body: html,
     navCurrent: '/',
   };
@@ -185,7 +185,7 @@ const POST_META = {
   'meditation-harm': {
     prompt: 'cat meditation-harm.md',
     tagline: 'the <b>full mechanism</b>: the evidence, the model, the notes.',
-    hint: '<a href="/">← short cut</a> · the full mechanism, with notes',
+    hint: '<a href="/">← home</a> · the full mechanism, with notes',
     description:
       'The full post: why meditation harm is under-counted — a measured control-theoretic model of the runaway, the border-collision fold, and why the failure hides itself.',
     accent: 'Failure Mode',
@@ -193,7 +193,7 @@ const POST_META = {
   'anxiety-damping': {
     prompt: 'cat anxiety-damping.md',
     tagline: 'the <b>prediction</b>: one variable, two readings, and the test that settles it.',
-    hint: '<a href="/">← short cut</a> · the prediction, with notes',
+    hint: '<a href="/">← home</a> · the prediction, with notes',
     description:
       'A prediction, not a result: anxiety-proneness read as low damping — two readings of one variable — and the cheap settling/tolerance test that would settle it.',
     accent: 'Damping',
