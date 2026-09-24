@@ -100,7 +100,7 @@ caveat that the two are **"directionally aligned, quantitatively unlinked."** An
 anxiety-prone temperament tends toward interoceptive checking and self-focus: attention
 already sitting further inward than average.
 
-So the joint position is: **further from the edge, and facing it.** Low damping puts you
+So the joint position is: **closer to the edge, and facing it.** Low damping puts you
 nearer the fold; elevated inward attention means you are already moving toward it. The model
 predicts that combination compounds — which is the double hit worth taking seriously.
 
