@@ -182,12 +182,12 @@ function buildHome(manifest) {
     `</div></section>`;
 
   const html =
-    `<section><div class="wrap">` +
-    `<h2>Summary</h2>` +
+    series +
+    `\n<section><div class="wrap">` +
+    `<h2>The short version</h2>` +
     `<div class="hint">$ cat summary.md</div>` +
     `<div class="prose">${body}</div>\n` +
-    `</div></section>\n` +
-    series;
+    `</div></section>`;
 
   return {
     title: 'Meditation can harm — and it does so invisibly — blog.jaye.ch',
@@ -195,7 +195,7 @@ function buildHome(manifest) {
       'Meditation-related harm is common and systematically under-reported: the evidence, and a measured control-theoretic account of why it hides.',
     prompt: 'cat summary.md',
     heroTitle: 'Meditation can harm — and it does so <span class="fx">invisibly</span>',
-    tagline: 'the <b>summary</b>: the evidence-first version, minus the machinery.',
+    tagline: 'the <b>series</b>: the evidence, the mechanism, and what the traditions got right.',
     body: html,
     navCurrent: '/',
   };
