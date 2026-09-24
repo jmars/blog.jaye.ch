@@ -198,6 +198,14 @@ const POST_META = {
       'A prediction, not a result: anxiety-proneness read as low damping — two readings of one variable — and the cheap settling/tolerance test that would settle it.',
     accent: 'Damping',
   },
+  'manufacturing-the-crossing': {
+    prompt: 'cat manufacturing-the-crossing.md',
+    tagline: 'the <b>inversion</b>: how coercive groups run the collapse on purpose.',
+    hint: '<a href="/">← home</a> · the procedure, and the inversion, with notes',
+    description:
+      'Coercive groups induce the same collapse deliberately and hold you on the far side of it — the same three guardrails the traditions supply, with two of them flipped.',
+    accent: 'Crossing',
+  },
 };
 
 function buildPost(post) {
