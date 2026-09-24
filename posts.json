@@ -3,6 +3,7 @@
   "posts": [
     { "slug": "meditation-harm", "file": "meditation-harm.md", "navLabel": "the failure mode", "published": true },
     { "slug": "anxiety-damping", "file": "anxiety-damping.md", "navLabel": "the damping dial", "published": false },
-    { "slug": "manufacturing-the-crossing", "file": "manufacturing-the-crossing.md", "navLabel": "the engineered crossing", "published": false }
+    { "slug": "manufacturing-the-crossing", "file": "manufacturing-the-crossing.md", "navLabel": "the engineered crossing", "published": false },
+    { "slug": "sacred-science", "file": "sacred-science.md", "navLabel": "the sacred science", "published": false }
   ]
 }

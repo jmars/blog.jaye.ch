@@ -111,7 +111,7 @@ function page({ title, description, prompt, heroTitle, tagline, body, navCurrent
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
-<meta name="description" content="${description}">
+<meta name="description" content="${description.replaceAll('"', '&quot;')}">
 <style>
 ${designCss}</style>
 <style>${PAGE_CSS}</style>
@@ -205,6 +205,14 @@ const POST_META = {
     description:
       'Coercive groups induce the same collapse deliberately and hold you on the far side of it — the same three guardrails the traditions supply, with two of them flipped.',
     accent: 'Crossing',
+  },
+  'sacred-science': {
+    prompt: 'cat sacred-science.md',
+    tagline: 'the <b>metaphysics</b>: the frame that decides what the collapse means.',
+    hint: '<a href="/">← home</a> · the frame, and the inversion, with notes',
+    description:
+      'Why "the observer collapses reality" and "union with God" are the same move — quantum mysticism as the modern warrant that steers the collapse toward an owned destination.',
+    accent: 'Sacred Science',
   },
 };
 
