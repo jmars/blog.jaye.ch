@@ -25,7 +25,7 @@ Reading order **is** release order, which is the array order in `posts.json`.
 |---|---|---|---|---|
 | 1 | `meditation-harm` | the failure mode | **measured** | with the blog going live |
 | 2 | `anxiety-damping` | the damping dial | **prediction** | ~1 week after #1 |
-| 3 | `manufacturing-the-crossing` | the engineered collapse | argument | ~2–3 weeks after #2 |
+| 3 | `manufacturing-the-collapse` | the engineered collapse | argument | ~2–3 weeks after #2 |
 | 4 | `sacred-science` | the sacred science | argument | ~1–2 weeks after #3 |
 | 5 | `empty-leader` | the empty leader | argument | ~1–2 weeks after #4 |
 | 6 | `safeguards` | the safeguards | argument | ~1–2 weeks after #5 — the resolution |

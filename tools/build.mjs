@@ -220,8 +220,8 @@ const POST_META = {
       'A prediction, not a result: anxiety-proneness read as low damping — two readings of one variable — and the cheap settling/tolerance test that would settle it.',
     accent: 'Damping',
   },
-  'manufacturing-the-crossing': {
-    prompt: 'cat manufacturing-the-crossing.md',
+  'manufacturing-the-collapse': {
+    prompt: 'cat manufacturing-the-collapse.md',
     tagline: 'the <b>inversion</b>: how coercive groups run the collapse on purpose.',
     hint: '<a href="/">← home</a> · the procedure, and the inversion, with notes',
     description:

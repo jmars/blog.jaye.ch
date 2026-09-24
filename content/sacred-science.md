@@ -3,7 +3,7 @@
 ### Why "the observer collapses reality" and "union with God" are the same move — and whose move it is
 
 *Fourth in the series. [The first](/meditation-harm/) sets out the collapse.
-[The second](/anxiety-damping/) asks who is at risk. [The third](/manufacturing-the-crossing/)
+[The second](/anxiety-damping/) asks who is at risk. [The third](/manufacturing-the-collapse/)
 describes the groups that engineer it. This one is about the **metaphysics** they wrap it in —
 the story that decides what the collapse *means*.*
 
