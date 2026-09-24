@@ -26,7 +26,7 @@ essays.
 
 | series | posts | status | audience |
 |---|---|---|---|
-| **The mechanism** | 1 `meditation-harm` (measured), 2 `anxiety-damping` (prediction) | a measured model and a falsifiable prediction | researchers, clinicians — **this is what gets sent** |
+| **The mechanism** | 1 `meditation-harm` (measured), 2 `anxiety-damping` (prediction), 3 `what-actually-works` (measured), 4 `recovery-is-not-immunity` (measured) | a measured model, a falsifiable prediction, and two measured follow-ups (rescue; relapse) | researchers, clinicians — **this is what gets sent** |
 | **The implications** | 3 `manufacturing-the-collapse`, 4 `sacred-science`, 5 `empty-leader`, 6 `safeguards`, 7 `the-label` | arguments built on cited literature | general readers, practitioners, cult / spiritual-abuse community |
 
 **Do not send the implications series to a researcher before they have engaged with the
@@ -41,11 +41,13 @@ Reading order **is** release order, in manifest order within each series.
 |---|---|---|---|---|
 | 1 | mechanism | `meditation-harm` | **measured** | with the blog going live |
 | 2 | mechanism | `anxiety-damping` | **prediction** | ~1 week after #1 |
-| 3 | implications | `manufacturing-the-collapse` | argument | ~2–3 weeks after #2 |
-| 4 | implications | `sacred-science` | argument | ~1–2 weeks after #3 |
-| 5 | implications | `empty-leader` | argument | ~1–2 weeks after #4 |
-| 6 | implications | `safeguards` | argument | ~1–2 weeks after #5 — the resolution |
-| 7 | implications | `the-label` | argument | last |
+| 3 | mechanism | `what-actually-works` | **measured** | ~1 week after #2 |
+| 4 | mechanism | `recovery-is-not-immunity` | **measured** | ~1 week after #3 |
+| 5 | implications | `manufacturing-the-collapse` | argument | ~2–3 weeks after #4 |
+| 6 | implications | `sacred-science` | argument | ~1–2 weeks after #5 |
+| 7 | implications | `empty-leader` | argument | ~1–2 weeks after #6 |
+| 8 | implications | `safeguards` | argument | ~1–2 weeks after #7 — the resolution |
+| 9 | implications | `the-label` | argument | last |
 
 **Why this order.** The evidence ladder has to stay legible. The mechanism series is
 measured-then-testable; the implications series is argument. Within the implications series:

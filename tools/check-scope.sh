@@ -53,7 +53,7 @@ fi
 # --- 4. content/ shape --------------------------------------------------------
 # The blog's own words only: the expected posts (in nav order per posts.json),
 # nothing else.
-unexpected="$(find content -type f 2>/dev/null | sort | grep -vE '^content/(meditation-harm|meditation-harm-summary|anxiety-damping|manufacturing-the-collapse|sacred-science|empty-leader|safeguards|the-label)\.md$' || true)"
+unexpected="$(find content -type f 2>/dev/null | sort | grep -vE '^content/(meditation-harm|meditation-harm-summary|anxiety-damping|what-actually-works|recovery-is-not-immunity|manufacturing-the-collapse|sacred-science|empty-leader|safeguards|the-label)\.md$' || true)"
 if [ -n "$unexpected" ]; then
   echo "SCOPE VIOLATION — unexpected files under content/:" >&2
   printf '  %s\n' $unexpected >&2

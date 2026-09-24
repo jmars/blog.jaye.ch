@@ -290,6 +290,22 @@ const POST_META = {
       '"Cult" is a category that harms the people it is meant to protect — and the sources this series leans on helped justify deprogramming. Why it names mechanisms instead.',
     accent: 'Label',
   },
+  'what-actually-works': {
+    prompt: 'cat what-actually-works.md',
+    tagline: 'the <b>rescue</b>: what gets someone out — and what breaks the rescue.',
+    hint: '<a href="/">← home</a> · the rescue result, with notes',
+    description:
+      'The measured rescue result: a cheap fixed floor beats an elaborate one, and continuously re-checking your support is what destroys it.',
+    accent: 'Works',
+  },
+  'recovery-is-not-immunity': {
+    prompt: 'cat recovery-is-not-immunity.md',
+    tagline: 'the <b>sequel</b>: a full rescue buys nothing against the next trigger.',
+    hint: '<a href="/">← home</a> · the relapse result, with notes',
+    description:
+      'A full rescue buys the recovered state nothing against the next trigger — the threshold that recovery restores is the threshold the next episode drains.',
+    accent: 'Immunity',
+  },
   'safeguards': {
     prompt: 'cat safeguards.md',
     tagline: 'the <b>countermeasures</b>: what the traditions wrote down, and why it works.',
