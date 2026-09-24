@@ -1,0 +1,3 @@
+[submodule "vendor/blog-design"]
+	path = vendor/blog-design
+	url = https://github.com/jmars/blog-design.git
