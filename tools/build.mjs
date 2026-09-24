@@ -214,6 +214,14 @@ const POST_META = {
       'Why "the observer collapses reality" and "union with God" are the same move — quantum mysticism as the modern warrant that steers the collapse toward an owned destination.',
     accent: 'Sacred Science',
   },
+  'empty-leader': {
+    prompt: 'cat empty-leader.md',
+    tagline: 'the <b>leader</b>: same dissociation, opposite direction.',
+    hint: '<a href="/">← home</a> · the leader, and the inversion, with notes',
+    description:
+      'The one who induces the collapse and the one who is collapsed share the same dissociation — intact cognition, absent affective self — and the difference is which way the emptiness points.',
+    accent: 'Empty Leader',
+  },
 };
 
 function buildPost(post) {
