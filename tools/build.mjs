@@ -20,7 +20,7 @@
  *                                   never deploy a preview build
  */
 
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -393,6 +393,34 @@ if (!existsSync(CSS)) {
   throw new Error(`missing ${CSS} — run tools/extract-css.mjs (or ./build.sh) first`);
 }
 
+/* ---------- preflight ---------- */
+
+/**
+ * Footnote integrity: every `[^key]` marker must have a matching `[^key]:`
+ * definition, and every definition must be used. Pandoc silently emits no
+ * footnotes section when markers are missing — the page then fails the
+ * "footnotes section not found" check in buildPost — and unused definitions
+ * are silently dropped. Catching it here, before anything is written, makes
+ * both failures impossible to ship.
+ */
+function checkFootnotes() {
+  const dir = join(ROOT, 'content');
+  const problems = [];
+  for (const name of readdirSync(dir).filter((f) => f.endsWith('.md'))) {
+    const src = readFileSync(join(dir, name), 'utf8');
+    const defs = new Set([...src.matchAll(/^\[\^([A-Za-z0-9]+)\]:/gm)].map((m) => m[1]));
+    const refs = new Set([...src.matchAll(/\[\^([A-Za-z0-9]+)\](?!:)/g)].map((m) => m[1]));
+    const unused = [...defs].filter((k) => !refs.has(k));
+    const undefined_ = [...refs].filter((k) => !defs.has(k));
+    if (unused.length) problems.push(`  ${name}: definition without an inline marker: ${unused.join(', ')}`);
+    if (undefined_.length) problems.push(`  ${name}: inline marker without a definition: ${undefined_.join(', ')}`);
+  }
+  if (problems.length) {
+    throw new Error('footnote integrity failed:\n' + problems.join('\n'));
+  }
+  log('footnote integrity ok (every marker has a definition, every definition is used)');
+}
+
 const manifest = JSON.parse(readFileSync(MANIFEST, 'utf8'));
 // In a PREVIEW build drafts appear in the nav too — that is what makes the
 // preview navigable; a deployable build's nav carries published posts only.
@@ -410,6 +438,8 @@ if (PREVIEW) {
   }
 }
 const postsToBuild = PREVIEW ? manifest.posts : navPosts;
+
+checkFootnotes();
 
 rmSync(DIST, { recursive: true, force: true });
 const written = [];

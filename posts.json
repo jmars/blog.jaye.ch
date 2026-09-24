@@ -28,7 +28,7 @@
       "kind": "measured",
       "series": "mechanism",
       "summary": "The rescue result: a cheap fixed floor beats an elaborate one — and re-checking your support is what destroys it.",
-      "published": false
+      "published": true
     },
     {
       "slug": "recovery-is-not-immunity",
@@ -37,7 +37,7 @@
       "kind": "measured",
       "series": "mechanism",
       "summary": "A full rescue buys the recovered state nothing against the next trigger — the threshold restored is the threshold the next episode drains.",
-      "published": false
+      "published": true
     },
     {
       "slug": "manufacturing-the-collapse",
