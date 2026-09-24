@@ -245,6 +245,14 @@ const POST_META = {
       'The one who induces the collapse and the one who is collapsed share the same dissociation — intact cognition, absent affective self — and the difference is which way the emptiness points.',
     accent: 'Empty Leader',
   },
+  'safeguards': {
+    prompt: 'cat safeguards.md',
+    tagline: 'the <b>countermeasures</b>: what the traditions wrote down, and why it works.',
+    hint: '<a href="/">← home</a> · the safeguards, with notes',
+    description:
+      'The sixth and last post: the safeguards the traditions encoded — and the clinical field is re-deriving — against every failure mode the series documents.',
+    accent: 'Safeguards',
+  },
 };
 
 function buildPost(post) {

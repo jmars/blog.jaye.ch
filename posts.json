@@ -40,6 +40,14 @@
       "kind": "argument",
       "summary": "The person at the top: leader and follower share one dissociation pointing opposite ways — the group as his externalized self.",
       "published": false
+    },
+    {
+      "slug": "safeguards",
+      "file": "safeguards.md",
+      "navLabel": "the safeguards",
+      "kind": "argument",
+      "summary": "What the traditions that survive the crossing wrote down — ethics first, metered pace, plural community, a teacher who points past himself, discernment as procedure — and why the clinical field is re-deriving the same list.",
+      "published": false
     }
   ]
 }
