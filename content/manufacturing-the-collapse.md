@@ -18,10 +18,10 @@ someone you love, the sources in the notes are the right place to start — not 
 
 ## 1. The question the first posts left open
 
-The first post ended on a structural fact: **the collapse supplies nothing.** What determines
-whether the same event wrecks a person or changes them is what is already around them when
-they arrive — a frame to land in, people who are not the loop, and a pace their system can
-absorb. We called the person who supplies that, and who acts on your behalf when the state
+The first post closes on three guardrails (§9): what determines whether the same event
+wrecks a person or changes them is not the collapse itself but what is already around them
+when they arrive — a frame to land in, people who are not the loop, and a pace their system
+can absorb. We called the person who supplies that, and who acts on your behalf when the state
 cannot act for itself, a **holder**.
 
 That framing invites an obvious and unpleasant question. The holder is defined by
@@ -196,8 +196,8 @@ worth naming without anyone in particular in mind.
 
 Here is the finding that makes this more than an analogy.
 
-The first post ended with three guardrails the traditions supply **before** the collapse — and
-they are the anti-induction structure, because a coercive group supplies **the same three
+The first post gives three guardrails the traditions supply **before** the collapse, and they
+are the anti-induction structure, because a coercive group supplies **the same three
 things** and inverts the two that decide the outcome.
 
 | guardrail | what the traditions supply | what the group supplies | inverted in |
