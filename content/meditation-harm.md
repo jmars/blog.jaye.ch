@@ -43,6 +43,15 @@ The numbers are not fringe findings:
   phenomenology.[^pons]
 - The standard self-report instrument for dissociation **false-positives at 54%** in
   non-clinical samples.[^leavitt]
+- **Intensity, and the teacher, are the strongest observed amplifiers.** In the largest
+  cross-sectional study of regular meditators (N = 1,370), having attended a **retreat**
+  carried **88.5% higher odds** of an unpleasant meditation-related experience — and the
+  association *strengthened* after adjusting for pre-existing mental illness.[^pauly] And in
+  the same practitioner sample the field's own taxonomy comes from, **97% of practitioners
+  and 97% of experts named the student–teacher relationship as a factor in these challenges,
+  including their onset** — with **71% of practitioners working with a teacher at the time
+  their difficulties began**, and teachers rated anywhere from *very harmful* to *very
+  helpful*.[^teacher]
 
 Read those together and a shape appears. The *phenomenology* is common. The *label* is
 rare. The state is often experienced as *good*. And the instrument of record cannot
@@ -357,6 +366,21 @@ spiritually meaningful."
 [^sierra]: Sierra, M., Senior, C., Dalton, J., et al. (2002). Reduced skin-conductance
 responses to unpleasant pictures in depersonalization disorder — i.e. no autonomic recovery
 to baseline. https://pubmed.ncbi.nlm.nih.gov/12215083/
+
+[^pauly]: Pauly, L. et al. (2021). "Prevalence, predictors and types of unpleasant and
+adverse effects of meditation in regular meditators: international cross-sectional study."
+*BJPsych Open* — N = 1,370 regular meditators; retreat attendance OR 1.89 (95% CI 1.43–2.48,
+p = 0.000), adjusted OR 1.94 (1.49–2.60). Replicates Schlosser, M. et al. (2019), *PLoS ONE*
+(25.4% unwanted effects). https://pmc.ncbi.nlm.nih.gov/articles/PMC8693904
+
+[^teacher]: "The Teacher Matters: The Role and Impact of Meditation Teachers in the
+Trajectories of Western Buddhist Meditators Experiencing Meditation-Related Challenges"
+(2025), *Contemporary Buddhism*, from the Varieties of Contemplative Experience dataset
+(68 practitioners, 33 experts) — 97% of practitioners and 97% of experts mentioned
+student–teacher relationships as an influencing factor "impacting meditation-related
+challenges, including their onset"; 71% were working with a teacher at onset; teacher
+support rated −3 (very harmful) to +3 (very helpful).
+https://www.tandfonline.com/doi/full/10.1080/14639947.2025.2485677
 
 [^leavitt]: Leavitt, F. (1999). "Dissociative Experiences Scale Taxon and Measurement of
 Dissociative Pathology." *J. Clin. Psychol. Med. Settings* — the DES-T dissociative taxon

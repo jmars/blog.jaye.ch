@@ -78,6 +78,15 @@ Read those together and a shape appears: a stable trait of slow return-to-baseli
 behaviourally (HSP), psychologically (emotional inertia), and autonomically (the DPDR
 signature). Anxiety-proneness sits plausibly inside that cluster.
 
+**And the meditation-adverse-effects data already show dispositional risk, in the same
+direction.** In the large cross-sectional study, participants with a **pre-existing mental
+disorder** before they started meditating had higher odds (1.63) *and* higher severity of
+unpleasant experiences; and **repetitive negative thinking** — the perseverative style that
+sits close to anxiety and rumination — raised the odds of an unpleasant experience by
+**33.6% per unit**.[^pauly2] These are the study's own authors drawing the dispositional
+conclusion, not this post's inference — which is the closest thing to independent support the
+damping account currently has.
+
 **What the source does *not* say, and this post does not claim:** that it names anxiety as a
 risk factor. It does not. It names damping profiles. The mapping of anxiety onto low damping
 is an inference — a reasonable one, but an inference, and it is the load-bearing step of
@@ -227,6 +236,11 @@ overstimulation, described in the source as "a stable trait version of the same 
 
 [^inertia]: Emotional inertia, in affect dynamics — *decreased recovery following negative
 stimuli* as its driver.
+
+[^pauly2]: Pauly, L. et al. (2021), *BJPsych Open* — pre-existing mental disorder: OR 1.63
+(95% CI 1.25–2.12, p = 0.000) for occurrence, β = 0.38 (0.18–0.58, p = 0.000) for severity;
+repetitive negative thinking (PTQ): OR 1.34 (1.12–1.60, p = 0.002) per unit.
+https://pmc.ncbi.nlm.nih.gov/articles/PMC8693904
 
 [^sierra]: Sierra, M., Senior, C., Dalton, J., et al. (2002). Reduced skin-conductance
 responses to unpleasant pictures in depersonalization disorder — i.e. no autonomic recovery

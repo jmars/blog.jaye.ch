@@ -163,8 +163,8 @@ as a collapse to be held carefully. The group reads it as an achievement to be r
 wider culture.** The most common form is the one usually called **"love and light"** — the
 frame in which difficulty is a sign of *your* resistance, emptiness is *advanced*, and doubt
 is the ego defending itself. Clinically this is **spiritual bypassing** (the term is John
-Welwood's)[^welwood]: using spiritual ideas to step around psychological material rather than
-through it. Its colloquial cousin is **toxic positivity** — the instruction to feel good about what is
+Welwood's): using spiritual ideas to step around psychological material rather than
+through it.[^welwood] Its colloquial cousin is **toxic positivity** — the instruction to feel good about what is
 happening, on the grounds that the feeling is what is lagging, not the situation.
 
 It is worth being precise about what that frame *is*, because it is not a different
@@ -211,6 +211,23 @@ engineered, with a malignant holder standing where the traditions put a benign o
 is a *better* description of why those three guardrails exist than any account that treats
 them as folk wisdom. They are not decoration on a path. They are the load-bearing
 countermeasures against a technique that has been studied for sixty-five years.
+
+**And this is not only a theory about groups — it is where the adverse-effects data point.**
+In the largest cross-sectional study of regular meditators, having attended a **retreat**
+carried **88.5% higher odds** of an unpleasant meditation-related experience (robust to
+adjusting for prior mental illness).[^pauly3] Retreats are the *intensity* amplifier — the
+pace term, supplied at scale. And in the field's own practitioner sample, **97% of
+practitioners and 97% of experts named the student–teacher relationship as a factor in these
+challenges, including their onset**; **71% of practitioners were working with a teacher when
+their difficulties began**; and those teachers were rated anywhere from *very harmful* to
+*very helpful*.[^teacher3] The teacher is therefore present at onset in most cases and is a
+variable in recovery — which is the structural point, stated without needing to claim anyone's
+intent: **the person who supplies the intensity also controls the channel out of it.**
+
+That is the empirical form of the malignant holder. And it is why a group or guru context
+compounds rather than merely adds: it stacks the intensity (retreats, fasts, long sits), the
+deconstructive instruction, and the exclusivity *at once*, then supplies the only available
+response to the result.
 
 And it explains a detail that otherwise looks arbitrary: the traditions' insistence that a
 teacher is **not** the only relationship, that the community is *sangha* rather than *one
@@ -297,6 +314,17 @@ former members of ideological/religious cults (11 participants, mean 16 years): 
 they felt **disconnected from themselves**"; shame, created dependency, and installed phobias
 (paving the way for isolation); and after leaving, they have "lost a functioning worldview …
 but not yet gained another."
+
+[^pauly3]: Pauly, L. et al. (2021). "Prevalence, predictors and types of unpleasant and
+adverse effects of meditation in regular meditators: international cross-sectional study."
+*BJPsych Open* — retreat attendance OR 1.89 (95% CI 1.43–2.48), adjusted OR 1.94
+(1.49–2.60). https://pmc.ncbi.nlm.nih.gov/articles/PMC8693904
+
+[^teacher3]: "The Teacher Matters" (2025), *Contemporary Buddhism*, from the Varieties of
+Contemplative Experience dataset — 97% of practitioners and 97% of experts cited the
+student–teacher relationship as an influencing factor "including their onset"; 71% were
+working with a teacher at onset; support rated −3 to +3.
+https://www.tandfonline.com/doi/full/10.1080/14639947.2025.2485677
 
 [^welwood]: Welwood, J. (2000/2011). *Toward a Psychology of Awakening* — the essay that
 coined "spiritual bypassing": using spiritual ideas and practices to sidestep unresolved
