@@ -6,7 +6,7 @@
 reports what a model does. This one takes a step that model's framing suggests but does not
 measure.*
 
-*Status — read this first, because this post is a different kind of thing.* The first post
+*Status — read this first, because this post is a different kind of thing.* The mechanism post
 reported measured results. **This one is a prediction.** The central claim — that
 anxiety-prone temperament and vulnerability to an unheld contemplative collapse are two
 readings of the same underlying variable — is **not in the data it derives from**. That
@@ -16,9 +16,9 @@ is a measurement, this post says so; where it is reasoning, it says that too.
 
 ---
 
-## 1. The question the first post didn't ask
+## 1. The question the mechanism post didn't ask
 
-The first post asked what happens once inward attention runs away — the runaway, the cliff,
+The mechanism post asked what happens once inward attention runs away — the runaway, the cliff,
 the reason it stays. Useful, but retrospective. It describes the failure after it has
 happened.
 
@@ -43,7 +43,7 @@ return.**
 
 The source framing is blunt about what loss of it produces: heightened sensitivity to input,
 larger and faster state swings, **slow or absent return to baseline**, and reachability of
-an extreme low-throughput state. That last item is the one the first post called the
+an extreme low-throughput state. That last item is the one the mechanism post called the
 collapse.
 
 The important structural point is that damping is the **single** control parameter in this
@@ -138,14 +138,14 @@ The source draws its risk stratification **by damping profile, not by diagnosis*
 
 Read the middle row carefully, because it is the whole point of this post. **Low damping is
 not a disqualification. It is the prevention window.** It does not mean "do not practice."
-It means the guardrails the first post described — frame before you arrive, community
+It means the guardrails the mechanism post described — frame before you arrive, community
 present, pace metered, a holder chosen in advance — matter *more*, and dose matters more.
 
 Which is a better thing to hand someone than a diagnosis. It is also, notably, what the
 traditions build into novice training and what the severed modern version strips out.
 
 A second prediction follows, and it is falsifiable in the right direction: **onset risk in
-low-damping populations should be threshold-shaped, not linear.** The first post's model
+low-damping populations should be threshold-shaped, not linear.** The mechanism post's model
 transition is a cliff, not a slope. So the risk should not rise smoothly with practice
 hours. It should be flat, then sudden — and the thing that moves you along that axis is dose
 and drift, not accumulated virtue.
@@ -170,7 +170,7 @@ The model makes a specific and counter-intuitive prediction about these two:
 
 > Near the edge, **recovery time stays constant** while **tolerance shrinks**.
 
-That is the first post's result, and it is the opposite of what the literature's default
+That is the mechanism post's result, and it is the opposite of what the literature's default
 early-warning account (*critical slowing down*) predicts. Critical slowing down says
 recovery gets slower as you approach a transition. This model says it does **not** slow —
 it gets **fragile** instead. A system near the edge is not sluggish; it is brittle.

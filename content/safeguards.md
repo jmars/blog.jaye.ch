@@ -3,11 +3,11 @@
 ### What the traditions that survive the collapse wrote down — and why it is a safety specification, not folk wisdom
 
 *Fourth of the implications, and its resolution — arguments built on the model, as distinct
-from the model itself. It has been a dark run: [the collapse](/meditation-harm/), [who
+from the model itself. It has been a dark run: [the mechanism posts](/meditation-harm/), [who
 is at risk](/anxiety-damping/), [the groups that engineer it](/manufacturing-the-collapse/),
 [the metaphysics that steers it](/sacred-science/), [the person at the top](/empty-leader/).
 This post is the other side of it. Not a defence of tradition — a **reading of the traditions'
-own codes** against the mechanism the first post set out, and against what the clinical
+own codes** against the mechanism the mechanism posts set out, and against what the clinical
 literature has independently arrived at.*
 
 *Status.* Where the previous posts reasoned from a model, this one is almost entirely
@@ -73,7 +73,7 @@ The second safeguard is a doctrine of **gradualism** so consistent it is almost 
   **abhyāsa** (sustained practice) and **vairāgya** (dispassion) — as a balance (YS I.12),
   not as intensity.
 
-The first post's mechanism makes the reason obvious. The transition is a **cliff at a
+The model's mechanism makes the reason obvious. The transition is a **cliff at a
 threshold** — 66.3 time-units of sustained inward drive in the model, with no gradual
 warning and no critical slowing down to feel. Gradual training is not caution for the
 timid. It is the **only** structure compatible with a cliff: you do not sprint at a
@@ -100,7 +100,7 @@ The term is ***kalyāṇa-mittatā***, noble friendship — and the structure it
 **plural**. Not a guru, not a master: *friends*, and a **sangha** — a community with many
 relationships and, per the Vinaya, procedures among them.
 
-Set that against the third post's inversion and it is the same safeguard seen from the other
+Set that against the coercion post's inversion and it is the same safeguard seen from the other
 side. There, **exclusivity was the tell**: a coercive group must become the only available
 attachment figure, because a holder that is one person is a holder that can be owned. A
 tradition that says *the community, not the teacher, is the whole of the life* has removed
@@ -156,7 +156,7 @@ authentic movement from misleading movement**, written as procedure.
   understanding that **states are stages, not destinations**, and that a teacher's function is
   assessment rather than validation.
 
-The first post found that this territory gives **no internal warning**: the transition is a
+The mechanism post found that this territory gives **no internal warning**: the transition is a
 fold, the reporting faculty survives while the self does not, and the endpoint feels like
 arrival. A tradition facing that must supply an *external* discernment procedure, because it
 cannot rely on the practitioner's own read. **Ignatius's rules are precisely that** — a
@@ -172,7 +172,7 @@ own vocabulary, been arriving at the same safeguards:
 
 - **Trauma-sensitive mindfulness** (Treleaven, 2018) gives operational principles — **stay
   inside the window of tolerance**; **shift attention to support stability**; **keep the body
-  in mind** — for the specific hazard the first post describes: sustained inward attention is
+  in mind** — for the specific hazard the mechanism post describes: sustained inward attention is
   not neutral, and for some people it destabilises rather than settles. (This is *pacing* and
   *attentional redirection*, restated.)[^treleaven]
 - **Informed consent** is the recommendation of the adverse-effects research (Britton et al.,
@@ -225,7 +225,7 @@ open.
   harboured serious abuse — including celebrated teachers in celebrated lineages — and the
   safeguards above are precisely what such cases **honoured in the breach**. "Traditional" is
   not a safety property. *Keeping the safeguards* is.
-- **Not a claim that the old ways are correct in their metaphysics.** The fourth post argued
+- **Not a claim that the old ways are correct in their metaphysics.** The metaphysics post argued
   the opposite for the quantum-mystical frame, and nothing here defends any doctrine's truth
   claims. The claim is narrow: these practices are **structurally protective** against a
   documented failure mode.

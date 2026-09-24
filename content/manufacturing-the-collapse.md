@@ -3,22 +3,22 @@
 ### Coercive groups run the same collapse deliberately — and stand on the far side of it
 
 *First of the implications — the arguments built on the model, as distinct from the model
-itself. [The first post](/meditation-harm/) sets out the mechanism — how sustained inward
-attention runs away and why the state it lands in cannot see itself; [the second](/anxiety-damping/)
+itself. [The mechanism post](/meditation-harm/) sets out the mechanism — how sustained inward
+attention runs away and why the state it lands in cannot see itself; [the risk post](/anxiety-damping/)
 asks who is most at risk. This one asks who would do it on purpose.*
 
 *Status.* The research cited here is an established clinical and social literature on
 coercive control — Schein, Lifton, Singer, Stein, Hassan — describing what such groups *do*
-and *how they bind people*. **The mapping of that procedure onto the collapse mechanism of the
-first post is an inference.** It is offered as a reading, not a measurement, and no group or
+and *how they bind people*. **The mapping of that procedure onto this model's collapse mechanism is an
+inference.** It is offered as a reading, not a measurement, and no group or
 person is named. If you are trying to work out whether something is happening to you or
 someone you love, the sources in the notes are the right place to start — not this post.
 
 ---
 
-## 1. The question the first posts left open
+## 1. The question the mechanism posts left open
 
-The first post closes on three guardrails (§9): what determines whether the same event
+The mechanism post closes on three guardrails (§9): what determines whether the same event
 wrecks a person or changes them is not the collapse itself but what is already around them
 when they arrive — a frame to land in, people who are not the loop, and a pace their system
 can absorb. We called the person who supplies that, and who acts on your behalf when the state
@@ -43,7 +43,7 @@ literature for sixty-five years.
 phases — borrowed from Lewin's model of change — and they map onto our problem with
 uncomfortable precision:
 
-| stage | what happens | in the first post's terms |
+| stage | what happens | in the mechanism post's terms |
 |---|---|---|
 | **Unfreezing** | "beliefs are shaken such that they start to doubt themselves and seek alternative ways of understanding" | the self-attack — raising inward attention while the ground of self-content falls away |
 | **Changing** | a new identity is imposed; behaviour modified; **mystical manipulation**; **mind-altering techniques** (repetition, monotony, rhythm); **confession** "forcibly and continually extracted" | the collapse, then the *frame* installed while the system is open |
@@ -83,7 +83,7 @@ and legal context — Singer's conditions for thought reform and Hassan's BITE m
 
 ## 3. The self-attack
 
-Read §2 with the first post's model in hand and the first step is unmistakable. Take a person
+Read §2 with the mechanism post's model in hand and the first step is unmistakable. Take a person
 whose self-content is produced by a generator (`G`), and whose attention (`a`) can be turned
 inward or outward. Then:
 
@@ -93,7 +93,7 @@ inward or outward. Then:
 - **The demand for purity** — "radical separation of good and evil *within oneself*" — is
   the same operation with a moral warrant attached. The self is not merely observed; it is
   judged, and found contaminated.
-- **Fasting, sleep loss, chanting, monotony, rhythm** attack the *other* axis. The first post
+- **Fasting, sleep loss, chanting, monotony, rhythm** attack the *other* axis. The mechanism post
   made the point that damping is the return-to-baseline force and that the approach to the
   edge is *autonomically* visible — resting heart rate up, heart-rate variability down, sleep
   shortening. These techniques lower damping directly. They are not decoration; they move the
@@ -101,7 +101,7 @@ inward or outward. Then:
   another.
 
 So the "unfreezing" is not a metaphor. It is a deliberate, two-channel approach to the same
-fold the first post describes: **inward attention raised, self-content degraded, settling
+fold the mechanism post describes: **inward attention raised, self-content degraded, settling
 slowed — until the healthy branch is annihilated on contact with the switching manifold.**
 
 ---
@@ -111,7 +111,7 @@ slowed — until the healthy branch is annihilated on contact with the switching
 Inducing a collapse gets you a collapsed person, not a member. That is the part the model
 makes non-optional, and it is the part the literature has already solved.
 
-The first post's second structural result: **the collapsed state cannot initiate its own
+The mechanism post's second structural result: **the collapsed state cannot initiate its own
 exit.** Reduce the drive to zero and the state persists; the reasoning faculty sits at
 baseline and sees nothing wrong. Recovery requires an input from **outside** — a holder.
 
@@ -145,7 +145,7 @@ Lifton's **sacred science**, **loading the language**, and **doctrine over perso
 - The loaded language makes the doctrine the *medium* of thought, so it stops feeling like a
   belief and starts feeling like the shape of reality.
 
-And here the corpus supplies the piece that closes the loop. The second post's companion
+And here the corpus supplies the piece that closes the loop. The risk post's companion
 finding — Pons et al. 2026[^pons] — is that meditation-triggered states **phenomenologically identical
 to depersonalization** were rated by the people who had them as **"more welcome, pleasant, and
 spiritually meaningful"** than the same state in a clinical group.
@@ -155,7 +155,7 @@ lever a group needs. For the induction to work, the collapse must be read as **a
 not "something went wrong," but "you broke through; you are further along than the others;
 this emptiness is the goal, so go deeper."
 
-That is the thing the first post called the trap — *the state that most needs care is the
+That is the thing the mechanism post called the trap — *the state that most needs care is the
 state that feels like the destination* — made into policy. The traditions read the same event
 as a collapse to be held carefully. The group reads it as an achievement to be repeated.
 
@@ -171,7 +171,7 @@ It is worth being precise about what that frame *is*, because it is not a differ
 mechanism. It is the appraisal lever of this section, pre-installed and available off the
 shelf. A group does not have to invent the story in which the collapse means progress. The
 story is already circulating, framed as kindness, and it says exactly the thing that makes the
-collapse un-rescuable: **if it hurts, the problem is your resistance.** Every signal the first
+collapse un-rescuable: **if it hurts, the problem is your resistance.** Every signal the mechanism
 post identified as a warning — the drift flags, the shrinking tolerance, the fact that the
 state cannot ask for help — arrives through that frame *already re-coded as evidence of
 progress*. The warning becomes the encouragement.
@@ -196,7 +196,7 @@ worth naming without anyone in particular in mind.
 
 Here is the finding that makes this more than an analogy.
 
-The first post gives three guardrails the traditions supply **before** the collapse, and they
+The mechanism post gives three guardrails the traditions supply **before** the collapse, and they
 are the anti-induction structure, because a coercive group supplies **the same three
 things** and inverts the two that decide the outcome.
 
@@ -247,7 +247,7 @@ contact all being pressed, with intensity framed as commitment? Those three ques
 whole practical content of this post.
 
 And the protective structure is the same one, in the positive: **a frame you already had
-beforehand, people who are not the group, a pace you control, and — the first post's
+beforehand, people who are not the group, a pace you control, and — the mechanism post's
 requirement — a holder chosen in advance who is not exclusive to anyone.** The model says the
 exit cannot come from inside the state. The literature says the group makes sure of it. The
 countermeasure is the same in both: something outside, that the collapsing state cannot

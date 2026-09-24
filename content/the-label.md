@@ -3,8 +3,8 @@
 ### "Cult" is a category that does harm — including to the people it is meant to protect. Why this series names mechanisms instead.
 
 *Fifth of the implications, and a coda — arguments built on the model, as distinct from the
-model itself. [The first post](/meditation-harm/) is the mechanism;
-[the first implication](/manufacturing-the-collapse/) describes the groups that engineer it.
+model itself. [The mechanism post](/meditation-harm/) sets out the model;
+[the coercion post](/manufacturing-the-collapse/) describes the groups that engineer it.
 This one is about the **word** — and about a debt that limitation owes, because the sources it
 relies on were used to justify a great deal of harm.*
 
@@ -17,7 +17,7 @@ because the harm done to it is the point. It diagnoses no group, and it is not a
 ## 1. The question the series has been dodging
 
 Six posts have described a structure: a collapse, engineered, held by someone standing on the
-far side. The third post listed its mechanisms — exclusivity, an owned frame, an accelerated
+far side. The coercion post listed its mechanisms — exclusivity, an owned frame, an accelerated
 pace — and called the picture "coercive control."
 
 But there is a word for all of this, and it is **cult**. The series has been conspicuously not
@@ -105,7 +105,7 @@ Now the parts that are uncomfortable:
   and rendered **"abnormally depersonalised, dissociated and regressed to psychological
   infancy."** Depersonalized. Dissociated. That is the language of post 1 — used as grounds for
   abducting adults.
-- **And the ACM drew on the exact sources the third post cites.** Its conceptual apparatus
+- **And the ACM drew on the exact sources the coercion post cites.** Its conceptual apparatus
   came from **Robert Lifton's** criteria for totalistic communities and from **Margaret
   Singer**, who testified in support of the brainwashing defence at Patty Hearst's trial.[^acm]
 
@@ -121,8 +121,8 @@ scholarship. It is the entire mechanism by which good description becomes harm: 
 observation, but in the step from "this is what coercion looks like" to "therefore this person
 cannot choose."**
 
-So the third post's authorities — Lifton, Singer, and the thought-reform tradition — are also
-the intellectual supply of a movement that kidnapped people. That does not make the third
+So the coercion post's authorities — Lifton, Singer, and the thought-reform tradition — are also
+the intellectual supply of a movement that kidnapped people. That does not make the coercion
 post wrong. Lifton's *description* of milieu control and confession can be accurate while the
 *use* made of it was harmful; the same lifeguard can be misused as a weapon. But a series that
 leans on these sources owes the reader this paragraph, and here it is.
@@ -132,7 +132,7 @@ largely **frightened parents** — not operatives. Their adult children had join
 could not understand, and they wanted them back. The coercive-explanation was *consoling*
 precisely because it removed the blame from everyone: the child had not chosen this, the parent
 had not driven them to it. Sincere people, trying to help, built the apparatus. That is the
-uncomfortable shape of it — and it is the same shape as the third post's own finding, that
+uncomfortable shape of it — and it is the same shape as the coercion post's own finding, that
 sincerity makes a harmful frame *worse*, because a sincere holder cannot see what a cynical one
 would.
 
@@ -183,7 +183,7 @@ out.
 ## 6. The resolution: mechanisms, not labels
 
 So the answer is not a better word. It is to **stop sorting groups and start describing
-mechanisms** — which is what the third post was already doing, and why it went out of its way
+mechanisms** — which is what the coercion post was already doing, and why it went out of its way
 to avoid naming anyone.
 
 Look at what it actually offers. Not membership criteria or a vibe. **Specific, checkable
@@ -203,7 +203,7 @@ cheap, because the group's lawyers, defenders, and sincere members all get to sa
 a cult."* Nobody can say *"we do not have an exclusive frame"* if they do.
 
 **Mechanism-first preserves the ability to warn without the harms of labelling.** It is more
-useful and less dangerous at the same time, which is rare, and it is why the third post reads
+useful and less dangerous at the same time, which is rare, and it is why the coercion post reads
 the way it does.
 
 ---
@@ -235,7 +235,7 @@ defended here rather than left implicit.
 
 ## 8. The reflexivity: this framework is not exempt
 
-The last move is the one the third post's §7 already began, and it belongs here too, in full.
+The last move is the one the coercion post's §7 already began, and it belongs here too, in full.
 
 **Every mechanism this series describes is available to be turned into a label.** "Exclusive
 community," "owned frame," "accelerated pace," "a teacher present at onset" — a checklist of

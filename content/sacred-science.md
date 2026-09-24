@@ -3,9 +3,9 @@
 ### Why "the observer collapses reality" and "union with God" are the same move — and whose move it is
 
 *Second of the implications — the arguments built on the model, as distinct from the model
-itself. [The first post](/meditation-harm/) sets out the mechanism;
-[the second](/anxiety-damping/) asks who is at risk;
-[the first implication](/manufacturing-the-collapse/) describes the groups that engineer it.
+itself. [The mechanism post](/meditation-harm/) sets out the mechanism;
+[the risk post](/anxiety-damping/) asks who is at risk;
+[the coercion post](/manufacturing-the-collapse/) describes the groups that engineer it.
 This one is about the **metaphysics** they wrap it in — the story that decides what the
 collapse *means*.*
 
@@ -95,7 +95,7 @@ The word doing the work is **"observer."** Both claims are about an observer:
   possibility — the observer is the thing that makes the world definite, and (in the strong
   version) the thing that makes it at all.
 - In the contemplative claim: the observer — the witness, the self — **dissolves**. The
-  collapse the first post described is precisely the loss of the one who observes.
+  collapse the mechanism post described is precisely the loss of the one who observes.
 
 Put them side by side and the pun is visible, and so is the *inversion*. In the physics
 story, the observer **makes things definite**; in the collapse, the definite self **comes
@@ -118,7 +118,7 @@ get merged by a shared noun — and once merged, the physics vouches for the met
 
 Now the reason this is not merely a bad argument but a **steering device**.
 
-The first post established something easy to miss: the collapse has **no inherent ending
+The mechanism post established something easy to miss: the collapse has **no inherent ending
 point**. In the model, the generator falls to a low level and *stays there*. There is no
 ascent, no union, no destination — only a state that persists and cannot see itself. The
 collapse is a *shape*, not a story.
@@ -131,7 +131,7 @@ quantum-observer frame is uniquely good at supplying that reading, because it ha
 posited consciousness as the fundamental stuff. **The void becomes the divine, by
 definition.**
 
-This is the appraisal lever of the third post in its metaphysical dress. There, the group
+This is the appraisal lever of the coercion post in its metaphysical dress. There, the group
 pre-installed the story that harm is resistance. Here, the frame pre-installs the story that
 dissolution is **union** — and it does it *upstream of experience*, so that the person
 approaches the collapse already knowing what it will mean when they arrive.
@@ -150,7 +150,7 @@ reached through the teacher, the lineage, the transmission, the group — then t
 your collapse belongs to them*. They are not merely describing where you are going. They are
 the **mediators of the destination**.
 
-Notice how cleanly this re-enters the third post's structure. The inversion was: the same
+Notice how cleanly this re-enters the coercion post's structure. The inversion was: the same
 three guardrails the traditions supply, with two flipped — the frame supplied by *ownership*,
 the community supplied by *exclusivity*. "Union with God, through us" is both flips at once.
 The frame is supplied (you do not have to discover what this experience means; it has been
@@ -184,7 +184,7 @@ falling off**. When that network's activity drops, the ordinary sense of a bound
 vanishes — and the experience is one of no separation, which is what *union* means
 experientially.
 
-Now put that beside the first post's mapping. The model's generator of self-content (`G`) was
+Now put that beside the mechanism post's mapping. The model's generator of self-content (`G`) was
 mapped to the **default mode network** — the DMN is the `G` analogue. So the neuroscience and
 the model agree on where to look, and they agree on what is happening there: a generator that
 produces the narrative self has stopped producing it.
@@ -225,7 +225,7 @@ get there"* has installed one.
 
 Both are talking about the same event. One of them refuses to say where it ends. That refusal
 is the countermeasure, and it took two and a half thousand years of accumulated reports to
-arrive at — which is roughly the same reason the third post's three guardrails exist. The
+arrive at — which is roughly the same reason the coercion post's three guardrails exist. The
 traditions are not the villain of this series. They are the *record of what happens* when the
 territory is entered carelessly, written by people who kept notes.
 
@@ -263,7 +263,7 @@ self-transcendent experience and ego dissolution;
 https://www.sciencedirect.com/science/article/abs/pii/S1053810024000229 — and the
 psychedelic-ego-dissolution literature on the DMN, e.g. Gattuso et al. (2022), where
 in-scanner reports of ego dissolution correlate with the "mystical" quality of experience and
-**DMN activity falling off**. The first post maps the model's self-content generator (`G`) to
+**DMN activity falling off**. The mechanism post maps the model's self-content generator (`G`) to
 the DMN, so the two accounts converge on the same generator — and on it having gone quiet.
 https://pmc.ncbi.nlm.nih.gov/articles/PMC10032309
 

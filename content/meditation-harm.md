@@ -284,7 +284,7 @@ Attention latched, not exhausted. Reducer unopposed, not overdriven.
 
 And the fourth is the mechanism that makes the other three feel true. It is also the answer to
 *"so what is actually failing?"* — nothing. **The exits are all still there; they just cost
-more than they did.** That is why *"just stop"* and *"just rest"* don't work, and why the third
+more than they did.** That is why *"just stop"* and *"just rest"* don't work, and why the coercion
 post's malignant holder is so effective: the holder is standing at the one remaining exit, and
 the price of using it has gone up.
 

@@ -3,9 +3,9 @@
 ### The one who induces the collapse and the one who is collapsed share the same dissociation — and the difference is which way it points
 
 *Third of the implications — the arguments built on the model, as distinct from the model
-itself. [The first post](/meditation-harm/) sets out the mechanism;
-[the first implication](/manufacturing-the-collapse/) describes the groups that engineer it;
-[the second](/sacred-science/) is about the frame that decides what it means. This one is
+itself. [The mechanism post](/meditation-harm/) sets out the mechanism;
+[the coercion post](/manufacturing-the-collapse/) describes the groups that engineer it;
+[the metaphysics post](/sacred-science/) is about the frame that decides what it means. This one is
 about the **person at the top** — and why the shape of his mind is the shape he reproduces.*
 
 *Status.* The two halves of this post's central claim are measured and published: the
@@ -20,7 +20,7 @@ end of the Dark Triad.
 
 ## 1. The thing that doesn't fit
 
-The third post described a structure in which someone induces a self-collapse in others and
+The coercion post described a structure in which someone induces a self-collapse in others and
 stands on the far side of it. The obvious question about that structure is:
 
 **What is going on in the one doing the inducing?**
@@ -50,7 +50,7 @@ empathy** is the ability to *feel with* them — to be moved, to have the other'
 you as your own.
 
 In depersonalization: the *modelling* keeps working, and the *feeling* goes. Which is the same
-statement the first post made in the model's terms — reasoning intact, self-content
+statement the mechanism post made in the model's terms — reasoning intact, self-content
 annihilated. The two descriptions are of one thing: a system that has lost the part of itself
 that *cares*, while keeping the part that *computes*.
 
@@ -101,12 +101,12 @@ of the second.
 Read the table carefully, because it corrects the intuition in §1. **The leader is not
 *un*scathed — he is not in the healthy state either.** He is low on the same variable the
 follower is low on. What he has is *mobility*: attention pointing outward, so the emptiness
-doesn't immobilize him; it frees him. The first post's collapsed state was defined by **"no
+doesn't immobilize him; it frees him. The mechanism post's collapsed state was defined by **"no
 outward pull"** — that is the *follower's* form of the deficit. The leader has the same hole
 and an outward vector, and the outward vector is what makes the hole useful.
 
 Which reframes the whole structure. The follower's collapse is *reached* — induced, by the
-third post's techniques, from a system that had a self. The leader's is *inhabited* — a
+coercion post's techniques, from a system that had a self. The leader's is *inhabited* — a
 developmental emptiness at the depersonalized end of the Dark Triad, not necessarily reached by any
 collapse at all. **Same destination variable, different roads.** The leader did not have to
 be collapsed to get there; he may simply never have had much there to begin with.
@@ -136,7 +136,7 @@ fuel is familiar: **narcissistic supply** — admiration, attention, deference, 
 So look at what the group is actually *for*, structurally:
 
 - The **doctrine** is about him. Every claim routes back to the leader's authority because the
-  frame is his own structure, externalized (the fourth post's sacred science, printed from the
+  frame is his own structure, externalized (the metaphysics post's sacred science, printed from the
   only template he has).
 - The **admiration and obedience** are the supply. They are not a perk of leading; they are the
   *mechanism* by which the empty system obtains self-content it cannot generate.
@@ -159,7 +159,7 @@ closed system is not paranoia. It is a **thermal** requirement: an open one leak
 
 ## 6. Why the traditions forbid precisely this — again
 
-The third post found that the same three guardrails the traditions supply are exactly what a
+The coercion post found that the same three guardrails the traditions supply are exactly what a
 coercive group supplies and inverts. The fourth found that the apophatic traditions refuse to
 name the destination, which is what removes the steering wheel. This post closes the triangle
 with the one prohibition that only makes sense once you see the leader:
@@ -175,7 +175,7 @@ where his self is stored. The prohibition is a structural countermeasure against
 configuration described above, and it was arrived at empirically, by lineages that watched
 what happened when it was absent.
 
-The third post's version of the test was **exclusivity is the tell**. This post's is sharper
+The coercion post's version of the test was **exclusivity is the tell**. This post's is sharper
 and more diagnostic: **follow the self-content.** Where does the group's admiration, meaning,
 and coherence actually *terminate*? In a tradition, it terminates past the teacher, in
 something no one owns. In a closed system, it terminates *at him* — and everything else in the
