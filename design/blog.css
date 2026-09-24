@@ -18,7 +18,7 @@
   --bg2: #f4f1ea;
   --fg: #1b1b1d;
   --dim: #66646d;
-  --accent: #15744a;
+  --accent: #a4262c;
   --accent2: #2158b0;
   --line: #e6e1d6;
   --mono: "SFMono-Regular", "Cascadia Code", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
@@ -132,7 +132,7 @@ a:hover { text-decoration: underline; }
 }
 .dropdown .menu::before { content: ""; position: absolute; top: -10px; left: 0; right: 0; height: 10px; }
 .dropdown .menu a { display: block; font-family: var(--mono); font-size: 13px; color: var(--dim); padding: 7px 16px; white-space: nowrap; }
-.dropdown .menu a:hover { color: var(--accent); background: rgba(21,116,74,0.07); text-decoration: none; }
+.dropdown .menu a:hover { color: var(--accent); background: rgba(164,38,44,0.06); text-decoration: none; }
 .dropdown .menu a .fx { color: var(--accent); }
 .dropdown:hover .menu { display: block; }
 .dropdown .menu .ddhake { color: var(--accent); font-weight: 600; }
@@ -223,21 +223,21 @@ table.api td:first-child { white-space: nowrap; font-family: var(--mono); }
 
 /* ---------- notes / callouts ---------- */
 .note {
-  background: #e9f4ee;
+  background: #fbeeed;
   border-left: 4px solid var(--accent);
   padding: 10px 14px;
   border-radius: 6px;
   margin: 1em 0;
-  color: #173e2c;
+  color: #8a2420;
 }
 
 .warn {
-  background: #fdeceb;
-  border-left: 4px solid #c0392b;
+  background: #fdf6e3;
+  border-left: 4px solid #b7791f;
   padding: 10px 14px;
   border-radius: 6px;
   margin: 1em 0;
-  color: #7a1f1a;
+  color: #7a5b1a;
 }
 
 /* ---------- CTA banner ---------- */
@@ -284,7 +284,7 @@ table.api td:first-child { white-space: nowrap; font-family: var(--mono); }
 .prose li { margin-bottom: 0.45em; }
 .prose blockquote { border-left: 3px solid var(--accent); background: var(--bg2); padding: 14px 20px; border-radius: 6px; margin: 1.3em 0; }
 .prose blockquote p:last-child { margin-bottom: 0; }
-.prose code { font-family: var(--mono); font-size: 0.86em; background: var(--bg2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; color: #0f5132; }
+.prose code { font-family: var(--mono); font-size: 0.86em; background: var(--bg2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; color: #8f1d22; }
 .prose pre { background: var(--bg2); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 1.2em 0; font-family: var(--mono); font-size: 13.5px; }
 .prose pre code { background: none; border: none; padding: 0; color: var(--fg); font-size: 1em; }
 .prose table { width: 100%; border-collapse: collapse; margin: 1.2em 0; font-size: 0.88em; font-family: var(--sans); }
