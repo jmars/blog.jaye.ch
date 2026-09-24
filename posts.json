@@ -1,5 +1,7 @@
 {
-  "home":  { "file": "meditation-harm-summary.md" },
+  "home": {
+    "file": "meditation-harm-summary.md"
+  },
   "posts": [
     {
       "slug": "meditation-harm",
@@ -7,7 +9,8 @@
       "navLabel": "the failure mode",
       "kind": "measured",
       "summary": "The mechanism end to end — the runaway, the cliff, and why the state it lands in cannot see itself.",
-      "published": true
+      "published": true,
+      "series": "mechanism"
     },
     {
       "slug": "anxiety-damping",
@@ -15,7 +18,8 @@
       "navLabel": "the damping dial",
       "kind": "prediction",
       "summary": "Who is at risk: anxiety-proneness read as low damping, and the cheap test — tolerance, not settling time — that would settle it.",
-      "published": true
+      "published": true,
+      "series": "mechanism"
     },
     {
       "slug": "manufacturing-the-collapse",
@@ -23,7 +27,8 @@
       "navLabel": "the engineered collapse",
       "kind": "argument",
       "summary": "The same collapse run deliberately — Schein, Lifton, Stein — and the inversion: the same three guardrails, two of them flipped.",
-      "published": false
+      "published": false,
+      "series": "implications"
     },
     {
       "slug": "sacred-science",
@@ -31,7 +36,8 @@
       "navLabel": "the sacred science",
       "kind": "argument",
       "summary": "Why “the observer collapses reality” and “union with God” are one move — and how the frame steers the collapse to an owned destination.",
-      "published": false
+      "published": false,
+      "series": "implications"
     },
     {
       "slug": "empty-leader",
@@ -39,7 +45,8 @@
       "navLabel": "the empty leader",
       "kind": "argument",
       "summary": "The person at the top: leader and follower share one dissociation pointing opposite ways — the group as his externalized self.",
-      "published": false
+      "published": false,
+      "series": "implications"
     },
     {
       "slug": "safeguards",
@@ -47,7 +54,8 @@
       "navLabel": "the safeguards",
       "kind": "argument",
       "summary": "What the traditions that survive the collapse wrote down — ethics first, metered pace, plural community, a teacher who points past himself, discernment as procedure — and why the clinical field is re-deriving the same list.",
-      "published": false
+      "published": false,
+      "series": "implications"
     },
     {
       "slug": "the-label",
@@ -55,7 +63,8 @@
       "navLabel": "the label",
       "kind": "argument",
       "summary": "\"Cult\" is a category that does harm — to the people it is meant to protect — and the sources this series leans on helped justify kidnapping. Why it names mechanisms instead.",
-      "published": false
+      "published": false,
+      "series": "implications"
     }
   ]
 }

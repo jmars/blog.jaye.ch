@@ -148,41 +148,61 @@ function splitH1(body, what) {
 
 /* ---------- pages ---------- */
 
+/** A post's title, read from its own file's leading <h1> (as plain text). */
+function titleOf(post) {
+  return splitH1(mdToHtml(read('content', post.file)), post.slug)
+    .titleHtml.replace(/<[^>]+>/g, '')
+    .trim();
+}
+
 function buildHome(manifest) {
   const md = read('content', manifest.home.file);
   // the summary's own H1 becomes the hero title, so it must not repeat in
   // the body
   const body = splitH1(mdToHtml(md), 'summary').rest;
 
-  // series index: one card per post this build lists (drafts included only
-  // in a PREVIEW build), in manifest order. The card's .n is the post's
-  // ordinal in the FULL manifest, so numbering stays stable as posts flip
-  // to published; titles come from each post's own file, like buildPost.
-  const listed = manifest.posts.filter((p) => PREVIEW || p.published);
-  const cards = listed
-    .map((p) => {
-      const title = splitH1(mdToHtml(read('content', p.file)), p.slug)
-        .titleHtml.replace(/<[^>]+>/g, '')
-        .trim();
-      const n = String(manifest.posts.indexOf(p) + 1).padStart(2, '0');
-      return (
-        `<div class="card">` +
-        `<span class="n">${n}</span>` +
-        `<h3><a href="/${p.slug}/">${title}</a></h3>` +
-        `<p><strong>${p.kind}</strong> · ${p.summary}</p>` +
-        `</div>`
-      );
-    })
-    .join('');
-  const series =
-    `<section><div class="wrap">` +
-    `<h2>The series</h2>` +
-    `<div class="hint">// in series order below · ${listed.length} of ${manifest.posts.length} published</div>` +
-    `<div class="grid">${cards}</div>` +
-    `</div></section>`;
+  // The posts form TWO series, split by epistemic status — the boundary the
+  // posts themselves draw. "mechanism" is a measured model + a falsifiable
+  // prediction; "implications" are arguments built on cited literature. They
+  // are indexed separately so the arguments cannot be read as part of the
+  // result (the reason for the split), and numbered within their own series.
+  const SERIES = [
+    {
+      key: 'mechanism',
+      name: 'The mechanism',
+      hint: '// a measured model, then a falsifiable prediction',
+    },
+    {
+      key: 'implications',
+      name: 'The implications',
+      hint: '// arguments built on cited literature — not measurements',
+    },
+  ];
+
+  const cardFor = (p, ordinal) =>
+    `<div class="card">` +
+    `<span class="n">${String(ordinal).padStart(2, '0')}</span>` +
+    `<h3><a href="/${p.slug}/">${titleOf(p)}</a></h3>` +
+    `<p><strong>${p.kind}</strong> · ${p.summary}</p>` +
+    `</div>`;
+
+  const sections = SERIES.map((s) => {
+    const inSeries = manifest.posts.filter((p) => p.series === s.key);
+    const listed = inSeries.filter((p) => PREVIEW || p.published);
+    if (listed.length === 0) return '';
+    return (
+      `<section><div class="wrap">` +
+      `<h2>${s.name}</h2>` +
+      `<div class="hint">${s.hint} · ${listed.length} of ${inSeries.length} published</div>` +
+      `<div class="grid">${listed.map((p) => cardFor(p, inSeries.indexOf(p) + 1)).join('')}</div>` +
+      `</div></section>`
+    );
+  })
+    .filter(Boolean)
+    .join('\n');
 
   const html =
-    series +
+    sections +
     `\n<section><div class="wrap">` +
     `<h2>The short version</h2>` +
     `<div class="hint">$ cat summary.md</div>` +
@@ -195,7 +215,8 @@ function buildHome(manifest) {
       'Meditation-related harm is common and systematically under-reported: the evidence, and a measured control-theoretic account of why it hides.',
     prompt: 'cat summary.md',
     heroTitle: 'Meditation can harm — and it does so <span class="fx">invisibly</span>',
-    tagline: 'the <b>series</b>: the evidence, the mechanism, and what the traditions got right.',
+    tagline:
+      'two series: the <b>mechanism</b> (measured), and the <b>implications</b> (arguments).',
     body: html,
     navCurrent: '/',
   };

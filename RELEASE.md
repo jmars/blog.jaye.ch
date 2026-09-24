@@ -17,27 +17,45 @@ personal theory. Deposit first; the blog follows.
 
 ---
 
+## Two series
+
+The posts are split by **epistemic status** — the boundary the posts already draw — and indexed
+separately on the home page so the arguments cannot be read as part of the result. This is the
+most important structural decision in the release: it is what protects the research from the
+essays.
+
+| series | posts | status | audience |
+|---|---|---|---|
+| **The mechanism** | 1 `meditation-harm` (measured), 2 `anxiety-damping` (prediction) | a measured model and a falsifiable prediction | researchers, clinicians — **this is what gets sent** |
+| **The implications** | 3 `manufacturing-the-collapse`, 4 `sacred-science`, 5 `empty-leader`, 6 `safeguards`, 7 `the-label` | arguments built on cited literature | general readers, practitioners, cult / spiritual-abuse community |
+
+**Do not send the implications series to a researcher before they have engaged with the
+mechanism series.** A reader who meets *Sacred Science* or *Empty Leader* first will discount
+the measured result. The mechanism series stands on its own, and it does.
+
 ## Release order
 
-Reading order **is** release order, which is the array order in `posts.json`.
+Reading order **is** release order, in manifest order within each series.
 
-| # | slug | nav label | kind | release |
+| # | series | slug | kind | release |
 |---|---|---|---|---|
-| 1 | `meditation-harm` | the failure mode | **measured** | with the blog going live |
-| 2 | `anxiety-damping` | the damping dial | **prediction** | ~1 week after #1 |
-| 3 | `manufacturing-the-collapse` | the engineered collapse | argument | ~2–3 weeks after #2 |
-| 4 | `sacred-science` | the sacred science | argument | ~1–2 weeks after #3 |
-| 5 | `empty-leader` | the empty leader | argument | ~1–2 weeks after #4 |
-| 6 | `safeguards` | the safeguards | argument | ~1–2 weeks after #5 — the resolution |
+| 1 | mechanism | `meditation-harm` | **measured** | with the blog going live |
+| 2 | mechanism | `anxiety-damping` | **prediction** | ~1 week after #1 |
+| 3 | implications | `manufacturing-the-collapse` | argument | ~2–3 weeks after #2 |
+| 4 | implications | `sacred-science` | argument | ~1–2 weeks after #3 |
+| 5 | implications | `empty-leader` | argument | ~1–2 weeks after #4 |
+| 6 | implications | `safeguards` | argument | ~1–2 weeks after #5 — the resolution |
+| 7 | implications | `the-label` | argument | last |
 
-**Why this order.** The evidence ladder has to stay legible. #1 is a **measured** model; #2 is a
-**falsifiable prediction**; #3–#6 are **arguments built on cited literature**. Publishing them
-together would let the weakest claim tar the strongest — a skeptical clinician would read the
-last essay and attribute it to the model. Staged, each is received on its own footing, and the
-early ones earn the standing that lets the later ones be read charitably.
+**Why this order.** The evidence ladder has to stay legible. The mechanism series is
+measured-then-testable; the implications series is argument. Within the implications series:
+3–5 are the coercive, metaphysical and psychological posts, **6 turns it up** by ending on what
+works, and 7 handles the ethics of the word.
 
-It also lands the darkness correctly: #3–#5 are the coercive, metaphysical and psychological
-posts; **#6 turns the series up** by ending on what works.
+**Placement note.** Post 6 (`safeguards`) is the most citation-heavy of the implications posts
+and the closest to clinical practice; it could move into the mechanism series to give that
+series a practical close. It sits here for thematic cohesion with the harm arc (what groups do
+wrong → what the traditions do right). Moving it is a one-line `series` change in `posts.json`.
 
 ---
 
