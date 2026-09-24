@@ -159,6 +159,37 @@ That is the thing the first post called the trap — *the state that most needs 
 state that feels like the destination* — made into policy. The traditions read the same event
 as a crossing to be held carefully. The group reads it as an achievement to be repeated.
 
+**And the appraisal is easier to install than it sounds, because it already exists in the
+wider culture.** The most common form is the one usually called **"love and light"** — the
+frame in which difficulty is a sign of *your* resistance, emptiness is *advanced*, and doubt
+is the ego defending itself. Clinically this is **spiritual bypassing** (the term is John
+Welwood's)[^welwood]: using spiritual ideas to step around psychological material rather than
+through it. Its colloquial cousin is **toxic positivity** — the instruction to feel good about what is
+happening, on the grounds that the feeling is what is lagging, not the situation.
+
+It is worth being precise about what that frame *is*, because it is not a different
+mechanism. It is the appraisal lever of this section, pre-installed and available off the
+shelf. A group does not have to invent the story in which the collapse means progress. The
+story is already circulating, framed as kindness, and it says exactly the thing that makes the
+collapse un-rescuable: **if it hurts, the problem is your resistance.** Every signal the first
+post identified as a warning — the drift flags, the shrinking tolerance, the fact that the
+state cannot ask for help — arrives through that frame *already re-coded as evidence of
+progress*. The warning becomes the encouragement.
+
+That is why the frame is a lever and not decoration, and why it is more dangerous the more
+sincerely it is held. A cynic who says "you have broken through, go deeper" is manipulating.
+Someone who says it because they believe it is not manipulating, and is worse off for it —
+they cannot see the failure either, because the same frame blinds them. The post's second
+structural result applies to the holder as much as the held: **the thing that would notice is
+the thing that has been trained not to.**
+
+None of which makes warmth, or gentleness, or an orientation toward the good, into failures.
+They are not. The distinguishing feature is not the vocabulary; it is whether the frame
+*permits* the signals. A frame that leaves room for "this is going wrong and we should stop"
+is a frame. A frame that has converted every alarm into evidence of progress has become a
+trap — and it can be entered with nothing but good intentions, which is precisely why it is
+worth naming without anyone in particular in mind.
+
 ---
 
 ## 6. The inversion: same three supplies, two of them flipped
@@ -266,6 +297,12 @@ former members of ideological/religious cults (11 participants, mean 16 years): 
 they felt **disconnected from themselves**"; shame, created dependency, and installed phobias
 (paving the way for isolation); and after leaving, they have "lost a functioning worldview …
 but not yet gained another."
+
+[^welwood]: Welwood, J. (2000/2011). *Toward a Psychology of Awakening* — the essay that
+coined "spiritual bypassing": using spiritual ideas and practices to sidestep unresolved
+psychological material. Its colloquial relative is "toxic positivity." Notably, this is a
+*frame* finding, not a *group* finding: it names a pattern of appraisal that circulates
+widely, and that any structure — benign or coercive — can rest on.
 
 If this describes your situation or someone you love: **ICSA** (internationalculticstudies.org)
 and **cult-aware clinical professionals** are the appropriate resources — not a mechanism
