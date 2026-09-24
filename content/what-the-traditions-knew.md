@@ -14,7 +14,12 @@ Library](https://sourcelibrary.org), a library of AI-translated historical texts
 translations are machine-generated and I have not checked them against the originals; the
 mapping from each tradition's terms to the model's features is **my interpretation**, not the
 texts'. Content is CC-BY-SA-4.0 (attribution: Source Library). The full passage collection with
-citations is at `source-library-passages.md`.[^method]
+citations is at `source-library-passages.md`.
+
+**On the quotations below.** The passages from Source Library are reproduced under
+**CC-BY-SA-4.0**, with attribution to Source Library and a link to the source page for each. That
+licence and its share-alike term travel with the quoted passages; the post's own prose is
+separate from them.[^method]
 
 ---
 
