@@ -1,10 +1,45 @@
 {
   "home":  { "file": "meditation-harm-summary.md" },
   "posts": [
-    { "slug": "meditation-harm", "file": "meditation-harm.md", "navLabel": "the failure mode", "published": true },
-    { "slug": "anxiety-damping", "file": "anxiety-damping.md", "navLabel": "the damping dial", "published": false },
-    { "slug": "manufacturing-the-crossing", "file": "manufacturing-the-crossing.md", "navLabel": "the engineered crossing", "published": false },
-    { "slug": "sacred-science", "file": "sacred-science.md", "navLabel": "the sacred science", "published": false },
-    { "slug": "empty-leader", "file": "empty-leader.md", "navLabel": "the empty leader", "published": false }
+    {
+      "slug": "meditation-harm",
+      "file": "meditation-harm.md",
+      "navLabel": "the failure mode",
+      "kind": "measured",
+      "summary": "The mechanism end to end — the runaway, the cliff, and why the state it lands in cannot see itself.",
+      "published": true
+    },
+    {
+      "slug": "anxiety-damping",
+      "file": "anxiety-damping.md",
+      "navLabel": "the damping dial",
+      "kind": "prediction",
+      "summary": "Who is at risk: anxiety-proneness read as low damping, and the cheap test — tolerance, not settling time — that would settle it.",
+      "published": false
+    },
+    {
+      "slug": "manufacturing-the-crossing",
+      "file": "manufacturing-the-crossing.md",
+      "navLabel": "the engineered crossing",
+      "kind": "argument",
+      "summary": "The same collapse run deliberately — Schein, Lifton, Stein — and the inversion: the same three guardrails, two of them flipped.",
+      "published": false
+    },
+    {
+      "slug": "sacred-science",
+      "file": "sacred-science.md",
+      "navLabel": "the sacred science",
+      "kind": "argument",
+      "summary": "Why “the observer collapses reality” and “union with God” are one move — and how the frame steers the collapse to an owned destination.",
+      "published": false
+    },
+    {
+      "slug": "empty-leader",
+      "file": "empty-leader.md",
+      "navLabel": "the empty leader",
+      "kind": "argument",
+      "summary": "The person at the top: leader and follower share one dissociation pointing opposite ways — the group as his externalized self.",
+      "published": false
+    }
   ]
 }

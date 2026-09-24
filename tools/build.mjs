@@ -138,34 +138,57 @@ function mdToHtml(md) {
 
 const read = (...p) => readFileSync(join(ROOT, ...p), 'utf8');
 
+/** Split a pandoc body at its leading <h1>: returns the body without it and
+ * the h1's inner HTML (whitespace-normalized — pandoc keeps the source's
+ * line wrap inside <h1>). `what` names the source for the error message. */
+function splitH1(body, what) {
+  const h1 = /^<h1[^>]*>([\s\S]*?)<\/h1>\n?/.exec(body);
+  if (!h1) throw new Error(`${what}: no leading <h1> found`);
+  return { rest: body.slice(h1[0].length), titleHtml: h1[1].replace(/\s+/g, ' ').trim() };
+}
+
 /* ---------- pages ---------- */
 
 function buildHome(manifest) {
   const md = read('content', manifest.home.file);
-  let body = mdToHtml(md);
+  // the summary's own H1 becomes the hero title, so it must not repeat in
+  // the body
+  const body = splitH1(mdToHtml(md), 'summary').rest;
 
-  // the summary's own H1 becomes the hero title, so it must not repeat in the
-  // body; relocate its inner HTML verbatim (normalize the source's line wrap)
-  const h1 = /^<h1[^>]*>([\s\S]*?)<\/h1>\n?/.exec(body);
-  if (!h1) throw new Error('summary: no leading <h1> found');
-  body = body.slice(h1[0].length);
-  const titleHtml = h1[1].replace(/\s+/g, ' ').trim();
-
-  // CTA banner: link to the first published post, in manifest order
-  const first = manifest.posts.find((p) => p.published);
-  const cta = first
-    ? `<div class="cta-banner">` +
-      `<span><strong>Read the full post</strong> — evidence, mechanism, and why it hides.</span>` +
-      `<a class="cta-btn" href="/${first.slug}/">the long version →</a></div>`
-    : '';
+  // series index: one card per post this build lists (drafts included only
+  // in a PREVIEW build), in manifest order. The card's .n is the post's
+  // ordinal in the FULL manifest, so numbering stays stable as posts flip
+  // to published; titles come from each post's own file, like buildPost.
+  const listed = manifest.posts.filter((p) => PREVIEW || p.published);
+  const cards = listed
+    .map((p) => {
+      const title = splitH1(mdToHtml(read('content', p.file)), p.slug)
+        .titleHtml.replace(/<[^>]+>/g, '')
+        .trim();
+      const n = String(manifest.posts.indexOf(p) + 1).padStart(2, '0');
+      return (
+        `<div class="card">` +
+        `<span class="n">${n}</span>` +
+        `<h3><a href="/${p.slug}/">${title}</a></h3>` +
+        `<p><strong>${p.kind}</strong> · ${p.summary}</p>` +
+        `</div>`
+      );
+    })
+    .join('');
+  const series =
+    `<section><div class="wrap">` +
+    `<h2>The series</h2>` +
+    `<div class="hint">// in series order below · ${listed.length} of ${manifest.posts.length} published</div>` +
+    `<div class="grid">${cards}</div>` +
+    `</div></section>`;
 
   const html =
     `<section><div class="wrap">` +
     `<h2>Summary</h2>` +
     `<div class="hint">$ cat summary.md</div>` +
     `<div class="prose">${body}</div>\n` +
-    cta +
-    `</div></section>`;
+    `</div></section>\n` +
+    series;
 
   return {
     title: 'Meditation can harm — and it does so invisibly — blog.jaye.ch',
@@ -228,15 +251,9 @@ function buildPost(post) {
   const meta = POST_META[post.slug];
   if (!meta) throw new Error(`no POST_META entry for slug '${post.slug}'`);
   const md = read('content', post.file);
-  let body = mdToHtml(md);
 
-  // the post's own H1 becomes the hero title, so it must not repeat in the
-  // body; relocate its inner HTML verbatim (pandoc keeps the source's line
-  // wrap inside <h1>, so normalize whitespace runs to single spaces)
-  const h1 = /^<h1[^>]*>([\s\S]*?)<\/h1>\n?/.exec(body);
-  if (!h1) throw new Error(`${post.slug}: no leading <h1> found`);
-  body = body.slice(h1[0].length);
-  const titleHtml = h1[1].replace(/\s+/g, ' ').trim();
+  // the post's own H1 becomes the hero title, so it must not repeat in the body
+  let { titleHtml, rest: body } = splitH1(mdToHtml(md), post.slug);
   const fxTitle = titleHtml.replace(meta.accent, `<span class="fx">${meta.accent}</span>`);
 
   // readable notes: keep pandoc's footnote <section> but canonicalize it to
