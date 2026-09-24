@@ -2,10 +2,11 @@
 
 ### "Cult" is a category that does harm — including to the people it is meant to protect. Why this series names mechanisms instead.
 
-*Seventh in the series. [The first](/meditation-harm/) is the mechanism;
-[the third](/manufacturing-the-collapse/) describes the groups that engineer it. This one is
-about the **word** — and about a debt the third post owes, because the sources it relies on
-were used to justify a great deal of harm.*
+*Fifth of the implications, and a coda — arguments built on the model, as distinct from the
+model itself. [The first post](/meditation-harm/) is the mechanism;
+[the first implication](/manufacturing-the-collapse/) describes the groups that engineer it.
+This one is about the **word** — and about a debt that limitation owes, because the sources it
+relies on were used to justify a great deal of harm.*
 
 *Status.* This post is mostly documented history and a named scholarly critique; the argument
 comes at the end. It names one group — MOVE — because its case is the clearest on record and

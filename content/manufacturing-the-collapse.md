@@ -2,10 +2,10 @@
 
 ### Coercive groups run the same collapse deliberately — and stand on the far side of it
 
-*Third in the series. [The first](/meditation-harm/) sets out the mechanism — how sustained
-inward attention runs away and why the state it lands in cannot see itself.
-[The second](/anxiety-damping/) asks who is most at risk. This one asks who would do it on
-purpose.*
+*First of the implications — the arguments built on the model, as distinct from the model
+itself. [The first post](/meditation-harm/) sets out the mechanism — how sustained inward
+attention runs away and why the state it lands in cannot see itself; [the second](/anxiety-damping/)
+asks who is most at risk. This one asks who would do it on purpose.*
 
 *Status.* The research cited here is an established clinical and social literature on
 coercive control — Schein, Lifton, Singer, Stein, Hassan — describing what such groups *do*

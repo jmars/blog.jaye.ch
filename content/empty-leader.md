@@ -2,9 +2,10 @@
 
 ### The one who induces the collapse and the one who is collapsed share the same dissociation — and the difference is which way it points
 
-*Fifth in the series. [The first](/meditation-harm/) sets out the collapse;
-[the third](/manufacturing-the-collapse/) describes the groups that engineer it;
-[the fourth](/sacred-science/) is about the frame that decides what it means. This one is
+*Third of the implications — the arguments built on the model, as distinct from the model
+itself. [The first post](/meditation-harm/) sets out the mechanism;
+[the first implication](/manufacturing-the-collapse/) describes the groups that engineer it;
+[the second](/sacred-science/) is about the frame that decides what it means. This one is
 about the **person at the top** — and why the shape of his mind is the shape he reproduces.*
 
 *Status.* The two halves of this post's central claim are measured and published: the

@@ -2,7 +2,8 @@
 
 ### What the traditions that survive the collapse wrote down — and why it is a safety specification, not folk wisdom
 
-*Sixth and last in the series. It has been a dark run: [the collapse](/meditation-harm/), [who
+*Fourth of the implications, and its resolution — arguments built on the model, as distinct
+from the model itself. It has been a dark run: [the collapse](/meditation-harm/), [who
 is at risk](/anxiety-damping/), [the groups that engineer it](/manufacturing-the-collapse/),
 [the metaphysics that steers it](/sacred-science/), [the person at the top](/empty-leader/).
 This post is the other side of it. Not a defence of tradition — a **reading of the traditions'
