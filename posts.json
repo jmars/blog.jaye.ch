@@ -54,7 +54,7 @@
       "navLabel": "the sacred science",
       "kind": "argument",
       "summary": "Why “the observer collapses reality” and “union with God” are one move — and how the frame steers the collapse to an owned destination.",
-      "published": false,
+      "published": true,
       "series": "implications"
     },
     {
@@ -63,7 +63,7 @@
       "navLabel": "the empty leader",
       "kind": "argument",
       "summary": "The person at the top: leader and follower share one dissociation pointing opposite ways — the group as his externalized self.",
-      "published": false,
+      "published": true,
       "series": "implications"
     },
     {
@@ -73,7 +73,7 @@
       "kind": "argument",
       "series": "implications",
       "summary": "Seven contemplative traditions, with no contact with each other, named this failure and prescribed the same five safeguards — primary-source passages.",
-      "published": false
+      "published": true
     },
     {
       "slug": "safeguards",
@@ -81,7 +81,7 @@
       "navLabel": "the safeguards",
       "kind": "argument",
       "summary": "What the traditions that survive the collapse wrote down — ethics first, metered pace, plural community, a teacher who points past himself, discernment as procedure — and why the clinical field is re-deriving the same list.",
-      "published": false,
+      "published": true,
       "series": "implications"
     },
     {
@@ -90,7 +90,7 @@
       "navLabel": "the label",
       "kind": "argument",
       "summary": "\"Cult\" is a category that does harm — to the people it is meant to protect — and the sources this series leans on helped justify kidnapping. Why it names mechanisms instead.",
-      "published": false,
+      "published": true,
       "series": "implications"
     }
   ]

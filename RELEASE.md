@@ -1,5 +1,12 @@
 # Release plan
 
+> **Status (2026-09-24): all ten posts are published.** The staged cadence below was
+> deliberately **not** used. The reasoning: staging was an engagement strategy, and the
+> protective work is done by the series split and the per-post epistemic labelling, not by
+> timing — so withholding freely-available, carefully-labelled material served attention
+> rather than the reader. The plan is kept below as a record of the decision and as the
+> checklist for any future post (the mechanics — one line in `posts.json` — are unchanged).
+
 The blog is the **translation layer** for each of the artifacts. Nothing is published without
 the user's explicit go-ahead, and the mechanism is `posts.json` — **flipping `"published":
 true` on a post is the whole release step.** A normal `./build.sh` emits the home page plus the
