@@ -144,7 +144,8 @@ held in place by the failure it feeds, while the generator is *consumed*: `G` fa
 to 0.049 and stays there. This is a self **switched off and held off**, unable to notice —
 not a self amplified. (The distinction matters for what follows: the intuitive picture
 predicts a runaway *upward*, and would look for overactivity. The measured one predicts
-absence — and, per §6, an absent self is exactly what no instrument is watching for.)
+absence — and, per §6, an absent self is exactly what no instrument is watching for. §8
+collects this and three sibling misreadings.)
 
 Run the canonical episode — inward drive `a_hold = 0.9` held past a duration threshold:
 
@@ -262,7 +263,34 @@ which no longer has the faculty that would ask.
 
 ---
 
-## 8. What this implies for practice and research
+## 8. Four readings this model reverses
+
+The results above are counter-intuitive in one consistent direction, and readers — including
+this author — reach for the folk reading every time. It is worth naming the four, because
+each one changes what you would look for, and one of them changes what you would *do*.
+
+| the intuitive reading | what the model actually shows | what changes |
+|---|---|---|
+| **"The self runs hot, then collapses"** — DMN overactivity, then annihilation | `G` reaches **0.8848 at the moment inward attention begins, and never rises again**; the decline starts immediately (dG/dt = −0.0044/t.u.). The switch arms at t = 167.5, when `G` is **already down to 0.14**. There is no overactive phase to find | the runaway is the **capture**, not the self — a search for hyperactivation finds nothing, because the predicted pattern is *normal, then down* |
+| **"Introspection is a resource that gets depleted"** — you run out of fuel | Release the inward drive at t = 200 and give it **1000 time-units of nothing**: `G` moves 0.0514 → 0.0486 (**−0.0028** — slightly worse). Attention stays at 0.88 and the switch at 1.0 throughout. It never refills | overharvest, not a battery. A depleted tank refills when you stop draining it; this does not, because **the draining never stops**. (Note this is *not* ego-depletion theory, which is contested and makes the opposite claim about recharge) |
+| **"The reducer runs hard and eats the self"** — CEN overdrive consuming the DMN | **Inward attention alone** collapses `G` (0.885 → 0.0487) with `D` never leaving its equilibrium (0.500 → 0.545, no spike). Conversely, raising `D` alone — an affect pulse to **0.676**, a 35% spike — collapses **nothing** (G_end 0.8855, switch never arms) | the reducer runs at its **normal rate on a shrinking substrate**. `D` at baseline while `G` is annihilated *is* the D/G dissociation, and it is the measurement the sensor-placement result rests on. No CEN hyperactivity is predicted |
+| **"The salience network loses the ability to switch"** — the switch breaks | Nothing breaks. Two ordinary feedbacks **latch** it: `c` holds attention inward (`χ·c`), and the setpoint drains (`S` 0.865 → 0.167), so the arming threshold `Θ_eff` falls **79% (0.64 → 0.134)** — the bar to stay on drops almost to nothing. And the capability survives intact: applying external input post-collapse at `u_ext` = 0.8 drives attention fully outward, restores `G` to 0.885, and disarms the switch | **captured, not broken** — and the cost is asymmetric: `u_ext` = 0.3 *prevents* collapse if present during the episode, but the same 0.3 does **not** rescue it afterwards. **Rescue costs more than prevention** |
+
+The first three are one family, and it is the family worth naming: **the folk reading of a
+catastrophic loss is always *something ran too hard*.** A self running hot. A fuel burned
+empty. A reasoner eating its host. In every case the model says the opposite — **something
+stopped, and nothing came to stop the stopping.** Generator annihilated, not amplified.
+Attention latched, not exhausted. Reducer unopposed, not overdriven.
+
+And the fourth is the mechanism that makes the other three feel true. It is also the answer to
+*"so what is actually failing?"* — nothing. **The exits are all still there; they just cost
+more than they did.** That is why *"just stop"* and *"just rest"* don't work, and why the third
+post's malignant holder is so effective: the holder is standing at the one remaining exit, and
+the price of using it has gone up.
+
+---
+
+## 9. What this implies for practice and research
 
 There is a line nearly everyone knows — *do not go gentle into that good night* — and this
 mechanism gives it a reading it rarely gets. It is normally heard as an instruction to the
@@ -330,7 +358,7 @@ from inside the state.
 
 ---
 
-## 9. The claim, and its boundary
+## 10. The claim, and its boundary
 
 The core is a deterministic five-state ODE. Every reference to brains or practice is an
 **interpretation of the dynamics**, not a measurement of them: the mapping is ordinal,
