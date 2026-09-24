@@ -337,6 +337,17 @@ with a stable basin would falsify this account of the event.
 That is the offer — a mechanism for the reporting gap, and one measurement to check it. The
 gap is the part that would matter if it holds; the fold is the part that could be wrong.
 
+**And one limit on its use, because a description of a mechanism is not a finding about a
+person.** This is a model, not an instrument: it has no individual-level test, and the one
+population-level measurement that could give a signal has not been run. So it is not a way to
+assess anyone's state, capacity to choose, or vulnerability — and in particular it is not a
+warrant to act on someone's behalf against what they say they want. **That inference — *this
+person's agency has been overborne, therefore acting for them is rescue* — is the exact step
+that turned a body of careful thought-reform research into a movement that abducted adults.**
+A description of an environment is not a finding about a mind, and the distance between those
+two is the whole of it. If you find this cited to override someone's account of their own
+life, it is being misused — including by its author.
+
 ---
 
 ## Notes
