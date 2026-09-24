@@ -2,6 +2,8 @@
 
 *Summary — the full post is at [`/meditation-harm/`](/meditation-harm/).*
 
+*The underlying paper is published: [Marshall (2026), doi:10.5281/zenodo.22943641](https://doi.org/10.5281/zenodo.22943641).*
+
 ---
 
 Meditation-related harm is not fringe. The *Varieties of Contemplative Experience* study

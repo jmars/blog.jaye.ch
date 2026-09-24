@@ -10,6 +10,11 @@ of meditation-adverse-effects research. The model is measured; the mapping onto
 contemplative practice is an interpretation it motivates but does not license. Citations
 are footnoted.
 
+The paper is published: **Marshall, J. T. (2026). *Self-Application as the Common Source of
+Benefit and Failure: A Control-Theoretic Model of Self-Regulation.* Zenodo.
+doi:[10.5281/zenodo.22943641](https://doi.org/10.5281/zenodo.22943641)** — every measurement
+in this post is traceable to it.
+
 ---
 
 ## 1. Start with the evidence, not the model
