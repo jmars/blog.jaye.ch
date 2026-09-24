@@ -46,9 +46,9 @@ Reading order **is** release order, in manifest order within each series.
 | 5 | implications | `manufacturing-the-collapse` | argument | ~2–3 weeks after #4 |
 | 6 | implications | `sacred-science` | argument | ~1–2 weeks after #5 |
 | 7 | implications | `empty-leader` | argument | ~1–2 weeks after #6 |
-| 7 | implications | `what-the-traditions-knew` | argument | ~1–2 weeks after #6 — the evidence |
-| 8 | implications | `safeguards` | argument | ~1–2 weeks after #7 — the resolution |
-| 9 | implications | `the-label` | argument | last |
+| 8 | implications | `what-the-traditions-knew` | argument | ~1–2 weeks after #7 — the evidence |
+| 9 | implications | `safeguards` | argument | ~1–2 weeks after #8 — the resolution |
+| 10 | implications | `the-label` | argument | last |
 
 **Why this order.** The evidence ladder has to stay legible. The mechanism series is
 measured-then-testable; the implications series is argument. Within the implications series:
