@@ -48,6 +48,14 @@
       "kind": "argument",
       "summary": "What the traditions that survive the collapse wrote down — ethics first, metered pace, plural community, a teacher who points past himself, discernment as procedure — and why the clinical field is re-deriving the same list.",
       "published": false
+    },
+    {
+      "slug": "the-label",
+      "file": "the-label.md",
+      "navLabel": "the label",
+      "kind": "argument",
+      "summary": "\"Cult\" is a category that does harm — to the people it is meant to protect — and the sources this series leans on helped justify kidnapping. Why it names mechanisms instead.",
+      "published": false
     }
   ]
 }

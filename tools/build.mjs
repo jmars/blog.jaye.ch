@@ -244,6 +244,14 @@ const POST_META = {
       'The one who induces the collapse and the one who is collapsed share the same dissociation — intact cognition, absent affective self — and the difference is which way the emptiness points.',
     accent: 'Empty Leader',
   },
+  'the-label': {
+    prompt: 'cat the-label.md',
+    tagline: 'the <b>word</b>: what a label does that a mechanism does not.',
+    hint: '<a href="/">← home</a> · the label, and the debt, with notes',
+    description:
+      '"Cult" is a category that harms the people it is meant to protect — and the sources this series leans on helped justify deprogramming. Why it names mechanisms instead.',
+    accent: 'Label',
+  },
   'safeguards': {
     prompt: 'cat safeguards.md',
     tagline: 'the <b>countermeasures</b>: what the traditions wrote down, and why it works.',
