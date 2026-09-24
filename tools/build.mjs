@@ -36,7 +36,7 @@ const PREVIEW = process.env.PREVIEW === '1';
 const log = (msg) => console.log(`[build] ${new Date().toISOString()} ${msg}`);
 const warn = (msg) => console.warn(`[build] WARNING: ${msg}`);
 
-/* ---------- chrome (fixpoint-linux design markup) ---------- */
+/* ---------- chrome (blog-design markup) ---------- */
 
 /** Sticky top nav, driven by the release manifest: home, then each published
  * post in manifest order (a draft never appears here). `current` highlights
@@ -51,7 +51,7 @@ function nav(current, navPosts) {
     .join('');
   return (
     `<nav><div class="wrap">` +
-    `<span class="brand"><span><span class="fx">fx</span>://blog</span></span>` +
+    `<span class="brand">blog.<span class="fx">jaye</span>.ch</span>` +
     `<span class="links">` +
     here('/', 'home') +
     posts +
@@ -87,8 +87,7 @@ function footer() {
   return (
     `<footer><div class="wrap">` +
     `<a href="/">blog.jaye.ch</a><span class="sep"> · </span>` +
-    `design by <a href="https://fixpointlinux.org">fixpoint-linux</a>` +
-    `<span class="sep"> · </span>no JS, no trackers` +
+    `no JS, no trackers` +
     `</div></footer>`
   );
 }
