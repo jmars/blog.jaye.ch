@@ -260,6 +260,43 @@ distance between them is maintained by discipline, not by having the right words
 
 ---
 
+## 9. A standing non-use clause
+
+Because this risk is not hypothetical, and because the whole point of this post is that
+descriptions become warrants, the model at the centre of this series carries an explicit limit
+on its use. This is not a disclaimer. It is the boundary that the model's own content
+enforces.
+
+**The model must not be used to:**
+
+- **Assess any individual** — their state, their capacity to choose, their agency, or their
+  vulnerability. It is a dynamical system, not an instrument. It has no individual-level
+  predictor; the one population-level test that might give a signal has **not been run**.
+- **Justify acting on someone's behalf against their stated wishes.** This is precisely the
+  step the anti-cult movement took from the thought-reform literature, and it is invalid for
+  the same reason now: **a description of an environment is not a finding about a person's
+  mind.** The two are different kinds of claim.
+- **Validate or disqualify a spiritual experience**, or rank anyone's practice against anyone
+  else's.
+- **Restrict anyone's practice.** The findings about intensity and support say what *helps* —
+  they do not name anyone who should be *stopped*.
+
+What makes this enforceable rather than decorative is that **every one of those misuses
+requires stepping past what the work actually says.** There is no individual measurement in
+it, no validated mapping from model to person, and no result from the test that would be
+needed. Misuse here is not a subtle hazard; it is a category error, and it is only available
+to someone who has not read the bounds.
+
+And the useful test is reflexive, so it can be applied to anyone invoking this work —
+including the author:
+
+> **If someone cites this work to override a person's account of their own life, they have
+> left the work behind.** They have reproduced the exact inference this post documents — from
+> *"this is what coercion looks like"* to *"therefore this person cannot choose."* That step
+> is where the harm lives, and it is the one thing here that is flatly prohibited.
+
+---
+
 ## Notes
 
 [^evans]: Evans, R. K. (2021). *MOVE: An American Religion.* Oxford University Press. — "There
