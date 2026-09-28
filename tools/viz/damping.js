@@ -82,6 +82,7 @@ VIZ.registerViz('damping', (function () {
         play.stop();
         run.textContent = '▶ run the return';
         draw();
+        VIZ.saveState(ctx); // an animation saves its own end state: a slider set() dispatches no input
         return;
       }
       reveal = Math.min(T_END, reveal + dt * SPEED);
@@ -92,6 +93,7 @@ VIZ.registerViz('damping', (function () {
       if (play.isRunning()) {
         play.stop();
         run.textContent = '▶ resume';
+        VIZ.saveState(ctx);
       } else {
         if (reveal >= T_END) reveal = 0;
         run.textContent = '❚❚ pause';
@@ -104,9 +106,24 @@ VIZ.registerViz('damping', (function () {
       zSlider.set(ZETA_CANON);
       reveal = T_END;
       draw();
+      VIZ.saveState(ctx);
     });
     controls.appendChild(run);
     controls.appendChild(reset);
+
+    // shareable frame: #viz=damping&damping=0.15
+    VIZ.share(ctx, {
+      get: function () {
+        return { damping: zSlider.value() };
+      },
+      set: function (s) {
+        if (s.damping != null) zSlider.set(s.damping);
+        play.stop();
+        run.textContent = '▶ run the return';
+        reveal = T_END;
+        draw();
+      },
+    });
 
     function draw() {
       var z = zSlider.value();

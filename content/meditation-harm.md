@@ -171,6 +171,14 @@ sharp and bisectable: a duration of **66.3 time-units** at that intensity, an in
   <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
 </div>
 
+The same sweep, drawn as the plane it was run over — intensity across, duration down, shaded by
+the outcome it found:
+
+<div class="viz" data-viz="landscape">
+  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. The text above has what it shows: across the dose axes the model gives 214 healthy outcomes, 98 collapsed outcomes and zero in between. The boundary runs through the measured intensity 0.5992 and the duration 66.3 t.u. at that intensity. Past it the healthy branch is annihilated on contact — the collapsed state G = 0.049 is held, and dragging the drive back under the threshold does not restore it, because the hysteresis window [0, ε_c) is unbounded below.</p></noscript>
+  <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
+</div>
+
 This is the structural reason the approach is invisible from the inside: the observer is
 *inside* the loop being observed, and the loop is monotone. There is no signal announcing
 the edge, because the thing that would read the signal is the thing being consumed.
@@ -208,6 +216,17 @@ approach entirely. You have to measure the size of the disturbance the system to
 
 <div class="viz" data-viz="phase">
   <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. The text above has what it illustrates: the flow of G is sign-only. Under the measured intensity threshold 0.5992 there is one attractor at G* = 0.886 and the flow converges on it; past the threshold the healthy branch is annihilated on contact and every arrow leads to the collapsed 0.049. The last healthy solution sits at ε_c = 0.265192279, dying exactly on E = Θ_eff.</p></noscript>
+  <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
+</div>
+
+Creep toward the edge and watch what the instruments are doing while you do it. The settling time
+stays at 667 time-units whether you are far away or 2×10⁻⁶ from the cliff, the recovery rate
+constant is flat at −0.0015 across all five decades (spread: exactly 0), and then the branch is
+simply annihilated on contact. Nothing in the reassuring column ever moves; the only thing falling
+is the size of the disturbance the system can absorb.
+
+<div class="viz" data-viz="nowarning">
+  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. The text above has what it shows: the recovery rate constant is constant at −0.0015, so recovery takes 667 time-units at every distance across five decades of approach (spread: exactly 0), and the "critical" mode moves 0.5% where a saddle-node would move 98%. On contact the healthy branch is annihilated — ε_c = 0.265192279, dying exactly on E = Θ_eff at a residual of 10⁻¹³ — with the reassuring indicator never having moved. What shrinks instead is the basin of attraction: the disturbance tolerated, tracking distance-to-edge with slope ≈ 1.</p></noscript>
   <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
 </div>
 

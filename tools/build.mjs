@@ -5,21 +5,27 @@
  * jmars/blog-design Elm package — the vendor/blog-design submodule — by
  * tools/extract-css.mjs) and is inlined into every page's <head>. The fork
  * carries the full reading layer (.prose serif typography, blockquotes,
- * tables, footnotes) inside the design system itself, so no page-level CSS
- * is needed any more. No external runtime deps; links are absolute (/…).
+ * tables, footnotes) inside the design system itself; the site-local PAGE_CSS
+ * below sits on top of it (masthead motion, nav menus, the contents block,
+ * series prev/next, the dose meter, the command line, footnote sidenotes, dark
+ * and print), and tools/viz/viz.css styles the figures. No external runtime
+ * deps; links are absolute (/…).
  *
- * Interactive figures (tools/viz/) are the one exception to "no JS": a page
- * whose rendered body carries a [data-viz] slot gets viz.css inlined after
- * the design CSS and ONE inline <script> holding the engine plus exactly the
- * widgets that page uses — no external src, no import map, no fetch, so the
- * page stays self-contained. A page with no slot is built byte-for-byte as
- * before.
+ * Every page runs two scripts, both inlined and self-contained: the command
+ * line (a terminal-idiom palette — press `/` or `:`), and, on a page whose
+ * rendered body carries a [data-viz] slot, ONE more <script> holding the figure
+ * engine plus exactly the widgets that page uses, with viz.css inlined next to
+ * its CSS. No external src, no import map, no fetch, so a page stays one file
+ * and nothing is ever requested from a third party.
  *
  * What gets built is governed by posts.json (repo root) — the release
  * manifest: it lists the home file and the posts IN NAV ORDER, each with its
  * nav label and `published` state. Published posts build to dist/<slug>/;
  * unpublished ones are staged drafts — not written to dist at all and absent
- * from every nav. Flipping `"published": true` is the whole release step.
+ * from every nav, from the feed/sitemap, and from the command line. Flipping
+ * `"published": true` is the whole release step. The manifest carries no dates,
+ * so nothing generated here invents one: the feed has no pubDate, the sitemap
+ * no lastmod.
  *
  *   node tools/build.mjs            (run from the repo root)
  *   PREVIEW=1 node tools/build.mjs  build drafts too — LOCAL PREVIEW ONLY,
@@ -39,8 +45,35 @@ const MANIFEST = join(ROOT, 'posts.json');
 const PANDOC = process.env.PANDOC || 'pandoc';
 const PREVIEW = process.env.PREVIEW === '1';
 
+/** Canonical origin. Every absolute URL the build emits (og:url, canonical,
+ * feed, sitemap, robots) is derived from this one constant. */
+const BASE = 'https://blog.jaye.ch';
+
+/** The two series the posts are grouped into. Labels match the home page's
+ * section names exactly; a series with nothing published contributes nothing
+ * anywhere (a draft never appears). */
+const SERIES = [
+  { key: 'mechanism', label: 'the mechanism' },
+  { key: 'implications', label: 'the implications' },
+];
+const seriesLabel = (key) => (SERIES.find((s) => s.key === key) || { label: key }).label;
+
 const log = (msg) => console.log(`[build] ${new Date().toISOString()} ${msg}`);
 const warn = (msg) => console.warn(`[build] WARNING: ${msg}`);
+
+/** Attribute-safe: any page value that reaches an attribute or an XML text
+ * node goes through this, so a quote or an ampersand in a title or a summary
+ * can never produce malformed markup. */
+const esc = (s) =>
+  String(s)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+
+/** XML text/attribute escaping — esc plus the apostrophe (RSS descriptions
+ * are quoted text, so every literal must be accounted for). */
+const xesc = (s) => esc(s).replaceAll("'", '&apos;');
 
 /* ---------- chrome (blog-design markup) ---------- */
 
@@ -54,21 +87,29 @@ function nav(current, navPosts) {
     link(url, current === url ? 'home' : '', label);
 
   // Two series, grouped so the measured work and the arguments are never a
-  // flat list. Labels match the home page's section names exactly. A series
-  // with nothing published contributes nothing (a draft never appears here).
-  const SERIES = [
-    { key: 'mechanism', label: 'the mechanism' },
-    { key: 'implications', label: 'the implications' },
-  ];
+  // flat list (SERIES, above). A series with nothing published contributes
+  // nothing (a draft never appears here).
   const dropdown = (s) => {
     const items = navPosts.filter((p) => p.series === s.key);
     if (items.length === 0) return '';
     const menu = items
       .map((p) => link(`/${p.slug}/`, current === `/${p.slug}/` ? 'home' : '', p.navLabel))
       .join('');
+    // Honest, CSS-only disclosure. The old markup put aria-haspopup="true" and
+    // role="menu" on a <button> with no menu behaviour and no way to open by
+    // keyboard (.menu was display:none until :hover, and a display:none link
+    // cannot be focused, so the series were mouse-only). The menu is now always
+    // in the DOM — PAGE_CSS keeps it out of sight with opacity + pointer-events
+    // rather than display:none, which is what makes its links focusable — and it
+    // opens on :hover and on :focus-within. A <details> would have been the
+    // obvious native disclosure, but Chromium makes the content of a CLOSED
+    // details unfocusable and unrendered whatever the author CSS says (measured:
+    // checkVisibility() is false and Tab skips the links), so it cannot serve
+    // the hover-and-focus pattern. The label stays plain text: no state is
+    // claimed that the markup cannot keep.
     return (
-      `<span class="dropdown"><button class="toggle" aria-haspopup="true">${s.label} ▾</button>` +
-      `<span class="menu" role="menu">${menu}</span></span>`
+      `<span class="dropdown"><span class="toggle">${s.label} ▾</span>` +
+      `<span class="menu">${menu}</span></span>`
     );
   };
 
@@ -82,26 +123,82 @@ function nav(current, navPosts) {
   );
 }
 
-/** Hero header: terminal prompt line, title, tagline. */
+/** Split a hero fragment into per-word stagger spans.
+ *
+ * Each TOP-LEVEL word becomes `<span class="w" style="--i:N">…</span>` so the
+ * masthead CSS (PAGE_CSS) can delay it; `start` continues the numbering across
+ * containers, so the title's words run into the tagline's. Inner markup is
+ * preserved verbatim — the home h1 keeps its red `<span class="fx">`, taglines
+ * keep their `<b>` — and whitespace is copied through untouched, so no text or
+ * spacing changes. Markup whose content spans words (e.g.
+ * `<span class="fx">Failure Mode</span>`) is one reveal unit.
+ */
+function revealWords(html, start = 0) {
+  let out = '';
+  let word = '';
+  let depth = 0;
+  let i = 0;
+  const flush = () => {
+    if (word === '') return;
+    out += `<span class="w" style="--i:${start++}">${word}</span>`;
+    word = '';
+  };
+  while (i < html.length) {
+    const ch = html[i];
+    if (ch === '<') {
+      const end = html.indexOf('>', i);
+      if (end === -1) throw new Error(`hero text has an unterminated tag: ${html.slice(i, i + 40)}`);
+      const tag = html.slice(i, end + 1);
+      if (tag.startsWith('</')) depth--;
+      else if (!tag.endsWith('/>')) depth++;
+      if (depth < 0) throw new Error(`hero text has an unbalanced ${tag} in: ${html.slice(0, 60)}`);
+      word += tag;
+      i = end + 1;
+    } else if (depth === 0 && /\s/.test(ch)) {
+      flush();
+      let j = i;
+      while (j < html.length && /\s/.test(html[j])) j++;
+      out += html.slice(i, j); // whitespace stays outside the spans
+      i = j;
+    } else {
+      word += ch;
+      i++;
+    }
+  }
+  flush();
+  return { html: out, next: start };
+}
+
+/** Hero header: terminal prompt line, title, tagline.
+ *
+ * The title and tagline are word-wrapped for the masthead reveal; the prompt
+ * line reveals as a whole (its caret keeps blinking on its own). */
 function hero({ prompt, title, tagline }) {
+  const t = revealWords(title);
+  const g = revealWords(tagline, t.next);
   return (
     `<header><div class="wrap">` +
     `<div class="prompt">` +
     `<span class="hash">#</span> blog.jaye.ch ` +
     `<span class="dollar">$</span> ${prompt}<span class="blink">▊</span>` +
     `</div>` +
-    `<h1>${title}</h1>` +
-    `<div class="tagline">${tagline}</div>` +
+    `<h1>${t.html}</h1>` +
+    `<div class="tagline">${g.html}</div>` +
     `</div></header>`
   );
 }
 
-function section(h2, hint, body) {
+/** A prose section. `before`/`after` are chrome that belongs inside the same
+ * wrap but outside the reading column — the post's contents block and its
+ * series prev/next, both of which must not join the .prose flow. */
+function section(h2, hint, body, { before = '', after = '' } = {}) {
   return (
     `<section><div class="wrap">` +
     `<h2>${h2}</h2>` +
     `<div class="hint">${hint}</div>` +
+    before +
     `<div class="prose">${body}</div>` +
+    after +
     `</div></section>`
   );
 }
@@ -110,19 +207,245 @@ function footer() {
   return (
     `<footer><div class="wrap">` +
     `<a href="/">blog.jaye.ch</a><span class="sep"> · </span>` +
-    `self-contained · no trackers` +
+    `self-contained · no trackers<span class="sep"> · </span>` +
+    // the command line is keyboard-first (press / or :); this is the mouse and
+    // touch way in, and the only place the shortcut is advertised
+    `<button type="button" class="palette-open">press / for the command line</button>` +
     `</div></footer>`
   );
 }
 
 /** Page-level CSS layered AFTER the design system.
  *
- * Empty: reading styles (.prose serif typography, blockquotes, tables,
- * footnotes) now live in the blog-design package itself — the design system
- * is the single source of truth for the entire look. Keep this hook for any
- * genuinely page-local one-off rule; do not re-add design rules here.
+ * Reading styles (.prose serif typography, blockquotes, tables, footnotes) live
+ * in the blog-design package itself — the design system is the single source of
+ * truth for the entire look; do not re-add design rules here.
+ *
+ * What does belong here is everything site-specific: the masthead motion layer
+ * (kinetic typography is not a design-system concern, and design/blog.css is
+ * generated from the shared jmars/blog-design package that sibling sites
+ * consume), the accessibility fix for the nav disclosure, the reading chrome
+ * this build adds (contents, series prev/next, the dose meter, the command
+ * line), the footnote sidenotes, and the two alternative renderings — warm dark
+ * (prefers-color-scheme) and print. page() emits this block LAST, after the
+ * figure CSS, so these rules can override the things they have to (hiding a
+ * figure's controls in print, re-tokening the palette for dark).
  */
-const PAGE_CSS = ``;
+const PAGE_CSS = `/* ---------- masthead reveal ---------- */
+/* build.mjs hero() wraps each hero word in <span class="w" style="--i:N">.
+   Default state: fully visible and static — the hidden start and the animation
+   exist only for readers who have NOT asked for reduced motion, so a
+   reduced-motion reader (or any renderer without CSS animations) sees the whole
+   masthead immediately. Only opacity and transform animate: the layout is never
+   touched, in either state, and .prose is not involved.
+   The hidden start is the animation's BACKWARDS fill alone, never a base
+   opacity: a renderer that ignores or never runs the animation leaves the
+   masthead fully readable rather than blank. There is no forwards fill either,
+   so once the reveal ends nothing is still animating the hero — the finished
+   state is the plain, static masthead again.
+   display:inline-block is what makes transform apply at all (it is ignored on
+   non-replaced inline boxes); it is set inside the media query so the default
+   state is exactly the pre-reveal layout. */
+@media (prefers-reduced-motion: no-preference) {
+  header .prompt,
+  header h1 .w,
+  header .tagline .w {
+    animation: masthead-reveal 420ms cubic-bezier(0.2, 0.7, 0.25, 1) backwards;
+  }
+  header .prompt { animation-delay: 0ms; }
+  header h1 .w,
+  header .tagline .w {
+    display: inline-block;
+    animation-delay: calc(60ms + var(--i, 0) * 40ms);
+  }
+  @keyframes masthead-reveal {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* ---------- nav disclosure: keyboard operable, honest state ----------
+   nav() emits <span class="dropdown"> (see its comment). The design package
+   opens .menu on :hover alone, and .menu is display:none until then — a
+   display:none link cannot be focused, so a keyboard reader could never reach the
+   series. The menu is therefore kept in the DOM and out of sight with opacity and
+   pointer-events instead, and opens on :hover or on :focus-within. Tabbing
+   through the nav reveals each menu as focus enters it and hides it again on the
+   way out; nothing is claimed that CSS cannot deliver. */
+.dropdown > .menu { display: block; opacity: 0; pointer-events: none; }
+.dropdown:hover > .menu,
+.dropdown:focus-within > .menu { opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .dropdown > .menu { transition: opacity 120ms ease-out; }
+}
+
+/* ---------- contents (long posts) ----------
+   Built by toc() from the rendered body's own <h2 id> headings, so every link
+   points at an anchor that already exists in the page. Native <details>: no
+   script, and the collapsed state is the default. */
+.toc { margin: 0 0 22px; font-family: var(--mono); font-size: 13px; }
+.toc > summary { cursor: pointer; color: var(--accent2); }
+.toc > summary:hover { color: var(--accent); }
+.toc .toc-n { color: var(--dim); }
+/* the headings number themselves ("3. The step: …"), so the list adds no marker */
+.toc ol { list-style: none; margin: 12px 0 0; padding-left: 0; color: var(--dim); }
+.toc li { margin-bottom: 5px; }
+.toc a { color: var(--dim); }
+.toc a:hover { color: var(--accent); }
+
+/* ---------- series prev/next ----------
+   postNav() emits a link only for a published neighbour inside the same series,
+   so the ends of a series simply have one slot empty. */
+.postnav {
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  margin-top: 2.4em; padding-top: 18px; border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: 13px;
+}
+.postnav a { display: block; max-width: 46%; color: var(--accent2); }
+.postnav a.next { margin-left: auto; text-align: right; }
+.postnav a:hover { color: var(--accent); }
+.postnav .dir { display: block; font-size: 12px; color: var(--dim); }
+.postnav .t { display: block; margin-top: 3px; }
+
+/* ---------- dose meter: reading progress, as accumulated dose ----------
+   Decorative chrome (aria-hidden), and deliberately script-free: a scroll-driven
+   animation reads the document's scroll progress with no listener at all, and
+   a browser without scroll-driven animations shows no meter rather than a stuck
+   one. The read is drawn as accumulated dose, so Θ_eff is marked on it: the
+   tick sits at 68.6% — the measured position of the switch in the published
+   dose sweep, 214 healthy / 98 collapsed with nothing in between — and the fill
+   changes state, and the label appears, once the read passes it. */
+.dose { display: none; }
+@supports (animation-timeline: scroll()) {
+  .dose {
+    display: block; position: fixed; top: 0; left: 0; right: 0; height: 2px;
+    z-index: 60; pointer-events: none; background: var(--line);
+  }
+  .dose-fill {
+    display: block; height: 100%; background: var(--accent2);
+    transform: scaleX(0); transform-origin: 0 50%;
+    animation: dose-read linear both; animation-timeline: scroll(root block);
+  }
+  .dose-mark { position: absolute; top: -1px; bottom: -1px; left: 68.6%; width: 1px; background: var(--dim); }
+  .dose-label {
+    position: absolute; left: 68.6%; top: 4px; margin-left: -1.6em; width: 3.2em;
+    text-align: center; font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+    color: var(--accent); opacity: 0;
+    animation: dose-label linear both; animation-timeline: scroll(root block);
+  }
+  @keyframes dose-read {
+    0% { transform: scaleX(0); background: var(--accent2); }
+    68.6% { transform: scaleX(0.686); background: var(--accent2); }
+    68.7% { transform: scaleX(0.687); background: var(--accent); }
+    100% { transform: scaleX(1); background: var(--accent); }
+  }
+  @keyframes dose-label {
+    0%, 62% { opacity: 0; }
+    68%, 100% { opacity: 0.85; }
+  }
+}
+
+/* ---------- the command line ----------
+   The palette markup is emitted by page() on every page; the script that drives
+   it is inlined (see PALETTE_JS). Styled in the hero prompt's idiom. */
+.palette { position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-start;
+  justify-content: center; padding: 14vh 16px 16px; background: rgba(20, 18, 16, 0.45); }
+.palette[hidden] { display: none; }
+.palette-box { width: min(680px, 100%); padding: 14px 16px 12px; background: var(--bg2);
+  border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  font-family: var(--mono); font-size: 13.5px; color: var(--fg); }
+.palette-line { display: flex; align-items: baseline; gap: 8px; }
+.palette-line .ps { color: var(--accent2); }
+.palette input { flex: 1 1 auto; min-width: 0; font: inherit; color: var(--fg);
+  background: none; border: none; outline: none; padding: 0; }
+.palette-out { margin-top: 12px; max-height: 52vh; overflow: auto; white-space: pre-wrap;
+  color: var(--dim); }
+.palette-open { font: inherit; font-family: var(--mono); font-size: 13px; color: var(--dim);
+  background: none; border: none; padding: 0; cursor: pointer; }
+.palette-open:hover { color: var(--accent); }
+
+/* ---------- footnote sidenotes (wide viewports only) ----------
+   buildPost() copies each footnote inline, right after its reference, as
+   .sidenote (aria-hidden: assistive tech keeps hearing the note once, in the
+   endnotes, exactly as before). Below the breakpoint the copy stays hidden and
+   the endnotes block is untouched. At wide viewports the copy floats into the
+   margin beside the passage it annotates — the note is never abandoned, and the
+   endnotes block stays in place below it, so the reference anchors and the
+   back-references keep resolving at every width. */
+.sidenote { display: none; }
+@media (min-width: 1200px) {
+  /* Chromium counts a float's margin box in the scrollable overflow region, and
+     this float's right margin is deliberately negative — so without this the
+     notes would add ~88px of phantom horizontal scroll at every width where they
+     are shown. clip (not hidden) is what keeps the fix safe: it removes the
+     scrollability without making the page a scroll container, so the sticky nav
+     is untouched and the notes, which sit inside the viewport, are not clipped. */
+  html, body { overflow-x: clip; }
+  .prose .sidenote {
+    display: block; float: right; clear: right; width: 13rem; margin: 0.35rem -15rem 0 0;
+    font-size: 12.5px; line-height: 1.42; color: var(--dim);
+  }
+  .prose .sidenote a { color: var(--accent2); }
+}
+
+/* ---------- warm dark reading mode ----------
+   Light stays the default; this is the same paper palette turned down, warm
+   rather than blue. Tokens first (everything the design package and the figure
+   engine read comes from them), then the handful of literals the design package
+   hard-codes. All text keeps AA: --fg 12.5:1, --dim 7.0:1, --accent 7.2:1,
+   --accent2 8.5:1 against --bg, and the callouts ≥ 8.9:1. Scoped to screen, so
+   a printed page is black on white whatever the reader's system preference. */
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #1a1816;
+    --bg2: #232120;
+    --fg: #efeae2;
+    --dim: #a9a29a;
+    --accent: #e88b86;
+    --accent2: #8ab4f8;
+    --line: #3a3733;
+  }
+  nav { background: rgba(26, 24, 22, 0.90); }
+  p, .stack td.desc, ul.checks li { color: #ddd7cd; }
+  .prose code { color: #f0a8a2; }
+  .prose a { text-decoration-color: rgba(138, 180, 248, 0.40); }
+  .dropdown .menu a:hover { background: rgba(232, 139, 134, 0.12); }
+  .cta-btn, .cta-btn:hover { color: #1a1816; }
+  .note { background: #2e2120; color: #f0b6b0; }
+  .warn { background: #2b2619; border-left-color: #c79a3c; color: #e8cd93; }
+  .palette { background: rgba(0, 0, 0, 0.55); }
+}
+
+/* ---------- print ----------
+   A paper copy of the essay: the chrome and every control go, the prose runs
+   the full measure in black on white. The figure canvas keeps its last drawn
+   frame (the engine draws one at mount), so a printed figure still shows the
+   curve — only its sliders and buttons are removed. */
+@media print {
+  @page { margin: 16mm 18mm; }
+  nav, footer, .palette, .dose, .toc, .postnav, .prompt, .blink,
+  .viz-controls, .sidenote { display: none !important; }
+  html, body { background: #fff; color: #000; }
+  .wrap { max-width: none; padding: 0; }
+  header { padding: 0 0 12pt; border-bottom: 1px solid #999; }
+  header h1 .w { display: inline !important; opacity: 1 !important; transform: none !important; }
+  section { padding: 12pt 0; border-bottom: none; }
+  .prose { max-width: none; font-size: 11.5pt; line-height: 1.5; color: #000; }
+  .prose p, .prose li, .prose blockquote, .prose table { color: #000; }
+  .prose a { color: #000; text-decoration: none; }
+  /* a printed page has no links: show where an absolute or site link went */
+  .prose a[href^="http"]::after,
+  .prose a[href^="/"]::after {
+    content: " (" attr(href) ")"; font-size: 0.82em; color: #444; word-break: break-all;
+  }
+  .prose .footnotes, .prose .footnotes p, .prose .footnotes li { color: #333; }
+  .prose .footnotes { display: block; }
+  .prose pre, .prose table, .prose blockquote, .viz, .card { break-inside: avoid; }
+  h2, h3, .prose h2, .prose h3 { break-after: avoid; }
+  .viz, .viz .viz-readout, .viz .viz-caption { color: #333; }
+  .viz .viz-caption::before { color: #333; }
+}`;
 
 /* ---------- interactive figures (tools/viz/) ---------- */
 
@@ -161,27 +484,238 @@ function vizAssets(body) {
   return { slots, css: readFileSync(VIZ_CSS, 'utf8'), script: `<script>\n${js}\n</script>\n` };
 }
 
+/* ---------- the command line (C4) ---------- */
+
+/** Decorative reading chrome: the dose meter. Emitted on every page; hidden
+ * unless the browser can drive it from scroll (see the PAGE_CSS block), and
+ * hidden in print. aria-hidden — it is ornament; the page itself carries the
+ * reading position. */
+const DOSE = `<div class="dose" aria-hidden="true"><span class="dose-fill"></span><span class="dose-mark"></span><span class="dose-label">Θ_eff</span></div>`;
+
+/**
+ * The command line, in the site's own terminal idiom: press `/` or `:` for a
+ * prompt that can list, search and open the blog (`ls`, `cat <slug>`,
+ * `open <series>`, `home`).
+ *
+ * The page list is embedded in the page, not fetched: the palette must never
+ * make a request, and it is built from navPosts — the same published-only list
+ * the nav uses — so a draft cannot be reached by typing its slug on a
+ * deployable page.
+ *
+ * The script is deliberately small and defensive: it is now on every page, so
+ * anything that is not there yet (no palette markup, no button) has to be
+ * tolerated rather than throw.
+ */
+const PALETTE_JS = (data) => `(function () {
+  'use strict';
+  function init() {
+  var DATA = ${JSON.stringify(data).replaceAll('<', '\\u003c')};
+  var PAGES = DATA.pages, SERIES = DATA.series;
+  var box = document.getElementById('palette');
+  if (!box) return;
+  var input = box.querySelector('input');
+  var out = box.querySelector('.palette-out');
+  var prev = null;
+
+  function show(text) { out.textContent = text; }
+  function seriesLabel(key) {
+    for (var i = 0; i < SERIES.length; i++) if (SERIES[i].key === key) return SERIES[i].label;
+    return key;
+  }
+  function pad(s, n) { while (s.length < n) s += ' '; return s; }
+  function pageFor(slug) {
+    for (var i = 0; i < PAGES.length; i++) if (PAGES[i].slug === slug) return PAGES[i];
+    return null;
+  }
+  function find(q) {
+    if (!q) return null;
+    var exact = pageFor(q);
+    if (exact) return exact;
+    for (var i = 0; i < PAGES.length; i++) if (PAGES[i].slug.indexOf(q) === 0) return PAGES[i];
+    for (var j = 0; j < PAGES.length; j++) if (PAGES[j].title.toLowerCase().indexOf(q) >= 0) return PAGES[j];
+    return null;
+  }
+  function seriesKey(q) {
+    for (var i = 0; i < SERIES.length; i++) {
+      if (SERIES[i].key === q || SERIES[i].label.toLowerCase() === q) return SERIES[i].key;
+    }
+    return null;
+  }
+  function firstIn(key) {
+    for (var i = 0; i < PAGES.length; i++) if (PAGES[i].series === key) return PAGES[i];
+    return null;
+  }
+  function listing(filter) {
+    var lines = [], last = null, hit = 0;
+    for (var i = 0; i < PAGES.length; i++) {
+      var p = PAGES[i];
+      if (filter && p.series !== filter) continue;
+      hit++;
+      if (p.series !== last) { lines.push(p.series ? seriesLabel(p.series) : 'unfiled'); last = p.series; }
+      lines.push('  ' + pad(p.slug, 26) + p.title);
+    }
+    return hit ? lines.join('\\n') : 'ls: ' + filter + ': no such series';
+  }
+  function go(slug) { window.location.href = '/' + slug + '/'; }
+  function goHome() { window.location.href = '/'; }
+  function run(line) {
+    var parts = line.split(/\\s+/);
+    var cmd = parts[0].toLowerCase();
+    var arg = parts.slice(1).join(' ').toLowerCase();
+    if (cmd === 'help' || cmd === '?') return show(HELP);
+    if (cmd === 'ls') return show(listing(arg ? seriesKey(arg) || arg : null));
+    if (cmd === 'home' || (cmd === 'cd' && !arg)) return goHome();
+    if (cmd === 'series') return show(listing(seriesKey(arg)));
+    if (cmd === 'cat' || cmd === 'open' || cmd === 'cd') {
+      var key = arg ? seriesKey(arg) : null;
+      var hit = find(arg);
+      if (hit) return go(hit.slug);
+      if (key) {
+        var first = firstIn(key);
+        return first ? go(first.slug) : show('open: ' + arg + ': nothing published yet');
+      }
+      return show(cmd + ': ' + (arg || '') + ': no such post. try ls');
+    }
+    var bare = find(cmd);
+    if (bare) return go(bare.slug);
+    return show('sh: ' + cmd + ': command not found. try help');
+  }
+  var HELP = [
+    'ls [series]     the published posts, in nav order',
+    'cat <slug>      open a post        (also: open, cd)',
+    'open <series>   the first post in a series',
+    'series <key>    list one series    (mechanism, implications)',
+    'home            the front page',
+    'help            this list',
+  ].join('\\n');
+
+  function open() {
+    prev = document.activeElement;
+    box.hidden = false;
+    input.value = '';
+    show(HELP);
+    input.focus();
+  }
+  function close() {
+    box.hidden = true;
+    // the input must not keep focus inside a hidden box: it would swallow the
+    // next '/' or ':' as ordinary typing, and the palette could not be reopened
+    input.blur();
+    if (prev && prev !== document.body && prev.focus) prev.focus();
+  }
+  function isTyping(el) {
+    if (!el || !el.tagName) return false;
+    if (el.isContentEditable) return true;
+    var tag = el.tagName;
+    if (tag === 'TEXTAREA' || tag === 'SELECT') return true;
+    if (tag !== 'INPUT') return false;
+    // a focused slider or checkbox is not a text field: / and : stay available
+    return ['range', 'checkbox', 'radio', 'button', 'submit', 'reset', 'file', 'color'].indexOf(el.type) < 0;
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (!box.hidden) {
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      return;
+    }
+    if (e.key !== '/' && e.key !== ':') return;
+    // a text field swallows the shortcut; a slider or a checkbox does not. Focus
+    // left inside the (hidden) palette is not typing either — it is where the
+    // shortcut would otherwise die.
+    if (isTyping(e.target) && !box.contains(e.target)) return;
+    e.preventDefault();
+    open();
+  });
+
+  input.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    var line = input.value.trim();
+    if (!line) return;
+    input.value = '';
+    run(line);
+  });
+
+  box.addEventListener('click', function (e) {
+    if (e.target === box) close();
+  });
+  for (var b = document.querySelectorAll('.palette-open'), i = 0; i < b.length; i++) {
+    b[i].addEventListener('click', open);
+  }
+  }
+  // the script is inlined on every page; do not depend on where the markup sits
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+`;
+
+/** The palette markup plus its script, built once per run (every page carries
+ * the same list). */
+let paletteCache = null;
+function paletteAssets(navPosts) {
+  if (paletteCache) return paletteCache;
+  const series = [];
+  const pages = [];
+  for (const p of navPosts) {
+    if (p.series && !series.includes(p.series)) series.push(p.series);
+    pages.push({ slug: p.slug, title: titleOf(p), series: p.series || '', kind: p.kind || '' });
+  }
+  const data = { pages, series: series.map((key) => ({ key, label: seriesLabel(key) })) };
+  const html =
+    `<div class="palette" id="palette" role="dialog" aria-label="command line" hidden>` +
+    `<div class="palette-box">` +
+    `<div class="palette-line"><span class="ps">#</span> blog.jaye.ch ` +
+    `<span class="ps">$</span> <input type="text" aria-label="command" autocomplete="off" ` +
+    `autocapitalize="off" spellcheck="false"></div>` +
+    `<div class="palette-out" role="status"></div>` +
+    `</div></div>`;
+  paletteCache = { html, script: `<script>\n${PALETTE_JS(data)}</script>\n` };
+  return paletteCache;
+}
+
 /** Full self-contained document. */
-function page({ title, description, prompt, heroTitle, tagline, body, navCurrent }, navPosts) {
+function page({ title, description, prompt, heroTitle, tagline, body, navCurrent, type = 'article', shareTitle, noindex = false }, navPosts) {
   const designCss = readFileSync(CSS, 'utf8');
   const viz = vizAssets(body);
+  const palette = paletteAssets(navPosts);
+
+  // Share metadata. The URL is derived from navCurrent (the same value that
+  // drives the nav highlight), so a page cannot advertise a canonical URL that
+  // is not its own. og:title strips markup — the home h1 carries a <span>.
+  // An index-excluded page (the 404) has no URL of its own to advertise, so
+  // it carries no canonical and no og:url.
+  const url = navCurrent === '/' ? `${BASE}/` : `${BASE}${navCurrent}`;
+  const share = (shareTitle || title).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  const meta =
+    `<title>${esc(title)}</title>\n` +
+    `<meta name="description" content="${esc(description)}">\n` +
+    (noindex ? `<meta name="robots" content="noindex">\n` : `<link rel="canonical" href="${url}">\n`) +
+    `<meta property="og:type" content="${type}">\n` +
+    `<meta property="og:site_name" content="blog.jaye.ch">\n` +
+    `<meta property="og:title" content="${esc(share)}">\n` +
+    `<meta property="og:description" content="${esc(description)}">\n` +
+    (noindex ? `` : `<meta property="og:url" content="${url}">\n`) +
+    `<meta name="twitter:card" content="summary">\n` +
+    `<meta name="twitter:title" content="${esc(share)}">\n` +
+    `<meta name="twitter:description" content="${esc(description)}">`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${title}</title>
-<meta name="description" content="${description.replaceAll('"', '&quot;')}">
+${meta}
 <style>
 ${designCss}</style>
-<style>${PAGE_CSS}</style>
-${viz ? `<style>\n${viz.css}</style>\n` : ''}</head>
+${viz ? `<style>\n${viz.css}</style>\n` : ''}<style>${PAGE_CSS}</style>
+</head>
 <body>
+${DOSE}
 ${nav(navCurrent, navPosts)}
 ${hero({ prompt, title: heroTitle, tagline })}
 ${body}
 ${footer()}
-${viz ? viz.script : ''}</body>
+${viz ? viz.script : ''}${palette.html}${palette.script}</body>
 </html>
 `;
 }
@@ -209,11 +743,93 @@ function splitH1(body, what) {
 
 /* ---------- pages ---------- */
 
-/** A post's title, read from its own file's leading <h1> (as plain text). */
+/** A post's title, read from its own file's leading <h1> (as plain text).
+ * Cached: the title is needed by the home cards, the command-line index and the
+ * series prev/next, and each miss is a pandoc run. */
+const titleCache = new Map();
 function titleOf(post) {
-  return splitH1(mdToHtml(read('content', post.file)), post.slug)
-    .titleHtml.replace(/<[^>]+>/g, '')
-    .trim();
+  if (!titleCache.has(post.slug)) {
+    titleCache.set(
+      post.slug,
+      splitH1(mdToHtml(read('content', post.file)), post.slug)
+        .titleHtml.replace(/<[^>]+>/g, '')
+        .trim(),
+    );
+  }
+  return titleCache.get(post.slug);
+}
+
+/* ---------- reading chrome built from the rendered body ---------- */
+
+/** A post's contents block, when it has enough sections to be worth one.
+ *
+ * Built from the RENDERED body's own <h2 id="…"> headings, so every entry links
+ * to an anchor that already exists in the page (the anchors are pandoc's and are
+ * never rewritten — external links point at them). <details> is native, so the
+ * block collapses and expands with no script. */
+const TOC_MIN = 5;
+function toc(body) {
+  // pandoc wraps a long heading's attributes across lines, so the tag must be
+  // matched loosely and the id read out of it (same reason as the footnote refs)
+  const headings = [...body.matchAll(/<h2\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g)];
+  if (headings.length < TOC_MIN) return '';
+  const items = headings
+    .map(([, id, text]) => `<li><a href="#${id}">${text.replace(/\s+/g, ' ').trim()}</a></li>`)
+    .join('');
+  return (
+    `<details class="toc"><summary>Contents <span class="toc-n">${headings.length} sections</span></summary>` +
+    `<ol>${items}</ol></details>`
+  );
+}
+
+/** Each footnote, copied inline right after its reference, as .sidenote (PAGE_CSS
+ * floats the copies into the margin at wide viewports — see there).
+ *
+ * The copy is phrasing content only: the note's <p> wrapper is dropped and the
+ * back-link removed, because inserting a block into the middle of a paragraph
+ * would make the HTML parser close that paragraph and split the prose. The copy
+ * is aria-hidden: the endnotes stay the canonical text for assistive tech, so a
+ * note is never announced twice. */
+function inlineSidenotes(body) {
+  // pandoc wraps a long anchor's attributes across lines, in no fixed order —
+  // match the tag wholesale and read the note id out of it.
+  const notes = new Map();
+  for (const m of body.matchAll(/<li id="(fn[^"]+)">([\s\S]*?)<\/li>/g)) {
+    const inner = m[2]
+      .replace(/<\/p>\s*<p>/g, ' ') // several paragraphs become one line
+      .replace(/<\/?p>/g, '')
+      .replace(/<a\s[^>]*class="footnote-back"[^>]*>[\s\S]*?<\/a>/g, '')
+      .trim();
+    if (inner) notes.set(m[1], inner);
+  }
+  let placed = 0;
+  const out = body.replace(/<a\s[^>]*class="footnote-ref"[^>]*>[\s\S]*?<\/a>/g, (ref) => {
+    const id = /href="#([^"]+)"/.exec(ref);
+    const note = id && notes.get(id[1]);
+    if (!note) return ref;
+    placed++;
+    return `${ref}<span class="sidenote" aria-hidden="true">${note}</span>`;
+  });
+  return { body: out, placed };
+}
+
+/** Series prev/next. Both neighbours come from navPosts — the published list the
+ * nav is built from — so a draft is never linked, and a series end simply has an
+ * empty slot. */
+function postNav(post, navPosts) {
+  if (!post.series) return '';
+  const inSeries = navPosts.filter((p) => p.series === post.series);
+  const i = inSeries.findIndex((p) => p.slug === post.slug);
+  if (i === -1) return '';
+  const prev = i > 0 ? inSeries[i - 1] : null;
+  const next = i < inSeries.length - 1 ? inSeries[i + 1] : null;
+  if (!prev && !next) return '';
+  const label = seriesLabel(post.series);
+  const card = (p, dir) =>
+    `<a class="${dir}" href="/${p.slug}/"><span class="dir">` +
+    (dir === 'prev' ? `← previous in ${label}` : `next in ${label} →`) +
+    `</span><span class="t">${titleOf(p)}</span></a>`;
+  return `<div class="postnav">${prev ? card(prev, 'prev') : '<span></span>'}${next ? card(next, 'next') : '<span></span>'}</div>`;
 }
 
 function buildHome(manifest) {
@@ -272,6 +888,8 @@ function buildHome(manifest) {
 
   return {
     title: 'Meditation can harm — and it does so invisibly — blog.jaye.ch',
+    shareTitle: 'Meditation can harm — and it does so invisibly',
+    type: 'website',
     description:
       'Meditation-related harm is common and systematically under-reported: the evidence, and a measured control-theoretic account of why it hides.',
     prompt: 'cat summary.md',
@@ -281,6 +899,118 @@ function buildHome(manifest) {
     body: html,
     navCurrent: '/',
   };
+}
+
+/** The not-found page. Served by Caddy's handle_errors with a real 404 status
+ * (see the Caddy site block) — the build only produces the document, and styled
+ * like every other page: nav, a hero in the site's own idiom, and links that are
+ * actually useful (home, and the first post of each series). noindex: it must
+ * never be indexed as a page of its own, and it declares no canonical URL
+ * because it has none. */
+function build404(navPosts) {
+  const firstOf = (key) => navPosts.find((p) => p.series === key);
+  const links = navPosts.length
+    ? SERIES.map((s) => firstOf(s.key))
+        .filter(Boolean)
+        .map((p) => `<li><a href="/${p.slug}/">${titleOf(p)}</a></li>`)
+        .join('')
+    : '';
+  const body =
+    `<section><div class="wrap">` +
+    `<h2>Nothing here</h2>` +
+    `<div class="hint"># the path you asked for is not one of the pages</div>` +
+    `<div class="prose">` +
+    `<p>Every address on this site is one of the pages below — the summary, or a ` +
+    `post in one of its two series. There is no other content, and nothing was ` +
+    `deleted to hide it.</p>` +
+    `<ul><li><a href="/">The summary — the whole argument in short</a></li>${links}</ul>` +
+    `<p>If you followed a link from somewhere else, the link is stale; the pieces ` +
+    `above are current.</p>` +
+    `</div></div></section>`;
+  return {
+    title: 'Not found — blog.jaye.ch',
+    shareTitle: 'Not found — blog.jaye.ch',
+    type: 'website',
+    noindex: true,
+    description: 'No page at this address. The published pages are listed here.',
+    prompt: 'cat "$REQUEST_URI"',
+    heroTitle: '404 — no such <span class="fx">page</span>',
+    tagline: 'the terminal is still here: <b>press /</b> and type <b>ls</b>.',
+    body,
+    navCurrent: '/404.html',
+  };
+}
+
+/* ---------- discovery files: feed, sitemap, robots ---------- */
+
+/** The published posts, in manifest order. Every generated file uses this list
+ * (and never manifest.posts), so no draft can leak into the feed, the sitemap or
+ * the command line — in a PREVIEW build too, where the nav deliberately shows
+ * the drafts. */
+function published(manifest) {
+  return manifest.posts.filter((p) => p.published);
+}
+
+/** RSS 2.0. There is no date field in posts.json and none is invented here, so
+ * the feed carries no pubDate and no lastBuildDate: an undated feed is honest,
+ * a fabricated one would be a lie about every post. A note in the channel says
+ * so, rather than leaving the omission to look like an oversight. */
+function feedXml(posts) {
+  const items = posts
+    .map((p) => {
+      const url = `${BASE}/${p.slug}/`;
+      return (
+        `    <item>\n` +
+        `      <title>${xesc(titleOf(p))}</title>\n` +
+        `      <link>${url}</link>\n` +
+        `      <guid isPermaLink="true">${url}</guid>\n` +
+        `      <description>${xesc(p.summary)}</description>\n` +
+        (p.series ? `      <category>${xesc(seriesLabel(p.series))}</category>\n` : '') +
+        (p.kind ? `      <category>${xesc(p.kind)}</category>\n` : '') +
+        `    </item>`
+      );
+    })
+    .join('\n');
+  return (
+    `<?xml version="1.0" encoding="utf-8"?>\n` +
+    `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n` +
+    `  <channel>\n` +
+    `    <title>blog.jaye.ch</title>\n` +
+    `    <link>${BASE}/</link>\n` +
+    `    <description>Meditation can harm — and it does so invisibly. A measured mechanism, and the implications that follow.</description>\n` +
+    `    <language>en</language>\n` +
+    `    <atom:link href="${BASE}/feed.xml" rel="self" type="application/rss+xml"/>\n` +
+    `    <!-- Posts carry no publication date: the manifest has none, and none is\n` +
+    `         invented, so items have no pubDate. Order is the site's own (series,\n` +
+    `         then reading order within the series). -->\n` +
+    `${items}\n` +
+    `  </channel>\n` +
+    `</rss>\n`
+  );
+}
+
+/** Absolute URLs for the home page and every published post. No lastmod, for the
+ * same reason as the feed. */
+function sitemapXml(posts) {
+  const urls = [BASE + '/', ...posts.map((p) => `${BASE}/${p.slug}/`)]
+    .map((u) => `  <url>\n    <loc>${u}</loc>\n  </url>`)
+    .join('\n');
+  return (
+    `<?xml version="1.0" encoding="utf-8"?>\n` +
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    `${urls}\n` +
+    `</urlset>\n`
+  );
+}
+
+function robotsTxt() {
+  return (
+    `# blog.jaye.ch — every published page is public; there is nothing to disallow.\n` +
+    `User-agent: *\n` +
+    `Allow: /\n` +
+    `\n` +
+    `Sitemap: ${BASE}/sitemap.xml\n`
+  );
 }
 
 /** Per-post page metadata (hero prompt/title/tagline stay code-side, not in
@@ -368,7 +1098,7 @@ const POST_META = {
   },
 };
 
-function buildPost(post) {
+function buildPost(post, navPosts) {
   const meta = POST_META[post.slug];
   if (!meta) throw new Error(`no POST_META entry for slug '${post.slug}'`);
   const md = read('content', post.file);
@@ -391,10 +1121,17 @@ function buildPost(post) {
   }
 
   // the section hint already links back to the summary — no extra back-link
-  const html = section('The full post', meta.hint, body);
+  const notes = inlineSidenotes(body);
+  if (notes.placed) log(`${post.slug}: ${notes.placed} footnote(s) also copied inline for wide-viewport sidenotes`);
+  const html = section('The full post', meta.hint, notes.body, {
+    before: toc(notes.body),
+    after: postNav(post, navPosts),
+  });
 
   return {
     title: `${titleHtml} — blog.jaye.ch`,
+    shareTitle: titleHtml,
+    type: 'article',
     description: meta.description,
     prompt: meta.prompt,
     heroTitle: fxTitle,
@@ -406,16 +1143,18 @@ function buildPost(post) {
 
 /* ---------- release safety: a built page must not link a draft ---------- */
 
-/** Scan every written page for href="/<slug>/" pointing at an UNPUBLISHED
- * slug — a deployable page must never expose a draft's URL. (In a PREVIEW
- * build the nav itself links drafts, which is expected and reported as such.) */
+/** Scan every written page for any reference to an UNPUBLISHED slug — a
+ * deployable page must never expose a draft's URL, whether as a link
+ * (href="/slug/") or as data the page's script can navigate to (the command
+ * line embeds its page list). (In a PREVIEW build the nav itself links drafts,
+ * which is expected and reported as such.) */
 function checkLinks(pages, manifest) {
   const drafts = manifest.posts.filter((p) => !p.published);
   const problems = [];
   for (const { rel, html } of pages) {
     for (const d of drafts) {
-      const needle = `href="/${d.slug}/"`;
-      if (html.includes(needle)) problems.push(`${rel} links ${needle}`);
+      const needle = `/${d.slug}/`;
+      if (html.includes(needle)) problems.push(`${rel} references ${needle}`);
     }
   }
   if (problems.length === 0) {
@@ -440,6 +1179,15 @@ function writePage(rel, pageDef, navPosts) {
   const slots = vizSlots(html);
   if (slots.length) log(`  ↳ inlined figures: ${slots.join(', ')}`);
   return html;
+}
+
+/** A generated non-page file (feed, sitemap, robots). Written like a page, but
+ * it is not scanned for draft links — it is built from the published list. */
+function writeFile(rel, text) {
+  const out = join(DIST, rel);
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, text);
+  log(`wrote ${rel} (${Buffer.byteLength(text)} bytes)`);
 }
 
 log('building dist/');
@@ -496,14 +1244,29 @@ const postsToBuild = PREVIEW ? manifest.posts : navPosts;
 checkFootnotes();
 
 rmSync(DIST, { recursive: true, force: true });
+// The feed, the sitemap and robots are built from the PUBLISHED posts even in a
+// PREVIEW build: a preview is a local approximation of the site, and the
+// discovery files describe the public one.
+const livePosts = published(manifest);
 const written = [];
 written.push({ rel: 'index.html', html: writePage('index.html', buildHome(manifest), navPosts) });
 for (const post of postsToBuild) {
   written.push({
     rel: `${post.slug}/index.html`,
-    html: writePage(`${post.slug}/index.html`, buildPost(post), navPosts),
+    html: writePage(`${post.slug}/index.html`, buildPost(post, navPosts), navPosts),
   });
 }
+written.push({ rel: '404.html', html: writePage('404.html', build404(navPosts), navPosts) });
+
+writeFile('feed.xml', feedXml(livePosts));
+writeFile('sitemap.xml', sitemapXml(livePosts));
+writeFile('robots.txt', robotsTxt());
+log(
+  `discovery files list ${livePosts.length} published post(s)` +
+    (PREVIEW && livePosts.length !== manifest.posts.length
+      ? ` — the ${manifest.posts.length - livePosts.length} draft(s) are excluded`
+      : ''),
+);
 
 checkLinks(written, manifest);
 if (PREVIEW) {

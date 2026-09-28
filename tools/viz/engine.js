@@ -444,6 +444,9 @@ var VIZ = (function () {
     input.addEventListener('input', function () {
       sync();
       if (o.onInput) o.onInput(Number(input.value));
+      // only a real input event reaches here (a programmatic set() does not
+      // dispatch one), so this is exactly "the reader moved this slider"
+      writeState(owningSlot(input));
     });
     sync();
     label.appendChild(name);
@@ -461,6 +464,307 @@ var VIZ = (function () {
       },
       sync: sync,
     };
+  }
+
+  /* ------------------------- shareable state (the URL hash) ---------------------- */
+
+  /**
+   * Every figure can put its state in the URL, so a frame can be linked:
+   *
+   *   #viz=switch&a=0.72
+   *
+   * The key is namespaced (`viz=`), and that is what keeps this from fighting
+   * the page's own fragments: the heading anchors and footnote backrefs are
+   * bare `#id` links (#4-the-runaway, #fn3), and a fragment that does not begin
+   * `viz=` is never parsed as state, never rewritten and never re-applied.
+   * With more than one figure on a page, the widget named in `viz=` owns the
+   * unprefixed keys and every other widget's keys carry its name as a prefix:
+   *
+   *   #viz=switch&a=0.72&runaway.hold=66.3
+   *
+   * (Two slots of the SAME widget on one page would share a prefix and restore
+   * the same state; no page does that.)
+   *
+   * A widget opts in with `VIZ.share(ctx, { get, set })`. The engine writes with
+   * history.replaceState — never pushState, because dragging a slider must not
+   * fill the reader's history — and only from a real `input` event, so a
+   * programmatic set() or an animation frame never touches the URL. A window
+   * that refuses history rewriting (an opaque origin) simply keeps the state in
+   * memory: the figure still works, only the frame is not linkable.
+   */
+  var HASH_KEY = 'viz';
+  var KEY_RE = /^[a-z0-9_-]+$/i;
+  var shareSlots = []; // mounted slots that declared a state, in mount order
+  var lastWritten = null; // the fragment this engine wrote last
+  var initial = null; // the fragment the page was loaded with, if it is ours
+  var pending = null; // the slot whose state is waiting to be written
+  var pendingTimer = 0;
+  var snappedRestore = false; // the fragment held a value no slider could hold
+
+  /** The [data-viz] slot a node belongs to, or null. */
+  function owningSlot(node) {
+    for (var n = node; n; n = n.parentNode) {
+      if (n.getAttribute && n.getAttribute('data-viz')) return n;
+    }
+    return null;
+  }
+
+  /** This page's fragment, with `primary` naming the `viz=` value. */
+  function fragment(primary) {
+    var parts = [HASH_KEY + '=' + primary.getAttribute('data-viz')];
+    for (var i = 0; i < shareSlots.length; i++) {
+      var el = shareSlots[i];
+      var provider = el.__vizShare;
+      if (!provider) continue;
+      var state = provider.get() || {};
+      var prefix = el === primary ? '' : el.getAttribute('data-viz') + '.';
+      for (var k in state) {
+        var v = Number(state[k]);
+        if (!KEY_RE.test(k) || !isFinite(v)) continue;
+        parts.push(prefix + k + '=' + String(v));
+      }
+    }
+    return parts.join('&');
+  }
+
+  /** Record the reader's state in the URL. Replacing, not pushing: the reader's
+   * Back button belongs to their reading, not to every slider step. Writes are
+   * coalesced to one per digest-interval, so a drag that fires sixty moves a
+   * second still leaves a short, honest history (and never trips the browser's
+   * history throttle). */
+  function writeState(slot) {
+    if (!slot || !slot.__vizShare) return;
+    pending = slot;
+    if (pendingTimer) return;
+    pendingTimer = setTimeout(flushState, 120);
+  }
+
+  function flushState() {
+    pendingTimer = 0;
+    var slot = pending;
+    pending = null;
+    writeFrame(slot);
+  }
+
+  /** Put `slot`'s own frame in the fragment, unless it is already there. */
+  function writeFrame(slot) {
+    if (!slot || !slot.__vizShare || slot.getAttribute('data-viz-mounted') !== '1') return;
+    var frag = fragment(slot);
+    if (frag === lastWritten) return;
+    try {
+      window.history.replaceState(null, '', '#' + frag);
+      lastWritten = '#' + frag;
+    } catch (e) {
+      // no history rewriting here: the figure still works, the frame is just
+      // not linkable, and the next input simply tries again
+    }
+  }
+
+  /** `#viz=<widget>&k=v&<other>.k=v` → { primary, byWidget } — or null when the
+   * fragment is not this engine's (a plain anchor). */
+  function parseState(hash) {
+    var h = String(hash || '').replace(/^#/, '');
+    if (h.indexOf(HASH_KEY + '=') !== 0) return null;
+    var segs = h.split('&');
+    var primary = segs[0].slice(HASH_KEY.length + 1);
+    if (!KEY_RE.test(primary)) return null;
+    var byWidget = {};
+    byWidget[primary] = {};
+    for (var i = 1; i < segs.length; i++) {
+      var eq = segs[i].indexOf('=');
+      if (eq < 1) continue;
+      var key = segs[i].slice(0, eq);
+      var dot = key.indexOf('.');
+      var widget = dot > 0 ? key.slice(0, dot) : primary;
+      var name = dot > 0 ? key.slice(dot + 1) : key;
+      // A share link can be mangled on the way here (a chat client, a bad
+      // paste): a percent-escape that is not valid UTF-8 makes
+      // decodeURIComponent throw, and this runs during boot, so an unguarded
+      // throw would take the whole figure set down with it. A key that will not
+      // decode is one key lost, not the page.
+      var raw = segs[i].slice(eq + 1);
+      try {
+        raw = decodeURIComponent(raw);
+      } catch (e) {
+        // keep the raw text: Number() then gives NaN and the key is skipped
+      }
+      var v = Number(raw);
+      if (!KEY_RE.test(widget) || !KEY_RE.test(name) || !isFinite(v)) continue;
+      if (!byWidget[widget]) byWidget[widget] = {};
+      byWidget[widget][name] = v;
+    }
+    return { primary: primary, byWidget: byWidget };
+  }
+
+  /** Hand a widget its own piece of the fragment. True when the widget could
+   * not hold exactly what it was handed — a slider snapping an off-grid value
+   * to its own step — which is the one case where the fragment may be
+   * rewritten on load. A key the widget does not report (a foreign widget's, or
+   * one this engine did not understand) is left alone. */
+  function restoreState(provider, vals) {
+    provider.set(vals);
+    var got = provider.get() || {};
+    for (var k in vals) {
+      if (!(k in got)) continue;
+      if (Math.abs(Number(got[k]) - Number(vals[k])) > 1e-9) return true;
+    }
+    return false;
+  }
+
+  /** An off-grid value in a pasted link is snapped by the slider that receives
+   * it. Say so in the URL — one write, on load, only when something actually
+   * snapped — so the address bar cannot disagree with the frame on screen. */
+  function normalizeFrame() {
+    if (!snappedRestore || !initial) return;
+    snappedRestore = false;
+    var slot = null;
+    for (var i = 0; i < shareSlots.length; i++) {
+      if (shareSlots[i].getAttribute('data-viz') === initial.primary) slot = shareSlots[i];
+    }
+    if (slot) writeFrame(slot);
+  }
+
+  /** Hand a parsed fragment back to the figures; each widget redraws itself. */
+  function applyState(state) {
+    if (!state) return;
+    for (var i = 0; i < shareSlots.length; i++) {
+      var el = shareSlots[i];
+      var vals = state.byWidget[el.getAttribute('data-viz')];
+      if (vals && el.__vizShare) el.__vizShare.set(vals);
+    }
+  }
+
+  /** Put a widget's state in the URL: `VIZ.share(ctx, { get, set })` once, at
+   * mount. `get()` returns the state as a flat object of numbers; `set(state)`
+   * accepts any subset of those keys and redraws. */
+  function share(ctx, provider) {
+    if (!ctx || !ctx.el || !provider || typeof provider.get !== 'function' || typeof provider.set !== 'function') {
+      throw new Error('viz: share(ctx, { get, set }) needs a ctx and both halves');
+    }
+    ctx.el.__vizShare = provider;
+  }
+
+  /* ------------------------------ figure export (PNG) --------------------------- */
+
+  /** The page's own slug, so an exported figure has a filename worth filing
+   * (meditation-harm-switch.png), on a served path or on file://. */
+  function pageSlug() {
+    var parts = window.location.pathname.split('/');
+    var out = [];
+    for (var i = 0; i < parts.length; i++) if (parts[i]) out.push(parts[i]);
+    if (out.length && /^index\.html?$/i.test(out[out.length - 1])) out.pop();
+    return out.length ? out[out.length - 1] : 'home';
+  }
+
+  /**
+   * Compose every canvas of one figure into a single PNG blob, in the order the
+   * reader sees them (a multi-panel figure exports as the figure, not as one
+   * arbitrary panel). All of it is in-page canvas work: nothing is uploaded,
+   * nothing is fetched, and the PNG is handed over as a data: URL.
+   */
+  function compose(canvases, done) {
+    var gap = 10;
+    var w = 0;
+    var h = 0;
+    var i;
+    for (i = 0; i < canvases.length; i++) {
+      w = Math.max(w, canvases[i].width);
+      h += canvases[i].height + (i ? gap : 0);
+    }
+    var out = document.createElement('canvas');
+    out.width = Math.max(1, w);
+    out.height = Math.max(1, h);
+    if (typeof out.toBlob !== 'function') return done(null); // not a real browser
+    var c = out.getContext('2d');
+    c.fillStyle = token('bg');
+    c.fillRect(0, 0, out.width, out.height);
+    var y = 0;
+    for (i = 0; i < canvases.length; i++) {
+      c.drawImage(canvases[i], 0, y);
+      y += canvases[i].height + gap;
+    }
+    out.toBlob(function (blob) {
+      done(blob);
+    }, 'image/png');
+  }
+
+  /** Save a blob through a data: URL — self-contained, no service involved. */
+  function saveBlob(blob, filename) {
+    var fr = new FileReader();
+    fr.onload = function () {
+      var a = document.createElement('a');
+      a.href = String(fr.result);
+      a.download = filename;
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      if (a.parentNode) a.parentNode.removeChild(a);
+    };
+    fr.readAsDataURL(blob);
+  }
+
+  /** A small control per figure: download it as a PNG (and copy it, where the
+   * browser can put an image on the clipboard). Both live in .viz-controls, so
+   * they are hidden with the rest of the controls in print. */
+  function attachExport(slot, name, bag) {
+    var canvases = slot.querySelectorAll('canvas.viz-canvas');
+    var controls = slot.querySelector('.viz-controls');
+    if (!canvases.length || !controls) return;
+    var group = document.createElement('span');
+    group.className = 'viz-export-group';
+    var filename = pageSlug() + '-' + name + '.png';
+
+    function flash(btn, text) {
+      if (btn.__vizLabel == null) btn.__vizLabel = btn.textContent;
+      btn.textContent = text;
+      bag.later(function () {
+        if (btn) btn.textContent = btn.__vizLabel;
+      }, 1600);
+    }
+
+    var dl = document.createElement('button');
+    dl.type = 'button';
+    dl.className = 'viz-button viz-export';
+    dl.textContent = '⬇ PNG';
+    dl.setAttribute('aria-label', 'download this figure as a PNG image (' + filename + ')');
+    bag.on(dl, 'click', function () {
+      compose(canvases, function (blob) {
+        if (!blob) return flash(dl, 'no export');
+        saveBlob(blob, filename);
+        flash(dl, 'saved');
+      });
+    });
+    group.appendChild(dl);
+
+    if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+      var cp = document.createElement('button');
+      cp.type = 'button';
+      cp.className = 'viz-button viz-export';
+      cp.textContent = 'copy image';
+      cp.setAttribute('aria-label', 'copy this figure to the clipboard as a PNG image');
+      bag.on(cp, 'click', function () {
+        compose(canvases, function (blob) {
+          var item;
+          if (!blob) return flash(cp, 'no export');
+          try {
+            item = new window.ClipboardItem({ 'image/png': blob });
+          } catch (e) {
+            return flash(cp, 'unavailable');
+          }
+          // both outcomes handled: a refused clipboard write is not a page error
+          navigator.clipboard.write([item]).then(
+            function () {
+              flash(cp, 'copied');
+            },
+            function () {
+              flash(cp, 'blocked');
+            },
+          );
+        });
+      });
+      group.appendChild(cp);
+    }
+    controls.appendChild(group);
   }
 
   /** A small toggle button (run / pause / reset). */
@@ -552,6 +856,14 @@ var VIZ = (function () {
           target.removeEventListener(type, fn, opts);
         });
         return fn;
+      },
+      /** A timeout that is cleared with the widget (no timer outlives a slot). */
+      later: function (fn, ms) {
+        var t = setTimeout(fn, ms);
+        disposers.push(function () {
+          clearTimeout(t);
+        });
+        return t;
       },
       /** Re-draw on resize, debounced. The slot itself is watched as well as
        * the window, so a widget mounted into a container that had no width
@@ -664,6 +976,15 @@ var VIZ = (function () {
     var ctx = context(el, name, lifecycle(el));
     el.setAttribute('data-viz-mounted', '1');
     component.mount(el, ctx);
+    // a widget that declared its state opts into the URL, and is restored from
+    // the fragment the page was loaded with (set() redraws)
+    if (el.__vizShare) {
+      shareSlots.push(el);
+      if (initial && initial.byWidget[name] && restoreState(el.__vizShare, initial.byWidget[name])) {
+        snappedRestore = true;
+      }
+    }
+    attachExport(el, name, ctx.lifecycle);
     running.push({ name: name, el: el, ctx: ctx, component: component });
     return true;
   }
@@ -688,19 +1009,31 @@ var VIZ = (function () {
       e.el.removeAttribute('data-viz-mounted');
     }
     running = [];
+    shareSlots = [];
   }
 
   function boot() {
     if (booted) return; // a second call is a no-op
     booted = true;
+    // the fragment the page arrived with, if it is this engine's (a plain
+    // heading anchor is not, and is left exactly where the browser put it)
+    initial = parseState(window.location.hash);
+    window.addEventListener('hashchange', function () {
+      if (window.location.hash === lastWritten) return; // our own write
+      var state = parseState(window.location.hash);
+      if (!state) return; // a plain #anchor — never rewritten, never clobbered
+      applyState(state);
+    });
     if (document.readyState === 'loading') {
       var onReady = function () {
         document.removeEventListener('DOMContentLoaded', onReady);
         mountAll(document);
+        normalizeFrame();
       };
       document.addEventListener('DOMContentLoaded', onReady);
     } else {
       mountAll(document);
+      normalizeFrame();
     }
   }
 
@@ -720,6 +1053,12 @@ var VIZ = (function () {
     button: button,
     readout: readout,
     bold: bold,
+    share: share,
+    saveState: function (ctx) {
+      // for a widget that changes its own state outside a slider's input event
+      // (a pointer drag, an automated cross): the frame is linkable too
+      if (ctx && ctx.el) writeState(ctx.el);
+    },
   };
 
   boot();

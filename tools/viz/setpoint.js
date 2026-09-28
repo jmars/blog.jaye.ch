@@ -99,6 +99,7 @@ VIZ.registerViz('setpoint', (function () {
         play.stop();
         run.textContent = '▶ play the timeline';
         draw();
+        VIZ.saveState(ctx); // the play moved the slider itself: the frame it stopped on is the linkable one
         return;
       }
       cursor = Math.min(T_END, cursor + dt * SPEED);
@@ -110,6 +111,7 @@ VIZ.registerViz('setpoint', (function () {
       if (play.isRunning()) {
         play.stop();
         run.textContent = '▶ resume';
+        VIZ.saveState(ctx);
       } else {
         if (cursor >= T_END) cursor = 0;
         run.textContent = '❚❚ pause';
@@ -122,9 +124,26 @@ VIZ.registerViz('setpoint', (function () {
       cursor = T_END;
       timeSlider.set(cursor);
       draw();
+      VIZ.saveState(ctx);
     });
     controls.appendChild(run);
     controls.appendChild(reset);
+
+    // shareable frame: #viz=setpoint&t=120 (the timeline cursor)
+    VIZ.share(ctx, {
+      get: function () {
+        return { t: timeSlider.value() };
+      },
+      set: function (s) {
+        if (s.t != null) {
+          cursor = s.t;
+          timeSlider.set(cursor);
+        }
+        play.stop();
+        run.textContent = '▶ play the timeline';
+        draw();
+      },
+    });
 
     function episodes(f, labelAt) {
       f.band(T1, RESCUE, { fill: VIZ.token('bg2'), label: 'episode 1', labelAt: labelAt });

@@ -117,6 +117,7 @@ VIZ.registerViz('phase', (function () {
         run.textContent = '▶ sweep the drive';
         aSlider.set(1);
         draw();
+        VIZ.saveState(ctx); // a sweep saves its own end state: a slider set() dispatches no input
         return;
       }
       aSlider.set(a);
@@ -129,6 +130,7 @@ VIZ.registerViz('phase', (function () {
       if (sweep.isRunning()) {
         sweep.stop();
         run.textContent = '▶ resume the sweep';
+        VIZ.saveState(ctx);
       } else {
         if (aSlider.value() >= 1) aSlider.set(0.5);
         run.textContent = '❚❚ pause';
@@ -140,9 +142,23 @@ VIZ.registerViz('phase', (function () {
       run.textContent = '▶ sweep the drive';
       aSlider.set(A_CANON);
       draw();
+      VIZ.saveState(ctx);
     });
     controls.appendChild(run);
     controls.appendChild(reset);
+
+    // shareable frame: #viz=phase&a=0.72
+    VIZ.share(ctx, {
+      get: function () {
+        return { a: aSlider.value() };
+      },
+      set: function (s) {
+        if (s.a != null) aSlider.set(s.a);
+        sweep.stop();
+        run.textContent = '▶ sweep the drive';
+        draw();
+      },
+    });
 
     /** One arrow of the field, in pixels, along the lane. */
     function arrowAt(c, px, dir, lane, color) {

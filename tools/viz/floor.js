@@ -60,6 +60,17 @@ VIZ.registerViz('floor', (function () {
     });
     controls.appendChild(floorSlider.el);
 
+    // shareable frame: #viz=floor&floor=0.7
+    VIZ.share(ctx, {
+      get: function () {
+        return { floor: floorSlider.value() };
+      },
+      set: function (s) {
+        if (s.floor != null) floorSlider.set(s.floor);
+        draw();
+      },
+    });
+
     function draw() {
       var floor = floorSlider.value();
       var escapes = floor >= FLOOR_CRIT;

@@ -91,6 +91,7 @@ VIZ.registerViz('runaway', (function () {
         play.stop();
         run.textContent = '▶ run the episode';
         draw();
+        VIZ.saveState(ctx); // an animation saves its own end state: a slider set() dispatches no input
         return;
       }
       reveal = Math.min(T_END, reveal + dt * SPEED);
@@ -101,6 +102,7 @@ VIZ.registerViz('runaway', (function () {
       if (play.isRunning()) {
         play.stop();
         run.textContent = '▶ resume';
+        VIZ.saveState(ctx);
       } else {
         if (reveal >= T_END) reveal = 0;
         run.textContent = '❚❚ pause';
@@ -114,9 +116,25 @@ VIZ.registerViz('runaway', (function () {
       holdSlider.set(T_CRIT);
       reveal = T_END;
       draw();
+      VIZ.saveState(ctx);
     });
     controls.appendChild(run);
     controls.appendChild(reset);
+
+    // shareable frame: #viz=runaway&a_hold=0.9&hold=66.3
+    VIZ.share(ctx, {
+      get: function () {
+        return { a_hold: aSlider.value(), hold: holdSlider.value() };
+      },
+      set: function (s) {
+        if (s.a_hold != null) aSlider.set(s.a_hold);
+        if (s.hold != null) holdSlider.set(s.hold);
+        play.stop();
+        run.textContent = '▶ run the episode';
+        reveal = T_END;
+        draw();
+      },
+    });
 
     function draw() {
       var a = aSlider.value();

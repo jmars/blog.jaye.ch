@@ -7,16 +7,45 @@ fork's Elm package (the single source of truth — never copied by hand) and
 inlined into each page, so every page is fully self-contained: **no external
 requests, no iframes, no trackers.**
 
-Interactive figures are the one place the blog runs JavaScript, and they keep
-that property: each one is authored as a component (`tools/viz/*.js` — the
-MFE `{ mount, unmount, update }` shape) and the build inlines exactly the
-engine and the widgets a page uses, next to its CSS. No import map, no
-`/vendor` path, no fetch — a page with a figure is still one file. Pages
-without one carry no script at all.
+Interactive figures are the blog's interactive layer, and they keep that
+property: each one is authored as a component (`tools/viz/*.js` — the MFE
+`{ mount, unmount, update }` shape) and the build inlines exactly the engine and
+the widgets a page uses, next to its CSS. No import map, no `/vendor` path, no
+fetch — a page with a figure is still one file.
+
+Two scripts run on the site, both inlined and neither fetching anything:
+
+- the **command line** — every page carries a small terminal-idiom palette in
+  the site's own idiom (press `/` or `:`, or the footer button: `ls`,
+  `cat <slug>`, `open <series>`, `home`). It is the one thing on every page,
+  including the ones with no figure;
+- the **figures** — a page whose body carries a `[data-viz]` slot gets one more
+  inline `<script>`, holding the engine plus exactly the widgets that page uses.
 
 The fork carries the whole look, including the long-form reading layer
-(`.prose` serif typography, blockquotes, tables, footnotes); the blog adds no
-page-level CSS beyond the figure styling in `tools/viz/viz.css`.
+(`.prose` serif typography, blockquotes, tables, footnotes). Two site-local
+layers sit on top of it, neither of them in the shared design package —
+`tools/viz/viz.css` (figure styling) and `PAGE_CSS` in `tools/build.mjs`: the
+masthead motion, the keyboard-accessible nav menus, the post contents block, the
+series prev/next, the dose meter, the command line, the wide-viewport footnote
+sidenotes, and the dark and print renderings.
+
+Two figure behaviours live in the shared engine, so every figure has them:
+
+- **the frame is in the URL** — a widget declares its state with
+  `VIZ.share(ctx, { get, set })` and the engine writes `#viz=<widget>&a=0.72` as
+  the reader moves it (`history.replaceState`, never `pushState`, so dragging
+  does not fill the history). The key is namespaced, so a heading anchor or a
+  footnote backref (`#fn3`) is left exactly where the browser put it; with
+  several figures on a page, the one named in `viz=` owns the bare keys and the
+  others prefix theirs (`runaway.hold=66.3`). Opening a copied URL restores the
+  frame, and a value no slider can hold exactly — an off-grid paste — is snapped
+  and written back once, so the URL never describes a frame the figure is not
+  showing.
+- **the figure exports as a PNG** — a `⬇ PNG` control per figure composes its
+  canvas(es) and downloads them (`canvas.toBlob` → a `data:` URL), plus a
+  `copy image` where the browser can put an image on the clipboard. All of it is
+  in-page: no upload, no service, no request.
 
 ## Licensing
 
@@ -77,6 +106,11 @@ Two guards enforce the boundary, so it does not depend on anyone remembering:
                               Elm package (Platform.worker + happy-dom boot,
                               mirroring the fixpointlinux.org SSG)
     tools/build.mjs           content/*.md → pandoc → design chrome → dist/
+                              (pages, plus the not-found page and the
+                              discovery files: feed.xml, sitemap.xml,
+                              robots.txt — all built from the manifest's
+                              PUBLISHED posts, and none of them carrying a
+                              date, because the manifest has none)
     tools/check-scope.sh      scope guard: this repo is the blog only (run
                               first by build.sh; see "Scope" above)
     tools/viz/                interactive figures, inlined per page by
@@ -96,8 +130,14 @@ Two guards enforce the boundary, so it does not depend on anyone remembering:
     content/                  Markdown, the actual words
       meditation-harm.md          the full post      → /meditation-harm/
       meditation-harm-summary.md  the short cut      → /
-      anxiety-damping.md          the second post    → /anxiety-damping/ (draft)
+      anxiety-damping.md          the second post    → /anxiety-damping/
     dist/                     generated site, deploy as-is (absolute paths)
+      <slug>/index.html           a published post
+      index.html                  the home page
+      404.html                    the not-found page (served by Caddy's
+                                  handle_errors with a real 404 status)
+      feed.xml / sitemap.xml / robots.txt
+                                  discovery files, published posts only
 
 ## Releases — publishing one post at a time
 
@@ -175,10 +215,13 @@ rebuild in full mode and commit the new submodule pin + `design/blog.css`.
 
 ## Pages
 
+`posts.json` lists ten published posts; each builds to `/<slug>/`, and `/` is
+the home page (the short cut of the first post). Four of them carry figures; the
+rest are prose only.
+
 - `/` — the short cut (summary) + a call-to-action to the first published post.
 - `/meditation-harm/` — the full post, footnotes rendered as a notes section.
-- `/anxiety-damping/` — the second post (draft: staged in `posts.json`, built
-  only under `PREVIEW=1`).
+- `/anxiety-damping/` — the second post.
 
 Prose is verbatim from `content/` — no content edits at build time; the summary
 already links to the published post in its own text.

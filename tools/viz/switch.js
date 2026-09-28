@@ -89,6 +89,7 @@ VIZ.registerViz('switch', (function () {
         play.stop();
         run.textContent = '▶ run the episode';
         draw();
+        VIZ.saveState(ctx); // an animation saves its own end state: a slider set() dispatches no input
         return;
       }
       reveal = Math.min(T_END, reveal + dt * SPEED);
@@ -99,6 +100,7 @@ VIZ.registerViz('switch', (function () {
       if (play.isRunning()) {
         play.stop();
         run.textContent = '▶ resume';
+        VIZ.saveState(ctx);
       } else {
         if (reveal >= T_END) reveal = 0;
         run.textContent = '❚❚ pause';
@@ -111,9 +113,24 @@ VIZ.registerViz('switch', (function () {
       aSlider.set(A_CANON);
       reveal = T_END;
       draw();
+      VIZ.saveState(ctx);
     });
     controls.appendChild(run);
     controls.appendChild(reset);
+
+    // shareable frame: #viz=switch&a=0.72 restores this slider
+    VIZ.share(ctx, {
+      get: function () {
+        return { a: aSlider.value() };
+      },
+      set: function (s) {
+        if (s.a != null) aSlider.set(s.a);
+        play.stop();
+        run.textContent = '▶ run the episode';
+        reveal = T_END;
+        draw();
+      },
+    });
 
     function draw() {
       var a = aSlider.value();
