@@ -4,12 +4,19 @@ Static source of record for **blog.jaye.ch**. Built on **blog-design** — the
 light "paper" fork of the [fixpoint-linux](https://fixpointlinux.org) design
 system — consumed as a git submodule. The design CSS is extracted from the
 fork's Elm package (the single source of truth — never copied by hand) and
-inlined into each page, so every page is fully self-contained: **no JS, no
-iframes, no external requests.**
+inlined into each page, so every page is fully self-contained: **no external
+requests, no iframes, no trackers.**
+
+Interactive figures are the one place the blog runs JavaScript, and they keep
+that property: each one is authored as a component (`tools/viz/*.js` — the
+MFE `{ mount, unmount, update }` shape) and the build inlines exactly the
+engine and the widgets a page uses, next to its CSS. No import map, no
+`/vendor` path, no fetch — a page with a figure is still one file. Pages
+without one carry no script at all.
 
 The fork carries the whole look, including the long-form reading layer
 (`.prose` serif typography, blockquotes, tables, footnotes); the blog adds no
-page-level CSS.
+page-level CSS beyond the figure styling in `tools/viz/viz.css`.
 
 ## Licensing
 
@@ -72,6 +79,13 @@ Two guards enforce the boundary, so it does not depend on anyone remembering:
     tools/build.mjs           content/*.md → pandoc → design chrome → dist/
     tools/check-scope.sh      scope guard: this repo is the blog only (run
                               first by build.sh; see "Scope" above)
+    tools/viz/                interactive figures, inlined per page by
+                              tools/build.mjs
+      engine.js                   the shared engine: the viz registry, boot(),
+                                  the hiDPI canvas/plot/animation helpers
+      <widget>.js                 one MFE-shaped widget per figure
+      viz.css                     figure styling (design tokens; inlined only
+                                  into pages that carry a [data-viz] slot)
     elm/                      tiny Elm program exposing Fixpoint.Style.css
     vendor/blog-design/       git submodule: github.com/jmars/blog-design
                               (light paper fork of fixpoint-linux/design)

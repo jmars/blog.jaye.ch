@@ -63,6 +63,11 @@ support you undermine. The whole value of a floor is that it is **held without o
 which is why a cheap, fixed, never-re-examined one is not a lazy version of a good one. It is
 the only kind that works.
 
+<div class="viz" data-viz="floor">
+  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. The table above has the result it illustrates: a floor from 0.0 to 0.4 all fail (the system stays stuck at G = 0.049), and 0.5 and above all escape identically to G = 0.8855 in ~22 t.u. The critical value is 0.4795. Held at 0.7 and re-checked at c_mon = 0.1/0.2/0.3/0.5, the outcome degrades to G_end = 0.53/0.34/0.24/0.16 (knowing-floor critical kc ≈ 0.2).</p></noscript>
+  <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
+</div>
+
 ---
 
 ## 3. Why the value doesn't matter (above the threshold)

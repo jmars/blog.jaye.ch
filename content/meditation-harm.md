@@ -137,6 +137,11 @@ That `χ·c` term is the trap. **The failure captures the attention that drives 
 focus lowers `G`; low `G` arms `c`; `c` pulls attention *further* inward; further inward
 drops `G` more. A positive feedback loop, one direction, no brake built in.
 
+<div class="viz" data-viz="switch">
+  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. The text above has the result it illustrates: c = σ·max(0, tanh((E − Θ_eff)/w)) with Θ_eff = Θ·S/S_rest. Below the threshold c = 0.000 and the healthy regime costs exactly zero; across it c ignites to 1.000 as E runs from −0.340 to +0.525.</p></noscript>
+  <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
+</div>
+
 **One clarification, because the intuition runs the other way and it is easy to reverse:** the
 thing that runs away is the **capture**, not the self. There is no generator in overdrive, no
 self running hot — that is the folk reading, and the model does the opposite. Attention is
@@ -160,6 +165,11 @@ And the transition is not gradual. Across a full sweep of the dose axes the mode
 **214 healthy outcomes, 98 collapsed outcomes, and zero in between.** The threshold is
 sharp and bisectable: a duration of **66.3 time-units** at that intensity, an intensity of
 **0.5992**, an affect amplitude of **0.1859**.
+
+<div class="viz" data-viz="runaway">
+  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. The text above has the result it illustrates: holding attention inward at a_hold = 0.9 past a 66.3 t.u. threshold drops G from 0.886 to 0.049 and holds it there; below the threshold it dips and returns.</p></noscript>
+  <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
+</div>
 
 This is the structural reason the approach is invisible from the inside: the observer is
 *inside* the loop being observed, and the loop is monotone. There is no signal announcing
@@ -195,6 +205,11 @@ size of perturbation the system can absorb — tracking distance-to-edge almost 
 (slope ≈ 1). A system in this regime does not slow down before it fails; it gets
 **fragile.** Which means a protocol that measures only *settling time* will miss the
 approach entirely. You have to measure the size of the disturbance the system tolerates.
+
+<div class="viz" data-viz="phase">
+  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. The text above has what it illustrates: the flow of G is sign-only. Under the measured intensity threshold 0.5992 there is one attractor at G* = 0.886 and the flow converges on it; past the threshold the healthy branch is annihilated on contact and every arrow leads to the collapsed 0.049. The last healthy solution sits at ε_c = 0.265192279, dying exactly on E = Θ_eff.</p></noscript>
+  <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
+</div>
 
 ---
 

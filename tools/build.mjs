@@ -6,8 +6,14 @@
  * tools/extract-css.mjs) and is inlined into every page's <head>. The fork
  * carries the full reading layer (.prose serif typography, blockquotes,
  * tables, footnotes) inside the design system itself, so no page-level CSS
- * is needed any more. No JS, no iframes, no external runtime deps; links are
- * absolute (/…).
+ * is needed any more. No external runtime deps; links are absolute (/…).
+ *
+ * Interactive figures (tools/viz/) are the one exception to "no JS": a page
+ * whose rendered body carries a [data-viz] slot gets viz.css inlined after
+ * the design CSS and ONE inline <script> holding the engine plus exactly the
+ * widgets that page uses — no external src, no import map, no fetch, so the
+ * page stays self-contained. A page with no slot is built byte-for-byte as
+ * before.
  *
  * What gets built is governed by posts.json (repo root) — the release
  * manifest: it lists the home file and the posts IN NAV ORDER, each with its
@@ -104,7 +110,7 @@ function footer() {
   return (
     `<footer><div class="wrap">` +
     `<a href="/">blog.jaye.ch</a><span class="sep"> · </span>` +
-    `no JS, no trackers` +
+    `self-contained · no trackers` +
     `</div></footer>`
   );
 }
@@ -118,9 +124,47 @@ function footer() {
  */
 const PAGE_CSS = ``;
 
+/* ---------- interactive figures (tools/viz/) ---------- */
+
+const VIZ_DIR = join(ROOT, 'tools', 'viz');
+const VIZ_ENGINE = join(VIZ_DIR, 'engine.js');
+const VIZ_CSS = join(VIZ_DIR, 'viz.css');
+
+/** Widget names a rendered body asks for, in first-use order. */
+function vizSlots(body) {
+  const names = [];
+  // both quote styles: an author writing data-viz='runaway' must not be
+  // silently shipped an empty box with no script and no viz.css
+  for (const m of body.matchAll(/data-viz=(["'])([a-z0-9-]+)\1/g)) {
+    if (!names.includes(m[2])) names.push(m[2]);
+  }
+  return names;
+}
+
+/**
+ * The figure assets a page needs — or null, so a page with no [data-viz] slot
+ * is built exactly as it was before this feature existed.
+ *
+ * The engine and the page's widgets are concatenated into one IIFE: the page
+ * carries only the code it uses (tree-shaken by concatenation, the build is
+ * the bundler) and nothing is fetched at runtime.
+ */
+function vizAssets(body) {
+  const slots = vizSlots(body);
+  if (slots.length === 0) return null;
+  const widgets = slots.map((name) => {
+    const file = join(VIZ_DIR, `${name}.js`);
+    if (!existsSync(file)) throw new Error(`data-viz="${name}" has no widget at tools/viz/${name}.js`);
+    return readFileSync(file, 'utf8');
+  });
+  const js = ['(function () {', "'use strict';", readFileSync(VIZ_ENGINE, 'utf8'), ...widgets, '})();'].join('\n');
+  return { slots, css: readFileSync(VIZ_CSS, 'utf8'), script: `<script>\n${js}\n</script>\n` };
+}
+
 /** Full self-contained document. */
 function page({ title, description, prompt, heroTitle, tagline, body, navCurrent }, navPosts) {
   const designCss = readFileSync(CSS, 'utf8');
+  const viz = vizAssets(body);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,13 +175,13 @@ function page({ title, description, prompt, heroTitle, tagline, body, navCurrent
 <style>
 ${designCss}</style>
 <style>${PAGE_CSS}</style>
-</head>
+${viz ? `<style>\n${viz.css}</style>\n` : ''}</head>
 <body>
 ${nav(navCurrent, navPosts)}
 ${hero({ prompt, title: heroTitle, tagline })}
 ${body}
 ${footer()}
-</body>
+${viz ? viz.script : ''}</body>
 </html>
 `;
 }
@@ -393,6 +437,8 @@ function writePage(rel, pageDef, navPosts) {
   const html = page(pageDef, navPosts);
   writeFileSync(out, html);
   log(`wrote ${rel} (${Buffer.byteLength(html)} bytes)`);
+  const slots = vizSlots(html);
+  if (slots.length) log(`  ↳ inlined figures: ${slots.join(', ')}`);
   return html;
 }
 

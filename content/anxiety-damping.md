@@ -54,6 +54,11 @@ things, and it is the second one that decides outcomes.
 And crucially: damping is not meditation-specific. It is a property of how a system settles.
 Which raises the suspicion this post is about.
 
+<div class="viz" data-viz="damping">
+  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It illustrates the prose definition above: damping is the return. Low damping — the shape the post reads as HSP, emotional inertia and the DPDR signature — means a larger excursion and a slower return to baseline.</p></noscript>
+  <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
+</div>
+
 ---
 
 ## 3. The step: anxiety as damping, read from outside

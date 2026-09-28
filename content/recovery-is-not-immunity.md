@@ -72,6 +72,11 @@ gets drained.
 threshold is what recovery *is*; losing the threshold is what the second episode *does*. They
 are the same mechanism run in opposite directions, and the second run is faster than the first.
 
+<div class="viz" data-viz="setpoint">
+  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. The table above has the result it illustrates: the first episode collapses at a 66.3 t.u. threshold and the second — after a full rescue back to G = 0.885 — at 66.0 t.u., the same within a grid step; G falls below 0.1 at 73 t.u. into the episode in both. The setpoint S drains 0.76 → 0.13 and Θ_eff = Θ·S/S_rest falls with it.</p></noscript>
+  <p class="viz-caption">Schematic illustration of the published mechanism — not the model solver.</p>
+</div>
+
 ---
 
 ## 4. The measured asymmetry, and the honest gap
