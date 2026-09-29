@@ -96,8 +96,13 @@ VIZ.registerViz('slot', (function () {
       ctx2.stroke();
       ctx2.restore();
 
-      f.textPx('evidence against', bx + 4, by - 21, { color: VIZ.token('bg'), font: '10px ' + MONO });
-      f.textPx('the claim — unmoved', bx + 4, by - 9, { color: VIZ.token('bg'), font: '10px ' + MONO });
+      // on-bar labels drawn directly (the frame's painter would patch over them);
+      // the evidence label needs dark ink while its bar is still empty
+      ctx2.font = '10px ' + MONO;
+      ctx2.fillStyle = evidence > 0.35 ? '#ffffff' : VIZ.token('dim');
+      ctx2.fillText('evidence against', bx + 4, by - 21);
+      ctx2.fillStyle = '#ffffff';
+      ctx2.fillText('the claim \u2014 unmoved', bx + 4, by - 9);
 
       out.set([
         VIZ.bold(String(n)), ' counter-example', n === 1 ? '' : 's',

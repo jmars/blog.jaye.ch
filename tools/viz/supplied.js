@@ -105,7 +105,7 @@ VIZ.registerViz('supplied', (function () {
       ctx2.rect(f.pad.l, top, f.w - f.pad.l - f.pad.r, 20);
       ctx2.stroke();
       ctx2.restore();
-      f.textPx('the mechanism \u2014 the same in all three:', f.pad.l + 6, top + 10, { color: VIZ.token('dim') });
+      f.textPx('the mechanism \u2014 the same in all four:', f.pad.l + 6, top + 10, { color: VIZ.token('dim') });
       f.textPx(MECH, f.pad.l + 6, top + 26, { color: VIZ.token('fg'), font: '10px ' + MONO });
 
       /* the two columns */

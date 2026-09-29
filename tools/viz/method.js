@@ -95,8 +95,14 @@ VIZ.registerViz('method', (function () {
         ctx2.rect(x, top, bw, 34);
         ctx2.stroke();
         ctx2.restore();
-        f.textPx(STAGES[k].n, x + 6, top + 10, { color: on ? VIZ.token('bg') : VIZ.token('dim'), font: '600 10px ' + MONO });
-        f.textPx(STAGES[k].label, x + 6, top + 24, { color: on ? VIZ.token('bg') : VIZ.token('fg'), font: '10px ' + MONO });
+        // drawn with plain canvas text: the frame's label painter lays an opaque
+        // background patch behind glyphs, which would erase white-on-accent text.
+        ctx2.font = '600 10px ' + MONO;
+        ctx2.fillStyle = on ? '#ffffff' : VIZ.token('dim');
+        ctx2.fillText(STAGES[k].n, x + 6, top + 12);
+        ctx2.font = '10px ' + MONO;
+        ctx2.fillStyle = on ? '#ffffff' : VIZ.token('fg');
+        ctx2.fillText(STAGES[k].label, x + 6, top + 26);
       }
 
       /* what it does, and how it is read — the two half-columns */

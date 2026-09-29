@@ -136,7 +136,10 @@ VIZ.registerViz('levers', (function () {
       ctx2.rect(f.pad.l, y0, f.w - f.pad.l - f.pad.r, y1 - y0);
       ctx2.stroke();
       ctx2.restore();
-      f.textPx(toBuild.length + ' of ' + TOTAL, f.pad.l + 6, (y0 + y1) / 2, { color: VIZ.token('bg'), font: '600 11px ' + MONO });
+      // drawn directly: the frame's label painter would lay an opaque patch over the bar
+      ctx2.font = '600 11px ' + MONO;
+      ctx2.fillStyle = '#ffffff';
+      ctx2.fillText(toBuild.length + ' of ' + TOTAL, f.pad.l + 6, (y0 + y1) / 2 + 4);
 
       out.set([
         'the environment supplies ', VIZ.bold(supplied.length + ' of 5'),

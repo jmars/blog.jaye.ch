@@ -120,6 +120,12 @@ Two guards enforce the boundary, so it does not depend on anyone remembering:
       <widget>.js                 one MFE-shaped widget per figure
       viz.css                     figure styling (design tokens; inlined only
                                   into pages that carry a [data-viz] slot)
+    tools/viz-shots.sh        visual check for the figures: renders each one
+                              headlessly via podman (rootless) into .viz-shots/,
+                              so a human — or the vision skill — can look at what
+                              the runtime test cannot see (invisible, clipped or
+                              overlapping text). Needs podman; pulls the browser
+                              image on first run.
     tools/viz-smoke.mjs       runtime test for the figures (happy-dom): mounts
                               each built page's figures, drives every control,
                               checks labels stay inside their canvas, tears down.

@@ -10,3 +10,6 @@ screenshots/
 # Belt-and-braces: artifact types that must never be committed
 *.npz
 *.jsonl
+
+# Generated figure screenshots (tools/viz-shots.sh)
+.viz-shots/
