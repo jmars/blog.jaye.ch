@@ -1,60 +1,42 @@
-# Meditation can harm — and it does so invisibly
+# A mechanism that hides itself — and where it runs
 
-*Summary — the full post is at [`/meditation-harm/`](/meditation-harm/).*
+*The model and the paper are in the mechanism series; the pointers below are the fastest route in.*
 
 *The underlying paper is published: [Marshall (2026), doi:10.5281/zenodo.22943641](https://doi.org/10.5281/zenodo.22943641) · [record](https://zenodo.org/records/22943641).*
 
 ---
 
-Meditation-related harm is not fringe. The *Varieties of Contemplative Experience* study
-built a taxonomy of meditation-related challenges and framed them as experiences
-**"typically underreported."** An independent assessor in a controlled mindfulness trial
-found **adverse effects in 58% of participants and negative impacts on functioning in 37%**
-— with the *lasting* effects (6–14%) **"associated with signs of dysregulated arousal
-(hyperarousal and dissociation)."** A widely-cited estimate puts an adverse effect lasting
-**more than a month** at roughly **one in ten** people who have meditated, including after a
-single practice.
+There is a failure mode with a peculiar property: **the part of the system that would report it is the
+part that survives it.** A self-referential collapse runs — sustained inward attention consumes the
+self-content that attention is made of, the falling generator arms a feedback switch, and the state it
+lands in *feels like arrival*. Reduce the drive to zero and it does not reverse. The reasoning faculty
+sits at its healthy baseline while the self is gone, so *"I'm fine, this is freedom"* is accurate from
+the only vantage left.
 
-And then the strange part. In a recent survey of 121 people with meditation-related
-difficulties, **61.7% of the meditation-triggered group scored above the clinical cutoff for
-depersonalization** — yet almost none carried a diagnosis, and the same state was described
-as **"more welcome, pleasant, and spiritually meaningful"** than the comparison group's
-identical phenomenology.
+That is the mechanism, and its consequence is practical: **it cannot be caught by self-report.** It is
+caught by relocated measurement — the body, the behaviour, an outside observer — and by the provisions
+the traditions built and modern delivery dropped: a frame before you arrive, a community around you, a
+pace metered, and a holder chosen in advance who can act when the state cannot act for itself.
 
-The *phenomenology* is common. The *label* is rare. The state is often experienced as
-**good**. And the self-report instruments cannot reliably see it (the standard dissociation
-taxon false-positives at 54% in non-clinical samples).
+The same mechanism has more than one address — **in minds, in groups, in machines**. A person can run
+it; so can anyone with something to gain from standing on the far side of it. The posts are grouped by
+**what kind of claim each one is**:
 
-**Why does a failure mode this common stay this invisible?** That is the question this
-post tries to answer — with a measured control-theoretic model of self-regulation.
+- **The mechanism** — the measured model: the runaway, the cliff, the invisibility — and the
+  falsifiable prediction that follows from it.
+- **The implications** — arguments built on cited literature: how the collapse is engineered, what
+  frame it is wrapped in, who holds it, what the traditions encoded against it, and why a label is not
+  a mechanism.
+- **The case studies** — documented cases, read through the mechanism: how a surrounding environment
+  pre-supplies the levers a predator would otherwise have to build.
 
-The short version:
-
-- Inward attention **consumes** self-content. Hold it and the generator falls; the falling
-  generator raises an error term that **arms a feedback switch**, which pulls attention
-  *further* inward. A runaway, one direction, no built-in brake.
-- The transition is a **cliff, not a slope** — and it is a specific kind of cliff
-  (*border-collision fold*) with **no critical slowing down**. Recovery time stays
-  *constant* to the edge; what shrinks is **tolerance to perturbation**. Which means a
-  protocol that measures only settling time will miss it entirely.
-- It **does not self-reverse**: reduce the drive to zero and the state persists.
-- And the mechanism for the invisibility: at the collapsed point the **reasoning faculty
-  sits at exactly its healthy baseline** while the self-content generator is annihilated.
-  The part of the system that would *report* the failure is the part that **survives** it —
-  so "I'm fine, this is freedom" is accurate from the only vantage left. Meanwhile the act
-  of self-monitoring *is* the failure driver. **The sensor is destroyed by the failure it
-  exists to detect.**
-
-That last point is the useful one. If it is right, the reporting gap will not close with
-better questionnaires. It closes with **relocated measurement** — the body, behavior, an
-external observer — and with the provision the traditions built and modern delivery dropped:
-a **frame before you arrive, community around you, and pace metered**, plus a holder
-chosen in advance who can act when the state cannot act for itself.
+*(An **agentic mechanism** — the same collapse on a different substrate — is in preparation.)*
 
 ---
 
-**[Read the full mechanics →](/meditation-harm/)**
+**Start with [the mechanism →](/meditation-harm/)**, then take the series that matches what brought
+you here.
 
-*(The model is a deterministic ODE from a single case; the mapping to practice is an
-interpretation, not a measurement. It is offered as one falsifiable hypothesis to the people
-who measure these things — not as a clinical claim.)*
+*(The model is a deterministic ODE from a single case; the mapping to practice is an interpretation,
+not a measurement. It is offered as one falsifiable hypothesis to the people who measure these things
+— not as a clinical claim.)*

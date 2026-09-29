@@ -120,6 +120,12 @@ Two guards enforce the boundary, so it does not depend on anyone remembering:
       <widget>.js                 one MFE-shaped widget per figure
       viz.css                     figure styling (design tokens; inlined only
                                   into pages that carry a [data-viz] slot)
+    tools/viz-smoke.mjs       runtime test for the figures (happy-dom): mounts
+                              each built page's figures, drives every control,
+                              checks labels stay inside their canvas, tears down.
+                              Discovers pages from posts.json. Run it against a
+                              PREVIEW build to cover the staged drafts:
+                                PREVIEW=1 SKIP_CSS=1 ./build.sh && node tools/viz-smoke.mjs
     elm/                      tiny Elm program exposing Fixpoint.Style.css
     vendor/blog-design/       git submodule: github.com/jmars/blog-design
                               (light paper fork of fixpoint-linux/design)
@@ -129,7 +135,8 @@ Two guards enforce the boundary, so it does not depend on anyone remembering:
                               which posts are published (see "Releases" below)
     content/                  Markdown, the actual words
       meditation-harm.md          the full post      → /meditation-harm/
-      meditation-harm-summary.md  the short cut      → /
+      meditation-harm-summary.md  the home page (start here)  → /
+      the-*.md                    the case studies  → /the-<slug>/
       anxiety-damping.md          the second post    → /anxiety-damping/
     dist/                     generated site, deploy as-is (absolute paths)
       <slug>/index.html           a published post

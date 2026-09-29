@@ -49,14 +49,20 @@ const PREVIEW = process.env.PREVIEW === '1';
  * feed, sitemap, robots) is derived from this one constant. */
 const BASE = 'https://blog.jaye.ch';
 
-/** The two series the posts are grouped into. Labels match the home page's
- * section names exactly; a series with nothing published contributes nothing
- * anywhere (a draft never appears). */
+/** The series the posts are grouped into, in nav order. Labels match the home
+ * page's section names exactly; a series with nothing published contributes
+ * nothing anywhere (a draft never appears). 'cases' is the documented tier —
+ * case studies, distinct from the measured mechanism and the argued
+ * implications. */
 const SERIES = [
   { key: 'mechanism', label: 'the mechanism' },
   { key: 'implications', label: 'the implications' },
+  { key: 'cases', label: 'the case studies' },
 ];
 const seriesLabel = (key) => (SERIES.find((s) => s.key === key) || { label: key }).label;
+
+/** Spelled counts, for the prose the build writes ("two series", "three series"). */
+const NUM_WORD = ['zero', 'one', 'two', 'three', 'four', 'five'];
 
 const log = (msg) => console.log(`[build] ${new Date().toISOString()} ${msg}`);
 const warn = (msg) => console.warn(`[build] WARNING: ${msg}`);
@@ -86,7 +92,7 @@ function nav(current, navPosts) {
   const here = (url, label) =>
     link(url, current === url ? 'home' : '', label);
 
-  // Two series, grouped so the measured work and the arguments are never a
+  // Series, grouped so the measured work and the arguments are never a
   // flat list (SERIES, above). A series with nothing published contributes
   // nothing (a draft never appears here).
   const dropdown = (s) => {
@@ -584,7 +590,7 @@ const PALETTE_JS = (data) => `(function () {
     'ls [series]     the published posts, in nav order',
     'cat <slug>      open a post        (also: open, cd)',
     'open <series>   the first post in a series',
-    'series <key>    list one series    (mechanism, implications)',
+    'series <key>    list one series    (' + SERIES.map(function (s) { return s.key; }).join(', ') + ')',
     'home            the front page',
     'help            this list',
   ].join('\\n');
@@ -838,21 +844,31 @@ function buildHome(manifest) {
   // the body
   const body = splitH1(mdToHtml(md), 'summary').rest;
 
-  // The posts form TWO series, split by epistemic status — the boundary the
-  // posts themselves draw. "mechanism" is a measured model + a falsifiable
-  // prediction; "implications" are arguments built on cited literature. They
-  // are indexed separately so the arguments cannot be read as part of the
-  // result (the reason for the split), and numbered within their own series.
+  // The posts form series, split by epistemic status — the boundary the
+  // posts themselves draw (as many as have published posts; the constants
+  // are SERIES, above). "mechanism" is a measured model + a falsifiable
+  // prediction; "implications" are arguments built on cited literature;
+  // "cases" are documented case studies. They are indexed separately so the
+  // arguments and the case narratives cannot be read as part of the result
+  // (the reason for the split), and numbered within their own series.
   const SERIES = [
     {
       key: 'mechanism',
       name: 'The mechanism',
       hint: '// a measured model, then a falsifiable prediction',
+      status: 'measured',
     },
     {
       key: 'implications',
       name: 'The implications',
       hint: '// arguments built on cited literature — not measurements',
+      status: 'arguments',
+    },
+    {
+      key: 'cases',
+      name: 'The case studies',
+      hint: '// documented case studies — how an environment enables predation, read through the mechanism',
+      status: 'documented',
     },
   ];
 
@@ -878,24 +894,39 @@ function buildHome(manifest) {
     .filter(Boolean)
     .join('\n');
 
+  // The tagline names the series that actually have published posts, in nav
+  // order — derived, so it stays true as series are added and never counts a
+  // series with nothing published (under PREVIEW, staged posts count). With the
+  // two published series it renders exactly as it always has:
+  // "two series: the <b>mechanism</b> (measured), and the <b>implications</b> (arguments)."
+  const shown = SERIES.filter((s) =>
+    manifest.posts.some((p) => p.series === s.key && (PREVIEW || p.published))
+  );
+  const tagline =
+    `${NUM_WORD[shown.length] || shown.length} series: ` +
+    shown
+      .map((s) => `the <b>${s.key}</b> (${s.status})`)
+      .join(', ')
+      .replace(/, ([^,]*)$/, ', and $1') +
+    '.';
+
   const html =
     sections +
     `\n<section><div class="wrap">` +
-    `<h2>The short version</h2>` +
-    `<div class="hint">$ cat summary.md</div>` +
+    `<h2>Where to start</h2>` +
+    `<div class="hint">$ cat start-here.md</div>` +
     `<div class="prose">${body}</div>\n` +
     `</div></section>`;
 
   return {
-    title: 'Meditation can harm — and it does so invisibly — blog.jaye.ch',
-    shareTitle: 'Meditation can harm — and it does so invisibly',
+    title: 'A mechanism that hides itself — blog.jaye.ch',
+    shareTitle: 'A mechanism that hides itself — in minds, in groups, in machines',
     type: 'website',
     description:
-      'Meditation-related harm is common and systematically under-reported: the evidence, and a measured control-theoretic account of why it hides.',
-    prompt: 'cat summary.md',
-    heroTitle: 'Meditation can harm — and it does so <span class="fx">invisibly</span>',
-    tagline:
-      'two series: the <b>mechanism</b> (measured), and the <b>implications</b> (arguments).',
+      'A measured control-theoretic mechanism of a collapse that cannot see itself — in minds, in groups, in machines — and how a surrounding environment pre-supplies the levers a predator needs.',
+    prompt: 'cat start-here.md',
+    heroTitle: 'A mechanism that <span class="fx">hides itself</span> — in minds, in groups, in machines',
+    tagline,
     body: html,
     navCurrent: '/',
   };
@@ -909,6 +940,9 @@ function buildHome(manifest) {
  * because it has none. */
 function build404(navPosts) {
   const firstOf = (key) => navPosts.find((p) => p.series === key);
+  // How many series the site actually has — derived, so the copy stays true as
+  // series are added (and never counts one with nothing published).
+  const seriesCount = new Set(navPosts.map((p) => p.series).filter(Boolean)).size;
   const links = navPosts.length
     ? SERIES.map((s) => firstOf(s.key))
         .filter(Boolean)
@@ -921,9 +955,9 @@ function build404(navPosts) {
     `<div class="hint"># the path you asked for is not one of the pages</div>` +
     `<div class="prose">` +
     `<p>Every address on this site is one of the pages below — the summary, or a ` +
-    `post in one of its two series. There is no other content, and nothing was ` +
+    `post in one of its ${NUM_WORD[seriesCount] || seriesCount} series. There is no other content, and nothing was ` +
     `deleted to hide it.</p>` +
-    `<ul><li><a href="/">The summary — the whole argument in short</a></li>${links}</ul>` +
+    `<ul><li><a href="/">Home — where to start</a></li>${links}</ul>` +
     `<p>If you followed a link from somewhere else, the link is stale; the pieces ` +
     `above are current.</p>` +
     `</div></div></section>`;
@@ -977,7 +1011,7 @@ function feedXml(posts) {
     `  <channel>\n` +
     `    <title>blog.jaye.ch</title>\n` +
     `    <link>${BASE}/</link>\n` +
-    `    <description>Meditation can harm — and it does so invisibly. A measured mechanism, and the implications that follow.</description>\n` +
+    `    <description>A mechanism that hides itself — in minds, in groups, in machines: a measured control-theoretic account of a self-referential collapse, and the places it shows up.</description>\n` +
     `    <language>en</language>\n` +
     `    <atom:link href="${BASE}/feed.xml" rel="self" type="application/rss+xml"/>\n` +
     `    <!-- Posts carry no publication date: the manifest has none, and none is\n` +
@@ -1095,6 +1129,47 @@ const POST_META = {
     description:
       'The sixth and last post: the safeguards the traditions encoded — and the clinical field is re-deriving — against every failure mode the series documents.',
     accent: 'Safeguards',
+  },
+  // --- the case studies (staged; published:false in the manifest until released)
+  'the-environment': {
+    prompt: 'cat the-environment.md',
+    tagline: 'the <b>method</b>: what a predator never has to build, because the culture already built it.',
+    hint: '<a href="/">← home</a> · the method, with notes',
+    description:
+      'What an environment pre-supplies — hidden agency, a ranked inner state, a sanctioned dissociation, a host-certified warrant — and the discipline that keeps reading a culture from becoming a verdict on a people.',
+    accent: 'Work',
+  },
+  'the-witch-and-the-debt': {
+    prompt: 'cat the-witch-and-the-debt.md',
+    tagline: 'the <b>hidden cause</b>: harm you cannot see, and a debt that silences the complaint.',
+    hint: '<a href="/">← home</a> · hidden agency, with notes',
+    description:
+      'A cosmology in which harm is real but invisible and suffering is owed — the unfalsifiable slot the environment supplies, and the reason a victim has no standing to complain.',
+    accent: 'Debt',
+  },
+  'the-ladder-of-light': {
+    prompt: 'cat the-ladder-of-light.md',
+    tagline: 'the <b>ranked state</b>: an authority nobody can check — and why wanting the next rung is obedience.',
+    hint: '<a href="/">← home</a> · ranked enlightenment, with notes',
+    description:
+      'Enlightenment as a hierarchy of inner state — spiritual materialism, the fallacy of ranking an unobservable, and the ladder as a control surface the seeker climbs for the predator.',
+    accent: 'Light',
+  },
+  'the-sanctioned-trance': {
+    prompt: 'cat the-sanctioned-trance.md',
+    tagline: 'the <b>sanctioned state</b>: where the trance is already holy, the damage arrives pre-legitimised.',
+    hint: '<a href="/">← home</a> · the sanctioned state, with notes',
+    description:
+      'Where dissociation is the practice, the collapse arrives pre-legitimised and the alarm is off — and the check that would notice is the tolerance the culture is right to keep.',
+    accent: 'Trance',
+  },
+  'the-certified-frame': {
+    prompt: 'cat the-certified-frame.md',
+    tagline: 'the <b>borrowed warrant</b>: the destination certifies the teacher — and the check on him reads as bigotry.',
+    hint: '<a href="/">← home</a> · the borrowed warrant, with notes',
+    description:
+      'When a host culture grants authority to a teacher it has not scrutinised, scrutiny becomes socially costly — and the protections of the home country do not travel with the frame.',
+    accent: 'Frame',
   },
 };
 

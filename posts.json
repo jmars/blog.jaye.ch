@@ -92,6 +92,51 @@
       "summary": "\"Cult\" is a category that does harm — to the people it is meant to protect — and the sources this series leans on helped justify kidnapping. Why it names mechanisms instead.",
       "published": true,
       "series": "implications"
+    },
+    {
+      "slug": "the-environment",
+      "file": "the-environment.md",
+      "navLabel": "the environment",
+      "kind": "case study",
+      "summary": "The method: what a predator never has to build, because the surrounding culture already built it — an inventory of pre-supplied levers.",
+      "published": true,
+      "series": "cases"
+    },
+    {
+      "slug": "the-witch-and-the-debt",
+      "file": "the-witch-and-the-debt.md",
+      "navLabel": "the witch and the debt",
+      "kind": "case study",
+      "summary": "Hidden agency: a cosmology in which harm is real but invisible and suffering is a debt — the unfalsifiable slot, pre-supplied.",
+      "published": true,
+      "series": "cases"
+    },
+    {
+      "slug": "the-ladder-of-light",
+      "file": "the-ladder-of-light.md",
+      "navLabel": "the ladder of light",
+      "kind": "case study",
+      "summary": "Ranked inner state: enlightenment as a hierarchy nobody can check — and why wanting the next rung is obedience.",
+      "published": true,
+      "series": "cases"
+    },
+    {
+      "slug": "the-sanctioned-trance",
+      "file": "the-sanctioned-trance.md",
+      "navLabel": "the sanctioned trance",
+      "kind": "case study",
+      "summary": "The state itself: where dissociation is already holy, the damage arrives pre-legitimised and the alarm is off.",
+      "published": true,
+      "series": "cases"
+    },
+    {
+      "slug": "the-certified-frame",
+      "file": "the-certified-frame.md",
+      "navLabel": "the certified frame",
+      "kind": "case study",
+      "summary": "The destination: a host culture certifies the teacher before he arrives — and the check on him reads as bigotry.",
+      "published": true,
+      "series": "cases"
     }
   ]
 }
