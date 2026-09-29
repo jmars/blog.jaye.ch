@@ -99,10 +99,14 @@ VIZ.registerViz('slot', (function () {
       // on-bar labels drawn directly (the frame's painter would patch over them);
       // the evidence label needs dark ink while its bar is still empty
       ctx2.font = '10px ' + MONO;
+      ctx2.shadowColor = 'rgba(0,0,0,0.6)';   // on-bar ink needs the contrast
+      ctx2.shadowBlur = 3;
       ctx2.fillStyle = evidence > 0.35 ? '#ffffff' : VIZ.token('dim');
       ctx2.fillText('evidence against', bx + 4, by - 21);
       ctx2.fillStyle = '#ffffff';
       ctx2.fillText('the claim \u2014 unmoved', bx + 4, by - 9);
+      ctx2.shadowBlur = 0;
+      ctx2.shadowColor = 'transparent';
 
       out.set([
         VIZ.bold(String(n)), ' counter-example', n === 1 ? '' : 's',
