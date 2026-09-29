@@ -1295,6 +1295,30 @@ const POST_META = {
       'Horizon, Robodebt and the Dutch childcare affair: the unfalsifiable slot staffed by a machine — and the finding that measurement is not a safeguard, auditable measurement is.',
     accent: 'Machine',
   },
+  'set-and-setting': {
+    prompt: 'cat set-and-setting.md',
+    tagline: 'the <b>third route</b>: the mechanism by molecule — and the field that named the appraisal as the variable.',
+    hint: '<a href="/">\u2190 home</a> · the appraisal, measured, with notes',
+    description:
+      'Psychedelics as the mechanism\u2019s third induction route: the same state appraised as breakthrough or bad trip \u2014 and \u201cset and setting\u201d is the frame lever, named as a risk factor.',
+    accent: 'Setting',
+  },
+  'the-differential': {
+    prompt: 'cat the-differential.md',
+    tagline: 'the <b>clinic</b>: the state is ambiguous by construction, so what the clinician can measure is what it costs.',
+    hint: '<a href="/">\u2190 home</a> · the clinic in the model, with notes',
+    description:
+      'What a clinician can and cannot know: the state is appraised, the instruments false-positive, and the honest measure is impairment, duration \u2014 and a holder.',
+    accent: 'Differential',
+  },
+  'after-the-room': {
+    prompt: 'cat after-the-room.md',
+    tagline: 'the <b>exit</b>: the model\u2019s clearest prediction, the history of getting it wrong, and what leaving costs.',
+    hint: '<a href="/">\u2190 home</a> · leaving, and the boundary, with notes',
+    description:
+      'The state cannot initiate its own exit \u2014 so an outside relationship is necessary, and a verdict is the harm. Deprogramming, exit counselling, and the in-between time.',
+    accent: 'Room',
+  },
 };
 
 function buildPost(post, navPosts) {
