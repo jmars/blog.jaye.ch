@@ -117,7 +117,7 @@
       "navLabel": "the differential",
       "kind": "argument",
       "summary": "The clinic in the model: the state is ambiguous by construction, the instruments false-positive, and the honest measure is impairment, duration — and a holder.",
-      "published": false,
+      "published": true,
       "series": "implications"
     },
     {
@@ -126,7 +126,7 @@
       "navLabel": "after the room",
       "kind": "argument",
       "summary": "The state cannot initiate its own exit: an outside relationship is necessary, a verdict is the harm — deprogramming, exit counselling, and the in-between time.",
-      "published": false,
+      "published": true,
       "series": "implications"
     },
     {
@@ -225,7 +225,7 @@
       "navLabel": "set and setting",
       "kind": "case study",
       "summary": "The mechanism's third route: the same state appraised as breakthrough or bad trip — and “set and setting” is the frame lever, named by the field as a risk factor.",
-      "published": false,
+      "published": true,
       "series": "cases"
     }
   ]
