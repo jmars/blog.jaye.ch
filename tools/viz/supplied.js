@@ -149,8 +149,10 @@ VIZ.registerViz('supplied', (function () {
       ctx2.rect(f.pad.l, by - 12, bw, 14);
       ctx2.stroke();
       ctx2.restore();
-      f.textPx('the price of the move', f.pad.l, by - 22, { color: VIZ.token('dim') });
-      f.textPx(e.note, f.pad.l + bw * e.price + 8 > f.w - 60 ? f.pad.l + 6 : f.pad.l + bw * e.price + 8, by - 5, {
+      f.textPx('the price of the move', f.pad.l, by - 26, { color: VIZ.token('dim') });
+      // the note goes on its own line under the bar: at the end of a long fill
+      // (Japan, 0.85) it used to run off the canvas
+      f.textPx(e.note, f.pad.l, by + 16, {
         color: e.price > 0.6 ? VIZ.token('accent') : VIZ.token('accent2'),
       });
 

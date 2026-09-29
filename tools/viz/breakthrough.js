@@ -62,10 +62,14 @@ VIZ.registerViz('breakthrough', (function () {
 
       var ctx2 = canvas.getContext('2d');
       var left = f.pad.l;
-      var colA = f.pad.l + (f.w - f.pad.l - f.pad.r) * 0.24;
-      var colB = f.pad.l + (f.w - f.pad.l - f.pad.r) * 0.60;
+      // three columns that share the canvas: the stage name column is narrow and
+      // fixed, and the two instance columns split what remains.
+      var w = f.w - f.pad.l - f.pad.r;
+      var nameW = 150;
+      var colA = left + nameW;
+      var colB = left + nameW + Math.max(150, (w - nameW) * 0.42);
       var top = f.pad.t + 4;
-      var rowH = 38;
+      var rowH = 40;
 
       f.textPx('the stage', left, top, { color: VIZ.token('dim'), font: '600 10px ' + MONO });
       f.textPx('mystical', colA, top, { color: VIZ.token('accent2'), font: '600 10px ' + MONO });
@@ -98,9 +102,6 @@ VIZ.registerViz('breakthrough', (function () {
         f.textPx(S.mystical, colA, y, { color: hot ? VIZ.token('accent') : VIZ.token('accent2') });
         f.textPx(S.secular, colB, y, { color: hot ? VIZ.token('accent') : VIZ.token('accent') });
 
-        if (hot) {
-          f.textPx('\u2190 the only difference', colB + 150, y, { color: VIZ.token('accent') });
-        }
       }
 
       out.set(

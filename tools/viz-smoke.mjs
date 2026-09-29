@@ -75,6 +75,12 @@ if (!list.length) {
   process.exit(1);
 }
 
+// Checked at the width the page actually renders at (~950px in a 1000px
+// browser). NOTE: this is a crude extent test — the DOM stub has no real font
+// metrics, so the advance is estimated, and NARROW/mobile widths are not covered
+// here. Text that fits at 950 can still clip on a phone; render and look
+// (tools/viz-shots.sh) for that.
+for (const WIDTH of [950]) {
 for (const [slug, widgets] of list) {
   const html = readFileSync(join(ROOT, 'dist', slug, 'index.html'), 'utf8');
   const m = html.match(/<script>\n([\s\S]*?)\n<\/script>/);
@@ -92,16 +98,38 @@ for (const [slug, widgets] of list) {
   const labels = [];
   w.HTMLCanvasElement.prototype.getContext = function () {
     const rec = {};
+    let fontPx = 11; // the engine's default label font
+    let align = 'left';
     for (const mm of CTX_METHODS) rec[mm] = (...a) => {
       calls.set(mm, (calls.get(mm) || 0) + 1);
       if (mm === 'stroke') draw.strokes++;
-      if (mm === 'fillText') { draw.texts++; labels.push({ s: String(a[0]), x: a[1], y: a[2] }); }
+      if (mm === 'fillText') {
+        draw.texts++;
+        // approximate a mono advance (~0.62em) AND honour textAlign, so a
+        // right-aligned axis label (which extends LEFTWARD from x) is not read
+        // as overflowing the right edge.
+        const txt = String(a[0]);
+        const w = txt.length * fontPx * 0.55;
+        const x0 = align === 'right' ? a[1] - w : align === 'center' ? a[1] - w / 2 : a[1];
+        labels.push({ s: txt, x: a[1], x0, x1: x0 + w, y: a[2], w });
+      }
       if (mm === 'fill') draw.fills++;
-      return { width: 20 };
+      const last = rec.__last || '';
+      return { width: last.length * fontPx * 0.50 };
     };
+    Object.defineProperty(rec, 'font', {
+      get() { return fontPx + 'px'; },
+      set(v) { const n = /(\d+(?:\.\d+)?)px/.exec(String(v)); if (n) fontPx = Number(n[1]); },
+    });
+    Object.defineProperty(rec, 'textAlign', {
+      get() { return align; },
+      set(v) { align = String(v || 'left'); },
+    });
+    const ft = rec.fillText;
+    rec.fillText = (t, ...a) => { rec.__last = t; return ft(t, ...a); };
     return rec;
   };
-  Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return 700; }, configurable: true });
+  Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return WIDTH; }, configurable: true });
 
   const injected = js.replace(/\}\)\(\);\s*$/, 'window.__VIZ = VIZ;\n})();');
   if (injected === js) { check(false, `${slug}: could not instrument the inline IIFE`); continue; }
@@ -116,7 +144,7 @@ for (const [slug, widgets] of list) {
     continue;
   }
 
-  console.log(`== ${slug}`);
+  console.log(`== ${slug} @${WIDTH}px`);
   check(d.querySelectorAll('[data-viz-mounted]').length === 0, 'nothing mounts while readyState is loading');
   state = 'interactive';
   d.dispatchEvent(new w.Event('DOMContentLoaded'));
@@ -145,8 +173,8 @@ for (const [slug, widgets] of list) {
 
   const maxW = Math.max(0, ...[...d.querySelectorAll('.viz canvas')].map((c) => c.width));
   const maxH = Math.max(0, ...[...d.querySelectorAll('.viz canvas')].map((c) => c.height));
-  const bad = labels.filter((l) => l.x < 0 || l.y < 0 || l.x > maxW + 2 || l.y > maxH + 2);
-  check(bad.length === 0, `every drawn label is inside its canvas (${labels.length} labels, ${bad.length} out of ${maxW}x${maxH})` +
+  const bad = labels.filter((l) => (l.x0 ?? l.x) < 0 || l.y < 0 || (l.x1 ?? l.x) > maxW + 2 || l.y > maxH + 2);
+  check(bad.length === 0, `every drawn label fits inside its canvas (${labels.length} labels, ${bad.length} out of ${maxW}x${maxH})` +
     (bad.length ? ` e.g. ${JSON.stringify(bad.slice(0, 3))}` : ''));
 
   for (const b of buttons) b.dispatchEvent(new w.Event('click', { bubbles: true }));
@@ -164,6 +192,7 @@ for (const [slug, widgets] of list) {
   check(d.querySelectorAll('[data-viz-mounted]').length === 0, 'the mounted marks are cleared');
   const left = [...d.querySelectorAll('.viz')].map((s) => [...s.children].map((c) => c.tagName).join('+'));
   check(left.every((l) => l === 'NOSCRIPT+P'), `the authored markup survives teardown (${left.join(', ')})`);
+}
 }
 
 console.log(failures === 0 ? '\nRUNTIME SMOKE TEST PASSED' : `\n${failures} FAILURE(S)`);

@@ -4,7 +4,7 @@
  * SCHEMATIC — an illustration of the argument, not a measurement. Toggle the
  * costume off and watch which levers survive: four of the five are indifferent to
  * whether they wear a cosmology, because they are POSITIONS. The fifth — the
- * sanctioned altered state — has no secular instance, and that is the point: it
+ * sanctioned dissociation — has no secular instance, and that is the point: it
  * belongs to the mechanism, not to the costume.
  */
 VIZ.registerViz('costume', (function () {
@@ -81,9 +81,9 @@ VIZ.registerViz('costume', (function () {
 
       var ctx2 = canvas.getContext('2d');
       var left = f.pad.l;
-      var mid = f.pad.l + (f.w - f.pad.l - f.pad.r) * 0.42;
+      var mid = f.pad.l + (f.w - f.pad.l - f.pad.r) * 0.50; // clear of the longest lever name
       var top = f.pad.t + 4;
-      var rowH = 40;
+      var rowH = 44;
 
       f.textPx('the lever (invariant)', left, top, { color: VIZ.token('dim'), font: '600 10px ' + MONO });
       f.textPx(dressed ? 'its mystical costume' : 'its secular instance', mid, top,

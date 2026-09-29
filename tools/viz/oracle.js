@@ -13,7 +13,7 @@ VIZ.registerViz('oracle', (function () {
 
   // the slot's properties: identical whichever occupant holds it
   var PROPS = [
-    { name: 'claim observable by the subject?', mystical: 'no', role: 'no', machine: 'no' },
+    { name: 'claim observable by you?', mystical: 'no', role: 'no', machine: 'no' },
     { name: 'grounds open to inspection?', mystical: 'no', role: 'no', machine: 'no' },
     { name: 'who must disprove it?', mystical: 'you', role: 'you', machine: 'you' },
     { name: 'appeal available?', mystical: 'to whom?', role: 'to whom?', machine: 'to whom?' },
@@ -58,7 +58,7 @@ VIZ.registerViz('oracle', (function () {
 
     function draw() {
       var f = VIZ.frame(canvas, {
-        height: 268,
+        height: 300,
         ariaLabel:
           'One slot, three occupants: a person, a role, a machine. The properties of the slot are the ' +
           'same whoever holds it \u2014 the claim is not observable by the subject, the grounds are not ' +
@@ -71,26 +71,27 @@ VIZ.registerViz('oracle', (function () {
 
       var ctx2 = canvas.getContext('2d');
       var left = f.pad.l;
-      var mid = f.pad.l + (f.w - f.pad.l - f.pad.r) * 0.52;
+      var mid = f.w - f.pad.r - 150; // fixed width for the value column, clear of the longest label
       var top = f.pad.t + 4;
-      var rowH = 34;
+      var rowH = 32;
 
       /* the occupant — the only thing that changes */
-      f.textPx('the oracle', left, top, { color: VIZ.token('dim'), font: '600 10px ' + MONO });
+      f.textPx('the oracle', left, top + 2, { color: VIZ.token('dim'), font: '600 10px ' + MONO });
       ctx2.save();
       ctx2.fillStyle = VIZ.token('bg2');
-      ctx2.fillRect(left, top + 10, f.w - f.pad.l - f.pad.r, 30);
+      ctx2.fillRect(left, top + 14, f.w - f.pad.l - f.pad.r, 30);
       ctx2.strokeStyle = VIZ.token('accent');
       ctx2.lineWidth = 1;
       ctx2.beginPath();
-      ctx2.rect(left, top + 10, f.w - f.pad.l - f.pad.r, 30);
+      ctx2.rect(left, top + 14, f.w - f.pad.l - f.pad.r, 30);
       ctx2.stroke();
       ctx2.restore();
-      f.textPx(OCCUPANTS[at].key, left + 8, top + 25, { color: VIZ.token('accent'), font: '600 12px ' + MONO });
-      f.textPx('\u2014 ' + OCCUPANTS[at].sub, left + 100, top + 25, { color: VIZ.token('dim') });
+      f.textPx(OCCUPANTS[at].key, left + 8, top + 29, { color: VIZ.token('accent'), font: '600 12px ' + MONO });
+      // the sub-label sits in the box, to the right of the occupant's name, never below it
+      f.textPx('\u2014 ' + OCCUPANTS[at].sub, left + 130, top + 29, { color: VIZ.token('dim') });
 
       /* the slot's properties — identical for every occupant */
-      var py = top + 56;
+      var py = top + 78; // clear of the box above
       f.textPx('the slot it occupies \u2014 the same, whichever it is', left, py - 14, {
         color: VIZ.token('dim'), font: '600 10px ' + MONO,
       });

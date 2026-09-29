@@ -17,6 +17,14 @@
 }
 .viz .viz-canvas { display: block; width: 100%; height: auto; }
 
+/* Wide figures must not be squashed on a phone: below the point where a
+ * multi-column figure's layout stops working, hold the canvas at a legible
+ * minimum and let the figure scroll sideways rather than overlap its own
+ * columns. The engine measures clientWidth, so it draws the full layout and the
+ * container scrolls it. */
+.viz { overflow-x: auto; }
+.viz .viz-canvas { min-width: 640px; }
+
 /* Caption — the schematic disclaimer every widget carries. Scoped to .viz to
  * outrank .prose p (which is 19px serif). */
 .viz .viz-caption,
