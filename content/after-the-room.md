@@ -44,11 +44,10 @@ That is the dilemma of leaving in one sentence, and the history of getting it wr
 In the late 1960s and early 1970s, parents across the United States and Europe began to notice
 frightening changes in their adult children and did what frightened parents do: they found someone who
 claimed to fix it. The result was **deprogramming** — the removal of an adult from their community,
-often by force, followed by encounters that, in the account of the practice's own sympathetic
-historians, "lasted three days or more."[^langone] It frequently worked — by one practitioner estimate
-quoted in that history, "about two-thirds of the time" — and it caused, in the same source's words, "a
-great deal of controversy," with even some of the movement's allies denouncing it "on legal and ethical
-grounds."[^langone]
+often by force, followed by encounters that, in the account of the two counter-cult scholars who
+chronicled it, "lasted three days or more."[^langone] It frequently worked — by the same account's
+estimate, "about two-thirds of the time" — and it caused, in its words, "quite a controversy," with
+even some cult critics denouncing it "on legal and ethical grounds."[^langone]
 
 [The label post](/the-label/) has already laid out what that movement did,[^label] and this post
 will not re-litigate it: the vocabulary of *depersonalization and dissociation* was used as grounds for
@@ -60,7 +59,7 @@ What is worth drawing out here is the **terminological history**, because it is 
 visible. The practice was renamed as it was reformed: "deprogramming" originally did not imply
 coercion; parents' voluntary versions were called **"voluntary deprogramming"**; and that term was then
 abandoned because — in the practitioners' own account — **the adjective "voluntary" did not remove the
-negative connotation.[^langone] "Exit counselling" replaced it.**
+negative connotation**[^langone] — "Exit counselling" replaced it.
 
 Read that as a lesson, because it is one. The field did not fix the ethics by finding a better word. It
 kept changing the word because the **practice underneath still had the problem** — an outsider deciding
@@ -95,14 +94,15 @@ does get things right.
 
 ## 4. Leaving is not the end of it
 
-There is a second half, and the studies of people who have left are unusually clear about it. Leaving
-is **not the resolution**; it is the start of a second dislocation.
+There is a second half, and the studies of people who have left are unusually clear about it.[^ransom]
+Leaving is **not the resolution**; it is the start of a second dislocation.
 
-A study of eighteen people who left "high-cost" religious groups found that disaffiliation is "a life
-change that may affect an individual's life in" — and the sentence continues into nearly every
-domain: identity, relationships, work, meaning.[^leaving] Another study, of eleven former members who
-had spent a **mean of sixteen years** inside (one had been in for longer than many readers have been
-alive), named the period after leaving an **"in-between time"**: they "experience [it] in the period
+A study of eighteen people who left "high-cost" religious groups found that disaffiliation "is a life
+change that may affect an individual's life in profound ways," with "experiences of fear, guilt,
+sorrow, pain, loss and even suffering on an existential level" — and "serious implications for one's
+well-being and health."[^leaving] Another study, of eleven former members who
+had spent a **mean of sixteen years** inside (one had left it forty-six years earlier), named the
+period after leaving an **"in-between time"**: they "experience [it] in the period
 after leaving the cult and find themselves in a confusing, chaotic state."[^between]
 
 That study's findings are the ones this series should sit with longest, because they are the model's
@@ -117,8 +117,8 @@ predictions made concrete:
   **having lost a functioning worldview upon leaving the cult but not yet gained another** to take its
   place."[^between] The model says the collapse needs a frame to land in; leaving removes the one they
   had, and a new one does not arrive on schedule.
-- **"Installed phobias."** The groups had taught that the outside world was "different, but threatening
-  or judgmental, thus making the isolation necessary."[^between] Read that against [the certified
+- **"Installed phobias."** The groups had taught that the outside world was "not only different, but
+  threatening or judgmental, thus making the isolation necessary."[^between] Read that against [the certified
   frame](/the-certified-frame/) and [the sanctioned trance](/the-sanctioned-trance/): the isolation was
   never only physical. It was **built into the appraisal**, so that leaving feels like the danger.
 - **Difficulty speaking about it at all.** They "find it hard to talk about their cult
@@ -213,23 +213,37 @@ because "the adjective 'voluntary' did not remove the negative connotation."
 https://cultrecovery101.com/deprogramming-exit-counseling-and-ethics-clarifying-the-confusion · see also
 https://en.wikipedia.org/wiki/Deprogramming
 
-[^leaving]: On leaving a high-cost religious group — the interview study of eighteen people who left
-different religious communities, and disaffiliation as a whole-of-life change.
+[^leaving]: On leaving a high-cost religious group — Björkmark, M., Nynäs, P., & Koskinen, C. (2022),
+"'Living Between Two Different Worlds': Experiences of Leaving a High-Cost Religious Group," *Journal
+of Religion and Health* 61(6): 4721–4737 — the interview study of eighteen people who had left
+different religious communities in Finland; disaffiliation "is a life change that may affect an
+individual's life in profound ways," with consequences for well-being and health, and also positive
+aspects (joy, freedom, relief, empowerment).
 https://pmc.ncbi.nlm.nih.gov/articles/PMC9569318
 
-[^between]: "Being in-between: exploring former cult members' experiences" — eleven former members
-(mean 16 years in; 1–46 years since leaving); the "in-between time" of "a confusing, chaotic state";
-"having lost a functioning worldview upon leaving the cult but not yet gained another"; "installed
-phobias" casting the outside world as "threatening or judgmental, thus making the isolation necessary";
-the difficulty of talking about the background; and the need for healthcare-system support.
-https://pmc.ncbi.nlm.nih.gov/articles/PMC10534031
+[^between]: Hadding, C., Semb, O., Lehti, A., Fahlström, M., Sandlund, M., & DeMarinis, V. (2023),
+"Being in-between: exploring former cult members' experiences of an acculturation process using the
+cultural formulation interview (DSM-5)," *Frontiers in Psychiatry* 14: 1142189 — eleven Swedish
+former members (mean 16 years in, median 18; 1–46 years since leaving); the "in-between time" of "a
+confusing, chaotic state"; "having lost a functioning worldview upon leaving the cult but not yet
+gained another"; "installed phobias" casting the outside world as "threatening or judgmental, thus
+making the isolation necessary" (a framing the paper takes from the prior literature, ref. 11, rather
+than a finding of its own interviews); the difficulty of talking about the background; and the need
+for healthcare-system support. https://pmc.ncbi.nlm.nih.gov/articles/PMC10534031
+
+[^ransom]: On post-exit identity transition — Ransom, H. J., Monk, R. L., & Heim, D. (2022), "Grieving
+the Living: The Social Death of Former Jehovah's Witnesses," *Journal of Religion and Health* 61(3):
+2458–2480 — the qualitative study of former members reading exit through a social-identity lens:
+ostracism after leaving was associated with diminished mental health, while a sense of agency and new
+(including online) social connections appeared to mitigate it; the authors frame it as a *transition*
+towards post-exit life rather than a single event. https://doi.org/10.1007/s10943-020-01156-8
 
 [^label]: [The label post](/the-label/) — deprogramming as extra-legal abduction; the anti-cult
 movement's use of the depersonalization/dissociation vocabulary; the prohibited inference from
 "coercive environment" to "this person cannot choose"; and the operational rule (describe; ask; do not
 diagnose).
 
-*Marking:* documented — the deprogramming history and the terminological sequence; the two studies of
+*Marking:* documented — the deprogramming history and the terminological sequence; the studies of
 people who left, their samples and findings; the ethical distinction between coercive and voluntary
 practice. Argument — that exit is the model's clearest practical prediction; that the outsider's input
 must be a relationship rather than a verdict; that the study findings are the model's predictions made

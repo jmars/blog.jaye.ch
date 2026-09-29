@@ -46,6 +46,11 @@ people**, which means it can neither confirm nor exclude the thing it exists to 
 form. The two failure modes compound — a self-report instrument, administered to a state that cannot
 report itself, on a population where it false-positives more often than not.
 
+And the instrument is not the only place the boundary gives way. The diagnostic criteria for the
+dissociative disorders have themselves been under continuing revision, precisely because the line
+between one dissociative state and its neighbours is not given by the phenomenology a person
+reports.[^diff]
+
 This is not a small clinical nuisance. It is the same structural fact the series keeps meeting: **the
 measurement and the measured are the same system**, so the system cannot audit itself.
 
@@ -91,8 +96,8 @@ is, so it must watch the system behave.
 
 The most complete practical version of this is not in a paper. It is **Cheetah House**, a resource
 built by researchers and clinicians for people harmed by meditation, whose core is a **symptom
-taxonomy** organised by domain — affective, cognitive, perceptual, somatic, conative, and changes in
-sense of self — with each symptom mapped to the research that describes it.[^cheetah]
+taxonomy** organised by domain — affective, cognitive, perceptual, somatic, conative, social, and
+changes in sense of self — with each symptom mapped to the research that describes it.[^cheetah]
 
 Two things about that artefact matter here. **First**, it is the relocated measurement made into an
 instrument: a checklist of *observable domains* for a state that cannot describe itself. **Second**,
@@ -116,8 +121,9 @@ name for the frame that says the experience is transformation rather than disord
 
 The term comes out of transpersonal psychiatry (Stanislav Grof), and it names the position that some
 psychotic-like and dissociative states are **not merely pathology** but a developmental or spiritual
-crisis that can resolve — and it argued that position into the diagnostic manuals, where it appears as
-a Z-code: *"Religious or Spiritual Problem."*[^spiritual] A substantial clinical and pastoral
+crisis that can resolve. That position was then argued *into* the diagnostic manuals — by Lukoff, Lu
+and Turner, working from the same transpersonal tradition — where it appears as a Z-code: *"Religious
+or Spiritual Problem."*[^spiritual] A substantial clinical and pastoral
 literature now works on **differentiating** such an event from psychosis, because getting it wrong cuts
 both ways.
 
@@ -200,14 +206,28 @@ side effect, adverse effects with negative valence or impact on functioning in *
 lasting bad effects in **6–14%**, "associated with signs of dysregulated arousal (hyperarousal and
 dissociation)." https://pmc.ncbi.nlm.nih.gov/articles/PMC8845498
 
-[^cheetah]: Cheetah House — the symptom taxonomy by domain (affective, cognitive, perceptual, somatic,
-conative, sense-of-self) with each symptom mapped to the research describing it; built by researchers
-and clinicians for people harmed by meditation practice. https://www.cheetahhouse.org/symptoms
+[^cheetah]: Cheetah House — the taxonomy of 59 categories organised by domain (affective, cognitive,
+somatic, perceptual, sense-of-self, conative, social) with each symptom mapped to the research
+describing it; built by researchers and clinicians for people harmed by meditation practice, and
+drawn from the *Varieties of Contemplative Experience* study — Lindahl, J. R., Fisher, N. E., Cooper,
+D. J., Rosen, R. K., & Britton, W. B. (2017), "The varieties of contemplative experience: A
+mixed-methods study of meditation-related challenges in Western Buddhists," *PLoS ONE* 12(5):
+e0176239. https://www.cheetahhouse.org/symptoms · https://doi.org/10.1371/journal.pone.0176239
 
-[^spiritual]: On "spiritual emergency" — Grof's transpersonal framing and the DSM's *"Religious or
-Spiritual Problem"* category (V62.89 in DSM-IV); and the clinical literature on **differentiating** a
-spiritual emergency from psychosis. See, e.g., the RCPsych Spirituality SIG discussion of the
-transpersonal perspective on psychotic experience,
+[^diff]: On the diagnostic boundary around dissociative states — Spiegel, D., Loewenstein, R. J.,
+Lewis-Fernández, R., Sar, V., Simeon, D., Vermetten, E., Cardeña, E., & Dell, P. F. (2011),
+"Dissociative disorders in DSM-5," *Depression and Anxiety* 28(9): 824–852 — the review of the
+clinical, phenomenological and neurobiological data behind the proposed revisions to the
+dissociative-disorders criteria, which turn on the disruptive nature of the dissociation rather than
+on the reported phenomenology alone. https://doi.org/10.1002/da.20874
+
+[^spiritual]: On "spiritual emergency" — Grof's transpersonal framing (the term is his and Christina
+Grof's, 1989) and the DSM's *"Religious or Spiritual Problem"* category (V62.89 in DSM-IV; carried
+into DSM-5 as a Z-code), which was introduced on the transpersonal argument of Lukoff, D., Lu, F., &
+Turner, R. (1998), "From spiritual emergency to spiritual problem: The transpersonal roots of the new
+DSM-IV category," *Journal of Humanistic Psychology* 38(2): 21–50, following Grof; and the clinical
+literature on **differentiating** a spiritual emergency from psychosis. See, e.g., the RCPsych
+Spirituality SIG discussion of the transpersonal perspective on psychotic experience,
 https://www.rcpsych.ac.uk/docs/default-source/members/sigs/spirituality-spsig/spirituality-special-interest-group-publications-nicki-crowley-psychotic-episode-or-spiritual-emergency.pdf
 
 [^label]: On the harm of converting a description into a verdict — [the label post](/the-label/), and
@@ -215,7 +235,8 @@ its account of the anti-cult movement's use of the depersonalization/dissociatio
 grounds for acting on people's behalf.
 
 *Marking:* documented — the DES-T false-positive rate; the harm-monitoring framework and its figures;
-Cheetah House's taxonomy; the spiritual-emergency literature and the Z-code. Argument — that the clinic
+the dissociative-disorders diagnostic literature; Cheetah House's taxonomy; the spiritual-emergency
+literature and the Z-code. Argument — that the clinic
 cannot diagnose from the state, only from impairment and duration; that the clinical frame is the same
 lever as the cases'; that the clinic's problem is structurally identical to the series' and its
 countermeasure the same. The reading is the post's contribution; the post is not clinical advice.

@@ -49,7 +49,7 @@ experiences"* — it draws the line between the two routes itself.
 
 This is the series' entire apparatus, stated by a field that arrived at it from survey data rather
 than from a control-theoretic model. The blog's contribution is not the observation that states get
-appraised — the literature has that. It is the longer argument about **who the appraiser is** and what
+appraised — the literature has that.[^making] It is the longer argument about **who the appraiser is** and what
 they get for supplying the reading.
 
 ---
@@ -63,14 +63,15 @@ that lever is not a metaphor — it is a measured **independent variable**, and 
 
 The finding is not that psychology is interesting. It is that the difficulty of an experience is
 predicted by **how the person was framed for it and what was around them when it happened**. A
-systematic review of predictors found six of them, and every one is a framing variable:
+nationally representative survey of psychedelic users found six variables that predicted
+difficulty, and every one is a framing variable:[^predictors]
 
 | the predictor | what it is, in this series' terms |
 |---|---|
 | **no preparation** | no frame supplied in advance |
 | **negative mindset** | a frame supplied in advance, pointing the wrong way |
 | **no psychological support** | no holder |
-| **disagreeable social environment** | milieu control, inverted |
+| **disagreeable physical environment** | milieu control, inverted |
 | **dose too large** | the approach driven past the edge |
 | **a major life event beforehand** | the pre-existing vulnerability the selection criteria of [the coercion post](/manufacturing-the-collapse/) look for |
 
@@ -95,10 +96,10 @@ The mixed-methods study above gathered **608 people** who reported difficulties 
 experience itself** — weeks, months, years. The most common forms were anxiety and fear, existential
 struggle, social disconnection, and **depersonalization and derealization**. For about **a third**, the
 problems lasted **more than a year**; for about **a sixth**, **more than three years**.[^extended]
-Other surveys point the same way: in the 2020 Global Drug Survey, **22.5%** of respondents reported at
-least one negative outcome, most often "mental confusion, memory problems, or racing thoughts"; in the
-Global Ayahuasca survey, **12%** reported lasting adverse effects for which they sought professional
-help.[^extended]
+Other surveys point the same way: in the 2020 Global Drug Survey, **22.5%** of LSD/psilocybin users
+reported at least one negative outcome, most often "mental confusion, memory problems, or racing
+thoughts"; in the Global Ayahuasca survey, **12%** reported lasting adverse effects for which they
+sought professional help.[^extended]
 
 Two things about those numbers matter to this series and one of them is easy to miss.
 
@@ -184,23 +185,49 @@ preparation and a responsible sitter, has arrived at the series' countermeasure 
 
 ## Notes
 
-[^extended]: On extended difficulties following psychedelic use — the mixed-methods study of **608
-participants** reporting difficulties persisting past the experience: the most common forms (anxiety
-and fear; existential struggle; social disconnection; **depersonalization and derealization** — 95
-participants, ~16%); the durations (about **a third** beyond a year, about **a sixth** beyond three
-years); the **appraisal** passage ("Whether a phenomenon is experienced as 'bad' or 'part of the
-process' depends on a person's appraisal. As with meditation experiences, emergent phenomena like
-depersonalization could be appraised as expected and welcome by some individuals, while others may
-find them unexpected and unsettling."); the **six set-and-setting predictors** (no preparation;
-negative mindset; no psychological support; disagreeable social environment; dose too large; a major
-life event prior); and the supporting survey figures (Global Drug Survey 2020: 22.5% at least one
-negative outcome; Global Ayahuasca survey: 12% seeking help for lasting effects).
+[^extended]: On extended difficulties following psychedelic use — Evans, J., Robinson, O. C., Argyri,
+E. K., Suseelan, S., Murphy-Beiner, A., McAlpine, R., Luke, D., Michel, K., & Prideaux, E. (2023),
+"Extended difficulties following the use of psychedelic drugs: A mixed methods study," *PLoS ONE*
+18(10): e0293349 — the mixed-methods study of **608 participants** reporting difficulties persisting
+past the experience: the most common forms (anxiety and fear; existential struggle; social
+disconnection; **depersonalization and derealization** — the depersonalization/dissociation
+sub-theme reported by 95 participants, ~16%); the durations (about **a third** beyond a year, about
+**a sixth** beyond three years); the **appraisal** passage ("Whether a phenomenon is experienced as
+'bad' or 'part of the process' depends on a person's appraisal. As with meditation experiences,
+emergent phenomena like depersonalization could be appraised as expected and welcome by some
+individuals, while others may find them unexpected and unsettling."); and the survey figures the
+study reports (Global Drug Survey 2020 — Kopra et al., *J. Psychopharmacol.* 2023: 22.5% of LSD and
+psilocybin users at least one negative outcome; Global Ayahuasca Survey — Bouso et al. 2022: 12%
+seeking professional support for lasting adverse effects).
 https://pmc.ncbi.nlm.nih.gov/articles/PMC10597511
 
-[^griffiths]: On mystical-type experience as the predictor of benefit — Griffiths et al. on
-psilocybin-occasioned mystical-type experiences mediating therapeutic effect. See, e.g., the
-psilocybin mystical-type experience literature, https://pmc.ncbi.nlm.nih.gov/articles/PMC3050654, and
-the rating-scale work, https://journals.sagepub.com/doi/10.1177/0269881117731279
+[^predictors]: The six set-and-setting variables associated with a greater degree of difficulty —
+Simonsson, O., Hendricks, P. S., Chambers, R., Osika, W., & Goldberg, S. B. (2023), "Prevalence and
+associations of challenging, difficult or distressing experiences using classic psychedelics,"
+*Journal of Affective Disorders* 326: 105–110 — from a nationally representative US survey (N =
+2,822; the subsample of n = 613 reporting lifetime classic psychedelic use): **no preparation;
+disagreeable physical environment; negative mindset; no psychological support; dose too large; a
+major life event prior to the experience**. (The 608-participant study above summarises these as
+"six" but then lists seven, adding "disagreeable social environment"; the six here are as the
+primary source states them.)
+https://doi.org/10.1016/j.jad.2023.01.073 · https://pmc.ncbi.nlm.nih.gov/articles/PMC9974873
+
+[^making]: On appraisal as a *meaning-making* process — Gashi, L., Sandberg, S., & Pedersen, W.
+(2021), "Making 'bad trips' good: How users of psychedelics narratively transform challenging trips
+into valuable experiences," *International Journal of Drug Policy* 87: 102997 — the interviews
+showing that a difficult experience is re-read through narrative *after* the fact, so that the
+account a person gives of their experience is in part a product of its later telling.
+https://doi.org/10.1016/j.drugpo.2020.102997
+
+[^griffiths]: On mystical-type experience as the predictor of benefit — Griffiths, R. R., Richards,
+W. A., Johnson, M. W., McCann, U. D., & Jesse, R. (2008), "Mystical-type experiences occasioned by
+psilocybin mediate the attribution of personal meaning and spiritual significance 14 months later,"
+*J. Psychopharmacol.* 22(6): 621–632 — the mystical experience measured on the session day
+accounting for the later ratings of personal meaning and spiritual significance; and Griffiths, R.
+R., et al. (2018), "Psilocybin-occasioned mystical-type experience in combination with meditation
+and other spiritual practices produces enduring positive changes in psychological functioning and in
+trait measures of prosocial attitudes and behaviors," *J. Psychopharmacol.* 32(1): 49–69.
+https://pmc.ncbi.nlm.nih.gov/articles/PMC3050654 · https://doi.org/10.1177/0269881117731279
 
 [^harm]: On set and setting as harm reduction — its treatment as a practical framework for reducing
 harm (preparation, setting, support, the role of the guide).
