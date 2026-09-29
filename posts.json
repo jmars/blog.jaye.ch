@@ -94,6 +94,15 @@
       "series": "implications"
     },
     {
+      "slug": "the-same-move",
+      "file": "the-same-move.md",
+      "navLabel": "the pattern",
+      "kind": "case study",
+      "summary": "The case studies, opening: one mechanism in four environments — and the finding that the environment sets the price, not whether the move is used.",
+      "published": true,
+      "series": "cases"
+    },
+    {
       "slug": "the-environment",
       "file": "the-environment.md",
       "navLabel": "the environment",
@@ -135,6 +144,33 @@
       "navLabel": "the certified frame",
       "kind": "case study",
       "summary": "The destination: a host culture certifies the teacher before he arrives — and the check on him reads as bigotry.",
+      "published": true,
+      "series": "cases"
+    },
+    {
+      "slug": "the-empty-vessel",
+      "file": "the-empty-vessel.md",
+      "navLabel": "the empty vessel",
+      "kind": "case study",
+      "summary": "The same mechanism outside Brazil: a guru who taught emptying the self and being filled with him — in a tradition that had already named the state and called it not the goal.",
+      "published": true,
+      "series": "cases"
+    },
+    {
+      "slug": "the-new-jerusalem",
+      "file": "the-new-jerusalem.md",
+      "navLabel": "the new jerusalem",
+      "kind": "case study",
+      "summary": "An environment that supplies nothing: post-Soviet Ukraine, the vacuum, and the group that filled it — the same mechanism as Brazil and Japan, at a different price.",
+      "published": true,
+      "series": "cases"
+    },
+    {
+      "slug": "the-designed-method",
+      "file": "the-designed-method.md",
+      "navLabel": "the designed method",
+      "kind": "case study",
+      "summary": "The one case where the group did not find a dissociation but designed one: a technique written to produce the state on schedule, then read as the goal.",
       "published": true,
       "series": "cases"
     }

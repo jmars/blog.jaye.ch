@@ -1171,6 +1171,38 @@ const POST_META = {
       'When a host culture grants authority to a teacher it has not scrutinised, scrutiny becomes socially costly — and the protections of the home country do not travel with the frame.',
     accent: 'Frame',
   },
+  'the-empty-vessel': {
+    prompt: 'cat the-empty-vessel.md',
+    tagline: 'the <b>owned frame</b>: a guru who said empty yourself and be filled with me — in a country that had already named the danger.',
+    hint: '<a href="/">← home</a> · the same mechanism, a different country, with notes',
+    description:
+      'Aum Shinrikyo: the mechanism outside Brazil — a guru who taught emptying the self and being filled with him, in a tradition that had already named the state (makyō, meditation sickness) and called it not the goal.',
+    accent: 'Vessel',
+  },
+  'the-new-jerusalem': {
+    prompt: 'cat the-new-jerusalem.md',
+    tagline: 'the <b>vacuum</b>: after an ideology fell, a country without a frame — and the group that supplied one, and claimed the nation as the world\u2019s sacred centre.',
+    hint: '<a href="/">← home</a> · three environments, one mechanism, with notes',
+    description:
+      'Post-Soviet Ukraine: an environment that supplies nothing, and the group that filled the vacuum — the same mechanism as Brazil and Japan, at a different price.',
+    accent: 'Jerusalem',
+  },
+  'the-designed-method': {
+    prompt: 'cat the-designed-method.md',
+    tagline: 'the <b>designed method</b>: a technique written to produce the state on schedule — then read as the goal.',
+    hint: '<a href="/">← home</a> · the method as lever, with notes',
+    description:
+      'Osho\u2019s Dynamic Meditation: the one case where the group did not find a dissociation but designed one — and the West certified it.',
+    accent: 'Method',
+  },
+  'the-same-move': {
+    prompt: 'cat the-same-move.md',
+    tagline: 'the <b>pattern</b>: one mechanism in four environments — and the environment sets the price, not the choice.',
+    hint: '<a href="/">← home</a> · read this first, with notes',
+    description:
+      'The case studies, opening: one mechanism run through Brazil, Japan, Ukraine and India-to-the-West — and the finding that the environment decides the price, not whether the move is used.',
+    accent: 'Move',
+  },
 };
 
 function buildPost(post, navPosts) {
