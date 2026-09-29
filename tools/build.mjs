@@ -788,6 +788,69 @@ function toc(body) {
   );
 }
 
+/** pandoc 3.x emits one notes-list entry per REFERENCE, so a footnote referenced
+ * several times is duplicated verbatim — one post rendered the same Lifton note
+ * seven times. Merge entries that differ only in their back-reference, keep a
+ * single back-reference to the first marker, and renumber the surviving notes
+ * sequentially so a merged note leaves no gap in the numbering. Runs on the post
+ * body after pandoc and before inlineSidenotes (which reads the merged list). */
+function dedupeFootnotes(body) {
+  const sect = body.match(/(<section class="footnotes" role="doc-endnotes">\s*<ol>)([\s\S]*?)(<\/ol>\s*<\/section>)/);
+  if (!sect) return body;
+  const lis = [...sect[2].matchAll(/<li id="(fn[^"]+)">([\s\S]*?)<\/li>/g)];
+  if (lis.length < 2) return body;
+
+  const BACK = /<a\s[^>]*class="footnote-back"[^>]*>[\s\S]*?<\/a>/g;
+  const sig = (h) => h.replace(BACK, '').replace(/\s+/g, ' ').trim();
+
+  const groups = [];         // { sig, content } in first-appearance order
+  const groupOf = new Map(); // old note id -> group index
+  for (const [, id, raw] of lis) {
+    const s = sig(raw);
+    let gi = groups.findIndex((g) => g.sig === s);
+    if (gi < 0) { gi = groups.length; groups.push({ sig: s, content: raw.replace(BACK, '').trim() }); }
+    groupOf.set(id, gi);
+  }
+  if (groups.length === lis.length) return body; // nothing was duplicated
+
+  // inline markers, in document order: number each group by its first reference,
+  // and remember that marker's id so the merged note has somewhere to return to
+  const refs = [...body.matchAll(/<a\b[^>]*class="footnote-ref"[^>]*>[\s\S]*?<\/a>/g)];
+  const num = new Map();
+  const firstMarker = new Map();
+  for (const r of refs) {
+    const href = /href="#(fn[^"]+)"/.exec(r[0]);
+    const rid = /id="(fnref[^"]+)"/.exec(r[0]);
+    if (!href) continue;
+    const gi = groupOf.get(href[1]);
+    if (gi == null) continue;
+    if (!num.has(gi)) { num.set(gi, num.size + 1); if (rid) firstMarker.set(gi, rid[1]); }
+  }
+
+  // point every marker at the merged note and renumber its visible numeral
+  const renumbered = body.replace(/<a\b[^>]*class="footnote-ref"[^>]*>[\s\S]*?<\/a>/g, (a) => {
+    const href = /href="#(fn[^"]+)"/.exec(a);
+    const gi = href && groupOf.get(href[1]);
+    if (gi == null) return a;
+    const n = num.get(gi);
+    return a.replace(/href="#fn[^"]+"/, `href="#fn${n}"`).replace(/<sup>[\s\S]*?<\/sup>/, `<sup>${n}</sup>`);
+  });
+
+  const items = groups.map((g, gi) => {
+    const n = num.get(gi);
+    if (n == null || !g.content) return '';
+    const marker = firstMarker.get(gi);
+    const back = marker ? `<a href="#${marker}" class="footnote-back" role="doc-backlink">↩︎</a>` : '';
+    const withBack = back && /<\/p>\s*$/.test(g.content)
+      ? g.content.replace(/<\/p>\s*$/, `${back}</p>`)
+      : g.content + back;
+    return `<li id="fn${n}">${withBack}</li>`;
+  }).filter(Boolean);
+
+  const list = `${sect[1]}\n${items.join('\n')}\n${sect[3]}`;
+  return renumbered.replace(/<section class="footnotes" role="doc-endnotes">\s*<ol>[\s\S]*?<\/ol>\s*<\/section>/, list);
+}
+
 /** Each footnote, copied inline right after its reference, as .sidenote (PAGE_CSS
  * floats the copies into the margin at wide viewports — see there).
  *
@@ -1226,6 +1289,13 @@ function buildPost(post, navPosts) {
   if (!body.includes('<section class="footnotes" role="doc-endnotes">')) {
     throw new Error(`${post.slug}: footnotes section not found/converted`);
   }
+
+  // pandoc duplicates a note once per reference — merge and renumber before the
+  // sidenote copies are made from the list
+  const notesBefore = (body.match(/<li id="fn/g) || []).length;
+  body = dedupeFootnotes(body);
+  const notesAfter = (body.match(/<li id="fn/g) || []).length;
+  if (notesAfter < notesBefore) log(`${post.slug}: merged ${notesBefore - notesAfter} duplicate footnote entr(ies)`);
 
   // the section hint already links back to the summary — no extra back-link
   const notes = inlineSidenotes(body);
