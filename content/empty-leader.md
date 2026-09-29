@@ -146,7 +146,7 @@ So look at what the group is actually *for*, structurally:
 
 **The followers are not shaped in his image by accident. They are shaped in his image because
 his image is the only thing he can reproduce** — and because producing it is what maintains
-him. A leader with intact self-content would have something else to give. A leader with an
+him.[^follower] A leader with intact self-content would have something else to give. A leader with an
 externalized one has exactly one product: himself, multiplied.
 
 This also explains a detail that otherwise looks like mere cruelty — the prohibition on
@@ -260,9 +260,28 @@ personality, and the Dark Triad. https://pmc.ncbi.nlm.nih.gov/articles/PMC119398
 *vulnerable* Dark Triad (vulnerable narcissism, secondary psychopathy, borderline traits) as a
 distinct cluster.
 
+[^follower]: The psychology of the **follower** is a separate and older literature than the one
+above, and its most useful contribution is that it refuses the type. **Altemeyer** coined the term
+deliberately: he calls right-wing authoritarians "**authoritarian followers**" *"to emphasize that he
+is not speaking of authoritarian leaders"*, and reserves a different term — "**social dominator**" —
+for the leaders. **Duckitt's** dual-process model (2009) gives the two different drivers: the
+authoritarian-follower path is **threat**-driven, the dominator path is **dominance**-driven. And
+**Stenner** (*The Authoritarian Dynamic*, 2005) argues the disposition is not a type at all but a
+**latent predisposition activated by conditions** — the RWA scale measuring *expressed* authoritarianism
+rather than the predisposition that threatening circumstances convert into a response. The instrument
+that would sort people is the one that fails: Adorno's F-scale — on which this whole tradition
+descends — correlated only **.20** with an item-by-item reversed version of itself, where a phrasing
+artifact would predict **−1.00** (the same validity problem the DES-T shows in [the mechanism
+post](/meditation-harm/)). On the follower as an *active* position rather than a defect, see Haslam &
+Reicher on tyranny as a group-identity dynamic. Read together: **the follower is a position, not a
+personality** — which is [the Costume](/the-costume/)'s finding applied to people rather than to
+levers.
+
 *Marking:* measured — the cognitive/affective empathy dissociation in depersonalization
 (Sierra 2011) and in psychopathy (Blair; Campos; Oliver); the selfobject/narcissistic-supply
-account of externalized self-function (Kohut); the Dark Triad leadership literature. Argument —
+account of externalized self-function (Kohut); the Dark Triad leadership literature. Documented
+(the follower, note 5) — Altemeyer's leader/follower distinction, Duckitt's two paths, Stenner's
+activation model, and the F-scale's validity failure. Argument —
 that these are one dissociation pointing two ways; that the leader's emptiness is functional
 and the group is his self-content; that the traditions' teacher-prohibitions are the structural
 countermeasure. The argument is the post's contribution, and the falsifiers in §7 are what it

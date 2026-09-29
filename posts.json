@@ -67,6 +67,15 @@
       "series": "implications"
     },
     {
+      "slug": "the-follower",
+      "file": "the-follower.md",
+      "navLabel": "the follower",
+      "kind": "argument",
+      "summary": "The follower is a position, not a personality — seventy years of research tried to name the type and dissolved it instead. Expression is conditional; the instrument failed at .20.",
+      "published": false,
+      "series": "implications"
+    },
+    {
       "slug": "what-the-traditions-knew",
       "file": "what-the-traditions-knew.md",
       "navLabel": "what the traditions knew",

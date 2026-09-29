@@ -710,7 +710,7 @@ function page({ title, description, prompt, heroTitle, tagline, body, navCurrent
     `<meta name="twitter:title" content="${esc(share)}">\n` +
     `<meta name="twitter:description" content="${esc(description)}">`;
 
-  return `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -729,6 +729,19 @@ ${footer()}
 ${viz ? viz.script : ''}${palette.html}${palette.script}</body>
 </html>
 `;
+
+  // A widget or post that writes '\\u2014' where it meant '\u2014' escapes the
+  // escape: the page renders a literal backslash-u sequence. Only a rendered page
+  // can show it (the string usually lives in an inlined widget script), so gate
+  // the assembled document — an invisible defect other checks cannot see.
+  const escaped = html.match(/\\\\u[0-9a-fA-F]{4}/);
+  if (escaped) {
+    throw new Error(
+      `literal escape sequence ${escaped[0]} in the rendered page ('${heroTitle.slice(0, 40)}…') — ` +
+        `a backslash was doubled somewhere, usually in a widget string.`,
+    );
+  }
+  return html;
 }
 
 /* ---------- markdown → html ---------- */
@@ -1318,6 +1331,14 @@ const POST_META = {
     description:
       'The state cannot initiate its own exit \u2014 so an outside relationship is necessary, and a verdict is the harm. Deprogramming, exit counselling, and the in-between time.',
     accent: 'Room',
+  },
+  'the-follower': {
+    prompt: 'cat the-follower.md',
+    tagline: 'the <b>follower</b>: a position, not a personality \u2014 and the instrument that would sort people is the one that fails.',
+    hint: '<a href="/">\u2190 home</a> · the other end of the relation, with notes',
+    description:
+      'Seventy years of research tried to name the follower as a personality type and dissolved the type instead: expression is conditional, the position is relational, and the instrument failed at .20.',
+    accent: 'Follower',
   },
 };
 
