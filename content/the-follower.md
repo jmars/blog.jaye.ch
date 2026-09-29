@@ -10,9 +10,9 @@ and ended up dissolving the type instead.*
 
 *Status.* The psychometric findings, the scale critiques and the model comparisons below are
 measured and published; the placing of them in this series' framework is an **inference**, offered as
-one. It names no living person, diagnoses no population, and takes no political side — which, as §6
-shows, is the whole difficulty, because the literature it draws on has *not* taken no side, and the
-series has to say so.
+one. It names only published scholars, and no one whose conduct is not on the record; it diagnoses no
+population, and it takes no political side — which, as §6 shows, is the whole difficulty, because the
+literature it draws on has *not* taken no side, and the series has to say so.
 
 ---
 
@@ -39,21 +39,26 @@ The tradition starts in 1950 with Adorno and colleagues' *The Authoritarian Pers
 proposed an authoritarian character structure to explain the rise of fascism. It was enormously
 influential — and, by the account of the field itself, it was also **criticised at the time for bias
 and methodology**, its theory falling "into disfavor" partly through its association with Freudian
-psychoanalysis.[^adorno]
+psychoanalysis.[^adorno] The counterweight is on the record too: independent studies confirmed part
+of what the book measured, and the criticism below is not that the authors invented a construct out
+of nothing.[^adorno]
 
 What matters here is not that it was wrong. It is **how** it failed, because the failure is one this
-series has met four times already.
+series has met before.
 
-The instrument was the **F-scale** — "F" for pre-fascist personality. Its items were written in
-"superficially moderate language" that nonetheless conveyed the target, and they were **all phrased in
-the same direction**. The check for that is to reverse each item and see whether the scale still
-measures the same thing. It did not: the correlation between the F-scale and an item-by-item reversed
-version of itself was **.20** — where, if phrasing played no role, it should have been **−1.00**.[^adorno]
+The instrument was the **F-scale** — the "F" for fascism, or for the "pre-fascist" personality it
+claimed to describe. Its items were written to *sound* moderate — the authors' own stated aim was to
+measure prejudice "without appearing to have this aim" — and they were **all phrased in the same
+direction**. The check for that is to reverse each item and see whether the scale still measures the
+same thing. It did not: Bass found the F-scale correlating **−.20** with a rewritten, content-reversed
+version of itself, and Messick and Jackson's reanalysis of the same data put it at **+.20** — where, if
+phrasing played no role, either figure should have been **−1.00**.[^adorno]
 
-Sit with that number. The scale's correlation with its own negation is **positive**, which means a
-substantial part of what it measured was not the construct — it was **acquiescence**, the tendency to
-agree. The instrument that would sort people into authoritarians and non-authoritarians was measuring,
-in part, *the willingness to say yes to a questionnaire.*
+Sit with that number, because its *size* is the finding and its sign is not. Whether the true value is
+−.20 or +.20, neither is anywhere near −1.00, and the gap is the point: a substantial part of what the
+F-scale measured was not the construct but **acquiescence**, the tendency to agree. The instrument that
+would sort people into authoritarians and non-authoritarians was measuring, in part, *the willingness
+to say yes to a questionnaire.*
 
 That is the **DES-T's 54% false-positive rate** in [the mechanism post](/meditation-harm/), met again
 in a different literature: **the instrument that names the person is the instrument that fails.** And
@@ -70,14 +75,21 @@ rigorously, and defined it by three attitudes: a high degree of **submission** t
 authorities; **aggression** directed at targets the authorities sanction; and high **adherence to
 social conventions**.[^altemeyer]
 
-And then he did the thing that matters most for this post, and it was deliberate:
+The repair worked better than the thing it replaced, and it did not remove the class of problem. The
+RWA scale carries its own version of the critique: items near-tautological with the prejudice they are
+meant to predict, and a unidimensional scale standing in for a three-factor construct whose factors
+cannot be separately analysed.[^rwa] That is not an aside: it is the post's own thesis holding at
+the next step along, and it is why the argument below rests on the *activation* finding rather than on
+the scale.
 
-> Altemeyer calls right-wing authoritarians **"authoritarian followers"** — "*to emphasize that he is
-> not speaking of authoritarian leaders*, which is the more commonly understood meaning." He reserves
-> a different term for leaders: the **"social dominator."**[^altemeyer]
+And then Altemeyer did the thing that matters most for this post, and it was deliberate:
+
+> Altemeyer calls right-wing authoritarians **"authoritarian followers"** — the point of the phrase
+> being that he is *not* speaking of authoritarian leaders, which is the more commonly understood
+> meaning of "authoritarian." He reserves a different term for leaders: the **"social dominator."**[^altemeyer]
 
 **The follower and the leader are not one category.** The finding is a measurement's, not a moralist's:
-the literature separated them, and **Duckitt's dual-process model** gave them different engines — the
+the literature separated them, and **Duckitt and Sibley's dual-process model** gave them different engines — the
 authoritarian-follower path runs on **threat**, the dominator path on **dominance**.[^duckitt]
 
 Read that against [the empty leader](/empty-leader/). That post argued the two share one dissociation
@@ -95,11 +107,12 @@ Dynamic* (2005).
 
 Her argument is that prior work on authoritarianism suffered from **tautological assertions** and had
 failed to produce a theory that explained how authoritarian expression **fluctuates with conditions**.
-Her correction is a single structural move: RWA is
+Her correction is a single structural move: the RWA index, she argues, "actually measures not
+fundamental predisposition to authoritarianism, but rather expressed authoritarian attitudes (i.e.,
+manifest expressions of intolerance of difference)" — a dynamic response to external threat, not a
+static disposition.[^stenner]
 
-> "best understood as a dynamic response to external threat, **not a static disposition**."[^stenner]
-
-And she makes the operational distinction that follows: the RWA scale measures **expressed**
+And the distinction that follows is the whole of the move: what the scale reads is **expressed**
 authoritarianism, while a *latent predisposition* is what threatening circumstances convert into that
 response.[^stenner]
 
@@ -125,9 +138,9 @@ stating as a rule:
 
 > **The environment does not create the follower. It decides whether the predisposition is expressed.**
 
-Which is the price-and-condition argument of [the Costume](/the-costume/) and
-[the Breakthrough](/the-breakthrough/), reached from political psychology by someone studying
-electorates.
+Which is what [the environment](/the-environment/) argues about price, [the Costume](/the-costume/)
+about position, and [the Breakthrough](/the-breakthrough/) from the case record — reached from
+political psychology by someone studying electorates.
 
 She also draws a line this series should keep, because it resolves a conflation that otherwise
 poisons the discussion: **authoritarianism is resistance to difference across *space*; conservatism is
@@ -181,9 +194,13 @@ where that rule is hardest to keep, so the difficulty goes in the body rather th
 **The literature is not politically neutral, and this post will not pretend it is.** The dominant
 construct is measured as **right-wing** authoritarianism; it was born as an attempt to explain
 fascism; and it is routinely deployed in political argument as a way of diagnosing one's opponents.
-Altemeyer himself noted the mirror case — a "left-wing authoritarian" who submits to authorities
-seeking to *overthrow* the establishment[^altemeyer] — and Stenner explicitly notes that the dynamic
-appears **elsewhere on the political spectrum**, citing the Nation of Islam as an example.[^stenner]
+Some of the scale's own critics make the stronger charge — that the bias is built into the items, so
+that the political commitment arrives with the measurement.[^rwa] Altemeyer himself noted the mirror
+case — a "left-wing authoritarian" who submits to authorities seeking to *overthrow* the
+establishment[^altemeyer] — and the construct has since been measured on the left rather than merely
+defined there, which makes it a live and contested literature rather than a tidy asymmetry.[^lwa]
+Stenner, for her part, explicitly notes that the dynamic appears **elsewhere on the political
+spectrum**, citing the Nation of Islam as an example.[^stenner]
 
 That matters because the honest use of this literature **dissolves** the political application rather
 than arming it. If authoritarian expression is **a response to threat**, then **the way to produce it
@@ -216,7 +233,7 @@ that closes the loop with [the empty leader](/empty-leader/).
 | what the psychology says | a dominator: **dominance**-driven | a follower: **threat**-driven |
 | what defines the position | the need to be supplied | **relation to an authority** |
 | what activates it | opportunity | **a condition** (perceived threat to the world) |
-| can it be diagnosed? | no | **no** — and the instrument that tried failed at .20 |
+| can it be diagnosed? | no | **no** — and the instrument that tried failed the reversal check |
 
 The last row is the post's contribution, and it is what makes this the series' clearest case rather
 than its most dangerous one. The tradition tried to name the follower as a type for seventy years and
@@ -231,46 +248,121 @@ names a type: **a position is what a person is standing in, and a person can lea
 ## Notes
 
 [^adorno]: Adorno, T. W., Frenkel-Brunswik, E., Levinson, D. J., & Sanford, R. N. (1950). *The
-Authoritarian Personality* — the F-scale ("F" for pre-fascist personality); the items' uniformly
-affirmative phrasing and "superficially moderate language"; and the reversal check: the correlation
-between the F-scale and an item-by-item reversed version was **.20** (where a pure phrasing artifact
-would give −1.00), indicating acquiescence response set as a substantial source of variance. The book
-was "criticized at the time for bias and methodology," and its theory "fell into disfavor" partly
-through its association with Freudian psychoanalysis.
-https://en.wikipedia.org/wiki/The_Authoritarian_Personality
+Authoritarian Personality* (New York: Harper & Brothers), https://en.wikipedia.org/wiki/The_Authoritarian_Personality
+— the F-scale (the "F" glossed as *fascism* in the source article's lead, and as the "pre-fascist"
+personality in its own body text — the same article carries both, and the secondary literature
+generally follows); the items' uniformly affirmative phrasing, on a scale whose stated aim was
+"to construct a scale that would measure prejudice without appearing to have this aim" (quoted in
+Dunwoody & Funke 2016, below); and *the reversal failure*, on which this post's figure turns: Bass, B.
+M. (1955), "Authoritarianism or acquiescence?" *The Journal of Abnormal and Social Psychology* 51(3):
+616–623, https://doi.org/10.1037/h0042890, whose rewritten, content-reversed "G scale" correlated
+**−.20** with the F-scale as his data are summarized by Messick, S., & Jackson, D. N. (1957),
+"Authoritarianism or acquiescence in Bass's data," *The Journal of Abnormal and Social Psychology*
+54(3): 424–426 (reanalysis of the same data yielding **+.20**),
+https://psycnet.apa.org/record/1959-05766-001. The **sign** is therefore disputed in the primary
+literature and the draft above rests only on the size of the gap from −1.00, which both values share.
+The more careful reversal — preserving each item's rationale rather than mechanically negating it — is
+Christie, R., Havel, J., & Seidenberg, B. (1958), "Is the F scale irreversible?" *The Journal of
+Abnormal and Social Psychology* 56(2): 143–159, https://doi.org/10.1037/h0041279; and the study that
+made agreeing response set a construct in its own right is Couch, A., & Keniston, K. (1960),
+"Yeasayers and naysayers: Agreeing response set as a personality variable," *The Journal of Abnormal
+and Social Psychology* 60(2): 151–174, https://doi.org/10.1037/h0040372. **Reception:** the book "was
+criticized at the time for bias and methodology," while parts of what it measured were confirmed in
+independent studies; the claim that its theory "fell into disfavor" partly because it was associated
+with Freudian psychoanalysis is stated in the *Right-wing authoritarianism* article,
+https://en.wikipedia.org/wiki/Right-wing_authoritarianism. **One attribution corrected here:** the
+phrase "superficially moderate language" appears in the source as a description of the **anti-Semitism
+scale's** items, not the F-scale's; the F-scale point is sourced to the construction aim instead.
 
 [^altemeyer]: Altemeyer, B. (1981). *Right-Wing Authoritarianism*; and (1996) *The Authoritarian
 Specter*. The three components (submission to established authorities; sanctioned aggression; adherence
-to social conventions); and the deliberate naming: Altemeyer "sometimes refers to right-wing
-authoritarians as 'authoritarian followers'… to emphasize that he is not speaking of authoritarian
-leaders," reserving "social dominator" for leaders. He also defined the "left-wing authoritarian" as
-one who submits to authorities seeking to overthrow the establishment.
-https://en.wikipedia.org/wiki/Right-wing_authoritarianism
+to social conventions) are Altemeyer's own definitions, at Altemeyer (1996) pp. 9–10 as quoted in
+Dunwoody & Funke (2016), below: aggression as intentional harm the aggressor believes "proper authority
+approves it or that it will help preserve such authority" (p. 10), submission as "a general acceptance
+of the statements and actions [of those in authority] and a general willingness to comply with their
+instructions without further inducement" (p. 9).
+https://en.wikipedia.org/wiki/Right-wing_authoritarianism *On the naming:* the post above renders
+Altemeyer's usage in reported speech rather than as a verbatim quotation, because the phrasing
+"sometimes refers to right-wing authoritarians as 'authoritarian followers' … to emphasize that he is
+not speaking of authoritarian leaders" is the **secondary article's** sentence, not Altemeyer's; its
+sources are Altemeyer (1996) p. 6 and Altemeyer (2010) *The Authoritarians*, ch. 1 ("Who Are the
+Authoritarian Followers?"). The "social dominator" term for leaders, and the definition of the
+"left-wing authoritarian" as one who submits to authorities who want to overthrow the establishment,
+are that article's attributions to Altemeyer (2010), ch. 1: "If these authorities are the established
+authorities in society, that's right-wing authoritarianism. If one submits to authorities who want to
+overthrow the establishment, that's left-wing authoritarianism, as I define things."
 
-[^duckitt]: Duckitt, J. (2009). "A Dual-Process Motivational Model of Ideology, Politics, and
-Prejudice," *Psychological Inquiry* 20(2–3): 84–97 — the two paths: authoritarian-follower attitudes
-driven by **threat**, social-dominance attitudes by **dominance**. See also Duckitt & Sibley's
-meta-analysis of dangerous and competitive worldviews.
+[^rwa]: On the current standing of the RWA construct — the critique the post's §3 and §6 lean on:
+Dunwoody, P. T., & Funke, F. (2016), "The Aggression-Submission-Conventionalism Scale: Testing a new
+three factor measure of authoritarianism," *Journal of Social and Political Psychology* 4(2): 571–600,
+https://doi.org/10.5964/jspp.v4i2.168 — a unidimensional scale used for a three-factor construct, items
+that cannot be assigned one-to-one to the factors they are meant to measure because they are
+deliberately double-barrelled, and items near-tautological with the prejudice the scale is used to
+predict ("a host of items that measure intolerance and prejudice can predict other measures of
+intolerance and prejudice," citing Stenner 2005); the same authors charge the RWA scale with political
+bias, and their own replacement (the ASC) is offered as the fix. See also Duckitt, J., Bizumic, B., Krauss, S. W., & Heled, E. (2010),
+"A tripartite approach to right-wing authoritarianism: The authoritarianism–conservatism–traditionalism
+model," *Political Psychology* 31(5): 685–715, https://doi.org/10.1111/j.1467-9221.2010.00781.x, a
+further attempt to rebuild the measure factor by factor.
 
-[^stenner]: Stenner, K. (2005). *The Authoritarian Dynamic* (Cambridge University Press) — RWA as "a
-dynamic response to external threat, not a static disposition"; the RWA scale as a measure of
-*expressed* authoritarianism rather than the **latent predisposition** that conditions convert into a
-response; the finding that authoritarian intolerance in Eastern Europe was **low while socialist
-autocracies supplied normative reassurance** and rose after their collapse; and the analytic
-distinction between **authoritarianism (resistance to difference across space)** and **conservatism
-(resistance to difference across time)**, with the note that the dynamic appears elsewhere on the
-political spectrum.
+[^lwa]: On measuring the construct on the left rather than only defining it: Conway, L. G. III, Houck,
+S. C., Gornick, L. J., & Repke, M. A. (2018), "Finding the Loch Ness Monster: Left-Wing
+Authoritarianism in the United States," *Political Psychology* 39(5): 1049–1067,
+https://doi.org/10.1111/pops.12470 — left-wing authoritarianism as a measurable construct in the same
+family. The literature is contested, and this post does not adjudicate it: the counter-argument, that
+the left-wing construct is being manufactured rather than found, is argued in the same journal's pages
+(see Conway et al. 2023, "Is the myth of left-wing authoritarianism itself a myth?" *Frontiers in
+Psychology* 13: 1041391, https://doi.org/10.3389/fpsyg.2022.1041391). Either way, the claim in §6 is
+the weaker one: the construct is not the exclusive property of one side.
 
-[^haslam]: Haslam, S. A., Reicher, S. D., & Platow, M. J. — *The New Psychology of Leadership:
-Identity, Influence and Power* — on tyranny as a **group-identity dynamic** and followers as **active
-participants** in producing the leader and the leadership, rather than passive victims.
+[^duckitt]: Duckitt, J., & Sibley, C. G. (2009). "A dual-process motivational model of ideology,
+politics, and prejudice," *Psychological Inquiry* 20(2–3): 98–109,
+https://doi.org/10.1080/10478400903028540 — the two paths: authoritarian-follower attitudes driven by
+**threat** (a dangerous-world view), social-dominance attitudes by **dominance** (a competitive-jungle
+view). For the dual-process model extended into a full account, see also Duckitt, J., & Sibley, C. G.
+(2010), "Personality, ideology, prejudice, and politics: A dual-process motivational model," *Journal
+of Personality* 78(6): 1861–1894, https://doi.org/10.1111/j.1467-6494.2010.00672.x.
+
+[^stenner]: Stenner, K. (2005). *The Authoritarian Dynamic* (Cambridge: Cambridge University Press) —
+the critique of Altemeyer's index as measuring "not fundamental predisposition to authoritarianism,
+but rather expressed authoritarian attitudes (i.e., manifest expressions of intolerance of
+difference)," quoted verbatim from ch. 4 (pp. 52–84), which is the *expressed*/*latent* distinction
+this post uses; the underlying claim that RWA is a dynamic response to external threat rather than a
+static disposition is the secondary literature's summary of the book's argument
+(https://en.wikipedia.org/wiki/Right-wing_authoritarianism) and is paraphrased above rather than
+quoted, because no verbatim sentence in that wording could be located. The Eastern-European finding —
+authoritarian intolerance low while socialist autocracies supplied **normative reassurance**, rising
+after the collapse — is at pp. 316–319; the Nation of Islam as an example of the dynamic elsewhere on
+the spectrum, at pp. 141–142
+(https://en.wikipedia.org/wiki/Karen_Stenner); and the analytic distinction between **authoritarianism
+(resistance to difference across space)** and **conservatism (resistance to difference across time)**
+is developed at pp. 13–27 and again in Stenner, K. (2009), "Three kinds of 'conservatism',"
+*Psychological Inquiry* 20(2–3): 142–159, https://doi.org/10.1080/10478400903028615.
+
+[^haslam]: Haslam, S. A., & Reicher, S. D. (2007). "Beyond the banality of evil: Three dynamics of an
+interactionist social psychology of tyranny," *Personality and Social Psychology Bulletin* 33(5):
+615–622, https://doi.org/10.1177/0146167206298570 — on tyranny as a **group-identity dynamic**, and on
+the point the post uses: the presence of leadership "should not be equated with the passivity of
+followers." For the positive half of the claim — leaders and followers as **collaborative agents**
+producing the leadership between them rather than followers as its recipients — see Reicher, S. D.,
+Haslam, S. A., & Hopkins, N. (2005), "Social identity and the dynamics of leadership: Leaders and
+followers as collaborative agents in the transformation of social reality," *The Leadership Quarterly*
+16(4): 547–568, https://doi.org/10.1016/j.leaqua.2005.06.007, and the book, Haslam, S. A., Reicher, S.
+D., & Platow, M. J. (2020), *The New Psychology of Leadership: Identity, Influence and Power*, 2nd ed.
+(London: Routledge), https://doi.org/10.4324/9781351108232. The phrase "active participants" is the
+paraphrase used above for that collaborative-agency position; it is not a quotation from any one of
+these texts.
 
 [^label]: [The label post](/the-label/) on the difference between describing a structure and sorting
 people into a verdict, and the standing non-use clause.
 
-*Marking:* measured — the F-scale's .20 reversal correlation and the acquiescence critique; the RWA
-scale and its three components; Stenner's activation model and her Eastern-European evidence;
-Altemeyer's follower/dominator distinction; Duckitt's dual-process model. Argument — that the follower
+*Marking:* measured — the F-scale's failure on the reversal check (Bass 1955; Messick & Jackson 1957;
+Christie et al. 1958) and the acquiescence critique (Couch & Keniston 1960); the RWA scale and its
+three components; the current critiques of the RWA construct (Dunwoody & Funke 2016; Duckitt et al.
+2010); the measurement of the construct on the left (Conway et al. 2018); Stenner's activation model,
+her Eastern-European evidence and her *expressed*/*latent* distinction; Altemeyer's follower/dominator
+distinction; Duckitt & Sibley's dual-process model. Documented — Haslam & Reicher on tyranny as a
+group-identity dynamic and on followers as something other than passive. Argument — that the follower
 is a **position activated by a condition** rather than a personality type; that this is the same
 finding the series reaches about every lever; that the political application of this literature
 dissolves under its own conditional finding rather than arming it; and the boundary in §6. The reading
