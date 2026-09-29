@@ -228,13 +228,17 @@ rebuild in full mode and commit the new submodule pin + `design/blog.css`.
 
 ## Pages
 
-`posts.json` lists ten published posts; each builds to `/<slug>/`, and `/` is
-the home page (the short cut of the first post). Four of them carry figures; the
-rest are prose only.
+`posts.json` lists every published post; each builds to `/<slug>/`, and `/` is the
+home page — the framework-level **start here**, which routes into the series. All
+prose is verbatim from `content/`: no content edits at build time.
 
-- `/` — the short cut (summary) + a call-to-action to the first published post.
-- `/meditation-harm/` — the full post, footnotes rendered as a notes section.
-- `/anxiety-damping/` — the second post.
+- `/` — the home page (start here), the series grids, and the route into the series.
+- `/meditation-harm/` — the mechanism post, footnotes rendered as a notes section.
+- `/anxiety-damping/` — the prediction.
 
-Prose is verbatim from `content/` — no content edits at build time; the summary
-already links to the published post in its own text.
+Posts are grouped into three series by **epistemic status** — `mechanism`
+(measured), `implications` (arguments), `cases` (documented). The home-page
+tagline, the section counts and the 404 copy are all derived from the manifest, so
+they follow whatever is published. A post carrying a `[data-viz]` slot gets the
+figure engine inlined; run `node tools/viz-smoke.mjs` after a build to check the
+figures mount, draw, respond and tear down.

@@ -1266,6 +1266,14 @@ const POST_META = {
       'The case studies, opening: one mechanism run through Brazil, Japan, Ukraine and India-to-the-West — and the finding that the environment decides the price, not whether the move is used.',
     accent: 'Move',
   },
+  'the-costume': {
+    prompt: 'cat the-costume.md',
+    tagline: 'the <b>costume</b>: strip the mysticism off the levers and they still work — which tells us what a lever is.',
+    hint: '<a href="/">← home</a> · the levers, undressed, with notes',
+    description:
+      'The levers without the mysticism: a masonic lodge and a false-bottomed suitcase run the same structure as the mystics — so the lever is a position, not a belief.',
+    accent: 'Costume',
+  },
 };
 
 function buildPost(post, navPosts) {
