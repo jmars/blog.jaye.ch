@@ -1274,6 +1274,22 @@ const POST_META = {
       'The levers without the mysticism: a masonic lodge and a false-bottomed suitcase run the same structure as the mystics — so the lever is a position, not a belief.',
     accent: 'Costume',
   },
+  'the-breakthrough': {
+    prompt: 'cat the-breakthrough.md',
+    tagline: 'the <b>other side of the coin</b>: the same manufactured collapse, with no mysticism at all — run for money, at scale.',
+    hint: '<a href="/">← home</a> · the procedure without a cosmology, with notes',
+    description:
+      'est and the Landmark Forum: the coercion post’s procedure with the cosmology removed — fatigue, confrontation, the collapse, and the appraisal sold as "Transformation."',
+    accent: 'Breakthrough',
+  },
+  'the-machine-said-so': {
+    prompt: 'cat the-machine-said-so.md',
+    tagline: 'the <b>oracle without a person</b>: the unfalsifiable authority needs no guru — and the remedy is still the same.',
+    hint: '<a href="/">\u2190 home</a> · the machine in the slot, with notes',
+    description:
+      'Horizon, Robodebt and the Dutch childcare affair: the unfalsifiable slot staffed by a machine — and the finding that measurement is not a safeguard, auditable measurement is.',
+    accent: 'Machine',
+  },
 };
 
 function buildPost(post, navPosts) {
