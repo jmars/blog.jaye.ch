@@ -76,10 +76,13 @@ if (!list.length) {
 }
 
 // Checked at the width the page actually renders at (~950px in a 1000px
-// browser). NOTE: this is a crude extent test — the DOM stub has no real font
-// metrics, so the advance is estimated, and NARROW/mobile widths are not covered
-// here. Text that fits at 950 can still clip on a phone; render and look
-// (tools/viz-shots.sh) for that.
+// browser). This is a HEURISTIC, not a layout engine: the DOM stub has no font
+// metrics, so the advance is estimated (~0.5em) and the result is only as good as
+// that guess — it catches gross overflow and nothing subtler. Narrow/mobile widths
+// and column-collision bugs are NOT detectable here; render every figure and LOOK
+// (tools/viz-shots.sh) before shipping a new one. (Items in this class — a column
+// running off the edge, a label colliding with its value — have all been found by
+// the visual pass, never by this file.)
 for (const WIDTH of [950]) {
 for (const [slug, widgets] of list) {
   const html = readFileSync(join(ROOT, 'dist', slug, 'index.html'), 'utf8');
@@ -111,11 +114,15 @@ for (const [slug, widgets] of list) {
         const txt = String(a[0]);
         const w = txt.length * fontPx * 0.55;
         const x0 = align === 'right' ? a[1] - w : align === 'center' ? a[1] - w / 2 : a[1];
-        labels.push({ s: txt, x: a[1], x0, x1: x0 + w, y: a[2], w });
+        labels.push({ s: txt, x: a[1], x0, x1: x0 + w, y: a[2], w: w });
       }
       if (mm === 'fill') draw.fills++;
+      // the widget wraps its own text through measureText, so this must return a
+      // plausible width (matching the extent estimate below) — a fake tiny width
+      // makes a wrapping widget refuse to wrap and the overflow test then blames
+      // the figure for the stub's shortfall.
       const last = rec.__last || '';
-      return { width: last.length * fontPx * 0.50 };
+      return { width: last.length * fontPx * 0.5 };
     };
     Object.defineProperty(rec, 'font', {
       get() { return fontPx + 'px'; },

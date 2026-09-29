@@ -306,6 +306,11 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
   display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   margin-top: 2.4em; padding-top: 18px; border-top: 1px solid var(--line);
   font-family: var(--mono); font-size: 13px;
+  /* the last margin sidenote (see the sidenote block) floats, and a float may
+     extend past the element that contains it — so the series nav, which follows
+     the prose in the same wrap, clears it. Without this a note on the final
+     paragraph overhangs the footer and the page box. */
+  clear: both;
 }
 .postnav a { display: block; max-width: 46%; color: var(--accent2); }
 .postnav a.next { margin-left: auto; text-align: right; }
