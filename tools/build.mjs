@@ -593,10 +593,10 @@ function vizAssets(body) {
   const widgets = slots.map((name) => {
     const file = join(VIZ_DIR, `${name}.js`);
     if (!existsSync(file)) throw new Error(`data-viz="${name}" has no widget at tools/viz/${name}.js`);
-    return readFileSync(file, 'utf8');
+    return stripComments(readFileSync(file, 'utf8'));
   });
-  const js = ['(function () {', "'use strict';", readFileSync(VIZ_ENGINE, 'utf8'), ...widgets, '})();'].join('\n');
-  return { slots, css: readFileSync(VIZ_CSS, 'utf8'), script: `<script>\n${js}\n</script>\n` };
+  const js = ['(function () {', "'use strict';", stripComments(readFileSync(VIZ_ENGINE, 'utf8')), ...widgets, '})();'].join('\n');
+  return { slots, css: stripComments(readFileSync(VIZ_CSS, 'utf8')), script: `<script>\n${js}\n</script>\n` };
 }
 
 /* ---------- the command line (C4) ---------- */
@@ -825,7 +825,7 @@ function page({ title, description, prompt, heroTitle, tagline, body, navCurrent
 ${meta}
 <style>
 ${designCss}</style>
-${viz ? `<style>\n${viz.css}</style>\n` : ''}<style>${PAGE_CSS}</style>
+${viz ? `<style>\n${viz.css}</style>\n` : ''}<style>${stripComments(PAGE_CSS)}</style>
 </head>
 <body>
 ${DOSE}
@@ -862,6 +862,17 @@ function mdToHtml(md) {
 }
 
 const read = (...p) => readFileSync(join(ROOT, ...p), 'utf8');
+
+/** Strip `/* … *\/` comments from text on its way into a page.
+ *
+ * The source comments in PAGE_CSS, design/viz.css and the widgets name internal
+ * files (build.mjs, tools/viz/<name>.js) and describe the build. They are for
+ * whoever maintains this, not for the reader, and the build inlines the CSS and
+ * the widget scripts verbatim into every page — so without this the public HTML
+ * carried the workshop's own filenames. Comments are kept in the source files;
+ * only the emitted copy is stripped. (CSS has no nested comments and nothing in
+ * these files holds a comment delimiter inside a string, so the strip is safe.) */
+const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
 
 /** Split a pandoc body at its leading <h1>: returns the body without it and
  * the h1's inner HTML (whitespace-normalized — pandoc keeps the source's
