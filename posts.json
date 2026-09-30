@@ -468,6 +468,16 @@
       "series": "readings"
     },
     {
+      "slug": "eichmann-in-jerusalem",
+      "file": "eichmann-in-jerusalem.md",
+      "navLabel": "the banality of evil",
+      "kind": "reading",
+      "summary": "A close reading of Arendt's Eichmann in Jerusalem — the banality of evil at source, used by the blog through Zimbardo and never read, and the phrase's own contested history.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
+    },
+    {
       "slug": "the-anatomy-of-destructiveness",
       "file": "the-anatomy-of-destructiveness.md",
       "navLabel": "the anatomy of destructiveness",
@@ -493,16 +503,6 @@
       "navLabel": "quareia",
       "kind": "reading",
       "summary": "A close reading of the Quareia curriculum whole — the practice the blog has been quoting in modules, read end to end.",
-      "date": "2026-09-30",
-      "published": true,
-      "series": "readings"
-    },
-    {
-      "slug": "eichmann-in-jerusalem",
-      "file": "eichmann-in-jerusalem.md",
-      "navLabel": "the banality of evil",
-      "kind": "reading",
-      "summary": "A close reading of Arendt's Eichmann in Jerusalem — the banality of evil at source, used by the blog through Zimbardo and never read, and the phrase's own contested history.",
       "date": "2026-09-30",
       "published": true,
       "series": "readings"
