@@ -383,6 +383,36 @@
       "date": "2026-09-30",
       "published": true,
       "series": "readings"
+    },
+    {
+      "slug": "memories-dreams-reflections",
+      "file": "memories-dreams-reflections.md",
+      "navLabel": "memories, dreams, reflections",
+      "kind": "reading",
+      "summary": "A close reading of Jung's Memories, Dreams, Reflections — the confrontation with the unconscious as a controlled descent, held by a task and a myth the book then says we no longer have.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
+    },
+    {
+      "slug": "ani-mystic",
+      "file": "ani-mystic.md",
+      "navLabel": "ani.mystic",
+      "kind": "reading",
+      "summary": "A close reading of Gordon White's Ani.Mystic — a cosmology of a living, animated cosmos, read as a frame held and examined rather than adopted.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
+    },
+    {
+      "slug": "star-ships",
+      "file": "star-ships.md",
+      "navLabel": "star.ships",
+      "kind": "reading",
+      "summary": "A close reading of Gordon White's Star.Ships — the deep-prehistory argument that the spirits came first, read at its own scale and against the corpus's inherited-frame finding.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
     }
   ]
 }

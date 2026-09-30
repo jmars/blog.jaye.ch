@@ -1654,6 +1654,30 @@ const POST_META = {
       'A close reading of Paul Levy\u2019s Undreaming Wetiko: the self-content collapse named as a transmissible mind-virus \u2014 a frame with \u201cno intrinsic, independent existence\u201d that can nevertheless kill \u2014 whose own remedy is legibility, and whose own trap is the detector move the corpus forbids.',
     accent: 'Undreaming Wetiko',
   },
+  'memories-dreams-reflections': {
+    prompt: 'cat memories-dreams-reflections.md',
+    tagline: 'a <b>reading</b>: the descent into the unconscious as a controlled collapse \u2014 held by a task, and by a myth the book then says we no longer have.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Jung\u2019s Memories, Dreams, Reflections: the confrontation with the unconscious read as a controlled collapse \u2014 the descent, the task that held it, the frame question stated as \u201cwhat myth do you live in?\u201d, and the authorship the book admits is a fusion.',
+    accent: 'Memories, Dreams, Reflections',
+  },
+  'ani-mystic': {
+    prompt: 'cat ani-mystic.md',
+    tagline: 'a <b>reading</b>: a cosmology of a living cosmos \u2014 read as the frame it argues for, held and examined, never adopted.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Gordon White\u2019s Ani.Mystic: the argument for an animated cosmos read as a frame \u2014 what it claims, what it can and cannot check, and why the frames series holds it as a source about frames rather than as the frame.',
+    accent: 'Ani.Mystic',
+  },
+  'star-ships': {
+    prompt: 'cat star-ships.md',
+    tagline: 'a <b>reading</b>: the spirits before the ships \u2014 a deep-prehistory argument read at its own scale, and against what the frames series took from it.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Gordon White\u2019s Star.Ships: the case that the spirits came first and the evidence it rests on \u2014 where it is strong, where it is contested, and how the corpus\u2019s inherited-frame finding relates to it.',
+    accent: 'Star.Ships',
+  },
 };
 
 function buildPost(post, navPosts) {

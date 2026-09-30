@@ -116,9 +116,14 @@ is a cosmology **with a telos**, and a telos is the precondition for a seat.
 
 That is not a coincidence of vocabulary. It is the structural distinction of posts
 [three](/a-cosmos-of-persons/) and [four](/the-owned-cosmos/) — endpoint or no endpoint — appearing at
-the root of the human record, in the two layers of the oldest story we have. And Witzel's chronology
-suggests something the series can note without overclaiming: the **telos was added later.** The forest
-of stories comes first; the novel — beginning, middle, end — comes after, in Eurasia, and then spreads.
+the root of the human record, in the two layers of the oldest story we have. **The families are older
+and younger, but the distinction is not a sequence** — White, working from Witzel, is explicit that the
+categorisation "is not an evolutionary one": both collections of stories continue to the present day,
+and the defining difference he draws is not chronology but emphasis, "the power of the word" in the
+Laurasian material against the Gondwanan stress on physical objects.[^notsequence] What the
+*specialisation* means is that a frame **with** a telos is not the primitive form the later world grew
+out of — it is the younger of two living forms, and one of them had the endpoint and one did not from
+the beginning the record reaches. This post does not lean on the chronology; the structure is the claim.
 
 **Which does not make the later frame worse.** It is the frame that produced almost everything this
 blog cites: the Vedic, Babylonian, Greek, Abrahamic and Hermetic traditions are all Laurasian, and
@@ -248,6 +253,8 @@ self-enforcing).
 
 [^label]: On the error of diagnosing a people rather than a structure — [the label post](/the-label/),
 applied here to a civilisation.
+
+[^notsequence]: Gordon White, *Star.Ships: A Prehistory of the Spirits* (Scarlet Imprint, 2016), quoting and working from Michael Witzel's *The Origins of the World's Mythologies* (OUP, 2012): "Witzel's categorisation is not an evolutionary one… Cultures do not graduate from one collection of stories to another like cabin classes on an airplane." White's own definition of the difference is the Laurasian emphasis on "the power of the word" against the Gondwanan "stress on physical objects such as fetishes". See [Star.Ships](/star-ships/) for the full reading.
 
 *Marking:* documented — the quotations (White, and Witzel through him) and the structural distinction
 between the two mythic families. Argument — that the inherited frame is the same finding as the series'
