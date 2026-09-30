@@ -13,7 +13,7 @@ surrounding culture supplies a predator; [the costume](/the-costume/) stripped t
 positions; [the follower](/the-follower/) dissolved the type; [the operative
 master](/the-operative-master/) took it down to one operator inside one frame. The book does two
 things none of them could: it names the mechanism as **contagious**, and it states the corpus's own
-boundary — *describe the structure, diagnose no one* — as its **method**, in its own voice, before
+boundary — **describe the structure, diagnose no one** — as its **method**, in its own voice, before
 the blog could.*
 
 *Status.* This post reads **one** source. The quotations are verbatim from the digital text, checked
