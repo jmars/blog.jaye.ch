@@ -98,7 +98,7 @@ spiritual path, in which each one's unconscious reading of the other confirms it
 Note the structure: each party is **sincere**, each is certain the other is the one who is not
 seeing, and "because this process is playing out through Jim's blind spot, which has become activated
 by seeing Sally's blind spot, he is not open to having his unconscious process reflected back to
-him".[^ch2] The far side of a state that cannot report itself is here a **person**, not a group —
+him…".[^ch2] The far side of a state that cannot report itself is here a **person**, not a group —
 which is [the operative master](/the-operative-master/)'s one-to-one frame, arrived at from the
 other end.
 
@@ -144,8 +144,8 @@ shamans as an encounter: "Our subjective experience of the demon of sickness is 
 On the other side, the book says plainly that it has no existence of its own, and it locates the
 whole thing in a process rather than a being: "The genesis of wetiko is to be found deep within our
 minds. It is a dreaming phenomenon, which is to say that it is something that in my language we are
-dreaming up, both collectively, in the world, and in our individual minds."[^intro] The glossary
-gives the same answer: it is "a misidentification of who we think we are".[^intro]
+dreaming up, both collectively, in the world, and in our individual minds."[^intro] The Introduction
+puts it in a phrase: wetiko is "a misidentification of who we think we are".[^intro]
 
 **This is the corpus's frame question, arriving in the book's own vocabulary.** [The
 environment](/the-environment/)'s first lever is **a cosmology of hidden agency** — a place in a
@@ -157,7 +157,7 @@ So both poles are refused here, for a reason each:
 - **Not "it is a real demon."** That would be adopting a cosmology, which is the one prohibition this
   series holds absolutely — and nothing in this post adjudicates what wetiko is.
 - **Not "it is only a metaphor."** That is a metaphysical verdict too, and it is one the book refuses
-  before the reader does: its introducer holds the same tension explicitly, and in the same breath.
+  before the reader does: the afterword's author holds the same tension explicitly, and in the same breath.
   "You could say it's not real, it's a metaphor, an exaggeration, a fantastic legend … I would say
   yes, of course, but also that it's real on an energetic level."[^aw] He also calls it "a sort of
   'true' sorcery"[^aw] and prints M. Scott Peck's conclusion from *People of the Lie* — "This was a
@@ -219,7 +219,7 @@ operation performed on the virus but a **relation to what is not the virus**.
 
 **This is the corpus's own conclusion, and the book reaches it independently.** Two other posts
 arrived at the same place from different directions. [The cosmos that
-refuses](/the-cosmos-that-refuses/) ended on the finding that **no cosmology is self-enforcing** —
+refuses](/the-cosmos-that-refuses/) ended on the finding that **no property of a cosmology is self-enforcing** —
 "the safeguard was never in the cosmology", and an unfalsifiable refusal is a seat waiting to happen.
 [The operative master](/the-operative-master/) ended with the rule this blog now writes by:
 "**concealment cannot warn anyone**" — the reader who most needs the shape cannot be reached by
@@ -302,7 +302,7 @@ reading has to hold for a different reason.
 
 Levy is a non-indigenous author writing the third of three books about a term from an Algonquian
 language group, and the book does not leave that unaddressed. It closes with an afterword by Richard
-Grossinger — a publisher and anthropologist — whose title is the whole problem in nine words:
+Grossinger — a publisher and anthropologist — whose title is the whole problem in ten words:
 **"Paul Levy's Conversion of First Nations Cannibalism to Global Sociopathy"**.[^aw] Grossinger
 states the objection and does not bury it:
 
@@ -376,7 +376,7 @@ treat a cosmology as a costume over levers; this is the case where the costume i
 as "the personification of wetiko",[^ch3] "the demon of sickness" from Jung,[^ch4] the "autonomous
 complex" that "can go rogue and become an antilife force, an agent of death",[^ch4] angels in Part
 II, the risk of "falling prey to the seductive, entrancing, demonic spell of wetiko",[^ch5] and an
-introducer who prints that "the devil is real".[^aw] A reading that reported only the "no
+afterword's author prints that "the devil is real".[^aw] A reading that reported only the "no
 substantial existence" passage would be quoting a tidier book. The honest report is that *Undreaming
 Wetiko* is a modern demonology built by a Jungian Buddhist around an indigenous term, and that the
 blog, which describes frames without adopting them, has to report that fact rather than resolve it
@@ -521,14 +521,14 @@ of the scan): the Forbes attribution and "having coined the term malignant egoph
 disease" (p. 16); "Wetiko has no intrinsic, independent existence (separate from the mind, that is),
 which is to say that it has no substantial existence from its own side; and yet it can wreak
 unimaginable havoc and even kill us" (p. 17); "It avoids the light of awareness like the plague"
-(p. 17); "The genesis of wetiko is to be found deep within our minds. It is a dreaming phenomenon,
+(p. 18); "The genesis of wetiko is to be found deep within our minds. It is a dreaming phenomenon,
 which is to say that it is something that in my language we are dreaming up, both collectively, in
 the world, and in our individual minds" (p. 17); "Wetiko, a form of death that 'takes on' life"
 (p. 17); "It's as if wetiko has its own propaganda department dedicated to keeping itself hidden.
 More than anything, wetiko hates to be outed, as it only has power when it works in the shadows of
-our minds" (pp. 17–18); "Wetiko has no creativity on its own, but is a master impersonator—we can
+our minds" (p. 18); "Wetiko has no creativity on its own, but is a master impersonator—we can
 conceive of it as aping the Divine. The Apocryphon of John calls wetiko 'the counterfeiting spirit'
-(the antimimon pneuma [Apoc. John III, 36:17])" (p. 18); "In my previous work I've referred to
+(the antimimon pneuma [Apoc. John III, 36:17])" (p. 22); "In my previous work I've referred to
 wetiko as ME disease, a misidentification of who we think we are" (p. 20); and "Because wetiko
 disease basically means to have fallen into a state of mistaken identity, the best medicine for
 wetiko is to know who we are" (p. 21).
@@ -608,7 +608,7 @@ polarization, and misunderstandings, and hence not only feeds wetiko, but is wet
 judge someone this way is a reflection that we are in a solidified (as compared to fluid) state
 ourselves, which only furthers the dominion of wetiko in the collective field."; "Wetiko is a form
 of psychic blindness. At a certain point in time we chose to look away—to blind ourselves—so as to
-avoid being in relationship to a part of ourselves. Our turning away is wetiko." (p. 280); "It isn't
+avoid being in relationship to a part of ourselves. Our turning away is wetiko." (p. 281); "It isn't
 beneficial to preach the light to people whose eyes can't see it" (p. 282); and "The part of us that
 sees our blindness is the part of us that is beginning to see." (p. 286).
 
@@ -654,7 +654,7 @@ exception to 'paleface' appropriation." (p. 341); "In all its derivations, wetik
 hunger and greed with cannibal and necrophiliac overtones—an appetite that can never be sated,
 consumption without boundary or moral compass" (p. 342); "wetiko ('wet-tee-ko,' Paul's preference,
 or 'wet-tick-ko,' as Western Algonquian linguists propose) … neither version is precisely
-Algonquian, Cree, or Powhatan" (p. 338); "You could say it's not real, it's a metaphor, an
+Algonquian, Cree, or Powhatan" (pp. 337–338); "You could say it's not real, it's a metaphor, an
 exaggeration, a fantastic legend like the European Cropsey Maniac, Mothman, and Rip Van Winkle of
 the same Eastern woodlands. I would say yes, of course, but also that it's real on an energetic
 level" (p. 343); and, quoting Ojibwe author, linguist and storyteller Basil H. Johnston, "The
@@ -667,8 +667,8 @@ extract returns 1 hit for "safeguard" (the Chapter 3 sentence quoted at §7), 0 
 "antipsychotic" and "spiritual emergency"; 4 for "clinical" and 1 for "clinician", all inside
 Grossinger's afterword ("clinical hermeneutics", "a clinical outlier like Paul", "clinical baggage",
 "Stated clinically, wetiko blends …", and "independent clinician and healer"); and 2 for
-"medication", one in the "About the Author" passage quoted above and one in the afterword's
-description of contemporary therapy. A search shows only what it indexes, so the claim is scoped to
+"medication", one in the "About the Author" passage quoted above and one in chapter 4's account of
+behaviour modification. A search shows only what it indexes, so the claim is scoped to
 this text.
 
 [^part4]: *Undreaming Wetiko*, Part 4 ("The Self as Revelation"), the part-opening synopsis (digital
