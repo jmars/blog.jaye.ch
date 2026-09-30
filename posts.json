@@ -468,6 +468,33 @@
       "series": "readings"
     },
     {
+      "slug": "the-anatomy-of-destructiveness",
+      "file": "the-anatomy-of-destructiveness.md",
+      "navLabel": "the anatomy of destructiveness",
+      "kind": "reading",
+      "summary": "A close reading of Fromm's The Anatomy of Human Destructiveness — the necrophilous character as a structure, and the biophilia that answers it.",
+      "published": false,
+      "series": "readings"
+    },
+    {
+      "slug": "geosophia",
+      "file": "geosophia.md",
+      "navLabel": "geosophia",
+      "kind": "reading",
+      "summary": "A close reading of Stratton-Kent's Geosophia — the underworld tradition read as the practice the blog's Western column lacks.",
+      "published": false,
+      "series": "readings"
+    },
+    {
+      "slug": "quareia",
+      "file": "quareia.md",
+      "navLabel": "quareia",
+      "kind": "reading",
+      "summary": "A close reading of the Quareia curriculum whole — the practice the blog has been quoting in modules, read end to end.",
+      "published": false,
+      "series": "readings"
+    },
+    {
       "slug": "eichmann-in-jerusalem",
       "file": "eichmann-in-jerusalem.md",
       "navLabel": "the banality of evil",
