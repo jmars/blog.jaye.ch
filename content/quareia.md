@@ -12,14 +12,13 @@ safeguard.** It was an inference from extracts. [The holy daimon](/the-holy-daim
 differential](/the-differential/) the boundary it is measured against. Here the claim meets the curriculum's
 own account of what it does — and the curriculum says the same thing, in a sentence the blog never quoted.*
 
-*Status.* This post reads **one** source: the Quareia curriculum of Josephine McCarthy, in the
-whitespace-collapsed course scans listed in [^course] and the per-book scans beside them. Quotations are
+*Status.* This post reads **one** source: the Quareia curriculum of Josephine McCarthy, in the two course
+texts listed in [^course] and the per-book texts beside them. Quotations are
 verbatim, checked character for character and cited in the notes **by grade, book, module, lesson and the
-scan's own page marker**; the reading of them is an **inference**, offered as one. **The curriculum's
+course text's own page marker**; the reading of them is an **inference**, offered as one. **The curriculum's
 cosmology is not endorsed** — nothing here claims its inner realms, deities, contacts or adept magicians
 exist, and nothing claims they do not. No living author is diagnosed, no practitioner's experience is
-validated or disqualified, and its terms — *adept*, *initiate*, *contact* — are reported in its sense, not
-adopted.*
+validated or disqualified, and its terms are reported in its sense, not adopted.*
 
 ---
 
@@ -29,7 +28,7 @@ adopted.*
 in fourteen volumes: Books One to Five carry the **Apprentice** section, Six to Ten the **Initiate**, Eleven
 to Fourteen the **Adept**.[^course] Each section is ten modules of eight lessons; the adept books carry the
 adept modules two to a volume.[^structure] Every lesson opens with a welcome page stating the course's
-purpose in a sentence repeated, unchanged, eighty-one times in the apprentice scan alone:
+purpose in a sentence repeated, unchanged, eighty-one times in the apprentice course text alone:
 
 > "The Quareia takes a magical apprentice from the beginning of magic to the level of adeptship and beyond.
 > The course has no superfluous text; there is no dressing, no padding — everything is in its place and
@@ -41,7 +40,7 @@ second sentence of the same page is the one the blog has leaned on since its fir
 > "So remember - in order for this course to work, it is wise to work with the lessons in sequence. If you
 > don't, it won't work."[^wel]
 
-Read in the place the file puts it, that is a **causal** claim about efficacy, not a protective claim about
+Read in the place the text puts it, that is a **causal** claim about efficacy, not a protective claim about
 the student: the work depends on the order, and out of order it "won't work". Safety is not mentioned yet. It
 arrives, and it arrives in the curriculum's own words — which is the finding this reading is built on.
 
@@ -51,7 +50,7 @@ inflation and fantasy realm** that a magician can so easily get stuck in") and t
 ("**if you are still hearing them, go see a doctor**").[^wc] [Egregores](/egregores/) used the third as the
 contrast that indicts another book, and [the holy daimon](/the-holy-daimon/) used it again as the gap that
 book's material invites. All three are accurate — worth saying, because the series' usual finding is
-otherwise — and all three came from extracts.
+otherwise.
 
 **And the debt.** The test applied here is not the blog's invention. *Does the frame supply a check that does
 not benefit from the answer* comes from the frames series; the boundary the referral is measured against
@@ -80,9 +79,8 @@ about rate:
 > not a race.**"[^adv]
 
 The fourth makes the same demand of the student: "Do not skim through the lessons. You simply will not learn
-and you will not properly develop. Slow down, take your time."[^adv] That is a metered pace *without a
-meter*: a rate prescription whose stated purpose is comprehension, and whose only enforcement is the
-student's work.
+and you will not properly develop. Slow down, take your time."[^adv] That is a metered pace *without a meter*:
+a rate prescription whose purpose is comprehension, and whose only enforcement is the student's work.
 
 **And the pace is content-gated, in a way the blog can check concretely.** The flame meditation that later
 becomes "the Void" is not the first exercise of the first lesson. It is the third, held behind a capacity
@@ -95,12 +93,12 @@ threshold stated in the same breath:
 > called the Void… it is the nothing from which all things flow."[^app11]
 
 So the blog's line — *Quareia will not give you the Void's deeper uses until you have done the earlier work* —
-is right in substance and loose in detail: what the file shows is a **capacity threshold** gating a
+is right in substance and loose in detail: what the text shows is a **capacity threshold** gating a
 **technique**, in the first week of the first module. The gate is not a person saying no. It is a condition
 printed on the page.
 
 **The order's stated purpose includes protecting the work — a different thing from protecting the student.**
-The apprentice mid-term summary explains the no-skimming rule from the inside:
+The apprentice mid-term summary explains the no-skimming rule from inside:
 
 > "If someone browses through the lessons, cherry-picks what work they want to do and ignores the rest, they
 > will miss these subtle prompts and keys. This in turn **protects the work, and protects the casual
@@ -141,9 +139,9 @@ supplies for the cases where that is not enough. §4 asks what the claim cannot 
 
 ---
 
-## 3. The checks: what is actually in the file
+## 3. The checks: what is actually in the text
 
-The file is more specific than the blog credited on one axis and less specific on the others. Take the
+The text is more specific than the blog credited on one axis and less specific on the others. Take the
 clinical referral first — and here the passage the blog quotes is a **differential, not an aside**. It sits
 in apprentice Module 1, Lesson 5, "Inner Senses", where, before anything positive is said about inner
 hearing, the text rules out what looks like it: tinnitus under the name musical hallucination, with its
@@ -161,12 +159,11 @@ Only then comes the discipline, stated as a **sequence**:
 > Clean yourself up magically, and if you are still hearing them, go see a doctor.**"[^app15]
 
 The blog's reading of that — *try the tradition's remedy, and if it fails, leave the tradition* — is correct
-at the level of the sentence. What the lesson adds is what the blog never had: a **rule-out procedure**
-first, so that the referral is not a concession bolted onto a magical claim but the second half of a
-differential.
+at the level of the sentence. What the lesson adds is what the blog never had: a **rule-out procedure** first,
+so the referral is not a concession bolted onto a magical claim but the second half of a differential.
 
 **And it is not one sentence. It is a procedure, at four grades of the curriculum, with an order and a scope
-rule.** Set out as the file has them.
+rule.** Set out as the text has them.
 
 *Grade one — apprentice, inner senses (above):* try the remedy first; if the symptom persists, a doctor.
 
@@ -219,12 +216,13 @@ and the instrument [the differential](/the-differential/) described from the cli
 in the initiate exorcism module:
 
 > "**Note 1: Do not do this work if you are pregnant, have small children at home, or are sick — even if it
-> is only a minor illness.**"[^ini26]
+> is only a minor illness.** It can take a lot of vital energy to do this work, and if there is an weak spot
+> in your health or in your immediate family it can create major problems."[^ini26]
 
-A second excludes a household rather than a state ("do not do this exercise if you have children in the
-house");[^ini18] a third is the sequence fence quoted in §2;[^app107] a fourth closes the door at the
-initiation: "If you wish to only have a mundane life, then **stop working with the Quareia lessons right
-here.**"[^app109] And a doctrine of **walking away from a job** runs through the initiate section.[^ini23]
+A second excludes a household ("do not do this exercise if you have children in the house");[^ini18] a third
+is the sequence fence quoted in §2;[^app107] a fourth closes the door at the initiation: "If you wish to only
+have a mundane life, then **stop working with the Quareia lessons right here.**"[^app109] And a doctrine of
+**walking away from a job** runs through the initiate section.[^ini23]
 
 **And a health check before the grade boundary — administered by the student, on the student, by
 divination.** The initiate section includes a lesson called "Magical Health Check", whose instrument is three
@@ -241,7 +239,8 @@ curriculum supplies at each grade boundary is a **self-assessment**, described i
 reading the blog gave it:
 
 > "This is not a 'pass or fail' type of exam; it is a **pause-and-reflect, a self-assessment**. If you are
-> being mentored then it will help your mentor understand what stage of development you are at."[^ini78]
+> being mentored then it will help your mentor understand what stage of development you are at, and where
+> you need to be refocused in terms of revision and understanding."[^ini78]
 
 > "There is no fail or pass with this; everyone develops in their own way. Being able to self-assess
 > honestly, without fear of failure, and without grandstanding or ego, is a good skill."[^app68]
@@ -263,8 +262,7 @@ skipped as unassessed, and the channel does not open early. A third has an insti
 module, where the course ships books to students who cannot afford them and guards the route with a real
 assessment of a real claim — "if you are not known to us through mentoring or previous correspondence then we
 will first **put you through an assessment** to ensure that you are, in fact, at this stage of initiate
-training."[^ini81] That is as far as the outside world reaches into this curriculum, and it reaches in to
-decide whether to post a book.
+training."[^ini81] That is how far the outside world reaches in: to decide whether to post a book.
 
 ---
 
@@ -279,12 +277,13 @@ curriculum's authority is **authorial**, not conferred — which matters, becaus
 *plural community* row, and the honest entry for Quareia is a single living practitioner's graded text, a
 small named team, and a mentoring scheme a student has to apply for.
 
-**It is taught by text, and its default mode is self-study.** Nothing in the scans requires a teacher: the
+**It is taught by text, and its default mode is self-study.** Nothing in the texts requires a teacher: the
 course is published free, the lessons address one reader, and the mid-term summary tells that reader what to
 do when there is nobody:
 
-> "So be aware that **no one is holding your hand. No one is spoon-feeding you.** You are expected to pick up
-> every detail, to include the new elements for yourself, and adjust your work accordingly."[^app68]
+> "So be aware that **no one is holding your hand. No one is spoon-feeding you.** You are expected to pick
+> up every detail, to include the new elements for yourself, and adjust your work accordingly, then decide
+> what is suitable for your own practice and what needs to be rethought as an individual."[^app68]
 
 The adept books state the same from the far end, in a lesson whose whole instrument is self-assessment:
 
@@ -307,10 +306,10 @@ only institutional language of protection, and it restrains the head of a group:
 > members of the lodge which is another action towards **safeguarding against power grabs and control issues
 > with the Hierophant and subsequent leaders**."[^ad11]
 
-The appendix around it is candid about the office it describes — "it is like being a parent to a lot of
-people", and the "ego and greed" that end a leader's hope of "anything of true lasting worth" — and it names
-the control problem in both directions: decisions taken by "people who may or may not understand the
-complexities", and "the Hierophant having absolute control and then abusing it".[^ad11]
+The appendix around it is candid about the office: "it is like being a parent to a lot of people", and the
+"ego and greed" that end a leader's hope of "anything of true lasting worth". It also names the control
+problem in both directions — decisions taken by "people who may or may not understand the complexities", and
+"the Hierophant having absolute control and then abusing it".[^ad11]
 
 **So the blog's community row is not supplied by this curriculum to its own students.** It is supplied, in an
 adept appendix, to someone about to run a lodge. For the solitary student working from the website, the
@@ -349,8 +348,8 @@ drawn, because the object compared is a protocol and not a line.
 **Second: "no one gets there without the previous stage having been checked" is not what the curriculum
 enforces, and it is the blog's sentence rather than the course's.** The western column's §4 drew its
 conclusion in two halves: the syllabus means nobody arrives at the deep state on a whim, and nobody arrives
-without the previous stage having been checked. The first half is what the file supports, in the
-curriculum's own words. The second is the blog's inference, and the file does not support it in that form.
+without the previous stage having been checked. The first half is what the text supports, in the
+curriculum's own words. The second is the blog's inference, and the text does not support it in that form.
 **At each rung the curriculum checks the student with a self-assessment that is explicitly not
 pass-or-fail**, with the mentor as an optional reader of the record; and at the grade boundary it says, in
 terms, that the initiation it administers is between the practitioner and the inner world — "hence you cannot
@@ -377,40 +376,40 @@ was built first.**
 ## 6. The negative finding
 
 The series reports the presence or absence of a **safeguard**, a **metered pace** and a **clinical referral**
-as search results, scoped to the file. Here the result differs from previous readings in one way that
+as search results, scoped to the text. Here the result differs from previous readings in one way that
 matters: **the referral is abundant, and the blog's own word for the other two is nearly absent.**
 
 **"Safeguard" occurs twice in the two course texts, and neither safeguards the student's mind.** In the
-apprentice scan, once: a magician's "lifespan will be safeguarded" — an effect of skilled practice, in a
-lesson on demons.[^app63] In the initiate scan, once: "I will put certain safeguards
+apprentice course text, once: a magician's "lifespan will be safeguarded" — an effect of skilled practice, in a
+lesson on demons.[^app63] In the initiate course text, once: "I will put certain safeguards
 into the action", of a designed exercise in which a student creates a vessel and then has to remove what
-moves in — a safeguard in a **rite**, not a fence around a person.[^ini18] Across the four adept scans, twice
-more: a quotation of Elizabeth I's Tilbury oration (the file quoting her), and the lodge appendix's
+moves in — a safeguard in a **rite**, not a fence around a person.[^ini18] Across the four adept texts, twice
+more: a quotation of Elizabeth I's Tilbury oration (the text quoting her), and the lodge appendix's
 "safeguarding against power grabs", which protects a **group** from its own leader.[^ad11] A search shows only
 what it indexes, so the claim is scoped: **the vocabulary of institutional protection appears in this
 curriculum only where it is restraining a Hierophant.** Everything the blog means by "safeguard" here is
 present under other names.
 
 **There is a metered pace, and it is stated as comprehension rather than caution.** "Pace yourself" occurs
-three times in the course scans;[^adv] once it is joined by a safety rationale — "for your own safety", on the
+three times in the course texts;[^adv] once it is joined by a safety rationale — "for your own safety", on the
 sequence fence[^app107] — and otherwise by reasons of learning. "supervisor" returns **0** hits in the course
-scans, and "prerequisit" **0**.
+texts, and "prerequisit" **0**.
 
 **The clinical vocabulary is the anomaly, and it is mixed.** The counts are itemised in [^abs]; the point
 here is what they are made of. "Doctor" is the commonest term by far, and nearly every instance is the text's
-own narrative or a case account rather than an instruction to a reader. "Clinic" is a clinical psychologist's
-research programme, "subclinical", and an acupuncture reference. **And here is the negative finding inside
-the positive one:** the single occurrence of "therapist" in the apprentice scan is not a referral at all. It
+own narrative or a case account rather than an instruction to a reader. "Clinic" is a research programme, the
+word "subclinical", and an acupuncture reference. **And here is the negative finding inside
+the positive one:** the single occurrence of "therapist" in the apprentice course text is not a referral at all. It
 is a **personality description** in the astrology lesson — "This is the therapist who is only interested in
 your troubles and never discloses anything about themselves, the martyr, the Human Resources
 manager…".[^app18] In the curriculum's own first module, the only therapist is a quadrant of a chart.
 
 **And there is no exclusion statement anywhere.** "not for everyone" **0**; no list of conditions that
 disqualify a person. The health lesson refuses the move outright — "There is no particular health status that
-one needs for adept work" — and the sequence fence's audience is defined by work already done rather than by
-capacity. The filter, by the curriculum's own account, is the student's willingness.[^app68] **That is the
-shape of this protection, and it is the correction to the blog's word *gate*: the syllabus orders the
-material, prints fences where the work is dangerous, and refuses to sort people.**
+one needs for adept work" — and the sequence fence's audience is defined by work already done. The filter, by
+the curriculum's own account, is the student's willingness.[^app68] **That is the shape of this protection,
+and it is the correction to the blog's word *gate*: the syllabus orders the material, prints fences where the
+work is dangerous, and refuses to sort people.**
 
 ---
 
@@ -422,11 +421,11 @@ one returns a confirmation with a subject change, a strengthened instrument, and
 **The confirmation is that the blog's claim survives, and that the curriculum makes it itself.** [The
 western column](/the-western-column/) inferred from extracts that a curriculum is a safeguard. Read whole,
 the curriculum says the same at the end of the apprentice grade — "this is how Quareia protects itself" —
-with the mechanism named: the keys are embedded in the worker by the doing, and nowhere else. The blog and
-the course agree about the shape of the protection. **They disagree about where it lives.** The blog's
-version puts a check at each rung; the course's puts a **requirement** at each rung and a **refusal to be
-skimmable** in the text, and leaves the verdict with the practitioner. That is not a weaker claim. It is a
-different one, and it is more honest about its own limits than the blog was.
+with the mechanism named: the keys are embedded in the worker by the doing, and nowhere else. **The two agree
+about the shape of the protection and disagree about where it lives.** The blog's version puts a check at
+each rung; the course's puts a **requirement** at each rung and a **refusal to be skimmable** in the text, and
+leaves the verdict with the practitioner. That is not a weaker claim. It is a different one, and it is more
+honest about its own limits than the blog was.
 
 **The strengthened instrument is the referral.** This curriculum does not have a doctor sentence. It has a
 rule about **who may assess**, one about what must be **exhausted first**, one about the **order of care**, an
@@ -446,12 +445,13 @@ names the profession and sends the person there. The blog's table should carry t
 the claim that a rung of this curriculum was checked by anyone but the person standing on it.
 
 *Marking:* **a reading.** Documented — the curriculum's identity, structure, publication terms and every
-passage in quotation marks, taken from the scans listed in [^course], checked character for character and
-cited in the notes by grade, book, module, lesson and the scan's own page marker. **Address:** the scans'
+passage in quotation marks, taken from the texts listed in [^course], checked character for character and
+cited in the notes by grade, book, module, lesson and the course text's own page marker. **Address:** the texts'
 line-break hyphenation is joined and their line breaks are not preserved; curly quotes and apostrophes are
-rendered here as straight ASCII; the spaced en dash is rendered as an em dash; page-adjacent numerals are
-dropped from quotations; where the per-book scans differ in punctuation the course scans are quoted.
-**Absences reported as search results, scoped to the two course scans:** "safeguard" 1 and 1, neither about a
+rendered here as straight ASCII; the spaced en dash is rendered as an em dash; page-adjacent numerals and the
+source's footnote markers are dropped from quotations; where the per-book texts differ in punctuation the
+course texts are quoted.
+**Absences reported as search results, scoped to the two course texts:** "safeguard" 1 and 1, neither about a
 student; "supervisor" 0; "prerequisit" 0; "not for everyone" 0; and the clinical and pace counts itemised in
 §6, terms listed in [^abs]. **Inferred, as this post's contribution:** that the curriculum's protective
 mechanism is content-embeddedness rather than supervision; that its grade checkpoints are self-assessments by
@@ -466,21 +466,20 @@ Nothing here validates, disqualifies or restricts anyone's practice.
 ## Notes
 
 [^course]: Josephine McCarthy, *Quareia* — the Apprentice, Initiate and Adept course texts, published free
-online by Quareia Publishing UK at https://www.quareia.com/. Read for this post from two
-whitespace-collapsed course scans and the per-book scans beside them in the same directory: the Apprentice
-course scan (2,870,044 characters; 1,569 page markers, each of the form `-- N of 1569 --`) and the Initiate
-course scan (2,993,137 characters; 1,605 page markers). The per-book scans are of the printed paperbacks —
+online by Quareia Publishing UK at https://www.quareia.com/. Read for this post from the two course
+texts and the per-book texts beside them: the Apprentice course text and the Initiate course text. The
+per-book texts are of the printed paperbacks —
 Book One (*Quareia—The Apprentice*, ISBN 978-0-9933480-0-6), the Initiate Book Ten (978-1-911134-03-9) and
 the Adept volumes Book Eleven (978-1-911134-11-4) and Book Fourteen (978-1-911134-17-6) among them — and they
-differ from the course scans in punctuation and layout: an example met while verifying is the mid-term
+differ from the course texts in punctuation and layout: an example met while verifying is the mid-term
 summary's "if you are seriously backed into a corner and I can see that you truly do need help, then I will
-converse with you", which the Book Five scan prints as "…truly do need help then I will converse with you".
-Quotations here follow the course scans. **Licensing:** the copyright pages of the apprentice and initiate
-volumes carry "© Josephine McCarthy", "All rights reserved", and — where the scans include it — "Permission
+converse with you", which the Book Five text prints as "…truly do need help then I will converse with you".
+Quotations here follow the course texts. **Licensing:** the copyright pages of the apprentice and initiate
+volumes carry "© Josephine McCarthy", "All rights reserved", and — where the texts include it — "Permission
 granted to reproduce for personal use only"; the course advises that the work be done in sequence. Every
 quotation is within the length a reading has used throughout this series, and the curriculum is published
 free at the address above so that a reader can check every one of them. **Standing welcome page:** the
-four-sentence welcome appears 81 times in the apprentice course scan and 81 times in the initiate scan — see
+four-sentence welcome appears 81 times in the apprentice course text and 81 times in the initiate course text — see
 [^wel].
 
 [^structure]: The Apprentice section's ten modules run from Module 1, "Core Skills", to Module 10,
@@ -491,18 +490,18 @@ Book Twelve: III and IV; Book Thirteen: V and VI; Book Fourteen: VII, "Adept Exo
 "Mediation of Power"). Each grade's final module carries a **ninth** lesson: the apprentice section's
 contents list "9 Apprentice Section Initiation Lesson", and the initiate section's list ends with
 "Initiatory Lesson: Born of the Stars". The apprentice initiation lesson is headed "Initiate Lesson" in the
-course scan while the running heads on its pages still read "Quareia - Module 10, Lesson 8"; the text calls
+course text while the running heads on its pages still read "Quareia - Module 10, Lesson 8"; the text calls
 it "the 81st lesson of the Apprentice training". It is cited here as Module 10, Lesson 9 (its number in the
-Book Five contents), with the scan's header form noted.
+Book Five contents), with the text's header form noted.
 
 [^wel]: The standing welcome page, printed at the head of every lesson: "The Quareia takes a magical
 apprentice from the beginning of magic to the level of adeptship and beyond. The course has no superfluous
 text; there is no dressing, no padding — everything is in its place and everything within the course has a
 good reason to be there." and "So remember - in order for this course to work, it is wise to work with the
 lessons in sequence. If you don't, it won't work." — followed by "Yours, Josephine McCarthy". Verified
-byte-identical in all 81 occurrences in the apprentice course scan (first at page marker 1) and in the
-initiate scan; the initiate scan sets the same two sentences with em dashes in place of the spaced en dash
-of the apprentice scan. The second sentence also appears, in a contracted form ("If you don't, it will not
+byte-identical in all 81 occurrences in the apprentice course text (first at page marker 1) and in the
+initiate course text; the initiate course text sets the same two sentences with em dashes in place of the spaced en dash
+of the apprentice course text. The second sentence also appears, in a contracted form ("If you don't, it will not
 work properly"), as the second sentence of the Course Advisory in every apprentice book ([^adv]).
 
 [^adv]: *Course Advisory*, opening each of the apprentice books (Books One to Five), four numbered rules.
@@ -511,8 +510,8 @@ ticking, and it is not a race."; "2. Keep paper and online notes… If you wish 
 Initiate and Adept training, these online and paper written notes will be a part of your application.
 Without them, you cannot be mentored."; "3. Learn to be flexible and adaptable… if you get stuck, work it
 out for yourself!"; "4. Do not skim through the lessons. You simply will not learn and you will not
-properly develop. Slow down, take your time." Read from the Book One scan (page 3 of 174), where all four
-appear on one page, and verified in the Book Five scan. **The later books do not carry the four rules:**
+properly develop. Slow down, take your time." Read from the Book One text (page 3 of 174), where all four
+appear on one page, and verified in the Book Five text. **The later books do not carry the four rules:**
 from Book Six (Initiate) onwards the advisory page contains only the two sentences quoted in [^wel], so the
 mentoring route is described once, in the apprentice books, and is not restated for students who begin the
 initiate or adept volumes. The reminder "Pace yourself." occurs once more, unnumbered, in apprentice Module
@@ -524,7 +523,7 @@ at marker 6. The Void is named here for the first time in the curriculum ("a sta
 power called the Void… the nothing from which all things flow", marker 6); its development as a defence
 ("that is the inner bullet-proof vest needed for inner work: absolute stillness in the 'nothing'") is at
 Module 1, Lesson 4, marker 12. The blog's separate account of the Void — from McCarthy's "Working with the
-Void," in the Quareia vision archive — is cited in [^wc] and is not in these scans.
+Void," in the Quareia vision archive — is cited in [^wc] and is not in these texts.
 
 [^app15]: Apprentice, Module 1, Lesson 5, "Inner Senses", page markers 67 and 69. The rule-out material
 (musical hallucination as a rare form of tinnitus, with "brain tumours, epilepsy, migraines" and OCD as
@@ -538,8 +537,8 @@ experience that the subject has always had" (marker 67).
 [^app18]: Apprentice, Module 1, Lesson 8, "Astrology", page markers 155–156, the lesson's passage on chart
 shapes and quadrants: "This is the therapist who is only interested in your troubles and never discloses
 anything about themselves, the martyr, the Human Resources manager, the doting Mother or partner…" — cited
-in §6 as the apprentice scan's single occurrence of "therapist", verified against the scan and against the
-Book One scan (page 86 of 174).
+in §6 as the apprentice course text's single occurrence of "therapist", verified against the text and against the
+Book One text (page 86 of 174).
 
 [^app41]: Apprentice, Module 4, "Death and the Underworld", Lesson 4, "The Underworld and the Abyss", page
 marker 571, in the second vision of the lesson ("Accessing the root ancient temples"): "Over the span of the
@@ -553,7 +552,7 @@ step in it. The blog's use of the quotation, and its scope, are discussed in §5
 ones learn how to survive, how to interact with all sorts of deities, and learn as adepts how to take their
 place in the vast community of natural forces. Their lifespan will be safeguarded (though not prolonged…
 remember Decima?) and they will have a much better chance of living their full potential lifespan". This is
-one of the record's two occurrences of "safeguard" in the course scans; the other is [^ini18].
+one of the record's two occurrences of "safeguard" in the course texts; the other is [^ini18].
 
 [^app64]: Apprentice, Module 6, Lesson 4, "Parasites", page marker 905: "One word of caution. The
 presentations of parasite infestation and mental illness are often very similar, to the point that it can be
@@ -600,13 +599,13 @@ address is correct.
 1541, opening the practical work: "Note: if you are not a Quareia student and have not done all of the
 lessons of the apprentice section so far, please do not do this work, for your own safety. It is contacted
 work and you will not have to contacts to achieve this work. You are more likely to put yourself in harms
-way." The scan's "you will not have to contacts" is reported as the file prints it; it reads as a damaged
-line for "the contacts", and is flagged rather than tidied. The Book Five scan opens the same lesson with the fence marked
+way." The text's "you will not have to contacts" is reported as the text prints it; it reads as a damaged
+line for "the contacts", and is flagged rather than tidied. The Book Five text opens the same lesson with the fence marked
 "WARNING".
 
 [^app109]: Apprentice, Module 10, Lesson 9 — the section's final lesson, headed "Initiate Lesson" in the
-course scan ([^structure]) and "Apprentice Section Initiation Lesson" in the Book Five contents, page
-markers 1559–1567 of 1569. Quoted from it: "This is the 81st lesson of the Apprentice training, the bridge
+course text ([^structure]) and "Apprentice Section Initiation Lesson" in the Book Five contents, page
+markers 1559–1567. Quoted from it: "This is the 81st lesson of the Apprentice training, the bridge
 that opens the way for deeper magical development as an Initiate." (marker 1560); the contrast with lodge
 initiation ("In many magical lodges and schools, the initiation is a ceremonial ritual aspect of the lodge
 which formally recognises the stages of the magician's development. It is witnessed by members of the lodge
@@ -621,12 +620,11 @@ the mundane onto the path of the Initiate." and "If you choose to walk away from
 punishment: you always have a choice." (1567). The rite is to be done "before midnight on the night of the
 new moon following the events experienced in the Inner Library" (1560). The initiate grade ends on the same
 pattern: Module X's appended "Initiatory Lesson: Born of the Stars", a self-conducted vision, whose closing
-task reads "If you are being mentored then you can discuss these with your mentor." (initiate scan, markers
-1599–1603).
+task reads "If you are being mentored then you can discuss these with your mentor." (the initiate course text).
 
 [^ini18]: Initiate, Module I, "Core Initiate Skills", Lesson 8, "Vessels and Windows", page markers 156 and
 164. The child exclusion is at the head of the practical work: "Warning: do not do this exercise if you have
-children in the house — just read this part of the lesson and…". The scan's other occurrence of "safeguard"
+children in the house — just read this part of the lesson and…". The text's other occurrence of "safeguard"
 is at marker 164: "I want you to experience what it is like to have a feral being move into a vessel, and
 then you have to remove it. The way we will do this is not dangerous, as I will put certain safeguards into
 the action…".
@@ -641,7 +639,7 @@ of the exorcist has no place in that treatment, and can often make the situation
 same lesson, the check the curriculum sets beside a performance of possession: where the presentation is "a
 very calculatedly created drama to gain attention", "the simple thing that often stops the claim of
 possession… is the suggestion of being sectioned or committed to a psychiatric unit and medicated" (page
-marker 181 of the initiate scan; the Book Six scan is headed "Lesson 1. Assessing").
+marker 181 of the initiate course text; the Book Six text is headed "Lesson 1. Assessing").
 
 [^ini23]: Initiate, Module II, Lessons 3 and 4, and Module VIII, Lesson 1. Quoted: "Do not fall into the trap
 of feeling you have to fix everything. If it needs a magician, get to work. If not, walk away. Those
@@ -653,7 +651,7 @@ do it, it is their choice." (module II, lesson 4, marker 283); "You always need 
 from a job that you cannot be of any real help with." (module VIII, lesson 1, marker 1160).
 
 [^ini25]: Initiate, Module II, Lesson 5, "Basic Exorcism", page markers 307–311. The passage quoted in §3
-runs across the page break at marker 308; it was verified in two parts, on either side of the scan's page
+runs across the page break at marker 308; it was verified in two parts, on either side of the text's page
 marker, and joined for quotation. The same lesson continues with the layer-by-layer method of approaching a
 house or person, and with the instruction to keep readings off-site where the case is major: "Do not do this
 in a house with major problems: wait until you are home and do it in your work space with all the directions
@@ -666,7 +664,7 @@ sick — even if it is only a minor illness. It can take a lot of vital energy t
 is an weak spot in your health or in your immediate family it can create major problems."; and, immediately
 before it, "Usually it is a change in the host's behaviour, along with a loss of physical or/and mental
 condition that brings the exorcist to the door. Of course all medical avenues must have also been
-explored." The scan's "if there is an weak spot" is reported as the file prints it.
+explored." The text's "if there is an weak spot" is reported as the text prints it.
 
 [^ini78]: Initiate, Module VII, "The Realm of the Inner Desert", Lesson 8, "Mid-course Exam", page markers
 1144–1145: "Before we shift gears and move on to more active, practical magic at adept level, it is time to
@@ -676,9 +674,9 @@ is not a 'pass or fail' type of exam; it is a pause-and-reflect, a self-assessme
 then it will help your mentor understand what stage of development you are at, and where you need to be
 refocused in terms of revision and understanding." The lesson's own framing at the head of Module VII makes
 the same point in advance ("At the end of this module there is an 'exam' lesson where you will be able to
-self-examine your progress", Module VII, Lesson 1, marker 1020). Note that the scan's running heads on the
+self-examine your progress", Module VII, Lesson 1, marker 1020). Note that the text's running heads on the
 exam lesson's pages read "Module vii, Lesson 7" — a running-head slip in the book, since the lesson's own
-opening block is headed "Lesson 8: Mid-course Exam" (Book Nine scan, page 73). The course's later
+opening block is headed "Lesson 8: Mid-course Exam" (the Book Nine text, page 73). The course's later
 checkpoints repeat the form: Book Fourteen's module VIII ("Mediation of Power") lesson 3 is headed
 "Self-assessment", and its own words are "This is not a pass or fail exam; this is for you to see and assess
 where you are in your training" (page marker 45).
@@ -697,9 +695,10 @@ training."
 left to a trained psychotherapist, the inner impact and violation can cause immense long-term suffering if
 the attack's pattern is not taken out of the system. This is a difficult and sensitive issue, but most
 magicians will likely encounter it at some point. But remember: your job is inner repair, not psychological
-repair. Otherwise you can end up doing more harm than good." The same lesson's rule for a coma case is
+repair. Otherwise you can end up doing more harm than good." (The text's own footnote numeral sits between
+the last two sentences and is dropped here, as throughout.) The same lesson's rule for a coma case is
 another instance of ordering the clinician first: "If it is a person and they are in hospital, check with
-the doctor first before administering a homeopathic dose." (marker 93 of the Book Nine scan).
+the doctor first before administering a homeopathic dose." (marker 93 of the Book Nine text).
 
 [^ini88]: Initiate, Module VIII, Lesson 8, "Magical Health Check", page markers 1289–1292: "As you are now
 edging towards the end of your initiate training and the beginning of your adept training, you will be
@@ -739,15 +738,15 @@ between theoretical study and practical application." The lesson's framing sente
 The module's exercise is a set of written case scenarios to be worked and reasoned about, with the
 assessment to be made by the student.
 
-[^wc]: The blog's own earlier citations of this curriculum, verified against the files for this post.
+[^wc]: The blog's own earlier citations of this curriculum, verified against the texts for this post.
 [The western column](/the-western-column/): "to stay solid, safe and sane… in slow, careful steps" (it cites
 apprentice Module 4, Lesson 4 — correct; see [^app41] for the sentence's scope); the ego-inflation passage
 (it cites Module 8, Lesson 6 — correct; [^app86]); the inner-senses referral (Module 1, Lesson 5 — correct;
-[^app15]); the acquisition warning, cited to the Initiate Module 5, which is in these scans at Module V,
+[^app15]); the acquisition warning, cited to the Initiate Module 5, which is in these texts at Module V,
 "Deities and the Magician", Lesson 6, page marker 779 ("Do not let the desire to own, to have, or to collect
 creep into your magical work. Not only can you end up with magical wars in your house between deities who do
 not like each other or do not match, but you can also end up with parasited vessels in your house."); and the
-health-and-doctor guidance, cited to the Initiate Module 8, which is in these scans at Module VIII, Lesson 5,
+health-and-doctor guidance, cited to the Initiate Module 8, which is in these texts at Module VIII, Lesson 5,
 "Magical Impact, Attack, and Curses I", page marker 128 ("Keep a close eye on your health and if you get a
 minor infection that you would not normally take medicine for, go see a doctor and get some. A magical
 attack can seriously amplify minor illnesses."). The column's own sentence about the curriculum, quoted in
@@ -758,14 +757,14 @@ referral to this curriculum and draws the contrast with a book that supplies no 
 row. Those uses are not re-read here beyond the quotations they carry.
 
 [^abs]: The search terms behind §6, run case-insensitively with word boundaries against the two course
-scans: **safeguard(s)** 1 (apprentice, [^app63]) and 1 (initiate, [^ini18]); **supervisor** 0 and 0;
+texts: **safeguard(s)** 1 (apprentice, [^app63]) and 1 (initiate, [^ini18]); **supervisor** 0 and 0;
 **prerequisit\*** 0 and 0; **pace yourself** 1 and 2; **not for everyone**, **not suitable for you**,
 **do not attempt** 0 in both (outside the "please do not do this work" fence of [^app107]); **doctor(s)** 6
 and 30; **physician** 0 and 1; **therapist** 1 and 0 (the apprentice hit is [^app18]); **psychotherapist** 0
 and 1; **psychiatry** 0 and 1; **psychiatrist** 1 and 2; **psychologist** 1 and 3; **mental health** 4 and
 17; **clinic(al)** 2 and 6; **hospital** present in both; **danger(ous)** 157 and 177; **warn(ing|s|ed)** 95
 and 101; **careful(ly)** 92 and 211; **mentor(ing|ed|s)** 20 and 25; **assessment** 7 and 9; **stop and** 16
-and 10. Counts are inflated in places by the scans' own duplication of running heads and by ordinary
+and 10. Counts are inflated in places by the texts' own duplication of running heads and by ordinary
 English usage (a "danger" in a myth, a "careful" step in a ritual), and are reported as counts rather than
 as findings; the itemised referral instances are in §3 and the four-grade protocol is verified in [^app15],
 [^app64], [^ini21] and [^ini25].

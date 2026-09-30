@@ -10,11 +10,11 @@ is a frame of a different shape — a fixed table of correspondences, a set of p
 supplies the reading. It is a frame you carry in a pocket, lay out on a table and read aloud: the first
 frame in the series that **fits in a hand**.*
 
-*Status.* This post reads **one** source. The quotations are verbatim from the digital text, checked
-character for character against the file, and cited in the notes **by part** and **by speaker** — because
+*Status.* This post reads **one** source. The quotations are verbatim from a complete digital text of
+the edition, checked character for character against it, and cited in the notes **by part** and **by speaker** — because
 this book is a **recorded conversation**, not a monograph: every claim in it belongs to the person who made
 it, not to "the book". Typographic quotes are rendered here as straight ASCII, and dashes are given as em dashes except
-inside numeric ranges (which keep the file's en dashes); the spaces the file's italics markup leaves around punctuation are closed; a quotation's opening
+inside numeric ranges (which keep its en dashes); the spaces its italics markup leaves around punctuation are closed; a quotation's opening
 capital is normalised to its position in the sentence; and the source's
 footnote numbers are dropped from quotations. The reading of the quotations is an **inference**, offered
 as one. **The book's
@@ -44,8 +44,8 @@ The blog owes this one a reading because **the blog has never read the tarot**, 
 frame. Every case study in this series has been about an environment: something a person is inside, which
 supplies the meaning of a state that cannot read itself. A deck of cards is not an environment. It is a
 thing, and it is used — and because it is a thing it can be exhibited, dated and checked, which is what §4
-is about. Two absences belong at the top: the file carries **no page numbers**, so every reference here is
-an offset into a 153,097-character text; and this reading never saw the cards.[^tet]
+is about. Two absences belong at the top: the text carries **no page numbers**, so every reference here is
+by part and by speaker; and this reading never saw the cards.[^tet]
 
 ---
 
@@ -137,7 +137,7 @@ convenor's:
 > dimension before the mid-eighteenth century. However, two independent experts have shattered that
 > consensus with their original research."[^fw]
 
-(the file sets the opening in small capitals; the reading is the same). Then three claims in order, with
+(the text sets the opening in small capitals; the reading is the same). Then three claims in order, with
 the second of them the sentence this book is known for:
 
 > "The evidence he presents unequivocally challenges the notion that the tarot served as a mere game of
@@ -325,7 +325,7 @@ pay. There is no predator in this book: two researchers have written about two d
 recruiting anyone. What the blog owes is the lever's **shape** and not its **charge** — not "is this
 being used on someone" but "who issued this warrant, and would the issuer recognise the use it is being put
 to". Applied here the second question has a checkable answer, because Ficino's own position on planetary
-influence is in the file:
+influence is in the text:
 
 > "I don't think the planetary divinities mentioned in most of Ficino's astrological writings, and thus
 > the grid I just described for the Tarot de Marseille, should be understood as referring to celestial
@@ -356,11 +356,10 @@ cosmos](/the-owned-cosmos/) found converts tests into credentials.
 ## 6. Counterweights, in the body
 
 **First: the strongest language in the book is not the researchers'. It is the convenor's, and the counts
-make it plain.** The Foreword runs from offset 4255 to 6997 — **2,742 characters** of a 153,097-character
-file, **1.8 per cent** of the text. In it are the sentences quoted at §3: "firmly maintained", "shattered
-that consensus", "unequivocally challenges", "It is evident that". Across the entire file the word
-"**unequivocally**" occurs **once**, and it is there.[^abs] Now the other half: in the remaining 150,355
-characters, a test list of fourteen hedge markers returns **64** occurrences and **0** of them fall in the
+make it plain.** The Foreword is **2,742 characters** — **1.8 per cent** of the text. In it are the sentences quoted at §3: "firmly maintained", "shattered
+that consensus", "unequivocally challenges", "It is evident that". Across the whole text the word
+"**unequivocally**" occurs **once**, and it is there.[^abs] Now the other half: in the rest of the
+text, a test list of fourteen hedge markers returns **64** occurrences and **0** of them fall in the
 Foreword — "**probably**" 20 times, "**seems**" 10, "**likely**" 8, "**may have**" 7, "**apparently**" 4,
 "**perhaps**" 3, "**to my mind**" twice, and the singletons "**I guess**", "**I gather**", "**tentatively**",
 "**My suggestion**" and "**conjecture**".[^abs] That is not deception: a foreword is a recommendation,
@@ -407,16 +406,16 @@ this book and cannot **rest** on it.
 ## 7. The negative finding: safeguard, metered pace, clinical referral
 
 The series reports the presence or absence of a safeguard, a metered pace and a clinical referral as
-**search results**, scoped to the file. This book's results are unambiguous, and each is a different kind
+**search results**, scoped to the text of this edition. This book's results are unambiguous, and each is a different kind
 of absence.
 
 **"Safeguard" occurs once, and it is not a safeguard of the reader.** It is the convenor's framing of a
-question about transmission (offset 130093): "Throughout history, there has been a prevailing belief that esoteric
+question about transmission: "Throughout history, there has been a prevailing belief that esoteric
 teachings should be **safeguarded** and transmitted orally, exclusively to those prepared to receive
 them."[^xi] The word belongs to the protection of **knowledge**, held by an institution against the wrong
 people. It is not a protection of a person from an experience, and the two are not the same instrument.
 
-**There is no metered pace.** "Pace" returns **six** hits in the file and **not one of them is a rate**:
+**There is no metered pace.** "Pace" returns **six** hits in the text and **not one of them is a rate**:
 every occurrence is inside the word "space" — a space of time, a ritual space, the twenty-two spaces of the
 trumps, a political space, the efficacious space of the convenor's dreams.[^abs] Nothing in the book says
 how often, how much, or how fast. And here a distinction the previous six readings did not have to make:
@@ -519,15 +518,13 @@ finding: **an instrument produces experiences. It does not certify them.**
 ## Notes
 
 [^tet]: Peter Mark Adams and Christophe Poncet, *Two Esoteric Tarots*, convened and with a foreword by
-César Pedreros, Scarlet Imprint, 2023; eISBN 978-1-912316-92-2. Read from the digital text of that
-edition: 154,542 bytes on disk, 153,097 characters with whitespace collapsed, which is the file every
-quotation was checked against. Front matter (line breaks shown as " / "): "Peter Mark Adams & Christophe Poncet / Convened &
+César Pedreros, Scarlet Imprint, 2023; eISBN 978-1-912316-92-2. Read from a complete digital text of that
+edition, which is what every quotation was checked against. Front matter (line breaks shown as " / "): "Peter Mark Adams & Christophe Poncet / Convened &
 with a foreword by César Pedreros / SCARLET IMPRINT MMXXIII"; "© Peter Mark Adams & Christophe Poncet 2023";
 "Edited by Peter Grey / copy edits by Paul Holman / design & typography by Alkistis Dimech". The image
 credits are a separate "Illustrations" list citing the Pinacoteca di Brera, Milano for the Sola-Busca, the
 Bibliothèque nationale de France for the Noblet *Tarot de Marseille*, the Musée Français de la Carte à
-Jouer for the Chariot of Issy, and the Szépművészeti Múzeum for a Ficino medal. The file contains **no
-page numbers**; its twelve parts are headed "PART I" to "PART XII", the contents listing naming them "Two
+Jouer for the Chariot of Issy, and the Szépművészeti Múzeum for a Ficino medal. The text carries **no page numbers**; its twelve parts are headed "PART I" to "PART XII", the contents listing naming them "Two
 journeys into the tarot", "Occult, esoteric and performative", "Decoding the Sola-Busca", "How the tarot
 became esoteric", "Of libertine aesthetics: the grotesque and the abject", "The Hellenistic revolution
 and the second renaissance", "Tarot designers", "The Dummett-Yates controversy", "Cyphers and time", "The
@@ -535,253 +532,243 @@ seven planets", "Orality, writing and the art of memory" and "The esoteric call"
 "Index". Both authors' own books are named in the text and notes: Adams, P. M. (2017) *The Game of
 Saturn: Decoding the Sola-Busca Tarocchi*, London: Scarlet Imprint, listed in the bibliography alongside
 *Mystai* (2019) and *Hagia Sophia / Sanctum of Kronos* (2023); Poncet's *The Tarot of Marsilio*,
-footnoted in the file as "to be published by Scarlet Imprint in 2024"; and Poncet's articles, including
+footnoted as "to be published by Scarlet Imprint in 2024"; and Poncet's articles, including
 "Ficino's Little Academy of Careggi", *Bruniana & Campanelliana* XIX, 67–76, and "Le triomphe de la vie",
 *Bruniana & Campanelliana* XXIII, 505–512.
 
 [^names]: **On attribution**, because the blog's proven failure mode is address. This is a recorded
-conversation among three named participants, and the file labels turns by first name: "**César**" is
+conversation among three named participants, and the text labels turns by first name: "**César**" is
 César Pedreros, the convenor; "**Peter**" is Peter Mark Adams; "**Christophe**" is Christophe Poncet. The
 Foreword is signed "César Pedreros / June 2023, Santiago de Chile" (line break shown as " / ") and is attributed here to Pedreros
-alone — which matters, because the sentences the book is known for are in it. Every quotation was located
-by character offset in the collapsed text, and the speaker established by finding the last **turn label**
-before that offset, distinguishing a label from a mention: Poncet's Part II speech contains the phrases
+alone — which matters, because the sentences the book is known for are in it. Every quotation's speaker was established by finding the last **turn label**
+before it, distinguishing a label from a mention: Poncet's Part II speech contains the phrases
 "Peter and I, and probably others" and "Peter analysed the very elaborate and specific imagery of the
 Sola-Busca", neither of which is a turn, and a naive search for the names attributes his words to Adams.
-Turn labels used here, by offset: Part I — César 7054, Christophe 7380, César 14404, Christophe 14898,
-César 16268, Peter 16332, César 20125, Peter 20220; Part II — César 24562, Peter 24748, César 31130,
-Peter 31283, César 35086, Christophe 35148 (through the end of the part); Part III — César 39760, Peter
-40054; Part IV — César 48892, Christophe 49137; Part V — César 59331, Peter 59865; Part VI — César 67003,
-Peter 67153; Part VII — César 73483, Peter 73574, César 78085, Peter 78263, César 87143, Christophe 87289,
-Peter 92996; Part VIII — César 98544, Peter 98929, Christophe 102055; Part IX — César 104799, Christophe
-105057, Peter 106028, César 106465, Peter 106578, César 109850, Christophe 110405, César 119746, Peter
-119928, César 122300, Christophe 122482; Part X — César 125387, Christophe 126424, César 129153, Peter
-129277; Part XI — César 130087, Christophe 130490, César 133128, Peter 133215; Part XII — César 135289,
-Christophe 135583, César 137440, Christophe 137543, Peter 138122. A quotation whose speaker is not
-established by this method is not attributed to a speaker in this post.
+Turn labels used here, in order of appearance: Part I — César, Christophe, César, Christophe, César, Peter,
+César, Peter; Part II — César, Peter, César, Peter, César, Christophe (through the end of the part);
+Part III — César, Peter; Part IV — César, Christophe; Part V — César, Peter; Part VI — César, Peter;
+Part VII — César, Peter, César, Peter, César, Christophe, Peter; Part VIII — César, Peter, Christophe;
+Part IX — César, Christophe, Peter, César, Peter, César, Christophe, César, Peter, César, Christophe;
+Part X — César, Christophe, César, Peter; Part XI — César, Christophe, César, Peter; Part XII — César,
+Christophe, César, Christophe, Peter. A quotation whose speaker is not established by this method is
+not attributed to a speaker in this post.
 
-[^fw]: *Two Esoteric Tarots*, Foreword, by **César Pedreros** (June 2023, Santiago de Chile), offset
-4255. "SCHOLARLY RESEARCH HAS FIRMLY MAINTAINED THAT THE tarot had no spiritual, esoteric or divinatory
+[^fw]: *Two Esoteric Tarots*, Foreword, by **César Pedreros** (June 2023, Santiago de Chile). "SCHOLARLY RESEARCH HAS FIRMLY MAINTAINED THAT THE tarot had no spiritual, esoteric or divinatory
 dimension before the mid-eighteenth century. However, two independent experts have shattered that
-consensus with their original research." (the file sets the opening in small capitals; the phrase "the
+consensus with their original research." (the text sets the opening in small capitals; the phrase "the
 tarot had" is lower case in a run of capitals). "Peter Mark Adams has traced the origins and meaning of
 the fifteenth-century Ferrarese Sola-Busca tarocchi. … The evidence he presents unequivocally challenges
 the notion that the tarot served as a mere game of chance; instead, it is an artefact imbued with a
 magical purpose. It is evident that this tarot, dating back to c.1490, predates the commonly accepted time
-frame of esoteric use by almost three centuries." (offset 4752). "Simultaneously, akin to a Jungian
+frame of esoteric use by almost three centuries.". "Simultaneously, akin to a Jungian
 synchronicity, the researcher Christophe Poncet had discerned unmistakable traces of Platonic philosophy
 within the imagery of the Tarot de Marseille. This revelation propelled him into a profound historical
 investigation, unearthing connections between the Florentine aristocracy, the Medici family, Marsilio
-Ficino, Botticelli, and the heretical philosophical underpinnings of the Italian Renaissance." (offset
-5107). "A conversation was convened for the Sagittarius Full Moon of 3rd June 2023. This is the record of
-that meeting of minds." (offset 6284). "Tell me and I'll forget, show me and I may remember, involve me
-and I'll understand." (offset 6865; the file's italics markup leaves a space before each comma, closed
+Ficino, Botticelli, and the heretical philosophical underpinnings of the Italian Renaissance.". "A conversation was convened for the Sagittarius Full Moon of 3rd June 2023. This is the record of
+that meeting of minds.". "Tell me and I'll forget, show me and I may remember, involve me
+and I'll understand." (the text's italics markup leaves a space before each comma, closed
 here).
 
 [^i]: *Two Esoteric Tarots*, Part I ("Two journeys into the tarot"), **Christophe Poncet**: "On my
 nineteenth birthday, my girlfriend gifted me a tarot deck. A Tarot de Marseille. I was amazed by the
 images of the trump cards. Before that I had used ordinary playing cards to tell the future, as a fun
-practice." (offset 7448). "The earliest Tarot de Marseille cards we know of are a World trump and a few
+practice.". "The earliest Tarot de Marseille cards we know of are a World trump and a few
 pips found in the Castello Sforzesco in Milan, which could be dated to the second half of the sixteenth
 century. … So the earliest material samples postdate by almost a century the original deck's creation."
-(offset 9495). "It is not by chance that all these cards represent the same kind of figures, seated on
+. "It is not by chance that all these cards represent the same kind of figures, seated on
 thrones, with symbols of power such as crowns and sceptres. They all are inspired by a single series of
 etchings by the Florentine engraver Baccio Baldini, the *Prophets and Sibyls*, dated circa 1471."
 "Plato's chariot of the soul, for instance, is obviously reflected in the *Chariot* card of the Tarot de
 Marseille, in a spectacular way". "I discovered that the images of the tarot are not so much Plato's, but
-rather Ficino's interpretation of Plato's images, and it's noticeably different." (offset 14193). On his
+rather Ficino's interpretation of Plato's images, and it's noticeably different.". On his
 criterion: "Well, this is only the obvious reading of the card. I could not accept it, because this
 interpretation does not account for all its details. In particular, there is a plant-shaped structure
 running all along the back of the skeleton, with a bulb rooted in the pelvis and a stem with leaves
 climbing up the spine to the skull. This cannot be meaningless. … As for any enigma, the solution needs to
-provide the key to all its given elements." (offset 15526). **Peter Adams**, later in the same part: "From
+provide the key to all its given elements.". **Peter Adams**, later in the same part: "From
 the beginning, I enjoyed an intense connection with the cards, engaging with the tarot on many different
 levels: aesthetically, historically, from a literary perspective and — last but not least —
-performatively; chiefly in acts of divination and energy work." (offset 17986); "I couldn't believe that
+performatively; chiefly in acts of divination and energy work."; "I couldn't believe that
 anything that had had this much time and effort expended on it wasn't possessed of some deeper
-significance." (offset 18818).
+significance.".
 
 [^iii]: *Two Esoteric Tarots*, Part III ("Decoding the Sola-Busca"), **Peter Adams**, throughout: "At the
 deepest level I found that the Sola-Busca's iconographic programme was structured around two key rituals.
 The first was an extremely archaic ritual, one attested as early as 700 BCE and still practiced by occult
-groups today. It is called 'Drawing Down the Moon.'" (offset 42300). "In effect what the ritual is doing
+groups today. It is called 'Drawing Down the Moon.'". "In effect what the ritual is doing
 is creating a magical child or homunculus that will then be 'sacrificed' by immolation in the next stage
 of the ritual as part of an invocation of the saturnian deity or current (whether encompassed under the
-name of Ammon, Kronos or Saturn)." (offset 42688). "The designer has sought to hide the ritual intent
+name of Ammon, Kronos or Saturn).". "The designer has sought to hide the ritual intent
 through the use of additional references that draw our attention away from the performative ritual
-narrative being enacted." (offset 43035). "The second ritual encompasses the main objective of the entire
+narrative being enacted.". "The second ritual encompasses the main objective of the entire
 ritual sequence. It is a rite of theurgical invocation whereby the operator seeks to become imbued with
-the draconian energies of the deity." (offset 45421). "He is shown using a globular ritual implement that
+the draconian energies of the deity.". "He is shown using a globular ritual implement that
 we find described in the principal text of theurgical practice, the *Chaldean Oracles*, and known as
-Hekate's Top." (offset 45815); "As far as I know, this is the only depiction of a theurgical operation in
-the entire oeuvre of both esoteric and Renaissance art." (offset 46319). "My suggestion is that only one
+Hekate's Top."; "As far as I know, this is the only depiction of a theurgical operation in
+the entire oeuvre of both esoteric and Renaissance art.". "My suggestion is that only one
 reading — that identifying a deeply heretical theurgical ritual — reflects the intent of the designer
-since this alone is consistent with the deck's other ritually-infused imagery." (offset 46748).
+since this alone is consistent with the deck's other ritually-infused imagery.".
 "Considered in isolation, the cards are inherently polysemous. We therefore need to assemble a group of
 cards in order to understand how they function together and this allows us to begin to recover the deck's
-deeper levels of meaning." (offset 45014). On method, from the same part and cited in the body as the four
+deeper levels of meaning.". On method, from the same part and cited in the body as the four
 named steps: the deck's "celestial and sidereal symbolism — references to the solstices, planets, fixed
 stars and constellations"; the "surplus imagery left over after accounting for the other elements", which
 yielded "a distinctive postural and gestural grammar — what I have called a 'ritual grammar'"; and the
 gesture "known as *aposkopein*; a characteristic gesture made in the presence of an epiphany of a deity.
 We find this gesture attested from at least the second millennium BCE in the context of Minoan and
-Mycenaean iconography." (offset 42173).
+Mycenaean iconography.".
 
 [^def]: *Two Esoteric Tarots*, Part II ("Occult, esoteric and performative"), **Christophe Poncet**'s
-answer from offset 35148 to the end of the part. "So, at the end of the twentieth century, when three
+answer to the end of the part. "So, at the end of the twentieth century, when three
 scholars, Ronald Decker, Thierry Depaulis and Michael Dummett wrote a book on the origins of the occult
 tarot, they simply set the starting point of their history at the end of the eighteenth century. For them,
 the occult or esoteric tarot could only be an invention of the French occultists. Before that, they
 asserted, ever since its origins, the tarot had only been a game of cards, with no other meanings or
-usages of any kind." (offset 35923). "In this way, two different decks of the fifteenth century revealed
+usages of any kind.". "In this way, two different decks of the fifteenth century revealed
 themselves as spectacular examples of esotericism in tarot, more than three hundred years before the
-earliest date previously accepted by academic consensus." (offset 37745). "To conclude on that point, I
+earliest date previously accepted by academic consensus.". "To conclude on that point, I
 cannot give you a definition of the esoteric or occult tarot. What I believe for certain, however, is
-that, very early in the history of the tarot, some decks had uses other than gaming." (offset 38406).
+that, very early in the history of the tarot, some decks had uses other than gaming.".
 **This post has not read Dummett, Depaulis or Yates**, and its account of what they held is taken from
 this book and marked as the book's.
 
-[^perf]: *Two Esoteric Tarots*, Part II, section "On the Performative", **Peter Adams** from offset
-31283: "My own conclusion is that the 'esoteric tarot' rests fully upon a performative occasion; one in
+[^perf]: *Two Esoteric Tarots*, Part II, section "On the Performative", **Peter Adams**: "My own conclusion is that the 'esoteric tarot' rests fully upon a performative occasion; one in
 which there is a distinct experience of some degree of automatism — whether conceived as entering a state
 of flow, intuition or external facilitation. Therein, for a space of time, the reader and the reading
 appear to occupy two different worlds, the reading appears to have taken on a life, and a direction, of
-its own." (offset 31679). "Such is the archetypal nature of its imagery, the tarot has the capacity to act
-as a container for a broad range of spiritual impulses." (offset 32824). "Twenty-five years ago, I met a
+its own.". "Such is the archetypal nature of its imagery, the tarot has the capacity to act
+as a container for a broad range of spiritual impulses.". "Twenty-five years ago, I met a
 tarot teacher who enlightened me as to the existence of an initiatory tradition in relation to the tarot
 (whether bestowed 'in spirit' or through a lineage holder) and accompanied by 'signs following' that serve
 to confirm the validity of the transmission. On occasion, tarot rituals may be empowered by such a
 tradition. This is seldom spoken of, or even alluded to, within the vast corpus of tarot-related
-literature." (offset 34466, 34819). **César Pedreros** opened the part at offset 24562: "Since we're
+literature.". **César Pedreros** opened the part: "Since we're
 framing our conversation with the term 'esoteric tarot' it is important to address what we understand by
 esoteric".
 
 [^iv]: *Two Esoteric Tarots*, Part IV ("How the tarot became esoteric"), **Christophe Poncet**: "At this
 point in history, I guess there is no esoteric meaning to these images, they probably just represent what
-they appear to represent." (offset 52004). "In this fertile intellectual context, someone, it may have
+they appear to represent.". "In this fertile intellectual context, someone, it may have
 been Ficino or a member of his Academy, figured out that images can convey Ideas. The game of tarot was
 popular at that time, so they imagined using its structure and figures to embed philosophical images and
 concepts. It's not the work of a single man. There are many tasks; so, it probably involved teamwork."
-(offset 55672); "they met in Ficino's house in the hills that dominate Florence, and there they discussed
+; "they met in Ficino's house in the hills that dominate Florence, and there they discussed
 the texts of Plato, shared ideas, drank wine, played the lyre and chanted Orphic hymns"; "Conceiving and
-producing the game must have been an activity of the Academy in itself." (offset 57362). "Then they
+producing the game must have been an activity of the Academy in itself.". "Then they
 probably played the game, as a serious game, and they might have invented new ways of using the deck. It
 may already, at this point, have been used for divinatory purposes, and there are several mentions of
-oracular practices in Ficino's writings." (offset 57717). "However, until the death of Ficino, in 1499, I
-gather it was exclusively reserved for a small circle of initiates." (offset 58215).
+oracular practices in Ficino's writings.". "However, until the death of Ficino, in 1499, I
+gather it was exclusively reserved for a small circle of initiates.".
 
 [^vi]: *Two Esoteric Tarots*, Part VI ("The Hellenistic revolution and the second renaissance"), **Peter
 Adams**, throughout. "Uniquely, the Sola-Busca appears to have embodied the actual ritual processes for
-performing theurgy." (offset 67448). "Giovanni Aurispa returned from Constantinople in 1423 and again in
+performing theurgy.". "Giovanni Aurispa returned from Constantinople in 1423 and again in
 1427, on each occasion bringing hundreds of Hellenistic texts with him. Amongst these texts were the
-complete works of Plato, Proclus, Plotinus, and most of Iamblichus." (offset 69790); "Their significance —
+complete works of Plato, Proclus, Plotinus, and most of Iamblichus."; "Their significance —
 especially the works of Proclus and Iamblichus — was the performativity that was fundamental to their
 approach as practicing polytheistic Hellenists."; "So inspiring were these ideas that they triggered a
 second Hellenistic Renaissance that fundamentally influenced the subsequent course of European culture
-for the next three centuries." (offset 71779). "In addition, this alternative spiritual path was
+for the next three centuries.". "In addition, this alternative spiritual path was
 under-written by two sources of authority: firstly, that accorded to ancient texts which were conceived as
 emerging from a fount of pristine wisdom (*prisca theologia*) at a time close to the act of creation, and
-were thereby thought to be imbued with far greater depth, wisdom and verisimilitude" (offset 70947; the
+were thereby thought to be imbued with far greater depth, wisdom and verisimilitude" (the
 italics run is closed up here). "That said, the fact that these beliefs threatened to undermine the
 institutional power of church and state meant that they could only be preserved by being occluded within
 other media. From the proactive perspective enjoined by theurgists, such as Proclus, the influence of
 higher order energies, or deities, could be embodied via their geometrical forms in artworks that would,
-henceforth, emanate their distinctive presence into the world." (offset 72735, 72981).
+henceforth, emanate their distinctive presence into the world.".
 
 [^vii]: *Two Esoteric Tarots*, Part VII ("Tarot designers"), **Peter Adams** except where marked. "The
 Sola-Busca appears to have been preserved within titled circles until its purchase by the Italian state in
 2009 — a period of some five hundred years. Prior to that, to the best of my knowledge, it only appeared
-in the public domain on four occasions." (offset 73580); "The first was when some of the cards were
+in the public domain on four occasions."; "The first was when some of the cards were
 described in Count Cicognara's memoire on intaglio printmaking in 1831; the second, when art historian and
 curator Arthur M. Hind arranged an exhibition of black and white photographic images of the cards in the
 British Museum in 1907, and then included some images of the cards in his catalogue of early Italian
 engravings." and "The fourth exposure of the cards was via a limited edition reproduction of the entire
 deck by Wolfgang Mayer in 1998, though I can find no further information as to how or why he undertook
-this project." (offset 74205). "I personally find his attribution convincing based upon stylistic
-comparisons with the artist's other works" (offset 75651). "Now, assuming that De Marchi is right about
+this project.". "I personally find his attribution convincing based upon stylistic
+comparisons with the artist's other works". "Now, assuming that De Marchi is right about
 the engraver's identity, and given the generally accepted dates during which he was active as an artist
 (1472–1501), then a date for the engraving work roughly concurrent with the ostensible production date of
-1491 is a reasonable conjecture." (offset 80997); "Since the colouration of the deck's figures corresponds
+1491 is a reasonable conjecture."; "Since the colouration of the deck's figures corresponds
 to the theurgical energies to which the ritual processes depicted within it relate, then we can assume that
 the theurgical knowledge encoded in the cards was also current at the d'Este court in the same time
-frame." (offset 81118). The political account: "The 1482–84 Salt War with Venice had essentially
-bankrupted the state and destroyed a large portion of her agricultural economy." (offset 84851); "the
+frame.". The political account: "The 1482–84 Salt War with Venice had essentially
+bankrupted the state and destroyed a large portion of her agricultural economy."; "the
 presence of the initials 'MS' and the encoding of the date 1491 points towards the Venetian patrician,
-Marin Sanudo, as their intended recipient" (offset 85542); "The date encoded on trump XIIII Bocho (fig.16), 1491, also marked the date at which Ferrara received the
+Marin Sanudo, as their intended recipient"; "The date encoded on trump XIIII Bocho (fig.16), 1491, also marked the date at which Ferrara received the
 first tranche of reparations from Venice. A coincidence?" and "The cards may well have served as a 'reward' for Sanudo's support since they are
 precisely the kind of unique, expensive, visually engaging artefact that he, a celebrated bibliophile,
-would subsequently have displayed in his house." (offset 86253). And, in **Christophe Poncet**'s turn from
-offset 87289: "Ficino takes the precaution of introducing each and every work of Plato with a commentary."
-(offset 89782).
+would subsequently have displayed in his house.". And, in **Christophe Poncet**'s turn: "Ficino takes the precaution of introducing each and every work of Plato with a commentary."
+.
 
 [^viii]: *Two Esoteric Tarots*, Part VIII ("The Dummett-Yates controversy"). **César Pedreros** asks:
 "Why is it that we cannot find books explicitly explaining the esoteric significance of these images until
 French occultism emerged in the eighteenth century? Were they destroyed? Were they simply never written?
 Or was Michael Dummett right when he insisted that there was no such thing as an esoteric tarot before the
-French occultists 'discovered' it in the eighteenth century?" (offset 98544). **Peter Adams**, from
-offset 98929: "Unfortunately, for many people it's as though the clock became stuck back in 1980 when
+French occultists 'discovered' it in the eighteenth century?". **Peter Adams**,: "Unfortunately, for many people it's as though the clock became stuck back in 1980 when
 Dummett published his study of the tarot as a game, and has remained so ever since, so that merely
 referring to Dummett has become a standard response on this issue — as though nothing has changed in the
-intervening almost half century." (offset 99314). "To be clear, the central issue rests on Dummett's claim
+intervening almost half century.". "To be clear, the central issue rests on Dummett's claim
 that 'no occult significance was attached to the cards, nor any use made of them save for playing games,
-until the intervention of Court de Gébelin in 1781.'" (offset 99472). "This topic formed the subject of an
+until the intervention of Court de Gébelin in 1781.'". "This topic formed the subject of an
 exchange between Michael Dummett, a professor of logic and expert on tarot games, and Frances Yates, a
 world-renowned expert on the iconography and ideation of the Renaissance, in the context of Yates's review
 of Dummett's *The Game of Tarot*."; "Rather than rehearse the intricacies of this exchange the issue
 rested, finally, on Dummett's appeal for, and openness towards, evidence overturning his statement."
-(offset 99956). "The evidence that neither Dummett nor Yates had access to in 1980 has only become
+. "The evidence that neither Dummett nor Yates had access to in 1980 has only become
 available over the last ten years or so, and it fundamentally overturns Dummett's supposition. Frances
-Yates was right but lacked the specifics to establish her case." (offset 100120). "The first piece of
+Yates was right but lacked the specifics to establish her case.". "The first piece of
 evidence comes from the records of the Inquisition. A Venetian courtesan, Isabella Bellochio, was stated
 to have 'worshipped an image of the devil by kneeling before it, with her hair loose, while maintaining a
 lantern alight before it day and night … a light which burned continuously in the kitchen in front of a
-devil and the tarocchi …'" (offset 100440; ellipses in the original, the footnote there giving Martin, R.
+devil and the tarocchi …'" (ellipses in the original, the footnote there giving Martin, R.
 (1989) *Witchcraft and the Inquisition in Venice, 1550–1650*, 163). "Surely this kind of dual-use of a
-portable, highly symbolic source of imagery is only to be expected?" (offset 100731); "In this connection
+portable, highly symbolic source of imagery is only to be expected?"; "In this connection
 it is interesting that the Sola-Busca's trump XVII Ipeo is the only card to show signs of wear on the
 paint surface. It appears to have been thumb-marked by being repeatedly gripped or held at the mid-opposite
 edges, which is not, of course, evidence of ritual use but it certainly points towards prolonged and
-sustained contemplation of the image." (offset 100969). "Today, the evidence for the existence of
+sustained contemplation of the image.". "Today, the evidence for the existence of
 occluded subtexts deliberately hidden within the pre-Gébelin tarot is threefold. It comprises the detailed
 analyses of the iconography of the Sola-Busca (Adams); the early Tarot de Marseille (Poncet); and the
-Noblet Tarot de Marseille (Appel)." (offset 101201); "So the answer to the question about the 'missing
+Noblet Tarot de Marseille (Appel)."; "So the answer to the question about the 'missing
 evidence' is that it was never missing. Some of it existed in official records; the rest, by far the more
-impactful portion, was hidden, rather artfully, in plain sight for these last five hundred years." (offset
-101802). **Christophe Poncet**, from offset 102055: "I completely agree with Peter. The cards themselves
-were the 'missing evidence.'" (offset 102097); "Such writings do not state 'I have created a tarot deck
+impactful portion, was hidden, rather artfully, in plain sight for these last five hundred years.". **Christophe Poncet**,: "I completely agree with Peter. The cards themselves
+were the 'missing evidence.'"; "Such writings do not state 'I have created a tarot deck
 that embodies my ideas and theurgical practices,' as the followers of Dummett seem to expect, because
-their authors couldn't express themselves openly." (offset 102286); "He was a very intelligent man. He was
+their authors couldn't express themselves openly."; "He was a very intelligent man. He was
 a professor of logic. And he knew a lot about philosophy, but he seems not to have been familiar with the
 culture of the Italian Renaissance. That probably explains his dry, austere and limited vision of the
-tarot." (offset 102816); "She wrote that Dummett should have spent more time looking for the ideas embedded
+tarot."; "She wrote that Dummett should have spent more time looking for the ideas embedded
 in the cards than to 'chase obscure card games'. To name the capacity of the cards to embed deep
-performative knowledge, Yates chose the word 'hieroglyph.'" (offset 103483).
+performative knowledge, Yates chose the word 'hieroglyph.'".
 
 [^ix]: *Two Esoteric Tarots*, Part IX ("Cyphers and time"). **Christophe Poncet**: "If we think of the
 game as a combinatorial system, you need every part to make it work. So, it's a complete system and each
-part has its function." (offset 105410). "My research shows that the Tarot de Marseille was designed
+part has its function.". "My research shows that the Tarot de Marseille was designed
 between 1470 and 1475. The Sola-Busca was probably created about ten years later in reaction to Ficino's
-deck, proposing in similar ways an opposite ideology." (offset 114838); and, on Ficino's doctrine of the
+deck, proposing in similar ways an opposite ideology."; and, on Ficino's doctrine of the
 incarnate soul: "For him, the journey of the soul during physical life necessarily leads to a state of
 madness. The soul becomes crazed when it is incarnated because, being immortal, her natural state is not
-to be imprisoned in a body, it is to be united with God." (offset 116277). **Peter Adams**: "What I
+to be imprisoned in a body, it is to be united with God.". **Peter Adams**: "What I
 perceive with respect to the Sola-Busca is that each of the trumps, and certain of the suit cards, form an
 elaborate cypher composed of some combination of historical or literary references, astro-alchemical
 allusions and ritual postures, gestures and magical implements. That being said, the recovery of the
 'sense' — the cards' deeper narratives — requires that these figures be grouped together in specific
-combinations." (offset 106089). On time: "These operations depend upon drawing in very specific forces —
+combinations.". On time: "These operations depend upon drawing in very specific forces —
 the energies of Mars, Saturn and chthonic Mercury under the influence of the most malefic of fixed stars,
 Algol — at the time of their maximum strength. There's a high degree of precision in the calculations
 required to achieve this. You would need to be an astrologer to make all of the calculations … All of the
 other operations would require equally precise timing — the collection of the menstruum, the preparation
 of the ritual space, garments, implements and the person of the Mage. With the Sola-Busca, therefore, we
-encounter time in its most instrumental sense" (offset 119928). "The whole operation functions like a very
+encounter time in its most instrumental sense". "The whole operation functions like a very
 complicated, intricate timepiece … In other words, we find ourselves at a very instrumental end of the
 spiritual spectrum, one more usually associated with goetia than with classical theurgy. This is a
 technocratic, astrologically-driven vision of the universe as a collection of manipulable forces.
 Ritually, the deck does not pose a question, it instructs us on how to draw this power down in its rawest
 form and manifest it into the external world. It is highly disciplined — which is, of course, a highly
-Saturnian quality." (offset 121429).
+Saturnian quality.".
 
 [^x]: *Two Esoteric Tarots*, Part X ("The seven planets"). **Christophe Poncet**: "In Ficino's commentary
 on Plato's *Timaeus*, there is a passage, about one page long, in which the soul is compared to a triple
@@ -793,80 +780,76 @@ de Marseille, I realised they were puns or wordplays or clues hinting at the arc
 grid has twenty-one cells, so one for each arcanum of the tarot, given that two of the trumps form a single
 arcanum: the one that has no name (*Arcanum XIII*) and the one that has no number (*The Fool*), forming
 together the inferior arcanum of Saturn. In this way, the grid could be seen as the hidden structure of
-the Tarot de Marseille, within which all the trumps could be ordered." (offset 126424). "To give a precise
+the Tarot de Marseille, within which all the trumps could be ordered.". "To give a precise
 answer to the question, I don't think the planetary divinities mentioned in most of Ficino's astrological
 writings, and thus the grid I just described for the Tarot de Marseille, should be understood as referring
 to celestial bodies acting on things and people. For him, the planets have no influence on the sublunar
 world. They are signs that reveal the universe … In the Tarot de Marseille, astrological allusions should
-most probably be seen as analogies put at the service of the description of souls." (offset 128380).
-**Peter Adams** replies from offset 129277: "Yes, it's a much more minimalistic situation with the
+most probably be seen as analogies put at the service of the description of souls.".
+**Peter Adams** replies: "Yes, it's a much more minimalistic situation with the
 Sola-Busca because the only celestial … and sidereal bodies … that can be discerned, are all malefic."
 
 [^xi]: *Two Esoteric Tarots*, Part XI ("Orality, writing & the art of memory"). **César Pedreros** asks:
 "Throughout history, there has been a prevailing belief that esoteric teachings should be safeguarded and
 transmitted orally, exclusively to those prepared to receive them. This exclusivity was supposed to
-maintain the integrity and sanctity of the knowledge." (offset 130093). **Christophe Poncet**: "The Tarot
+maintain the integrity and sanctity of the knowledge.". **Christophe Poncet**: "The Tarot
 de Marseille, with its multilayered content and combinatorial structure, is a fantastic instrument to
-produce unique experiences in the reader, and in this way excludes any form of literality." (offset
-132925). **Peter Adams**: "The concept of the art, or theatre, of memory informs everything I've written
+produce unique experiences in the reader, and in this way excludes any form of literality.". **Peter Adams**: "The concept of the art, or theatre, of memory informs everything I've written
 over the last twenty-five years. The reason is simple enough. There are two distinct modes of religiosity:
-a 'doctrinal mode' and an 'imagistic mode.'" (offset 133215); "Because of the transience of these
+a 'doctrinal mode' and an 'imagistic mode.'"; "Because of the transience of these
 experiences, imagistic modes of religiosity require that their core ritual processes, iconic imagery and
 visionary outcomes — rather than a body of fixed doctrine — be encoded in a form that allows the
 restitution of the ritual and verification of its efficacy and visionary outcomes. The ideal form with
-which to capture these essential elements is that of the Theatre of Memory." (offset 134124). The
+which to capture these essential elements is that of the Theatre of Memory.". The
 "doctrinal"/"imagistic" distinction is there credited to Whitehouse, H. (2002), "Modes of Religiosity".
 
-[^xii]: *Two Esoteric Tarots*, Part XII ("The esoteric call"). **Christophe Poncet** from offset 135583:
+[^xii]: *Two Esoteric Tarots*, Part XII ("The esoteric call"). **Christophe Poncet**:
 "As soon as I started investigating the Tarot de Marseille, I felt like I was mysteriously helped every
 now and then, as if some providential hand was giving me the clues needed to continue my progress."
-(offset 135594); "I note in passing that none of us three is an academic" (offset 137239). **Peter
-Adams**, closing the conversation from offset 138122: "I hope that our conversation has served to
+; "I note in passing that none of us three is an academic". **Peter
+Adams**, closing the conversation: "I hope that our conversation has served to
 highlight the importance that people have accorded to securing the performative in relation to their
 spirituality: the ways and the means for connecting directly to the numinous and experiencing the influx
 of the divine, and doing so despite the risk of being exposed and punished, or even executed, for their
-non-conformity of beliefs and practices." (offset 138417); "The fact is, the esoteric tarot is a living
+non-conformity of beliefs and practices."; "The fact is, the esoteric tarot is a living
 reality for the hundreds of thousands of people who daily engage, through the mediation of its imagery,
-with greatly expanded domains of awareness and understanding" (offset 139205).
+with greatly expanded domains of awareness and understanding".
 
-[^abs]: Reported as a search result, and scoped to this file. Case-insensitive counts against the
-whitespace-collapsed digital text (153,097 characters). **Length:** the Foreword runs from offset 4255 to
-6997 — **2,742 characters**, or 1.8 per cent of the file; the remainder is 150,355 characters. **Strong
-epistemic markers:** "unequivocally" occurs **1** time in the file, at offset 4777, inside the Foreword;
-"firmly" **3** times (offsets 4287 in the Foreword, 62371, 75279); "shattered" **2** (4444 in the
-Foreword, of the scholarly consensus, and 71943, of the medieval worldview); "evident" **4** (4925 in the
-Foreword, 51851, 84655, 109017). **Hedge markers, case-insensitive substring counts across the whole file,
+[^abs]: Reported as a search result, and scoped to the text of this edition. Case-insensitive counts
+over the book's text. **Length:** the Foreword is **2,742 characters**, or 1.8 per cent of the text.
+**Strong epistemic markers:** "unequivocally" occurs **1** time in the text, inside the Foreword;
+"firmly" **3** times (in the Foreword, and twice elsewhere); "shattered" **2** (in the
+Foreword, of the scholarly consensus, and once more, of the medieval worldview); "evident" **4** (one in the
+Foreword, three elsewhere). **Hedge markers, case-insensitive substring counts across the whole text,
 the Foreword's count in brackets:** "probably" 20 (0), "seems" 10 (0), "likely" 8 (0), "may have" 7 (0),
 "apparently" 4 (0), "perhaps" 3 (0), "to my mind" 2 (0), "I guess" 1 (0), "I gather" 1 (0), "tentatively"
 1 (0), "My suggestion" 1 (0), "conjecture" 1 (0), "possible" 4 (0), "possibility" 1 (0) — **64 across the
-file, 0 in the Foreword.** **Safeguard:** "safeguard" returns **1** hit, inside "safeguarded", at offset
-130182, in the convenor's question about transmitting knowledge. **Pace:** "pace" returns **6** hits and
-**0** as a word of its own; every hit is inside "space" — offsets 31916 ("for a space of time"), 34068 and
-120739 ("the ritual space"), 51235 ("twenty-two spaces"), 68324 ("this turbulent political space"), 138902
-("the efficacious space of your own dreams"). **Clinical and risk vocabulary returning 0 hits:** danger,
+text, 0 in the Foreword.** **Safeguard:** "safeguard" returns **1** hit, inside "safeguarded", in the
+convenor's question about transmitting knowledge. **Pace:** "pace" returns **6** hits and
+**0** as a word of its own; every hit is inside "space" — "for a space of time", "the ritual space"
+twice, "twenty-two spaces", "this turbulent political space" and
+"the efficacious space of your own dreams". **Clinical and risk vocabulary returning 0 hits:** danger,
 warn, warning, doctor, therap-, therapist, psychiatr-, psychiatric, psychiatry, psychotic,
 clinical, hospital, crisis, suicid-, mental health, breakdown, seek help, professional help, self-harm,
-mentor, dose, safety, ethic. **Near-misses:** "risk" **1** (offset 138417, the historical risk run by
-Renaissance practitioners); "precaution" **1** (offset 89799, Ficino's commentary habit); "caution" **0**
-as a word of its own and 1 as a substring of "precaution"; "madness" **2** (offset 116354, Ficino's
-doctrine that the incarnate soul's journey "necessarily leads to a state of madness", and an index entry
-at 149146); "careful" **5** (offsets 43713, 44871, 61774, 64457, 102613 — all five about examining images
-or texts); "psycho" **3**, all inside "metempsychosis"; "supervis" **1** (offset 83611, Prisciani's
-"design and supervision" of a fresco cycle); "discipline" **2** (offsets 52988, the Quadrivium, and 121843,
-"It is highly disciplined"); "purif" **2** (offsets 119569, 119658, of the soul); "meditat" **8**, of which
+mentor, dose, safety, ethic. **Near-misses:** "risk" **1** (the historical risk run by
+Renaissance practitioners); "precaution" **1** (Ficino's commentary habit); "caution" **0**
+as a word of its own and 1 as a substring of "precaution"; "madness" **2** (Ficino's
+doctrine that the incarnate soul's journey "necessarily leads to a state of madness", and an index entry);
+"careful" **5** (all five about examining images or texts); "psycho" **3**, all inside "metempsychosis";
+"supervis" **1** (Prisciani's "design and supervision" of a fresco cycle); "discipline" **2** (the
+Quadrivium, and "It is highly disciplined"); "purif" **2** (of the soul); "meditat" **8**, of which
 5 are the title of Tomberg's *Meditations on the Tarot* or references to it, 2 are "divination and
 meditation"/"divination, meditative or ritual use", and 1 is "meditative ritual". **The word "third"**
-occurs **1** time in the file (offset 40933, "thirdly" in Adams's four decoding steps) and does not appear
+occurs **1** time in the text ("thirdly" in Adams's four decoding steps) and does not appear
 in the third element of the deck's four public appearances. A search shows only what it indexes, so every
-count here is scoped to this text.
+count here is scoped to the text of this edition.
 
-*Marking:* **a reading.** Documented — every passage in quotation marks, taken from the digital text of
+*Marking:* **a reading.** Documented — every passage in quotation marks, taken from a complete digital text of
 *Two Esoteric Tarots* by Peter Mark Adams and Christophe Poncet, convened and with a foreword by César
-Pedreros (Scarlet Imprint, 2023, eISBN 978-1-912316-92-2), checked character for character against the
-file and cited in the notes by part **and by speaker**, because the book is a recorded conversation and
-its claims belong to the person who made them. **Address:** the file's typographic quotes are rendered
-here as straight ASCII, and its dashes are given as em dashes except inside numeric ranges (which keep the file's en dashes); the small-caps opening of the Foreword is quoted in
-lower case with the rendering noted; the stray spaces the file's italics markup leaves before punctuation
+Pedreros (Scarlet Imprint, 2023, eISBN 978-1-912316-92-2), checked character for character against it and cited in the notes by part **and by speaker**, because the book is a recorded conversation and
+its claims belong to the person who made them. **Address:** the text's typographic quotes are rendered
+here as straight ASCII, and its dashes are given as em dashes except inside numeric ranges (which keep its en dashes); the small-caps opening of the Foreword is quoted in
+lower case with the rendering noted; the stray spaces its italics markup leaves before punctuation
 are closed. **Absences reported as search results, scoped to this file:** no safeguard of a reader (the
 single occurrence of "safeguarded" concerns transmitting knowledge); no metered pace (all six hits for
 "pace" are inside "space"); and 0 hits for the clinical and risk vocabulary listed in note [^abs], with

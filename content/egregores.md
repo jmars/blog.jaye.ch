@@ -11,8 +11,8 @@ mechanism**. Neither post read the book. This one does — and finds that the cl
 case is the opposite of a pathology, that the same structure is what a healthy group runs on, and that
 the book's countermeasure, which the blog never cited, has a **pace** in it.*
 
-*Status.* This post reads **one** source. The quotations are verbatim from the digital text, checked
-character for character against the file and cited in the notes by chapter and section; the reading of
+*Status.* This post reads **one** source. The quotations are verbatim from a complete digital text of the edition, checked
+character for character against it and cited in the notes by chapter and section; the reading of
 them is an **inference**, offered as one. **The book's cosmology is not endorsed** — nothing here claims
 that egregores are real entities, and nothing claims they are only metaphor; §2 is about why holding
 that open is the point, and it is the book's own move rather than this post's. No living author is
@@ -67,9 +67,9 @@ who founded the Philosophers of Nature:
 > receives the influences of the egregores, that is the astral counterpart of the group, in his
 > psyche."[^intro]
 
-One textual note, reported rather than tidied: the digital text reads "or even a country, psychically
+One textual note, reported rather than tidied: the text reads "or even a country, psychically
 included in the egregore of the organization", with no verb before "psychically", and the clause is quoted
-as the file has it.[^addr]
+as the text has it.[^addr]
 
 The scale is the point of that list. This is not a claim about cults, or about orders, or about any group
 a reader would identify as dangerous. It is a claim about **every** group a person is in, up to and
@@ -216,7 +216,7 @@ be amoral and remedial at once.
 
 But in every account of harm in this book, a **seat appears inside the egregore**, and in the predation
 account the fatal feature is stated in one clause by the writer: the Secret Chiefs were
-"so-called because (1) they were the guiding forces legitimizing the school's existence and (2) **only the
+"so-called because they were the guiding forces legitimizing the school's existence and **only the
 Chief had contact with them**", and they "were aspects of the unconscious of the Chief, **whether or not
 they had any objective existence**".[^app1] The egregore is the medium. The harm arrives when a single
 person becomes its **reader** — the one who says what the group mind wants — and when that reading cannot
@@ -486,9 +486,9 @@ light of consciousness is thrown, is already a demon rendered impotent."[^ch7]
 
 ## 9. The negative finding
 
-**Stated as a search result, scoped to the file.** The digital text of *Egregores* contains **no clinical
+**Stated as a search result, scoped to the text of this edition.** The text of *Egregores* contains **no clinical
 referral**. Case-insensitive searches return **0** hits for "safeguard", "physician", "therapist",
-"therapis", "psychiatry", "psychosis", "counsel" and "supervis". Everything clinical in the file is
+"therapis", "psychiatry", "psychosis", "counsel" and "supervis". Everything clinical in the text is
 incidental, and it is itemised at [^gap]: **one** hit for "psychiatr", in an appendix account, where a
 Chief's "psychiatric medication kept him a bit more stable"; **three** hits for "doctor", all inside a
 quoted 1920s dialogue by the French mystic Paul Sédir; and **one** hit for "clinic", inside "severe
@@ -595,8 +595,8 @@ percent of the officers of the order died before reaching the age of sixty-five,
 debilitating blood diseases**", and that with the general membership the figure was "still a staggering 20
 percent".[^app1] There is no denominator, no comparison population, no base rate for officers of small
 esoteric orders, and no control — and the reporter is a member with an interest in the explanation he goes
-on to give. A residual the same size as the scan step is measuring the scan. Reported as what it is: one
-person's recollection of a small group, offered as evidence of a shared mind's toll.
+on to give. A percentage with no base rate to compare it to is not a rate. Reported as what it is: one person's
+recollection of a small group, offered as evidence of a shared mind's toll.
 
 **And the same account gives itself away, which is worth more than the statistic.** After the list of
 everyone else's misfortunes — a lost job, a transferred post, blood cancers, an embezzlement charge — the
@@ -639,107 +639,103 @@ are the parts a reader who does not accept the metaphysics can use, and the part
 
 [^egr]: Stavish, M., *Egregores: The Occult Entities That Watch Over Human Destiny*, Rochester, VT:
 Inner Traditions, 2018, ISBN 978-1-62055-577-4 (paperback), 978-1-62055-578-1 (e-book), LCCN 2017048793.
-Read from a digital text of the book, whitespace-collapsed and with the page order jumbled by the
-extraction (the body of chapter 1 appears first, then chapters 2, 6, 3, 7, 5 and 4 out of order, with the
-front matter and table of contents following the Lovecraft endnotes). Structure: Foreword by James
+Read from a complete digital text of the book, whose sections stand out of book order (the body of
+chapter 1 appears first, then chapters 2, 6, 3, 7, 5 and 4, with the front matter and table of contents
+following the Lovecraft endnotes). Structure: Foreword by James
 Wasserman; Introduction, "Angels, Women, and War in the Heavens"; chapters 1–7 as listed in §1;
 Conclusion, "Ideas and Their Consequences"; Appendix 1, "Personal Accounts of Disengaging from an
 Egregore"; Appendix 2, "An Account of the Revivification of an Egregore"; endnotes, bibliography, index.
 
-[^addr]: **Address, and how the quotations are rendered.** The offsets below are byte offsets into the
-whitespace-normalised digital text used for this reading; each quotation was checked character for
-character, with the file's curly quotes and apostrophes rendered here as straight ASCII and its em dashes
-kept as the em dash character. Chapter and section attributions are taken from the book's own running
-headings and its table of contents, both of which the file preserves. Where the file and the printed book
-appear to differ, the file is reported and the difference is flagged rather than reconciled: the Dubuis
+[^addr]: **Address, and how the quotations are rendered.** Every quotation was checked character for
+character against the text of this edition, with its curly quotes and apostrophes rendered here as
+straight ASCII and its em dashes kept as the em dash character. Chapter and section attributions are taken from the book's own running
+headings and its table of contents, both of which the text preserves. Where the text and the printed book
+appear to differ, the text is reported and the difference is flagged rather than reconciled: the Dubuis
 group-list sentence in §2 reads "or even a country, psychically included in the egregore of the
-organization to which they belong", with the verb absent, and it is quoted as the file has it. The book sets its section headings and parts of its
+organization to which they belong", with the verb absent, and it is quoted as the text has it. The book sets its section headings and parts of its
 table of contents in **small capitals**; those titles are rendered here in title case ("A Modern Example of
 the War of the Egregores", "Language as a Control Mechanism"), and an opening capital inside a sentence is
 lowered to the sentence's position where a quotation continues one mid-sentence. This
 reading's brief named several of the book's **sections** as chapters — "A Modern Example of the War of the
 Egregores", "The Power of the Egregore", "Watch Your Dreams" and "Language as a Control Mechanism" (all
 sections of chapter 1), and "The Golden Dawn Egregore" and "Walter Ernest Butler" (sections of chapter 2);
-they are cited here as sections. The file's internal cross-reference footnote numbers are dropped from
+they are cited here as sections. The text's internal cross-reference footnote numbers are dropped from
 quotations, and inner double quotes in the source are rendered as single quotes inside a longer quotation
 (Slender Man, ch. 4).
 
 [^fore]: Wasserman, J., Foreword to Stavish, *Egregores* — "I believe egregores are both positive and
-negative. They can inspire or enslave" (offset 128663); and the political passage quoted in §10: the *New
+negative. They can inspire or enslave"; and the political passage quoted in §10: the *New
 York Times* motto "a lie whose object is incitement and the propagation of insane myths and irrational
 policies"; "Antifa and others as Berkeley was turned into a war zone by leftist-inspired censorship storm
 troopers and jackbooted, mask-wearing street gangs"; and the six-pointed star and its doctrines as
-"another resilient egregore that could well be improved upon" (all three inside offsets 129000–133000, the
+"another resilient egregore that could well be improved upon" (all three in the
 Foreword's closing survey of national, commercial, communication and religious egregores).
 
 [^intro]: Stavish, *Egregores*, Introduction, sections "What Is an Egregore?" and "Three Questions This
 Book Will Address" — the Wiktionary definition, "( occult ) autonomous psychic entity composed of and
-influencing the thoughts of a group of people" (offset 225566); the harder definition, "the home or conduit
+influencing the thoughts of a group of people"; the harder definition, "the home or conduit
 for a specific psychic intelligence of a nonhuman nature connecting the invisible dimensions with the
-material world in which we live" (225880); the Jean Dubuis passage quoted at length, from the lessons of
-instruction he wrote for the Philosophers of Nature (231000–235100) — "What is an egregore? It is the
-psychic and astral entity of a group" (234240); "All members of a group, a family, a club, a political
+material world in which we live"; the Jean Dubuis passage quoted at length, from the lessons of
+instruction he wrote for the Philosophers of Nature — "What is an egregore? It is the
+psychic and astral entity of a group"; "All members of a group, a family, a club, a political
 party, a religion, or even a country, psychically included in the egregore of the organization to which
-they belong" (234282); "Therefore, each individual who is involved in a group receives the influences of
-the egregores, that is the astral counterpart of the group, in his psyche" (234459); "It is impossible to
-free oneself from certain egregores" (234785). Stavish notes that the Dubuis excerpt comes from the
+they belong"; "Therefore, each individual who is involved in a group receives the influences of
+the egregores, that is the astral counterpart of the group, in his psyche"; "It is impossible to
+free oneself from certain egregores". Stavish notes that the Dubuis excerpt comes from the
 Philosophers of Nature lessons and that the school held no collective rituals "so as to limit the formation
-of any egregore" (234100). Also quoted by Stavish from Joscelyn Godwin's *The Golden Thread* — "the
+of any egregore". Also quoted by Stavish from Joscelyn Godwin's *The Golden Thread* — "the
 egregore can take on a life of its own and appear to be an independent, personal divinity, with a limited
-power on behalf of its devotees and an unlimited appetite for further devotion" (228991).
+power on behalf of its devotees and an unlimited appetite for further devotion".
 
 [^ch1]: Stavish, *Egregores*, ch. 1, "Tibetan Buddhism and the Reality of the Egregore" — the David-Néel
 material, from *Magic and Mystery in Tibet* (1929), *Initiations and Initiates in Tibet* and *The Secret
 Oral Teachings in Tibetan Buddhist Sects*: the tulpa's autonomy, "Once the tulpa is endowed with enough
 vitality to be capable of playing the part of a real being, it tends to free itself from its maker's
 control. This, say Tibetan occultists, happens nearly mechanically, just as the child, when his body is
-completed and able to live apart, leaves its mother's womb" (offset 5251); "I may have created my own
-hallucination" (5802); the tulpa/tulku distinction (6000–9200), including "in some cases they may survive
-him, or, during his life, free themselves from his domination" (8500); "It is only prudent to beware of
-opening channels without due consideration" (9686); "One must know how to protect oneself against the
-tigers to which one has given birth, as well as against those that have been begotten by others" (9868);
-the four *dubthabs* and the warning about the wrathful category (10016–18000); "The mystics of Tibet
-consider that gods and demons, paradise and hell, exist only for those who believe in them" (13776); the
+completed and able to live apart, leaves its mother's womb"; "I may have created my own
+hallucination"; the tulpa/tulku distinction, including "in some cases they may survive
+him, or, during his life, free themselves from his domination"; "It is only prudent to beware of
+opening channels without due consideration"; "One must know how to protect oneself against the
+tigers to which one has given birth, as well as against those that have been begotten by others";
+the four *dubthabs* and the warning about the wrathful category; "The mystics of Tibet
+consider that gods and demons, paradise and hell, exist only for those who believe in them"; the
 Dorje Shugden material, from Isabel Hilton's *The Search for the Panchen Lama*, including "In Dorje
-Shugden we see a sort of apotheosis, or divinization of the human being" (19391) and the claim that "some
+Shugden we see a sort of apotheosis, or divinization of the human being" and the claim that "some
 have seen the Chinese occupation and destruction of Tibet as punishment for—or at least as a result
-of—the inadequate worship of Dorje Shugden" (19800); the section "The Power of the Egregore . . . Watch
+of—the inadequate worship of Dorje Shugden"; the section "The Power of the Egregore . . . Watch
 Your Dreams", "Just as we feed, so does it feed. Just as we inhale and exhale, so does it inhale and
-exhale" (23133); and the section "Language as a Control Mechanism", "the discussion is controlled,
-definitions are controlled, and, with this, the overarching egregore of the sect or school is maintained"
-(24453) and "they have simply traded one egregore for another" (24814).
+exhale"; and the section "Language as a Control Mechanism", "the discussion is controlled,
+definitions are controlled, and, with this, the overarching egregore of the sect or school is maintained" and "they have simply traded one egregore for another".
 
 [^ch2]: Stavish, *Egregores*, ch. 2, "The Hermetic Order of the Golden Dawn and Related Egregores", and
 its sections "The Golden Dawn Egregore" and "Walter Ernest Butler: A Seminal Occultist". The Flying Roll
 material is quoted by Stavish from Patrick Zalewski's *Secret Inner Order Rituals of the Golden Dawn*:
 "Once accepted into the body during the 5=6, it is impregnated into the individual for life, unless the
-Chiefs who emanate the Link choose to close it down" (36690); and the "Transmission of the Etheric Link"
+Chiefs who emanate the Link choose to close it down"; and the "Transmission of the Etheric Link"
 at the 7=4 grade, where "the Link is given in its entirety to the Adept so that they are able to carry
-on" (37800). The Butler quotations are from W. E. Butler, "The Egregore of a School" (1970), published by
-the Servants of the Light — Stavish's paraphrase of Butler's "amoral" claim (42304), "the fundamental
+on". The Butler quotations are from W. E. Butler, "The Egregore of a School" (1970), published by
+the Servants of the Light — Stavish's paraphrase of Butler's "amoral" claim, "the fundamental
 nature of the egregore consists of collective emotions and the thoughtform itself is amoral, taking its
 directions from those connected to it"; and Butler's own text: "Each member of the group pours energy into
 the collective thought-form but, equally, into each member there also passes the influence of the group as
-a whole" (43108); "such dependence upon the Egregore may even be remedial. But any organization, which
+a whole"; "such dependence upon the Egregore may even be remedial. But any organization, which
 makes such dependence mandatory upon all its members, is treading a dangerous and slippery path and will,
-sooner or later, come to grief" (44257); and Dion Fortune's test as Butler records it — "not to take its
+sooner or later, come to grief"; and Dion Fortune's test as Butler records it — "not to take its
 public teachings and statements as proof of its integrity but rather to look closely at the type of person
-its discipline turned out. . . . 'By their fruits shall ye know them'" (45186). Stavish introduces Butler
-as "among one of the most important, and often little-known, occultists of the twentieth century" (40980).
+its discipline turned out. . . . 'By their fruits shall ye know them'". Stavish introduces Butler
+as "among one of the most important, and often little-known, occultists of the twentieth century".
 
 [^ch4]: Stavish, *Egregores*, ch. 4, "Pop Culture and the Creation of Egregores", sections "Jean Dubuis,
 UFOs, Feng Shui, and Slenderman", "Revolt Against the Modern World by Julius Evola" and "Mind Games by
 Robert Masters and Jean Houston" — the Dubuis account, "far too often the egregore, or group mind or
-soul, was a trap rather than a channel toward liberation" (178255) and "Personal agendas hidden inside the
+soul, was a trap rather than a channel toward liberation" and "Personal agendas hidden inside the
 desired manifestations utilized the emotional energy of the group to bring to pass what one person could
-not—all without the knowledge or consent of the group" (178358); and the Slender Man claim quoted in §6
-(181320).
+not—all without the knowledge or consent of the group"; and the Slender Man claim quoted in §6.
 
 [^ch5]: Stavish, *Egregores*, ch. 5, "The Lovecraft Circle", section "Howard Phillips Lovecraft and the
-Necronomicon" — "nearly all of the famous magical texts in Western occultism were in some way contrived"
-(146038); the Padmasambhava/terma comparison (146200–147400); "Neither has the fictional nature of the
+Necronomicon" — "nearly all of the famous magical texts in Western occultism were in some way contrived"; the Padmasambhava/terma comparison; "Neither has the fictional nature of the
 Necronomicon been a stumbling block for those who see it as a gateway to genuine and existing alternate
-realities" (147629); and "thus bending the framework of reality for the reader" (148207). The chapter's
+realities"; and "thus bending the framework of reality for the reader". The chapter's
 remaining sections — "Kenneth Grant: Revealer of Deep Esoteric Truth", "Robert E. Howard and Conan the
 Barbarian" and "Fellow Magician Arthur Machen" — read the pulp circle as a formed network.
 
@@ -747,78 +743,72 @@ Barbarian" and "Fellow Magician Arthur Machen" — read the pulp circle as a for
 sections "Harvey Spencer Lewis: The Founder of AMORC", "AMORC and the Cathedral of the Soul" and "The
 Third Mind" — the *Pronunziamento to All the World* material, including "it is doubtful that the mentioned
 'signatories' existed in any uniform manner; if they did exist they were probably more honorary than
-active" (52300); "This document, and ones similar to it, are in fact magical operations" (53250); "That
-which is fiction slowly materializes into fact; the dream becomes reality, and history is justified"
-(53819); and the averment, "I do solemnly affirm that I have carefully read and meditated upon the
-contents of this manifesto" (55152). The Third Mind material, with Napoleon Hill's "coordination of
-knowledge and effort of two or more people, who work toward a definite purpose, in the spirit of harmony"
-(74545), and Stavish's account of the Burroughs-Vollmer shooting, "the magical being they had engendered
-was taking its toll" (76000–76300).
+active"; "This document, and ones similar to it, are in fact magical operations"; "That
+which is fiction slowly materializes into fact; the dream becomes reality, and history is justified"; and the averment, "I do solemnly affirm that I have carefully read and meditated upon the
+contents of this manifesto". The Third Mind material, with Napoleon Hill's "coordination of
+knowledge and effort of two or more people, who work toward a definite purpose, in the spirit of harmony", and Stavish's account of the Burroughs-Vollmer shooting, "the magical being they had engendered
+was taking its toll".
 
 [^ch7]: Stavish, *Egregores*, ch. 7, "Freeing Oneself from the Influence of Egregores" — "So can egregores
-be avoided? Yes, but only if human beings can be avoided" (96850); "the majority of egregores are born out
-of necessity—one might even say accidentally" (96621); the media passage, "the purpose of media is, on its
-most fundamental level, to create an egregore" (102099), and "The media and its attendant sounds and
-images are extensions of various egregores. Limit exposure to them, and do so consciously" (120554).
+be avoided? Yes, but only if human beings can be avoided"; "the majority of egregores are born out
+of necessity—one might even say accidentally"; the media passage, "the purpose of media is, on its
+most fundamental level, to create an egregore", and "The media and its attendant sounds and
+images are extensions of various egregores. Limit exposure to them, and do so consciously".
 Section "'Therapeutic Blasphemy' to Break Their Hold": "we are to free ourselves publicly and consciously
-from private and unconscious indoctrination" (104216) and "then desacralization, or therapeutic blasphemy,
-loses its therapeutic component and simply becomes blasphemy" (104801); Stavish attributes the term to
+from private and unconscious indoctrination" and "then desacralization, or therapeutic blasphemy,
+loses its therapeutic component and simply becomes blasphemy"; Stavish attributes the term to
 Joscelyn Godwin's *The Theosophical Enlightenment*, borrowing from Urgyen Sangharakshita. Section "Spin
 Three Times to the Left": the Psalm 68 response and "One must also spin three times to the left and cross
-oneself" (110381). Section "Destruction of an Egregore—Fire and Sword": "the objects connected with the
+oneself". Section "Destruction of an Egregore—Fire and Sword": "the objects connected with the
 organization or movement must be destroyed. Fire is the principal means of separating the energetic link
-and destroying it" (113189); the list of modern destruction quoted in §7 (113300–114000); and "Hence, some
+and destroying it"; the list of modern destruction quoted in §7; and "Hence, some
 egregores may be reinvigorated even after centuries or millennia of disuse, which is a closely kept secret
-of operational magic" (114207). Section "Refuge in an Egregore?": "all egregores are at best restrictive
-forces from which we must free ourselves" (118769) and Sadhu's three points. Section "Do-It-Yourself
+of operational magic". Section "Refuge in an Egregore?": "all egregores are at best restrictive
+forces from which we must free ourselves" and Sadhu's three points. Section "Do-It-Yourself
 Deprogramming": "all egregores are cults in the classical sense of the word, but not all are cults in the
-modern pejorative sense" (121980); "it is often difficult to do, for it's the same thing as demonstrated
-in deprogramming from destructive mind-control cults (DMCC)" (121821); "by oneself, without some form of
-support" (122298); the extraction timeline (124737); the box procedure (125468); "You may find a way to
-balance the two, or you may choose to go back" (126267) and "it will be from a position of individual
-choice, self-expression, and freedom" (126411); and "there are egregores that are healthy for some people"
-(127072). Section "Controlling the Narrative": "Controlling the narrative means to be in control of the
-story, of the story you want people to hear, believe, and act upon—all three parts must be present"
-(126715). Also, quoting the author of *Meditations on the Tarot*: "a demon perceived, i.e., on whom the
-light of consciousness is thrown, is already a demon rendered impotent" (107341).
+modern pejorative sense"; "it is often difficult to do, for it's the same thing as demonstrated
+in deprogramming from destructive mind-control cults (DMCC)"; "by oneself, without some form of
+support"; the extraction timeline; the box procedure; "You may find a way to
+balance the two, or you may choose to go back" and "it will be from a position of individual
+choice, self-expression, and freedom"; and "there are egregores that are healthy for some people". Section "Controlling the Narrative": "Controlling the narrative means to be in control of the
+story, of the story you want people to hear, believe, and act upon—all three parts must be present". Also, quoting the author of *Meditations on the Tarot*: "a demon perceived, i.e., on whom the
+light of consciousness is thrown, is already a demon rendered impotent".
 
-[^concl]: Stavish, *Egregores*, Conclusion, "Ideas and Their Consequences" (body at offsets 47900–50300,
-placed in the digital text before the AMORC chapter) — "It is functionally irrelevant, except for academic
+[^concl]: Stavish, *Egregores*, Conclusion, "Ideas and Their Consequences" (placed in the text before the AMORC chapter) — "It is functionally irrelevant, except for academic
 definition, if an egregore is understood to exist only in the classical sense or if we can consider a
-thoughtform an egregore" (48424); "there is no such thing as good or evil, only ideas and their
-consequences" (50050); and "Recognizing this reality is the first step in defeating it" (50126).
+thoughtform an egregore"; "there is no such thing as good or evil, only ideas and their
+consequences"; and "Recognizing this reality is the first step in defeating it".
 
 [^app1]: Stavish, *Egregores*, Appendix 1, "Personal Accounts of Disengaging from an Egregore".
 Preamble: "It is very clear that many people have positive experiences with various organizations and
-their attendant egregores" (198751) and "These examples are dramatic and have been chosen for this very
-quality" (199061). The first account, "'The Greater the Eschaton, the Tighter the Screws of the
+their attendant egregores" and "These examples are dramatic and have been chosen for this very
+quality". The first account, "'The Greater the Eschaton, the Tighter the Screws of the
 Egregore'", is by a former member of a Tibetan Buddhist organisation, after twenty-seven years of
-involvement (199358–208200). The second, "'It Was Like Something Out of H. P. Lovecraft!'", is by a former
+involvement. The second, "'It Was Like Something Out of H. P. Lovecraft!'", is by a former
 member of a worldwide initiatic fraternity, and contains the officer-mortality figure, "upward of 80
 percent of the officers of the order died before reaching the age of sixty-five, and from unusual and
-debilitating blood diseases" (209732), the emergency-room material (210600–211000), and "I have been
+debilitating blood diseases", the emergency-room material, and "I have been
 spared through no grace or skill of my own. I attribute it to constant prayer, a loving wife who steered
-me back to sane choices, and the love and grace of God" (212752). The third, "'Do Not Call Up That Which
+me back to sane choices, and the love and grace of God". The third, "'Do Not Call Up That Which
 You Cannot Put Down!'", carries the Secret Chiefs account: "The Secret Chiefs, who had formed the
 egregore, were relentlessly demanding of superhuman effort. They invented techniques like staying for days
-inside closets and whipping recruits" (218884); "People simply burned out. The few left were frightening
-zealots" (219159); "without humanizing elements like nurturing and basic mental hygiene, the power made
-people maniacal and cruel" (219437); "you are in charge of your spiritual path, not spirits, not Chiefs,
-and not Imperators" (219998); and "the methods used by the group were incredibly effective in inducing
-mystical states of consciousness but had the terrible side effect of moderate to total brainwashing"
-(220123). Its account of the Chief: the Secret Chiefs "were aspects of the unconscious of the Chief,
-whether or not they had any objective existence" (214325); "the discipline and ethics of an eight-yearold
-child" (216468); "through a complete psychotic break" (214918); and "he was cataleptic for about a month
-and was briefly institutionalized" (215100). The three accounts carry a byline only of the kind of
+inside closets and whipping recruits"; "People simply burned out. The few left were frightening
+zealots"; "without humanizing elements like nurturing and basic mental hygiene, the power made
+people maniacal and cruel"; "you are in charge of your spiritual path, not spirits, not Chiefs,
+and not Imperators"; and "the methods used by the group were incredibly effective in inducing
+mystical states of consciousness but had the terrible side effect of moderate to total brainwashing". Its account of the Chief: the Secret Chiefs "were aspects of the unconscious of the Chief,
+whether or not they had any objective existence"; "the discipline and ethics of an eight-yearold
+child"; "through a complete psychotic break"; and "he was cataleptic for about a month
+and was briefly institutionalized". The three accounts carry a byline only of the kind of
 organisation the writer belonged to; no individual is named.
 
 [^app2]: Stavish, *Egregores*, Appendix 2, "An Account of the Revivification of an Egregore" — the
 narrative first published in the esoteric journal *Krur* in 1929, edited by Julius Evola, describing a
 group's attempt to revive the egregore of the Roman Empire "using Benito Mussolini as their instrument";
 Stavish's chapter-7 summary of it — "efforts to revive the egregore of the Roman Empire that led to the
-political ascendancy of Benito Mussolini" (114485); and his claim that "an egregore can be modified, with
+political ascendancy of Benito Mussolini"; and his claim that "an egregore can be modified, with
 an existing weak or even 'dead egregore' (of a long since vanished cult) being easier to modify during the
-process of its revival than an existing strong and vital one" (114300). The appendix appears in this
+process of its revival than an existing strong and vital one". The appendix appears in this
 reading only as the book's own closing structure: its final exhibit is a documented attempt to reactivate
 a dead group mind, reported by its participants.
 
@@ -836,42 +826,41 @@ blog's neutrality argument was missing. This post does not repeat [the western
 column](/the-western-column/) §5–§7; it reads the rest of the book, and states in §9 exactly which
 sentences the two posts took.
 
-[^gap]: **The negative finding, scoped to this file.** Case-insensitive searches of the
-whitespace-normalised digital text of *Egregores* return **0** hits for "safeguard", "physician",
+[^gap]: **The negative finding, scoped to the text of this edition.** Case-insensitive searches of the
+text of *Egregores* return **0** hits for "safeguard", "physician",
 "therapist", "therapis", "psychiatry", "psychosis", "counsel", "supervis", "cult exit" and "exit
-counsel". **1** hit for "psychiatr" — "his psychiatric medication kept him a bit more stable", Appendix 1
-(offset 217551). **3** hits for "doctor", all inside the quoted Sédir dialogue in ch. 3 (282302, 282667,
+counsel". **1** hit for "psychiatr" — "his psychiatric medication kept him a bit more stable", Appendix 1. **3** hits for "doctor", all inside the quoted Sédir dialogue in ch. 3 (282302, 282667,
 283779). **1** hit for "clinic" — "several authors of histories of witchcraft have experienced severe
-clinical depression", ch. 3 (249562). **4** hits for "mental illness", three of them in Appendix 1
-(the Chief, 216445, 216564, 218702, and "a person recovering from a mental illness", 219665); 1 hit for "mental health", inside "call into question Grant's mental health"
-in ch. 5 (149897), which is not a referral. **2** hits for "crisis" — one generic, "Such a crisis is a
-normal part of any path", ch. 7 (105377), and one in a personal account, "I was at fifty years of age
+clinical depression", ch. 3. **4** hits for "mental illness", three of them in Appendix 1
+(the Chief, and "a person recovering from a mental illness"); 1 hit for "mental health", inside "call into question Grant's mental health"
+in ch. 5, which is not a referral. **2** hits for "crisis" — one generic, "Such a crisis is a
+normal part of any path", ch. 7, and one in a personal account, "I was at fifty years of age
 having a crisis about my spiritual path", set beside what that account found sufficient: "my awareness
-grew" (204094). No hit in the file is a referral from a practice to a clinician, and the book contains no
+grew". No hit in the text is a referral from a practice to a clinician, and the book contains no
 instruction to make one. A search shows only what it indexes, so the claim is scoped to this text.
 
 [^levi]: Éliphas Lévi, *Le Grand Arcane, ou l'Occultisme dévoilé* (1868), ch. "Le Magnétisme du Mal"; read from the 1912 printing at archive.org (item 1912-levi-grand-arcane), French as printed: "Ce sont les Eggrégores du livre d'Hénoch…"; "Les véritables eggrégores, c'est-à-dire les veilleurs de nuit…"; and "C'est pourquoi nous rejetons définitivement et absolument la mythologie des eggrégores" (the 1912 scan corrupts the word "mythologie"; the published text and other editions carry it). The English renderings in the body are this post's.
 
 [^guenon]: René Guénon, *Initiation et réalisation spirituelle* (Paris: Éditions Traditionnelles), ch. VI, "Influences spirituelles et « égrégores »", read at index-rene-guenon.org: "…nous n'avons jamais employé le mot « égrégore » pour désigner ce qu'on peut appeler proprement une « entité collective » ; et la raison en est que, dans cette acception, c'est là un terme qui n'a rien de traditionnel et qui ne représente qu'une des nombreuses fantaisies du moderne langage occultiste." Translation in the body is this post's. Note Guénon's own position, which the post does not adopt: he holds the collective force to be real but not the word *égrégore*.
 
-[^refuge]: Stavish, *Egregores*, ch. 7, "Freeing Oneself from the Influence of Egregores", section "Refuge in an Egregore?" (the book's Table of Contents places the section in chapter 7, and the quoted text sits between the chapter-7 header and the following Foreword): Mouni Sadhu's *The Tarot* (1968) is quoted for the three-point defence, "DO NOT SLEEP in the sense of being passive or distracted" (119457), and for "Join a certain good Egregor, which corresponds to your contemplation, so that you will not be entangled with the Chain of a foreign, evil Egregor" (119762); with Dubuis's "I am freedom" (119006) and "for many a positive egregore is a spiritual refuge, a port in the storm of life" (119043). The section's own heading is the book's answer to whether an egregore can be a refuge rather than a trap. The book's separate chapter 3 ("The Modern Era and the French Occult Revival", section "The Tarot by Mouni Sadhu") also quotes Sadhu, on an astrally fighting egregore, "able to fight on the astral plane, while their human beings fight on the physical" (240889).
+[^refuge]: Stavish, *Egregores*, ch. 7, "Freeing Oneself from the Influence of Egregores", section "Refuge in an Egregore?" (the book's Table of Contents places the section in chapter 7, and the quoted text sits between the chapter-7 header and the following Foreword): Mouni Sadhu's *The Tarot* (1968) is quoted for the three-point defence, "DO NOT SLEEP in the sense of being passive or distracted", and for "Join a certain good Egregor, which corresponds to your contemplation, so that you will not be entangled with the Chain of a foreign, evil Egregor"; with Dubuis's "I am freedom" and "for many a positive egregore is a spiritual refuge, a port in the storm of life". The section's own heading is the book's answer to whether an egregore can be a refuge rather than a trap. The book's separate chapter 3 ("The Modern Era and the French Occult Revival", section "The Tarot by Mouni Sadhu") also quotes Sadhu, on an astrally fighting egregore, "able to fight on the astral plane, while their human beings fight on the physical".
 
 [^lebon]: Gustave Le Bon, *The Crowd: A Study of the Popular Mind* (1895), trans. 1896, ch. "The Mind of Crowds"; read from the archive.org scan (le-bon-gustave.-the-crowd…[1896]): "The most striking peculiarity presented by a psychological crowd is the following: Whoever be the individuals that compose it… the fact that they have been transformed into a crowd puts them in possession of a sort of collective mind which makes them feel, think, and act in a manner quite different from that in which each individual of them would feel, think, and act were he in a state of isolation."
 
 [^durkheim]: Émile Durkheim, *The Elementary Forms of the Religious Life* (1912; Swain trans. 1915), read from Project Gutenberg (no. 41360): "So it is in the midst of these effervescent social environments and out of this effervescence itself that the religious idea seems to be born."
 
-*Marking:* **a reading.** Documented — every passage in quotation marks, taken from the digital text of
+*Marking:* **a reading.** Documented — every passage in quotation marks, taken from a complete digital text of
 Mark Stavish, *Egregores: The Occult Entities That Watch Over Human Destiny* (Rochester, VT: Inner
-Traditions, 2018, ISBN 978-1-62055-577-4), checked character for character against the file and cited in
-the notes by chapter and section with byte offsets into the normalised text. **Address:** the file's
-extraction is jumbled, so chapter and section attributions are taken from the book's own running headings
+Traditions, 2018, ISBN 978-1-62055-577-4), checked character for character against it and cited in
+the notes by chapter and section. **Address:** chapter and section attributions are taken from the book's
+own running headings
 and its table of contents rather than from position; this reading's brief named several **sections** as
-chapters and they are cited here as sections; the Dubuis group-list sentence is quoted as the file has it,
+chapters and they are cited here as sections; the Dubuis group-list sentence is quoted as the text has it,
 with the verb absent, and the difference is flagged rather than reconciled; typographic quotes are
 rendered as straight ASCII; the book's small-capital section headings are rendered in title case, and
-opening capitals are normalised to sentence position; the file's internal footnote numbers are dropped from
+opening capitals are normalised to sentence position; the text's internal footnote numbers are dropped from
 quotations.
-**Absences reported as search results, scoped to this file:** no clinical referral anywhere (no
+**Absences reported as search results, scoped to the text of this edition:** no clinical referral anywhere (no
 "safeguard", "physician", "therapist", "psychiatry", "psychosis", "counsel", "supervis"); the single
 "psychiatr" hit and the three "doctor" hits are itemised at [^gap]; and the metered pace that *is* present
 belongs to the countermeasure, not to the practice (one month minimum, six weeks ideally, one month per

@@ -13,12 +13,11 @@ What follows is the thesis in the book's words, the four kinds of claim it is bu
 the blog owes, and the register in which its author writes: a practitioner for whom the spirits are not
 metaphor — held at that distance, and not adopted.*
 
-*Status.* This post reads **one** source. The quotations are verbatim from the digital text, checked
-character for character against the file and cited in the notes **by chapter and section**, because that
-file is a single collapsed run of text and carries no page markers at all. The file's typographic quotes
-and dashes are rendered here as straight ASCII quotes and em dashes, and the stray spaces its italics
-markup leaves before punctuation are closed. The reading of the quotations is an **inference**, offered as
-one. **The book's cosmology is not endorsed** — nothing here claims that spirits are real, and nothing
+*Status.* This post reads **one** source. The quotations are verbatim from a complete digital text of the
+edition, checked character for character against it and cited in the notes **by chapter and section**. Its
+typographic quotes and dashes are rendered here as straight ASCII quotes and em dashes, and the stray
+spaces its italics markup leaves before punctuation are closed. The reading of the quotations is an
+**inference**, offered as one. **The book's cosmology is not endorsed** — nothing here claims that spirits are real, and nothing
 claims they are not; §5 and §6 are about why both of those verdicts are refused. No living author is
 diagnosed, the ownership question in §7 is described as a structure and **not adjudicated**, and nothing
 here validates, disqualifies or restricts anyone's practice. As everywhere: describe structures, diagnose
@@ -34,17 +33,17 @@ position in one sentence:
 > "Star.Ships: A Prehistory of the Spirits was published by Scarlet Imprint in 2016 under the Bibliothèque
 > Rouge banner."[^ss]
 
-That banner line is in the file, as is the digital edition's own
+That banner line is in the text, as is the digital edition's own
 identifier — "eISBN 978-0-9931200-8-4" — and the colophon's account of the physical editions: the standard
 hardback and paperback "printed and bound by Gomer Press", the fine edition "bound by Ludlow
-Bookbinders".[^ss] The extract does **not** carry a printed-edition ISBN, and this post therefore does not
+Bookbinders".[^ss] This text does **not** carry a printed-edition ISBN, and this post therefore does not
 quote one.
 
 Its structure is a Prologue, ten chapters and a Conclusion, and the contents listing is itself an
 argument: **One Funeral at a Time**; **The Cathedral Predates the City**; **Et in Laurasia Ego**; **Island
 of Dragons**; **Star Lore**; **How a World Ends**; **Expulsion from Eden**; **The Mirror of Heaven**; **The
 Tree of Many Branches**; **Children of the Mother of Heaven**, ending at **Canopy of Stars**.[^ss] The
-listing opens with a **Preface**, for which the file contains no text — it runs straight from the contents
+listing opens with a **Preface**, for which the text contains nothing — it runs straight from the contents
 to the Prologue, and that absence is reported rather than filled.
 
 Two things about the shape of the book matter before anything else. The first is that the chapter titles
@@ -458,8 +457,8 @@ synthesis is. It is, however, why the blog can **use** this book and cannot **re
 ## 8. The negative finding: safeguard, metered pace, clinical referral
 
 The series reports the presence or absence of a safeguard, a metered pace and a clinical referral as
-**search results**, scoped to the file. This book's results are unambiguous, and each is a different kind
-of absence.
+**search results**, scoped to the text of this edition. This book's results are unambiguous, and each is a
+different kind of absence.
 
 **"Safeguard" occurs exactly once, and it is not a safeguard of the reader.** It is in a chapter VII
 inventory, the section "Summing Up", of what a stellar kingship promised: "Kingship descending from the stars and the ritual
@@ -479,8 +478,8 @@ the investigator. That is an epistemic discipline, and it is the nearest analogu
 safeguards the series has been tracking — which is worth saying precisely, because it is a different
 instrument aimed at a different actor. It disciplines the **researcher**, not the practitioner.
 
-**There is no clinical referral at all.** A case-insensitive search of the file returns **0** hits for
-"therapy", "therapist", "psychiatry", "psychiatric", "hospital", "psychosis", "psychotic", "mental
+**There is no clinical referral at all.** A case-insensitive search of the text of this edition returns
+**0** hits for "therapy", "therapist", "psychiatry", "psychiatric", "hospital", "psychosis", "psychotic", "mental
 health", "crisis", "hotline", "seek help", "professional help" and "self-harm". Three more terms do occur, and none is a referral: "counsel" **once** ("legal counsel from a Muslim jurist"), "suicid" **three times** (a "suicidal" labour detail, a "career suicide" figure of speech, Cleopatra "committing suicide"), and "emergency" **once** ("emergency services rely entirely on modern communication"). The other near-misses are elsewhere too: "doctor" appears **once**, of a cited researcher;
 "physician" **once**, as a fellowship title ("Fellow of the Royal College of Physicians of Edinburgh");
 "breakdown" **once**, about *societies* ("no compelling archaeological evidence for any of the key claims
@@ -542,14 +541,13 @@ digital-edition credit and the contents listing: a Preface, Prologue "The Missio
 World", chapters I–X, and the Conclusion "Canopy of Stars"); the illustrations list; the Colophon
 ("published in the United Kingdom by Scarlet Imprint, Bucknell, SY 7 0 AH. Copyright © Gordon White,
 2016."; the standard hardback and paperback editions "printed and bound by Gomer Press", the fine edition
-"bound by Ludlow Bookbinders"). Read directly from the digital text (740,754 characters, no page markers
-and no line breaks — a single collapsed run of text); every quotation in this post was checked character
-for character against that file, with its typographic quotes rendered as straight ASCII quotes, its dashes
-as em dashes, its whitespace normalised, and the stray spaces its italics markup leaves before punctuation
-closed; elisions marked […] are this post's. **The file carries no page numbers**, so quotations are cited
-by chapter and section title, as they appear in the book's own headings. The contents listing carries a
-**Preface** for which the file contains no text; that absence is reported at §1 and nothing is inferred
-from it. **The extract does not carry the printed-edition ISBN**, and this post quotes none.
+"bound by Ludlow Bookbinders"). Read from a complete digital text of that edition; every quotation in this
+post was checked character for character against it, with its typographic quotes rendered as straight
+ASCII quotes, its dashes as em dashes, and the stray spaces its italics markup leaves before punctuation
+closed; elisions marked […] are this post's. The citations are by chapter and section title, as they appear
+in the book's own headings. The contents listing carries a
+**Preface** for which the text contains nothing; that absence is reported at §1 and nothing is inferred
+from it. **This text does not carry the printed-edition ISBN**, and this post quotes none.
 
 [^pro]: *Star.Ships*, Prologue, "The Mission at the End of the World": "Stories that fall outside this
 network first become untrue, and then they fade completely from reality."; "In the early years of the
@@ -595,7 +593,7 @@ provisional."; "New data are guaranteed to appear that will move his proposed ti
 connections between cultural groups, or place mankind in a specific part of the world at a
 previously-unknown date."; and "They also say something profound about the origins of magic and the
 spirits." The word "provisional" is set off as an italicised word in the digital text, which is why the
-file prints a space before its full stop; that space is closed here.
+digital text prints a space before its full stop; that space is closed here.
 
 [^myth]: *Star.Ships*, chapter III, section "Gondwana, Laurasia and Pan-Gaea", and the sections "Gondwana
 Mythology", "Laurasian Mythology" and "Pan-Gaean Mythology": "Witzel categorises the planet's mythologies
@@ -656,7 +654,7 @@ investigations of the origins of western magic."
 another shortcoming in the thesis were it not a near universal and entirely expected blind spot found
 across the modern academic spectrum."; "A specialist readership such as this one requires an additional
 interpretation, if not explanation." (§1 quotes that sentence with a bracketed capital — "[A] specialist
-readership…" — as the file prints it.); "Given that we are talking about fungi and
+readership…" — as the text prints it.); "Given that we are talking about fungi and
 cultures with perishable artefacts at a time depth of 40,000 years, it is not clear what archaeological
 evidence we would ever expect to prove or disprove this hypothesis, although there are numerous depictions
 of mushrooms or humans with mushroom hands, etc. in later cave art, and indeed at Göbekli Tepe."; "it may be that we are seeing
@@ -784,7 +782,7 @@ at the end of the Ice Age, Clovis changes or mass animal extinction." with the U
 inheritance](/the-deep-inheritance/) quotes it truncated to "cold snap at the end of the Ice Age" without
 an ellipsis.
 
-[^abs]: Reported as a search result, and scoped to this file. Case-insensitive counts of the digital text:
+[^abs]: Reported as a search result, and scoped to the text of this edition. Case-insensitive counts:
 "safeguard" 1 (the chapter VII, section "Summing Up", sentence quoted at §8); "unprepared" 1 (the Prologue sentence quoted at
 §6); "doctor" 1 ("the good doctor brings up an excellent point"); "physician" 1 ("Fellow of the Royal
 College of Physicians of Edinburgh"); "breakdown" 1 (Peiser's "societal dissolution and breakdown before
@@ -799,14 +797,14 @@ and "ethic" (the three terms that do occur — "counsel" 1, "suicid" 3, "emergen
 "most Atlantologists into madness and ridicule". A search shows only what it indexes, so the claim is
 scoped to this text.
 
-*Marking:* **a reading.** Documented — every passage in quotation marks, taken from the digital text of
-Gordon White's *Star.Ships: A Prehistory of the Spirits* (Scarlet Imprint, 2016, Bibliothèque Rouge banner;
-the extract carries the eISBN 978-0-9931200-8-4 and no printed-edition ISBN), checked character for
-character against that file and cited in the notes by chapter and section, because the file carries no page
-numbers. **Absences reported as search results:** no clinical referral at all, no metered pace, a single
+*Marking:* **a reading.** Documented — every passage in quotation marks, taken from a complete digital text
+of Gordon White's *Star.Ships: A Prehistory of the Spirits* (Scarlet Imprint, 2016, Bibliothèque Rouge
+banner; the text carries the eISBN 978-0-9931200-8-4 and no printed-edition ISBN), checked character for
+character against it and cited in the notes by chapter and section. **Absences reported as search
+results:** no clinical referral at all, no metered pace, a single
 practitioner-facing caution that names no pace or supervision ("Approach with newfound caution and
 humility."), and a single occurrence of "safeguard" in a sense belonging to the cosmology described
-(itemised at [^abs]); the contents listing carries a Preface for which the file has no text (noted at
+(itemised at [^abs]); the contents listing carries a Preface for which the text has nothing (noted at
 [^ss]). **Inferred, as this
 post's:** §3's sorting of the book's claims into four kinds and its finding that the same book that faults
 Jaynes's theory for its "complete unfalsifiability" also states an unfalsifiable hypothesis of its own; §4's reading
