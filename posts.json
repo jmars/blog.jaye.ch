@@ -164,6 +164,16 @@
       "series": "implications"
     },
     {
+      "slug": "the-operative-master",
+      "file": "the-operative-master.md",
+      "navLabel": "the operative master",
+      "kind": "argument",
+      "summary": "The one-to-one case of the levers-as-positions: an operator reads a person's own frame, finds the position it already leaves open and occupies it — so the target's frame does the installing, and it cannot be reported from inside.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "implications"
+    },
+    {
       "slug": "the-same-move",
       "file": "the-same-move.md",
       "navLabel": "the pattern",
@@ -342,6 +352,16 @@
       "date": "2026-09-30",
       "published": true,
       "series": "frames"
+    },
+    {
+      "slug": "the-holy-daimon",
+      "file": "the-holy-daimon.md",
+      "navLabel": "the holy daimon",
+      "kind": "reading",
+      "summary": "A close reading of Frater Acher's Holy Daimon: systasis as a meeting between two parties, a guide that is unowned, and a practice whose stated direction runs outward — and the one safeguard the book never writes down.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
     }
   ]
 }

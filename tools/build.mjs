@@ -64,6 +64,7 @@ const SERIES = [
   { key: 'implications', label: 'the implications' },
   { key: 'frames', label: 'the frames' },
   { key: 'cases', label: 'the case studies' },
+  { key: 'readings', label: 'the readings' },
 ];
 const seriesLabel = (key) => (SERIES.find((s) => s.key === key) || { label: key }).label;
 
@@ -988,9 +989,12 @@ function buildHome(manifest) {
   // posts themselves draw (as many as have published posts; the constants
   // are SERIES, above). "mechanism" is a measured model + a falsifiable
   // prediction; "implications" are arguments built on cited literature;
-  // "cases" are documented case studies. They are indexed separately so the
-  // arguments and the case narratives cannot be read as part of the result
-  // (the reason for the split), and numbered within their own series.
+  // "frames" are arguments about the largest frame of all; "cases" are
+  // documented case studies. They are indexed separately so the arguments and
+  // the case narratives cannot be read as part of the result (the reason for
+  // the split), and numbered within their own series. "readings" is a different
+  // axis again: one book, one post — a close reading held at the source's own
+  // scale, the citable bedrock the arguments rest on.
   const SERIES = [
     {
       key: 'mechanism',
@@ -1015,6 +1019,12 @@ function buildHome(manifest) {
       name: 'The case studies',
       hint: '// documented case studies — how an environment enables predation, read through the mechanism',
       status: 'documented',
+    },
+    {
+      key: 'readings',
+      name: 'The readings',
+      hint: '// close readings of the source texts the arguments rest on — one book, one post',
+      status: 'readings',
     },
   ];
 
@@ -1057,12 +1067,12 @@ function buildHome(manifest) {
     '.';
 
   // A mini-timeline of the most recent pieces, so the home page shows what is
-  // new without leaving for /timeline/. It reuses the timeline's own manifest
-  // order: `published` posts only in a deployable build, staged ones too under
-  // PREVIEW, so the two pages can never disagree about what is recent.
+  // new without leaving for /timeline/. It is the first MINI rows of that same
+  // day-grouped list, so the two pages can never disagree about what is recent
+  // (and a post added mid-manifest still shows as new — the order is the dates').
   const MINI = 8;
-  const recentAll = manifest.posts.filter((p) => PREVIEW || p.published);
-  const recent = recentAll.slice(-MINI).reverse();
+  const recentAll = dayGroups(manifest.posts.filter((p) => PREVIEW || p.published)).flatMap((g) => g.posts);
+  const recent = recentAll.slice(0, MINI);
   const miniTimeline =
     `<section><div class="wrap">` +
     `<h2>What's new</h2>` +
@@ -1146,6 +1156,20 @@ function build404(navPosts) {
   };
 }
 
+/** The publishing days, newest first, each day's posts newest-first (manifest
+ * order is append order within a day, so a day's list is reversed). Shared by
+ * the timeline page and the home page's mini-timeline so the two can never
+ * disagree about what is recent — and it is DATE-ordered, not manifest-ordered,
+ * so adding a post mid-manifest still shows it as new. `navPosts` is the
+ * published list (or the preview list) and only dated posts take part. */
+function dayGroups(navPosts) {
+  const dated = navPosts.filter((p) => p.date);
+  return [...new Set(dated.map((p) => p.date))]
+    .sort()
+    .reverse()
+    .map((day) => ({ day, posts: dated.filter((p) => p.date === day).reverse() }));
+}
+
 /** The timeline — every published piece, newest first, grouped by the day it
  * went live. This is why the manifest gained a `date` at all: without one this
  * page could not exist, and the manifest is the only honest source for it (the
@@ -1155,30 +1179,26 @@ function build404(navPosts) {
  * sitemap. It is built from navPosts so a PREVIEW build shows a staged post in
  * place; in a deployable build navPosts is the published list alone. */
 function buildTimeline(navPosts) {
-  const dated = navPosts.filter((p) => p.date);
-  const days = [...new Set(dated.map((p) => p.date))].sort().reverse();
+  const groups = dayGroups(navPosts);
   const item = (p) =>
     `<li><a href="/${p.slug}/">${titleOf(p)}</a>` +
     `<span class="m">${seriesLabel(p.series)} · ${p.kind}</span></li>`;
-  const body = days
-    .map((day) => {
-      // newest first within a day: manifest order is append order, so reverse it
-      const on = dated.filter((p) => p.date === day).reverse();
-      return `<li class="day"><span class="d">${day}</span><ul>${on.map(item).join('')}</ul></li>`;
-    })
+  const body = groups
+    .map((g) => `<li class="day"><span class="d">${g.day}</span><ul>${g.posts.map(item).join('')}</ul></li>`)
     .join('');
-  const count = dated.length;
+  const count = groups.reduce((n, g) => n + g.posts.length, 0);
+  const days = groups.length;
   return {
     title: "What's new — blog.jaye.ch",
     shareTitle: "What's new — blog.jaye.ch",
     type: 'website',
-    description: `Every published piece on blog.jaye.ch, newest first — ${count} pieces over ${days.length} days.`,
+    description: `Every published piece on blog.jaye.ch, newest first — ${count} pieces over ${days} day${days === 1 ? '' : 's'}.`,
     prompt: 'ls -lt',
     heroTitle: `What's <span class="fx">new</span>`,
     tagline: 'every published piece, newest first — with the day it went live.',
     body:
       `<section><div class="wrap">` +
-      `<div class="hint"># every published piece, newest first · ${count} over ${days.length} day${days.length === 1 ? '' : 's'}</div>` +
+      `<div class="hint"># every published piece, newest first · ${count} over ${days} day${days === 1 ? '' : 's'}</div>` +
       `<ol class="tl">${body}</ol>` +
       `</div></section>`,
     navCurrent: '/timeline/',
@@ -1543,6 +1563,22 @@ const POST_META = {
     description:
       'Witzel\u2019s deep-mythology finding as the fourth convergence: the frames a person is inside were inherited tens of millennia ago \u2014 and the oldest disagreement is about whether reality has an endpoint.',
     accent: 'Inheritance',
+  },
+  'the-holy-daimon': {
+    prompt: 'cat the-holy-daimon.md',
+    tagline: 'a <b>reading</b>: the guide that is met, not mediated \u2014 and the one safeguard the book never writes down.',
+    hint: '<a href="/">\u2190 home</a> · a reading of one book, with notes',
+    description:
+      'A close reading of Frater Acher\u2019s Holy Daimon: systasis as a meeting between two parties, a guide that is unowned, and a practice whose stated direction runs outward \u2014 against the seat, and with one gap the book leaves open.',
+    accent: 'The Holy Daimon',
+  },
+  'the-operative-master': {
+    prompt: 'cat the-operative-master.md',
+    tagline: 'the <b>matching operation</b>: the operator brings no frame \u2014 he finds the position yours already leaves open, and occupies it.',
+    hint: '<a href="/">\u2190 home</a> · the position, and the boundary, with notes',
+    description:
+      'The one-to-one case of the levers-as-positions: a reading of a person\u2019s own frame that fits it, so the frame does the installing \u2014 experienced as recognition, and therefore unreportable from inside.',
+    accent: 'Operative Master',
   },
 };
 
