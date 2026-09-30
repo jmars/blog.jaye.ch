@@ -28,8 +28,8 @@ pseudonym — and in the course of doing so **arrived independently at nearly ev
 series' model**, in his own vocabulary, without a control-theoretic term in sight.
 
 That is worth recording for the same reason a witness is worth recording: it is a different kind of
-evidence. And it is worth recording for a second reason, which is that **he disagrees with this series
-at exactly the place that matters most.**
+evidence.[^account] And it is worth recording for a second reason, which is that **he disagrees with
+this series at exactly the place that matters most.**
 
 ---
 
@@ -55,14 +55,15 @@ almost mechanically:
 
 **Containers are not a fringe phenomenon in his account — they are the base case.** His list is
 deliberately flattening: "Christianity, Islam, Jehovah's Witnesses, Scientology, Rosicrucians, Masons,
-Castaneda, Flat Earth Society, Osho, Lightworkers, **Warriors against archontic forces**… a container
-is a container."[^containers] The last two entries matter: the man hunting the archons is in a
-container too. **The frame-supply is total**, which is the same claim [the-environment](/the-environment/) makes
+Castaneda, Flat Earth Society, Osho, Fellowship of the Cosmic Mind, Department for the Spirit, Mind
+and Soul development, Sugar baba, Lightworkers, **Warriors against archontic forces**, etc…etc…; a
+container is a – container."[^containers] The last two entries matter: the man hunting the archons is
+in a container too. **The frame-supply is total**, which is the same claim [the-environment](/the-environment/) makes
 when it says the levers are **positions**, not cultural possessions.[^method]
 
 And he gives the structure that makes a frame stick, in the exact form
 [sacred-science](/sacred-science/) describes: the content holds "some **irrelevant truths** which will
-be recognised by many, but there will be served **relevant lies** there as well, which will be
+be recognised by many, but there will be served **relevant lies** there, as well, which will be
 carefully mixed with truth and great promises."[^containers] Not all lies — that would fail. Truth
 enough to be recognisable, lie enough to steer.
 
@@ -102,13 +103,13 @@ This is the mechanism post's invisibility — *the part of the system that would
 the part that survives it* — demonstrated with a party trick instead of a model. And he adds the
 consequence for groups, which is the series' own finding about self-report:
 
-> "a container member would rationalise very well the content of the container he/she is inhabiting. In
-> many cases, they will be able to see the errors and inconsistencies in **other** containers, but not
-> in the one they are inhabiting."[^containers]
+> "a container member would rationalise very well the content of the container that he/she is
+> inhabiting. In many cases, they will be able to see the errors and inconsistencies in the content of
+> **other** containers, but not in the one they are inhabiting."[^containers]
 
 Which is exactly why the instruments in [the differential](/the-differential/) fail, and why
 [the machine](/the-machine-said-so/) could not be argued with. **A member cannot audit their own
-container because the container is the instrument doing the auditing.**
+container because the container is the instrument doing the auditing.**[^confab]
 
 ---
 
@@ -124,8 +125,8 @@ overcome that, soon)". And then the container fell:
 
 > "**I woke up when mortar shells were started exploding around me.** … Most of my mates, who till
 > yesterday were partying together, playing football together, enjoying life together, stayed there,
-> now **divided on three different sides and looking at each other over the rifle sights**. It was not
-> by their choice, they were just **sucked in, as per the program**."[^containers]
+> now **divided on three differents [sic] sides and looking at each other over the rifle sights**. It
+> was not by their choice, they were just **sucked in, as per the program**."[^containers]
 
 That is the series' environment thesis demonstrated at the scale of a country — and note the
 from-inside rendering of what [the-certified-frame](/the-certified-frame/) calls a frame arriving
@@ -139,7 +140,7 @@ lived experience:
 > "I found myself in a newly established, specialized esoteric container… It has started just as a
 > discussion group and it has **gradually turned into a container**; so, I was like in the story about
 > the **frog in the pot**, where the water temperature gets gradually increased."
-> "a leadership was formed… then the container name was **registered as a trading mark**… a container
+> "a leadership was formed… then, the container name was **registered as a trading mark**… a container
 > financing system was established, **'Donate-button' installed**… the management/teachers were
 > **guiding members how to think, what to think, what to do, what not**."[^hyper]
 
@@ -195,8 +196,8 @@ His reason is his own container theory, applied to an escape: anyone offering to
 priests, gurus, leaders, teachers etc. are not aware individuals." The escape is to **stop following,
 full stop** — and he is honest that this leaves you alone: "each of us will have to discern alone."
 
-And in the same post he states the test I found in the attack essay, in the form this series should
-keep:
+And in the same post he restates, in the form this series should keep, the discernment test I first
+found in the attack essay:
 
 > "The influences from the being will be coming as an inner knowing, related to the now and they **will
 > never be accompanied by a drive to do something**, without an understanding of why should we be
@@ -222,16 +223,47 @@ for itself. That is the series' most practical claim.
 
 And this author says: **"There is no help, as any 'help' could only be detrimental to us."**
 
-Not a qualified caution. A **universal prohibition**, from someone who has clearly thought about it
-more than most, and who earned the view.
+Read alone, that is a universal prohibition, and it is the strongest form of the position this series
+has to answer. It is also more than he actually claims, and he says so in the same post. What he
+refuses is **following**; sharing between two people who are not following one another he explicitly
+allows:
 
-**This series' model predicts that position is the trap.** The mechanism post says the state cannot
-ask for help and cannot see itself; [the label post](/the-label/) warns that a description of an
-environment is not a finding about a person's mind; [the coercion post](/manufacturing-the-collapse/)
-says the rescue the model requires is rigged to arrive from the group — and the only way out is a
-relationship that is **not** the loop. A rule which says *no outside help is ever legitimate* removes
-precisely the channel the model requires, and leaves a person alone with the thing that cannot exit
-itself. **The no-guru position, taken to its limit, becomes "no exit."**
+> "Somebody, who is in the 'transitioning' phase, from a chook into an eagle, may share his views and
+> opinions with those who are interested, and some of it may be helpful for others, however, he/she
+> would be aware that nobody can follow him/her."[^eagles]
+
+And his test for the thing this series calls a holder is structural rather than a blanket ban: a
+"container-for-getting-out-of-the-container" is recognisable, he writes, "as long as, there is a
+leader or a teacher in charge there, and more people beside yourself."[^containers] A relationship
+with no leader in it, and no one to follow, is not the thing he is warning against.[^help]
+
+Which matters, because **the series' model predicts that the stricter version would be the trap.**
+[The mechanism post](/meditation-harm/) says the state cannot ask for help and cannot see itself;
+[the label post](/the-label/) warns that a description of an environment is not a finding about a
+person's mind; [the coercion post](/manufacturing-the-collapse/) says the rescue the model requires is
+rigged to arrive from the group — and the only way out is a relationship that is **not** the loop. A
+rule that made *every* relationship which might help illegitimate would remove precisely the channel
+the model requires, and leave a person alone with the thing that cannot exit itself. **The no-guru
+position, taken to its limit, becomes "no exit."**
+
+He does not take it to that limit. But he blocks the other end — not the helper, the *impulse* — and
+that is the part of the contradiction that survives, and it is a sentence long. The containers post
+ends on the mechanism of waking:
+
+> "The initial impulse for the individualization (liberation) of the being will come from inside, from
+> the higher centres of the being."[^containers]
+
+**That is this series' second result, answered from the opposite side.** Where the model says the
+collapsed state cannot initiate its own exit, he locates the initiating impulse **inside** the being,
+in the higher centres — and it is not a throwaway line: it is the conclusion of the essay that
+establishes his whole frame. What makes it usable is that his own biography is the counter-instance to
+his own claim. By his account the impulse did not arrive from his higher centres; it came through the
+window:
+
+> "I woke up when mortar shells were started exploding around me."[^containers]
+
+An outside shock, arriving unbidden — this series' prediction, in the account of the man who denies
+the model.
 
 I am not going to pretend to settle it, because the tension is real on both sides. His position has
 real force: **he is right that the format of help can carry a new container** — that is exactly what
@@ -241,10 +273,11 @@ is this:
 
 > **Is a holder always a new container?**
 
-He says yes, and therefore refuses all holders. This series says **no** — that a relationship which
-keeps the check outside itself, which does not supply the meaning of your state, is *structurally
-different* from a container, and that telling a person who cannot exit that they must not accept help
-turns a safeguard into a locked room.
+He will not have a leader, and he puts the start of the exit inside the person; where this series says
+the state cannot initiate its own exit and an outside relationship is required, he says the impulse is
+the being's own. This series says **no** — that a relationship which keeps the check outside itself,
+which does not supply the meaning of your state, is *structurally different* from a container, and that
+telling a person who cannot exit that they must not accept help turns a safeguard into a locked room.
 
 I hold the series' position. **And I note that his is the more internally consistent one** — because
 if you cannot verify a container from inside it, you cannot verify a *helper* either. That is the
@@ -261,8 +294,8 @@ model independently described: frame-supply, gradual escalation, the holder move
 cannot see itself, partial-truth content, the price of leaving, and a confirming-miracles lever this
 series had not named. He arrived at the blog's apparatus **from the inside of one instance of it**.
 
-**It does not prove his cosmology**, and he says so himself — the account opens on the admission that
-"you can not prove them to anybody else, as there is nothing solid there, what you may use as
+**It does not prove his cosmology**, and he says so himself — that post opens on the admission that
+"you can not prove them to anybody else, as there is nothing solid there, what you may use as an
 evidence," and closes on: "I do not regard this as facts… **I am not an 'insider'**."[^hyper] He is a
 witness who distrusts his own frame, which is more than can be said for most witnesses.
 
@@ -296,43 +329,77 @@ sort people — is not squeamishness. **It is what the man who was there asks fo
 
 ## Notes
 
-[^containers]: "Containers," *soulmindspirit* (25 April 2016) — the container concept; the content and
-its promise of rewards for conformity; the flattening list of containers ("Christianity… 'Warriors
-against archontic forces'… a container is a container"); "irrelevant truths" mixed with "relevant
-lies"; the forced Christianisation of the author's ancestor; the family's movement through the
-Communism container; "I woke up when mortar shells were started exploding around me"; the mates
-"divided on three different sides… sucked in, as per the program"; the hypnosis-lecture rationalisation
-("the atmosphere in the audience was somehow bad, so I wanted to cheer people up") and "ANYTHING in
-this reality can be rationalised"; a member's inability to see their own container's inconsistencies;
-"the main aspect of the mind manipulation is to transfer the power of a human being into
-somebody/something else's hands"; the re/DE-programming asymmetry; and "program reinforcement" with its
-instances (the beads at mass, the Rosicrucian lottery, the "illuminati" vase).
+[^containers]: "Containers" (25 April 2016), by the pseudonymous author **churchallergy**, on
+*soulmindspirit* — the container concept; the content and its promise of rewards for conformity; the
+flattening list of containers (fourteen named, ending "Warriors against archontic forces",
+etc…etc…: "a container is a – container"); "irrelevant truths" mixed with "relevant lies"; the forced
+Christianisation of the author's ancestor; the family's movement through the Communism container; "I
+woke up when mortar shells were started exploding around me"; the mates "divided on three differents
+[sic] sides… sucked in, as per the program"; the hypnosis-lecture rationalisation ("the atmosphere in
+the audience was somehow bad, so he wanted to cheer people up") and "ANYTHING in this reality can be
+rationalised"; a member's inability to see their own container's inconsistencies; "the main aspect of
+the mind manipulation is to transfer the power of a human being into somebody/something else's hands";
+the re/DE-programming asymmetry; the escape-container that is recognisable "as long as, there is a
+leader or a teacher in charge there, and more people beside yourself"; the closing claim that "the
+initial impulse for the individualization (liberation) of the being will come from inside, from the
+higher centres of the being"; and "program reinforcement" with its instances (the beads at mass, the
+Rosicrucian lottery, the "illuminati" vase).
 https://soulmindspirit.wordpress.com/2016/04/25/containers/
 
-[^hyper]: "Hyperdimensional Attacks," *soulmindspirit* (25 April 2016) — the author's admission that
-the phenomena "can not prove[n] to anybody else, as there is nothing solid there, what you may use as
-evidence"; his account of the esoteric container he "found [him]self in" more than ten years earlier,
-the "frog in the pot," the trading mark and "Donate-button," and the teachers "guiding members how to
-think, what to think"; the "inseminated thought"; the discernment criterion ("B-influences… are never
-accompanied with a drive or a compulsion"); and his closing disclaimer ("I do not regard this as
-facts… I am not an 'insider'").
+[^hyper]: "Hyperdimensional Attacks" (25 April 2016), by the same author on *soulmindspirit* — his
+admission that the phenomena "can not prove them to anybody else, as there is nothing solid there,
+what you may use as an evidence"; his account of the esoteric container he "found [him]self in" more
+than ten years earlier, the "frog in the pot," the trading mark and "Donate-button," and the teachers
+"guiding members how to think, what to think"; the "inseminated thought"; the discernment criterion
+("B-influences… are never accompanied with a drive or a compulsion"); and his closing disclaimer ("I
+do not regard this as facts… I am not an 'insider'").
 https://soulmindspirit.wordpress.com/2016/04/25/hyperdimensional-attacks/
 
-[^eagles]: "Eagles in the chook yard," *soulmindspirit* (7 May 2016) — the de Mello parable; "NOBODY
-can help us to individualize ourselves. There is no help, as any 'help' could only be detrimental to
-us"; the conclusion about those "taking followers, as gods, priests, gurus, leaders, teachers"; the
-Mouravieff citation on the Personality and the real "I"; and the restated criterion that influences
-from the being "will never be accompanied by a drive to do something."
+[^eagles]: "Eagles in the chook yard" (7 May 2016), by the same author on *soulmindspirit* — the de
+Mello parable; "NOBODY can help us to individualize ourselves. There is no help, as any 'help' could
+only be detrimental to us"; the qualification that immediately follows it, permitting one person to
+share with another while forbidding anyone to follow ("may share his views and opinions with those who
+are interested, and some of it may be helpful for others, however, he/she would be aware that nobody
+can follow him/her"); the conclusion about those "taking followers, as gods, priests, gurus, leaders,
+teachers"; the Mouravieff citation on the Personality and the real "I"; and the restated criterion
+that influences from the being "will never be accompanied by a drive to do something."
 https://soulmindspirit.wordpress.com/2016/05/07/eagles-in-the-chook-yard/
+
+[^account]: On the first-person account as evidence — Ellis, C., Adams, T. E., & Bochner, A. P.
+(2011), "Autoethnography: An Overview," *Historical Social Research* 36(4): 273–290 — the standard
+account of autoethnography: research that describes and systematically analyses personal experience in
+order to understand a cultural experience, and the standing debate over how much an account of that
+kind can be asked to show. The bound this post applies is its own: the report below is evidence of
+**what one container was like from inside** — not a measurement of any group's effect, not a
+generalisation to other containers, and not a finding about anyone's mind.
+https://www.ssoar.info/ssoar/handle/document/36323
+
+[^confab]: On rationalisation, and why a person's account of their own reasons is not evidence of the
+cause — Johansson, P., Hall, L., Sikström, S., & Olsson, A. (2005), "Failure to Detect Mismatches
+Between Intention and Outcome in a Simple Decision Task," *Science* 310(5745): 116–119 — the
+choice-blindness experiments, in which participants were presented with the outcome of a choice they
+had not in fact made, frequently failed to notice, and went on to explain the reasons for the choice
+they had not made. That is the hypnosis-lecture result reproduced under a laboratory control, and it is
+why "the instruments fail" is a finding about self-report rather than about a member's honesty. The
+comparison to the rooster-crower is this post's; the experiment is not.
+https://doi.org/10.1126/science.1111709
+
+[^help]: On helping in recovery from a high-control group — Langone, M. D. (ed.) (1993), *Recovery
+from Cults: Help for Victims of Psychological and Spiritual Abuse*, New York: W. W. Norton — the
+field's standard practitioner volume on assisting former members, edited by one of the two authors of
+the article [After the Room](/after-the-room/) cites (Langone & Martin 1993). It is the reference for
+the territory §8 is arguing over, not for a finding: whether a helper can avoid supplying a new
+container is a question this post does not answer.
 
 [^method]: On the environment and the levers — [the method post](/the-environment/): what a culture
 pre-supplies, and what it decides is the price. His "container" is the same object, described from
 inside it.
 
-*Marking:* documented — the account and every quotation in it, taken verbatim from the three
-published posts; the author's own disclaimers and his pseudonymity. Argument — that his account
+*Marking:* documented — the account and every quotation in it, taken from the three published posts
+and checked against them, with the one typographical slip in a quoted line marked *[sic]*; the
+author's own disclaimers, his pseudonymity and his published byline. Argument — that his account
 instantiates this series' mechanism independently; that "program reinforcement" is a lever the series
-had not named; and §8, that his prohibition of all help is the strongest available challenge to this
-series' countermeasure, and that the disagreement is worth recording rather than resolving. The
-reading is this post's contribution. His cosmology is not endorsed; the author is not diagnosed; and
-the standing non-use clause applies at full strength.
+had not named; and §8, that his own text locates the start of the exit **inside** the being where this
+series locates it outside, and that his biography is the counter-instance to his own claim. The reading
+is this post's contribution. His cosmology is not endorsed; the author is not diagnosed; and the
+standing non-use clause applies at full strength.
