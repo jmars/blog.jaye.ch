@@ -1734,6 +1734,38 @@ const POST_META = {
       'A close reading of Robert Jay Lifton\u2019s Thought Reform and the Psychology of Totalism: the totalism framework at source, its eight criteria read whole rather than through summaries \u2014 and the certified checklist the anti-cult movement made of it.',
     accent: 'Thought Reform',
   },
+  'eichmann-in-jerusalem': {
+    prompt: 'cat eichmann-in-jerusalem.md',
+    tagline: 'a <b>reading</b>: the banality of evil at source \u2014 the phrase the blog has used all along through Zimbardo, and the thoughtlessness it actually names.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Hannah Arendt\u2019s Eichmann in Jerusalem: thoughtlessness rather than monstrousness, the phrase read at source rather than through its later uses, and the controversy over what she meant and what misuse has made of it.',
+    accent: 'Eichmann in Jerusalem',
+  },
+  'the-anatomy-of-destructiveness': {
+    prompt: 'cat the-anatomy-of-destructiveness.md',
+    tagline: 'a <b>reading</b>: the necrophilous character read whole \u2014 destruction as a structure of character, and the biophilia that answers it.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Erich Fromm\u2019s The Anatomy of Human Destructiveness: the necrophilous and biophilous orientations read as structures rather than dispositions, and what the blog owes a framework it has never cited.',
+    accent: 'The Anatomy of Destructiveness',
+  },
+  'geosophia': {
+    prompt: 'cat geosophia.md',
+    tagline: 'a <b>reading</b>: the underworld tradition read whole \u2014 the practice beneath the Western column\u2019s theory.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of two volumes, with notes',
+    description:
+      'A close reading of Jake Stratton-Kent\u2019s Geosophia I and II: the chthonic and goetic tradition reconstructed as the practical root the blog\u2019s Western column keeps gesturing at, read at its own scale.',
+    accent: 'Geosophia',
+  },
+  'quareia': {
+    prompt: 'cat quareia.md',
+    tagline: 'a <b>reading</b>: the curriculum read end to end \u2014 the practice the blog has been quoting module by module.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of a curriculum, with notes',
+    description:
+      'A close reading of the Quareia curriculum as a whole: the modern magical training the blog has cited in extracts, read for its structure, its pace, and where it puts the check.',
+    accent: 'Quareia',
+  },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',
     tagline: 'the <b>fit that fails</b>: getting ahead of the account \u2014 the rejection recoded as the target\u2019s symptom, the pivot to the network, and the accurate report made self-indicting.',
