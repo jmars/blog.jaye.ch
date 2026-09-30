@@ -1379,6 +1379,14 @@ const POST_META = {
       'Why a materialist cosmology cannot measure the collapse: no category means misfiling, not absence — and an unfilled category is a vacancy a coercive frame can occupy.',
     accent: 'Reading',
   },
+  'a-cosmos-of-persons': {
+    prompt: 'cat a-cosmos-of-persons.md',
+    tagline: 'the <b>frame with a reading</b>: more dangerous than one without \u2014 because a reading can be owned.',
+    hint: '<a href="/">\u2190 home</a> · the other frame, and its safeguard, with notes',
+    description:
+      'The living cosmos has a reading for the collapse, and that is its danger: the safeguard is structural \u2014 a plane of many participants, and a practitioner who does not stand above it.',
+    accent: 'Persons',
+  },
 };
 
 function buildPost(post, navPosts) {
