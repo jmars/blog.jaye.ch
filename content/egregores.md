@@ -32,7 +32,7 @@ appendix is a 1929 narrative of a group's attempt to revive the egregore of the 
 Disengaging from an Egregore" — is three first-person accounts by former members of three different
 organisations, and that is where the blog's interest has been.[^app2][^app1]
 
-Two corrections to the chapter list the brief carried: "A Modern Example of the War of the Egregores",
+Two corrections to the chapter list: "A Modern Example of the War of the Egregores",
 "The Power of the Egregore", "Watch Your Dreams" and "Language as a Control Mechanism" are **sections of
 chapter 1**, and "The Golden Dawn Egregore" and "Walter Ernest Butler" are **sections of chapter 2** — a
 small thing until one notices that the blog's first borrowing is not from a chapter at all.

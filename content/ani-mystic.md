@@ -14,8 +14,8 @@ comparison that matters, because a frame with an aim and no seat is not the same
 standing at the end of the road.*
 
 *Status.* This post reads **one** source. The quotations are verbatim from the digital text, checked character for
-character against the file and cited by chapter in the notes — by chapter and not by page, because this extract's
-page order is jumbled and its running heads carry no numbers; the reading of them is an **inference**, offered as
+character against it and cited by chapter in the notes — by chapter and not by page, because the text's
+sections stand out of book order and its running heads carry no numbers; the reading of them is an **inference**, offered as
 one. **The book's cosmology is not endorsed** — nothing here claims the cosmos is alive and nothing claims it is
 not, and §6 and §9 are about why holding that open is the whole of the discipline here. This is the book the
 blog's own guardrail was written for, and the guardrail is held throughout: **Gordon White is cited for what he
@@ -300,10 +300,10 @@ answer is *everybody, and that is not a check either*.
 
 ## 8. The negative finding, and the counterweights, in the body
 
-**The negative finding first, stated as a search result and scoped to the file.** The digital text of *Ani.Mystic*
+**The negative finding first, stated as a search result and scoped to the text of this edition.** The digital text of *Ani.Mystic*
 contains **no clinical referral**. Case-insensitive searches return **0** hits for "safeguard", "safety",
 "breakdown", "sanity", "psychosis", "seek help", "get help", "emergency", "suicide", "medication", "clinician" and
-"counsel". Everything else clinical in the file is incidental, itemised at [^gap]: the "founding physicians" of
+"counsel". Everything else clinical in the text is incidental, itemised at [^gap]: the "founding physicians" of
 forest medicine; "the clinical impact of spending time in forests"; two proper nouns naming a cited researcher's
 institutions; "botanists, doctors and anthropologists" as historical actors; and, among five hits for "therap", a
 therapist in a passage on dream interpretation, a patient's therapist in an account of ancestral healing, a
@@ -407,17 +407,17 @@ makes possible, and it belongs beside the guardrail:
 
 ## Notes
 
-[^am]: Gordon White, *Ani.Mystic: Encounters with a Living Cosmos*, London: Scarlet Imprint, 2022 (the file supplies the digital ISBN only; the print ISBN is as elsewhere in the blog) — paperback ISBN
+[^am]: Gordon White, *Ani.Mystic: Encounters with a Living Cosmos*, London: Scarlet Imprint, 2022 (the text supplies the digital ISBN only; the print ISBN is as elsewhere in the blog) — paperback ISBN
 978-1-912316-57-1; the digital text read here carries its own ISBN 978-1-912316-56-4 and the copyright page "©
 Gordon White 2022. Published by Scarlet Imprint. Edited by Peter Grey; designed and typeset by Alkistis Dimech."
-Every quotation in this post was verified character for character against that digital text (612 KB), with the
-source's typographic quotes and apostrophes rendered as ASCII, its collapsed whitespace normalised, its en-dashes
-rendered as em dashes, its OCR space-before-punctuation normalised, its bulleted lists in quotations flattened to runs of sentences, and its caps-set section
-headings rendered in title case; elisions marked […] are this post's. **The extract's page order is jumbled and its
+Every quotation in this post was verified character for character against that text, with the
+source's typographic quotes and apostrophes rendered as ASCII, its whitespace normalised, its en-dashes
+rendered as em dashes, its spacing before punctuation normalised, its bulleted lists in quotations flattened to runs of sentences, and its caps-set section
+headings rendered in title case; elisions marked […] are this post's. **The text's sections stand out of book order and its
 running heads carry no page numbers**, so every quotation is cited by chapter (or Introduction section), which is
-the only address the file supports; the chapter map used here, in file order, is: "Book People" (the book's own "final chapter" in its Introduction, though chapter 7 is "the last chapter" in its own closing footnote,
-at the file's start), "Index", chapters 1 to 7, the contents page, the copyright page, the Introduction ("Island of
-my Grandfather"), the title page. The contents listing quoted at §2 is the book's own. **The extract carries no
+the only address the text supports; the chapter map used here, in the text's order, is: "Book People" (the book's own "final chapter" in its Introduction, though chapter 7 is "the last chapter" in its own closing footnote,
+at the text's start), "Index", chapters 1 to 7, the contents page, the copyright page, the Introduction ("Island of
+my Grandfather"), the title page. The contents listing quoted at §2 is the book's own. **The text carries no
 2021 publication date**: the copyright page reads © 2022 and the title page "SCARLET IMPRINT · MMXXII", and this post therefore
 cites the 2022 edition; **a brief that gives this book a 2021 first publication is left uncorrected here, because
 the artifact does not support it** — recorded as a mismatch rather than reconciled.
@@ -460,15 +460,15 @@ century."; and "Read the book in multiple locations. Wild places. Urban places. 
 Read it at sunrise. Read it aloud to your ancestors. Read it where the world speaks to you just as much as the
 words do."
 
-[^bp]: *Ani.Mystic*, "Book People" (the final chapter, which the extract places at the file's start): "To finish a
+[^bp]: *Ani.Mystic*, "Book People" (the final chapter, which the text places first): "To finish a
 book like this with a typical bibliography feels almost like a betrayal. Why spend so many pages exploring methods
 of truth validation better suited to a forming universe if, in the end, I was going to rely on the authority of a
 book pile from a formed one? And why do we have bibliographies, anyway? You may say it is so interested readers can
 move further into a topic but I think it is so we can play gotcha with an author. Bibliographies are not about the
 books that are in them but the ones that are not."; and "Whenever someone has been quoted in the main part of the
 text, their work has been easy to find. Below are the thoughts that came furthest with me on this journey, and
-where you can find them yourself." The Introduction carries a short **section** of the same name — a heading this
-extract preserves separately from the final chapter — in which the replacement is announced: "in lieu of a
+where you can find them yourself." The Introduction carries a short **section** of the same name — a heading the
+text keeps separate from the final chapter — in which the replacement is announced: "in lieu of a
 bibliography, please find instead a final chapter, Book People, which details not only the books that contributed
 'ideas' to this book, but also the ideas themselves."
 
@@ -541,7 +541,7 @@ might be ways to learn from Indigenous cosmovisions without harvesting them."; a
 wholly contained by the four walls of the haunted library — makes no claims of universality, nor does it really
 offer explanations — belonging as they do to an earlier age."
 
-[^gap]: **The negative finding, reported as a search result and scoped to this file.** Case-insensitive searches of
+[^gap]: **The negative finding, reported as a search result and scoped to the text of this edition.** Case-insensitive searches of
 the digital text return 0 hits for "safeguard", "safety", "breakdown", "sanity", "psychosis", "seek help", "get
 help", "emergency", "suicide", "medication", "clinician", "counsel", "readiness", "premature", "too soon" and "not
 for everyone"; 1 hit for "physician" (chapter 7, "one of the founding physicians of the discipline" of forest
@@ -559,8 +559,8 @@ the text reports it; this post makes no finding about anyone's health.
 
 *Marking:* **a reading.** Documented — every passage in quotation marks, taken from the digital text of Gordon
 White's *Ani.Mystic: Encounters with a Living Cosmos* (Scarlet Imprint, 2022; paperback ISBN 978-1-912316-57-1,
-digital ISBN 978-1-912316-56-4), checked character for character against the file and cited by chapter in the
-notes, because the extract's page order is jumbled and carries no page numbers. **Absences reported as search
+digital ISBN 978-1-912316-56-4), checked character for character against it and cited by chapter in the
+notes, because the text's sections stand out of book order and it carries no page numbers. **Absences reported as search
 results:** no clinical referral and no reader-facing metered pace, itemised at [^gap]. Inferred, as this post's —
 §2's reading of the book as an epistemology first and an enchantment second; §3's placement of the machine
 metaphor's diagnosis against [the machine frame](/the-machine-has-no-reading/)'s own virtue; §4's reading of the

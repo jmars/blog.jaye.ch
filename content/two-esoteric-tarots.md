@@ -159,7 +159,7 @@ isolation he establishes first: it "appears to have been preserved within titled
 by the Italian state in 2009 — a period of some five hundred years", and "only appeared in the public
 domain on four occasions".[^vii] The list prints a **first** (Cicognara, 1831), a **second** (Arthur M.
 Hind's photographs at the British Museum, 1907) and a **fourth** (Wolfgang Mayer's reproduction, 1998) —
-and no third. That is a file-level observation, reported as one.[^abs] Then the claim itself:
+and no third. That is a whole-text observation, reported as one.[^abs] Then the claim itself:
 
 > "At the deepest level I found that the Sola-Busca's iconographic programme was structured around two key
 > rituals. The first was an extremely archaic ritual, one attested as early as 700 BCE and still practiced
@@ -356,7 +356,7 @@ cosmos](/the-owned-cosmos/) found converts tests into credentials.
 ## 6. Counterweights, in the body
 
 **First: the strongest language in the book is not the researchers'. It is the convenor's, and the counts
-make it plain.** The Foreword is **2,742 characters** — **1.8 per cent** of the text. In it are the sentences quoted at §3: "firmly maintained", "shattered
+make it plain.** The Foreword is **1.8 per cent** of the text. In it are the sentences quoted at §3: "firmly maintained", "shattered
 that consensus", "unequivocally challenges", "It is evident that". Across the whole text the word
 "**unequivocally**" occurs **once**, and it is there.[^abs] Now the other half: in the rest of the
 text, a test list of fourteen hedge markers returns **64** occurrences and **0** of them fall in the
@@ -816,7 +816,7 @@ reality for the hundreds of thousands of people who daily engage, through the me
 with greatly expanded domains of awareness and understanding".
 
 [^abs]: Reported as a search result, and scoped to the text of this edition. Case-insensitive counts
-over the book's text. **Length:** the Foreword is **2,742 characters**, or 1.8 per cent of the text.
+over the book's text. **Length:** the Foreword is **1.8 per cent** of the text.
 **Strong epistemic markers:** "unequivocally" occurs **1** time in the text, inside the Foreword;
 "firmly" **3** times (in the Foreword, and twice elsewhere); "shattered" **2** (in the
 Foreword, of the scholarly consensus, and once more, of the medieval worldview); "evident" **4** (one in the
@@ -850,7 +850,7 @@ Pedreros (Scarlet Imprint, 2023, eISBN 978-1-912316-92-2), checked character for
 its claims belong to the person who made them. **Address:** the text's typographic quotes are rendered
 here as straight ASCII, and its dashes are given as em dashes except inside numeric ranges (which keep its en dashes); the small-caps opening of the Foreword is quoted in
 lower case with the rendering noted; the stray spaces its italics markup leaves before punctuation
-are closed. **Absences reported as search results, scoped to this file:** no safeguard of a reader (the
+are closed. **Absences reported as search results, scoped to the text of this edition:** no safeguard of a reader (the
 single occurrence of "safeguarded" concerns transmitting knowledge); no metered pace (all six hits for
 "pace" are inside "space"); and 0 hits for the clinical and risk vocabulary listed in note [^abs], with
 "risk" once, as a historical danger the text leaves undated. **Inferred, as this post's

@@ -17,7 +17,7 @@ boundary — **describe the structure, diagnose no one** — as its **method**, 
 the blog could.*
 
 *Status.* This post reads **one** source. The quotations are verbatim from the digital text, checked
-character for character against the file and cited in the notes by part and chapter and by the
+character for character against the text and cited in the notes by part and chapter and by the
 digital text's own page markers; the reading of them is an **inference**, offered as one. **The
 book's cosmology is not endorsed** — nothing here claims that wetiko is a real entity, and nothing
 claims it is only a metaphor; §3 is about why holding that open is the point. No living author is
@@ -503,21 +503,18 @@ scale. It now has it from a book that did not have to agree.
 ## Notes
 
 [^uw]: Paul Levy, *Undreaming Wetiko*, Inner Traditions, 2023 — print ISBN 978-1-64411-566-4,
-ebook ISBN 978-1-64411-567-1. (The extract's title pages carry no subtitle; the afterword's own
+ebook ISBN 978-1-64411-567-1. (The title pages carry no subtitle; the afterword's own
 reference to the book is "this third folio, *Undreaming Wetiko*", and its reference to the second
-volume carries a subtitle.) Read directly from the
-digital text (835 KB, 409-page scan, page-jumbled, collapsed whitespace); every quotation here was
-verified character for character against that file, with the source's typographic quotes and dashes
+volume carries a subtitle.) Read from a complete digital text of the edition; every quotation here was
+verified character for character against it, with the source's typographic quotes and dashes
 rendered as ASCII and its whitespace normalised, and elisions marked […] are this post's. **Where a
-quotation is cited:** by part and chapter title where the file shows them, and by the digital text's
-own page marker ("N of 409") where that marker is unambiguous; those markers are the scan's, not the
-printed book's page numbers, which this file does not carry. The four-part structure and the chapter
+quotation is cited:** by part and chapter title, and by the text's own page numbers where a note
+gives them. The four-part structure and the chapter
 titles quoted at §1 are the book's own contents listing: Part 1, Spells, Curses, and Shamans; Part 2,
 Angels, Demons, and Rebirth; Part 3, The Quantum Synchronistic Field; Part 4, The Self as Revelation
 (Chapters 12–15, and the epilogue "All You Have to Do to See Is Open Your Eyes and Look").
 
-[^intro]: *Undreaming Wetiko*, Introduction, "A Thumbnail Sketch of Wetiko" (digital text, pp. 16–22
-of the scan): the Forbes attribution and "having coined the term malignant egophrenia, or ME
+[^intro]: *Undreaming Wetiko*, Introduction, "A Thumbnail Sketch of Wetiko" (digital text, pp. 16–22): the Forbes attribution and "having coined the term malignant egophrenia, or ME
 disease" (p. 16); "Wetiko has no intrinsic, independent existence (separate from the mind, that is),
 which is to say that it has no substantial existence from its own side; and yet it can wreak
 unimaginable havoc and even kill us" (p. 17); "It avoids the light of awareness like the plague"
@@ -533,14 +530,13 @@ wetiko as ME disease, a misidentification of who we think we are" (p. 20); and "
 disease basically means to have fallen into a state of mistaken identity, the best medicine for
 wetiko is to know who we are" (p. 21).
 
-[^ded]: *Undreaming Wetiko*, dedication page (digital text, p. 5 of the scan): "This book is
+[^ded]: *Undreaming Wetiko*, dedication page (digital text, p. 5): "This book is
 dedicated to the great doctor of the soul C. G. Jung."; "I feel that I am standing on Jung's broad
 shoulders as I continually deepen my understanding of wetiko."; and "Jung, though not having the
 indigenous name, was tracking the spore-prints of wetiko as it weaved itself throughout the warp and
 woof of the human psyche and the world at large."
 
-[^ch1]: *Undreaming Wetiko*, Part 1, chapter 1, "Human Family Curse" (digital text, p. 34 of the
-scan): "The repressed and unlived lives of the parents act like a contagious and malignant psychic
+[^ch1]: *Undreaming Wetiko*, Part 1, chapter 1, "Human Family Curse" (digital text, p. 34): "The repressed and unlived lives of the parents act like a contagious and malignant psychic
 virus that infects the surrounding field."; "This psychological virus is like a nonlocalized bug in
 the system that creates a dis-ease and disturbance in the coherence of the family."; "This virulent
 psychic pathogen germinates in and replicates itself through the unconscious of the children, which
@@ -550,7 +546,7 @@ influencing the unconscious of the children". The chapter's opening is its autho
 criticism from Alice Miller — no finding is made here about her or about any family.
 
 [^ch2]: *Undreaming Wetiko*, Part 1, chapter 2, "Wetiko in Relationships" (digital text, pp. 40 and
-56 of the scan): "Being a form of psychic blindness, wetiko, as I can't mention often enough, only
+56): "Being a form of psychic blindness, wetiko, as I can't mention often enough, only
 has power over us to the extent it is not seen." (p. 40); and, in the section "A Wetiko Case Study",
 "Jim is now dreaming up Sally in such a way as to play out with her an inner process of which he is
 unconscious, while Sally's unconscious is doing the same with Jim. They are co-dreaming."; "Because
@@ -560,7 +556,7 @@ challenges his experience of what is real." (p. 56). The case is the book's hypo
 as "let's imagine".
 
 [^ch3]: *Undreaming Wetiko*, Part 1, chapter 3, "Wilhelm Reich's Murder of Christ" (digital text,
-pp. 72–77 of the scan): "The devil, whom Christ called 'a murderer from the beginning' (John 8:44),
+pp. 72–77): "The devil, whom Christ called 'a murderer from the beginning' (John 8:44),
 is the personification of an energy both out in the world and within us." (p. 72); "Satan, the
 personification of wetiko, is extremely cunning when it comes to inciting conflict, scandal, and the
 like" (p. 74); "Wetiko, after all is said and done, is an all-around form of psychic blindness in
@@ -570,23 +566,21 @@ it." (p. 77); and "The disease of wetiko is infectious; its presence can potenti
 latent plague in ordinarily decent people." (p. 77). The chapter reads Reich's *The Murder of
 Christ*; this post quotes the book, not Reich.
 
-[^ch4]: *Undreaming Wetiko*, Part 1, chapter 4, "Shamans to the Rescue" (digital text, pp. 85–86 of
-the scan): "Our subjective experience of the demon of sickness is an encounter with a seemingly
+[^ch4]: *Undreaming Wetiko*, Part 1, chapter 4, "Shamans to the Rescue" (digital text, pp. 85–86): "Our subjective experience of the demon of sickness is an encounter with a seemingly
 autonomous, life-destroying entity whose intent is to take us down." (p. 85); "This can become, in
 psychology speak, an 'autonomous complex'—what indigenous cultures call a demon—that can go rogue
-and become an antilife force, an agent of death" (pp. 85–86, the phrase spanning the page break in
-the scan); and, on the shaman, that they "take on" the sickness "that has infected the field around
+and become an antilife force, an agent of death" (pp. 85–86, the phrase spanning the page break); and, on the shaman, that they "take on" the sickness "that has infected the field around
 them" (p. 85).
 
 [^ch10]: *Undreaming Wetiko*, Part 3, chapter 10, "Quantum Physics and Wetiko", section "A Fictive
-Personality" (digital text, pp. 233–234 of the scan): "Wetiko—what years ago I initially called
+Personality" (digital text, pp. 233–234): "Wetiko—what years ago I initially called
 malignant egophrenia, or ME disease—is in essence a case of mistaken identity"; "It is a forgery, a
 counterfeit (the counterfeiting spirit, aka wetiko), of no intrinsic value in and of itself."; and
 "Is it us or the counterfeiting spirit, wetiko, impersonating us who is deciding? Are we nourishing
 ourselves or wetiko with the food we put in our bodies?"
 
 [^ch12]: *Undreaming Wetiko*, Part 4, chapter 12, "The Disease of Not Seeing" (digital text,
-pp. 267–275 of the scan): "We live in a time when the dark forces of the universe are coming out of
+pp. 267–275): "We live in a time when the dark forces of the universe are coming out of
 hiding and are visible for all who have eyes to see."; "It's always some form of 'the other.' Some
 people even have the temerity to suggest the radical idea that these dark forces are ultimately to
 be found within our own minds, a perspective that gets closer to the mark than any other
@@ -598,8 +592,7 @@ can be called not see disease (acronym NSD), which it should be pointed out is p
 as 'Nazi disease.'" (p. 275). The chapter's quoted physician is Peter McCullough, cited in the
 book's endnotes; this post quotes the book.
 
-[^ch13]: *Undreaming Wetiko*, Part 4, chapter 13, "The Art of Seeing" (digital text, pp. 280–286 of
-the scan): "When we see people who have fallen under the spell of wetiko, it's very tempting to
+[^ch13]: *Undreaming Wetiko*, Part 4, chapter 13, "The Art of Seeing" (digital text, pp. 280–286): "When we see people who have fallen under the spell of wetiko, it's very tempting to
 think of them in any number of ways—they're ignorant, crazy, or maybe somewhat evil themselves. But
 this would be a mistake. Many people under wetiko's thrall can be quite brilliant, sane in many
 ways, and are genuinely good people with the best of intentions."; "To mischaracterize them is to
@@ -613,7 +606,7 @@ beneficial to preach the light to people whose eyes can't see it" (p. 282); and 
 sees our blindness is the part of us that is beginning to see." (p. 286).
 
 [^epi]: *Undreaming Wetiko*, Part 4, epilogue, "All You Have to Do to See Is Open Your Eyes and
-Look" (digital text, pp. 314–315 of the scan): "Concerning wetiko, the diagnosis (and prognosis) of
+Look" (digital text, pp. 314–315): "Concerning wetiko, the diagnosis (and prognosis) of
 the malady that humanity is suffering from has been found."; "wetiko is a form of psychospiritual
 blindness. In a very real sense, humanity has fallen blind, and we don't even realize that we are
 blind. More precisely, we suffer from a form of hysterical blindness that we ourselves are inducing
@@ -623,7 +616,7 @@ blindness taking physical form took place in the hallowed—and maddening—hall
 "Refusing to accept this diagnosis (the diagnosis itself being what was pathological)". Reported as
 the text reports it; this post makes no finding about anyone's health or about psychiatry.
 
-[^author]: *Undreaming Wetiko*, "About the Author" (digital text, p. 375 of the scan): "In 1981,
+[^author]: *Undreaming Wetiko*, "About the Author" (digital text, p. 375): "In 1981,
 catalyzed by an intense trauma, Paul had a life-changing spiritual awakening in which he began to
 recognize the dreamlike nature of reality. During the first year of his spiritual emergence, he was
 hospitalized a number of times and was told he was having a severe psychotic break from reality and
@@ -634,13 +627,13 @@ completely off the map of the psychiatric system."; and "Fortunately, over time 
 extricate himself from the psychiatric establishment so that he could continue to unfold his inner
 process of awakening."
 
-[^gloss]: *Undreaming Wetiko*, "Glossary of Acronyms" (digital text, p. 331 of the scan): "ME
+[^gloss]: *Undreaming Wetiko*, "Glossary of Acronyms" (digital text, p. 331): "ME
 disease: malignant egophrenia. ME disease was my original name for what I later discovered the
 Native Americans called wetiko."; and, from the same list, "NSD: not see disease (pronounced 'Nazi
 disease'). A form of blindness in which we turn a blind eye to evil".
 
 [^aw]: *Undreaming Wetiko*, Afterword by Richard Grossinger, "Paul Levy's Conversion of First
-Nations Cannibalism to Global Sociopathy" (digital text, pp. 335–344 of the scan): the title and the
+Nations Cannibalism to Global Sociopathy" (digital text, pp. 335–344): the title and the
 attribution (p. 335); "I was dubious about a white dude elucidating a Native American concept."; and
 "Over time, and at a deeper level as a result of writing this afterword, I have come to understand
 the true power of Paul's 'appropriation.'" (p. 337); "beginning with his second volume on the topic,
@@ -661,8 +654,7 @@ level" (p. 343); and, quoting Ojibwe author, linguist and storyteller Basil H. J
 Wendigo was gaunt to the point of emaciation, its desiccated skin pulled tightly over its bones."
 (p. 344).
 
-[^abs]: Reported as a search result, and scoped to this file: a case-insensitive search of the
-extract returns 1 hit for "safeguard" (the Chapter 3 sentence quoted at §7), 0 for "seek help",
+[^abs]: Reported as a search result, and scoped to the text of this edition: a case-insensitive search returns 1 hit for "safeguard" (the Chapter 3 sentence quoted at §7), 0 for "seek help",
 "professional help", "support group", "hotline", "crisis line", "self-harm", "suicid", "emergency",
 "antipsychotic" and "spiritual emergency"; 4 for "clinical" and 1 for "clinician", all inside
 Grossinger's afterword ("clinical hermeneutics", "a clinical outlier like Paul", "clinical baggage",
@@ -672,15 +664,14 @@ behaviour modification. A search shows only what it indexes, so the claim is sco
 this text.
 
 [^part4]: *Undreaming Wetiko*, Part 4 ("The Self as Revelation"), the part-opening synopsis (digital
-text, p. 266 of the scan): "Being that wetiko is a form of psychic blindness, this section starts off
+text, p. 266): "Being that wetiko is a form of psychic blindness, this section starts off
 by contemplating the nature of our blindness and how we can begin to see it. Seeing the underlying
 unconscious dynamics that fuel our blindness helps us realize how we can help open other people's
 eyes as well."; and "It points out that the best medicine for the wetiko mind-virus is to connect
 with the presence and light of our true nature, by stepping into who we truly are." The synopsis is
 the book's own summary of the four chapters that follow it, and is quoted here as such.
 
-[^ch5]: *Undreaming Wetiko*, Part 2, chapter 5, "The Battle for Our Angel" (digital text, p. 144 of
-the scan), on the person who has lost connection with the angel: "we are highly susceptible to
+[^ch5]: *Undreaming Wetiko*, Part 2, chapter 5, "The Battle for Our Angel" (digital text, p. 144), on the person who has lost connection with the angel: "we are highly susceptible to
 falling prey to the seductive, entrancing, demonic spell of wetiko." Cited at §7 as the register in
 which the book speaks of the thing as a presence, not a process.
 

@@ -189,7 +189,7 @@ VIZ.registerViz('nowarning', (function () {
         textW,
       );
       var notes = [
-        'x — distance to the edge, log scale, over the five decades the audit swept; 2×10⁻⁶ is the closest ' +
+        'x — distance to the edge, log scale, over the five decades the check swept; 2×10⁻⁶ is the closest ' +
           'measured approach',
         'grey: settling time in time units (left axis) · accent: the disturbance tolerated, normalized (right axis)',
         'the reassuring indicator is flat: ' +

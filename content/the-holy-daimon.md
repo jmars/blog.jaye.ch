@@ -24,7 +24,7 @@ blog's. That use selects. A source quoted for the sentence that fits a thesis ha
 sentence, and the rest of the book is not on the page.
 
 This series inverts it. **The book is the unit of analysis**, and each reading reports three things:
-what the text says, quoted verbatim and cited against the file; the correction the rest of the blog now
+what the text says, quoted verbatim and cited against the text; the correction the rest of the blog now
 owes, stated as a correction; and an explicit counterweight or gap, **in the body**. And one
 prohibition: a reading never adopts the book's cosmology.
 
@@ -293,9 +293,9 @@ to write both halves down, cite them, and hand the next post a sharper test.
 ## Notes
 
 [^hd]: Frater Acher, *Holy Daimon*, second edition, London: Scarlet Imprint, 2018, 2023 — illustrations
-by Jose Gabriel Alegría Sabogal, edited by Peter Grey; ISBN 978-1-912316-81-6 (digital). Read directly
-from the digital text (342 KB extract); every quotation here was checked against it character for
-character, with the source's typographic apostrophes rendered as ASCII and its collapsed whitespace
+by Jose Gabriel Alegría Sabogal, edited by Peter Grey; ISBN 978-1-912316-81-6 (digital). Read from a
+complete digital text of the edition; every quotation here was checked against it character for
+character, with the source's typographic apostrophes rendered as ASCII and its whitespace
 normalised. Also from the book: "consists of three parts, History, Memory and Practice"; "The best magic
 stands in the service of life"; the Chaldean summary, that they "did not have the concept of a personal
 holy daimon of the sort known in later centuries"; and the chain "formed by direct, living lineages

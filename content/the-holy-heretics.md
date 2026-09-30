@@ -11,7 +11,7 @@ divine and another, but between any unmediated encounter and organised orthodoxy
 [the cosmos that refuses](/the-cosmos-that-refuses/) said the apophatic refusal still needed.*
 
 *Status.* This post reads **one** source. The quotations are verbatim from the digital edition, checked
-character for character against the file and cited in the notes; the reading of them is an **inference**,
+character for character against it and cited in the notes; the reading of them is an **inference**,
 offered as one. **The book's cosmology is not endorsed** — nothing here claims that a daimon or an Olympic
 spirit exists. No living author is diagnosed. The criticism below is of a **structure** — orthodoxy as a
 single mediated route to the divine — and of no church or people, and nothing here validates, disqualifies
@@ -196,7 +196,7 @@ health", no "psychosis", no "clinical", no "go see" and no "seek help" in any fo
 "physician", "medical" and "doctor" are a therapy-room metaphor, the *antidotum Mithridaticum*, historical
 physicians (Paracelsus, Celsus, a Pavia court physician), Hildegard's title of "doctor", and a Gospel line
 ("no master nor doctors"). **Within this text, there is no route out
-to a clinician.** A search shows only what it indexes, so the claim is scoped to this file.
+to a clinician.** A search shows only what it indexes, so the claim is scoped to the text of this edition.
 
 What the book warns about **instead** is named, and it is not nothing — three instances, two of them from the book's own front-matter chapter summaries.
 **The institution's poison:** those summaries say it — "Takes a stark look at how **the
@@ -336,9 +336,8 @@ but states. So: **a practice can supply its own criterion, and a criterion is st
 ## Notes
 
 [^hh]: Frater Acher, *Holy Heretics*, London: Scarlet Imprint, 2022 — illustrations by Jose Gabriel
-Alegría Sabogal; eISBN 978-1-912316-68-7 (digital). Read directly from the digital text (479 KB extract,
-jumbled page order, collapsed whitespace); every quotation was verified character for character against
-that file, with the source's typographic apostrophes and quotes rendered as ASCII and its whitespace
+Alegría Sabogal; eISBN 978-1-912316-68-7 (digital). Read from a complete digital text of the edition; every quotation was verified character for character against
+it, with the source's typographic apostrophes and quotes rendered as ASCII and its whitespace
 normalised. Also from the Introduction: "harbour a healthy mistrust towards what we think we know and who
 we think we are"; "as the third and final volume of the Holy Daimon cycle"; "Each chapter, therefore, ends
 with straightforward instructions on how to approach your own heart space"; and "I would advise against
@@ -459,7 +458,7 @@ instruction, "wash your hands with water and salt, and go to bed without speakin
 *Marking:* **a reading.** Documented — every passage in quotation marks, taken from the digital text of
 Frater Acher's *Holy Heretics* (Scarlet Imprint, 2022; eISBN 978-1-912316-68-7), checked character for
 character and cited in the notes, including the Shabistari and Paracelsus epigraphs as the book prints
-them. **Absences reported as search results:** "safeguard" returns 0 hits in the file; "therapist",
+them. **Absences reported as search results:** "safeguard" returns 0 hits in the text; "therapist",
 "psychiatrist", "mental health", "psychosis", "clinical", "go see" and "seek help" return 0; "therapy",
 "physician", "medical" and "doctor" occur only in the historical chapters and the *antidotum
 Mithridaticum* material, itemised at §6. Inferred, as this post's — §2's reading that the book's antagonism

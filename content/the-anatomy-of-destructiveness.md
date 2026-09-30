@@ -37,7 +37,7 @@ The text's sections stand out of book order and its running heads are unreliable
 citations below are by chapter and section, the way the other readings have handled damaged texts.[^file]
 
 Two facts belong before the reading. **The blog has never cited him**: a case-insensitive search for
-"Fromm" across the blog returns nothing, not one line, in any post.[^cite] Arendt was read at the eleventh reading and Zimbardo at the ninth; this is the third of the three.
+"Fromm" across the blog returns nothing, not one line, in any post.[^cite] Arendt and Zimbardo bear on this reading; this is the third of the three.
 
 **And he is the hardest of them to place.** The blog's method has two standing forms. The first is
 *describe structures, diagnose no one*, which forbids the diagnosis of a person. The second is stronger:
@@ -220,7 +220,7 @@ will be heard: "It is truly astonishing that this view should be considered 'ide
 in regard to physical development and health."[^ch10]
 
 The blog cannot run that premise — not because it is falsifiable, but because it is a norm, and a norm is
-what turns a description into a ranking. That is the risk the brief named, and it is in the book rather
+what turns a description into a ranking. That is the risk, and it is in the book rather
 than in its reception. What keeps it from being fatal is that Fromm spends the rest of the chapter
 qualifying it; §9 collects those qualifications.
 
@@ -519,7 +519,7 @@ satisfactory results."[^ch12] The population figure is quoted from Maccoby's pap
 necrophilous."[^ch12] The 10 per cent in the Hitler chapter is introduced as an estimate — "even if one
 would estimate".[^ch13] The blog's standing requirement of its own mechanism claims is that somebody else
 can run them. Nothing here can be run by a reader: no published instrument with a false-positive rate in
-this file, no inter-rater figure, and a central type diagnosed by the interpretation of dreams and
+this text, no inter-rater figure, and a central type diagnosed by the interpretation of dreams and
 diction. That does not make it false; it makes it a clinical inference, and a reading must say so.
 
 **Third, the place where the book argues with itself is real and does not fully close.** The objection
@@ -602,7 +602,7 @@ Conventions. … First published by Holt, Rinehart and Winston, New York, 1973. 
 revised edition as Owl Book, (Henry Holt and Company, New York) 1992. (c) 1973 by Erich Fromm (c) 1992
 by the Estate of Erich Fromm cover design by Angela Goddard 978-1-4804-0193-8 This edition published in
 2013 by Open Road Integrated Media 180 Varick Street New York, NY 10014 www.openroadmedia.com". The
-file also carries a short biography at the back ("Erich Fromm (1900-1980) was a German-American
+text also carries a short biography at the back ("Erich Fromm (1900-1980) was a German-American
 psychoanalyst, sociolo[gist]…"), which is the Open Road edition's own apparatus and not part of the book.
 
 [^file]: **The text.** Read from a complete digital text of that edition, following the revised Owl
@@ -611,7 +611,7 @@ and checked character for character against it. Its sections stand out of book o
 the top of chapter 13 and places the Contents page near the end — and its running heads are
 unreliable, so every citation in this post is by chapter and section.
 
-[^cite]: **The audit.** A case-insensitive search for "Fromm" across every post on the blog (and the home page) returns **zero hits**. The three books arrived together as a group in the reading list this series works from; Arendt was read at the eleventh reading and Zimbardo at the ninth, and this is the third of the three.
+[^cite]: **The count.** A case-insensitive search for "Fromm" across every post on the blog (and the home page) returns **zero hits**. The three books arrived together as a group; Arendt and Zimbardo bear on this reading, and this is the third of the three.
 
 [^intro]: **Introduction: Instincts and Human Passions**. "man's aggressive behavior as manifested in war, crime,
 personal quarrels, and all kinds of destructive and sadistic behavior is due to a phylogenetically
@@ -643,7 +643,7 @@ way in search of his salvation.".
 person, the behaving man, from their field of vision."; "Whether man is the product of
 conditioning, or the product of animal evolution, he is exclusively determined by conditions outside
 himself; he has no part in his own life, no responsibility, and not even a trace of freedom. Man is a
-puppet, controlled by strings — instinct or conditioning." (the text's OCR reads "controllers"
+puppet, controlled by strings — instinct or conditioning." (the text reads "controllers"
 for "controlled", restored here); "the basic assumption of nineteenth-century capitalism"; "it
 is nevertheless noteworthy that he only sees the bias of the anti-instinctivists and not of those who
 share his own position." (in "The Political and Social Background of Both Theories"); "looks as
@@ -701,7 +701,7 @@ predominant use of words referring to destruction and to feces and toilets."; th
 answer ("It is bourgeois", "unnatural", "not hygienic"; "It is poisonous", "It makes
 women look like whores") and "almost invariably, the respondents who used these words showed a
 destructive trend in most other answers."; "we judge that about 10 to 15 per cent of the samples
-interviewed would be dominantly necrophilous" (the text reads "would he dominantly", the OCR
+interviewed would be dominantly necrophilous" (the text reads "would he dominantly",
 reversing "be"; restored here). In "The Connection Between Necrophilia and the Worship of Technique": "the full affective recognition of what one is doing"; "Once this process has been
 fully established there is no limit to destructiveness because nobody destroys: one only serves the
 machine for programmed — hence, apparently rational — purposes."; "is not motivated by a passion
@@ -739,7 +739,7 @@ unconscious forces behind manifest behavior and opinions". "six very different p
 to class, race, and education)".
 
 [^ch13]: **Chapter 13, "Malignant Aggression: Adolf Hitler, a Clinical Case of Necrophilia"**.
-"An analytic psychobiographical study aims at answering two questions…" (133; the text's OCR opens
+"An analytic psychobiographical study aims at answering two questions…" (133; the text opens
 "A N ANALYTIC PSYCHOBIOGRAPHICAL", its small capitals run together); "the analysis of dreams, unintended
 behavior, gestures, language, and behavior that is rationally not fully explainable permits one to form a
 picture of the essential and mostly unconscious passions ('X-ray approach')."; "classic analysts
@@ -813,7 +813,7 @@ referral.
 edition's copyright page (Holt, Rinehart and Winston, 1973; the Owl Book revised text of 1992; the 2013 Open
 Road edition, ISBN 978-1-4804-0193-8); the text's shape and its out-of-book-order sections; the Contents-derived structure; every quotation,
 checked character for character against it and cited by chapter and section; the counts in §10, which are
-search results over the text of this edition; and the audit in §1, which is a count over
+search results over the text of this edition; and the check in §1, which is a count over
 the blog's own posts. Reported as **the book's own content and not adjudicated**: the instinctivist and behaviourist
 theses as Fromm states them, the two-aggression distinction, the character-structure account and its norm,
 necrophilia and biophilia, and the three clinical cases — Stalin, Himmler and Hitler — including the
@@ -827,8 +827,7 @@ which is the correction the blog owes and which is drawn from one sentence of ch
 chapter 12. **Not adopted**: the book's norm ("man's biological constitution is the source of norms for
 living"), its biophilic ethics as a standard for measuring a life, its diagnosis of named persons, and
 its programme for recognising potential destroyers. No living person is diagnosed here and no reader is
-assessed; nothing in this post validates, disqualifies or restricts anyone's experience or conduct. **OCR
-restorations inside quoted matter**, all reported rather than tidied: "controlled" for the text's
+assessed; nothing in this post validates, disqualifies or restricts anyone's experience or conduct. **Restorations inside quoted matter**, all reported rather than tidied: "controlled" for the text's
 "controllers" (ch. 3); "Hitlers" for the text's "Hitters" (ch. 13); "would be dominantly necrophilous"
 for the text's "would he dominantly" and "wants to be more" for "wants to he more" (ch. 12); the text's
 small-capital openings ("A N ANALYTIC") are quoted in normal case, and

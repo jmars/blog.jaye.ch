@@ -593,9 +593,9 @@ function vizAssets(body) {
   const widgets = slots.map((name) => {
     const file = join(VIZ_DIR, `${name}.js`);
     if (!existsSync(file)) throw new Error(`data-viz="${name}" has no widget at tools/viz/${name}.js`);
-    return stripComments(readFileSync(file, 'utf8'));
+    return stripJsComments(readFileSync(file, 'utf8'));
   });
-  const js = ['(function () {', "'use strict';", stripComments(readFileSync(VIZ_ENGINE, 'utf8')), ...widgets, '})();'].join('\n');
+  const js = ['(function () {', "'use strict';", stripJsComments(readFileSync(VIZ_ENGINE, 'utf8')), ...widgets, '})();'].join('\n');
   return { slots, css: stripComments(readFileSync(VIZ_CSS, 'utf8')), script: `<script>\n${js}\n</script>\n` };
 }
 
@@ -793,7 +793,7 @@ function paletteAssets(navPosts) {
 
 /** Full self-contained document. */
 function page({ title, description, prompt, heroTitle, tagline, body, navCurrent, type = 'article', shareTitle, noindex = false }, navPosts) {
-  const designCss = readFileSync(CSS, 'utf8');
+  const designCss = stripComments(readFileSync(CSS, 'utf8'));
   const viz = vizAssets(body);
   const palette = paletteAssets(navPosts);
 
@@ -873,6 +873,13 @@ const read = (...p) => readFileSync(join(ROOT, ...p), 'utf8');
  * only the emitted copy is stripped. (CSS has no nested comments and nothing in
  * these files holds a comment delimiter inside a string, so the strip is safe.) */
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
+
+/** The same for the widget scripts, where `//` line comments also occur.
+ * The `[^:]` guard keeps a `://` inside a URL intact; nothing in tools/viz/*
+ * holds a `//` inside a string or a regex literal. (Note: build.mjs's own hint
+ * strings — '// a measured model…' — are page content, not comments, and are
+ * not run through this.) */
+const stripJsComments = (s) => stripComments(s).replace(/(^|[^:\/])\/\/[^\n]*/g, '$1');
 
 /** Split a pandoc body at its leading <h1>: returns the body without it and
  * the h1's inner HTML (whitespace-normalized — pandoc keeps the source's
@@ -1339,8 +1346,6 @@ function feedXml(posts) {
     `    <description>A mechanism that hides itself — in minds, in groups, in the frames they live inside: a measured account of a collapse that cannot report itself, the frames that decide what it means, and the discipline of describing structures without diagnosing people.</description>\n` +
     `    <language>en</language>\n` +
     `    <atom:link href="${BASE}/feed.xml" rel="self" type="application/rss+xml"/>\n` +
-    `    <!-- Dates are the manifest's, and only a day is known: each item's\n` +
-    `         pubDate is that day at midnight UTC, not a measured time. -->\n` +
     `${items}\n` +
     `  </channel>\n` +
     `</rss>\n`
