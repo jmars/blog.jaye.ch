@@ -1348,6 +1348,14 @@ const POST_META = {
       'A pseudonymous practitioner\u2019s own account of being recruited, waking up and getting out — independently describing frame-supply, rationalisation, the holder move, and a confirming-miracles lever this series had not named.',
     accent: 'Container',
   },
+  'the-western-column': {
+    prompt: 'cat the-western-column.md',
+    tagline: 'the <b>Western column</b>: the same failure, graded into a curriculum \u2014 and a tradition that wrote its own safeguards down.',
+    hint: '<a href="/">\u2190 home</a> · the third column, with notes',
+    description:
+      'The Western esoteric tradition ran the same induction, named the same failure and built the same safeguards into a syllabus \u2014 and published its own predation account.',
+    accent: 'Column',
+  },
 };
 
 function buildPost(post, navPosts) {

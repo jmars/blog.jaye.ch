@@ -46,8 +46,14 @@ function loadHappyDom() {
 }
 const Window = loadHappyDom();
 
-const CTX_METHODS = ['setTransform','clearRect','save','restore','beginPath','moveTo','lineTo',
-  'stroke','fill','fillRect','rect','arc','fillText','closePath','setLineDash','measureText'];
+// The canvas methods a widget may call. Kept broad so a widget using a standard
+// method the stub lacks does not read as a widget failure — the stub should not be
+// the thing under test.
+const CTX_METHODS = ['setTransform','resetTransform','clearRect','save','restore','beginPath','closePath',
+  'moveTo','lineTo','stroke','fill','fillRect','strokeRect','clearRect','rect','roundRect','arc','arcTo',
+  'ellipse','bezierCurveTo','quadraticCurveTo','fillText','strokeText','setLineDash','getLineDash',
+  'measureText','translate','scale','rotate','transform','clip','drawImage','createLinearGradient',
+  'createRadialGradient','createPattern','getImageData','putImageData'];
 
 /** slug -> the widgets its built page declares, discovered from the manifest. */
 function pages() {

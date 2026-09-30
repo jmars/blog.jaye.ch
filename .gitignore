@@ -13,3 +13,6 @@ screenshots/
 
 # Generated figure screenshots (tools/viz-shots.sh)
 .viz-shots/
+
+# Local working state (session continuity)
+continuity.md

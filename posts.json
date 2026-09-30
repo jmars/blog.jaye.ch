@@ -139,6 +139,15 @@
       "series": "implications"
     },
     {
+      "slug": "the-western-column",
+      "file": "the-western-column.md",
+      "navLabel": "the western column",
+      "kind": "argument",
+      "summary": "The Western esoteric tradition ran the same induction, named the same failure and built the same safeguards into a syllabus — and published its own predation account.",
+      "published": false,
+      "series": "implications"
+    },
+    {
       "slug": "the-same-move",
       "file": "the-same-move.md",
       "navLabel": "the pattern",
