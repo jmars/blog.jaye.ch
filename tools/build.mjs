@@ -1387,6 +1387,14 @@ const POST_META = {
       'The living cosmos has a reading for the collapse, and that is its danger: the safeguard is structural \u2014 a plane of many participants, and a practitioner who does not stand above it.',
     accent: 'Persons',
   },
+  'the-owned-cosmos': {
+    prompt: 'cat the-owned-cosmos.md',
+    tagline: 'the <b>seat</b>: a cosmology that names the endpoint and stations someone at it \u2014 the form every case study shares.',
+    hint: '<a href="/">\u2190 home</a> · the occupied frame, with notes',
+    description:
+      'The third possibility: a frame with a reading, a purpose, and a seat. The cosmological form of every case study in this series \u2014 and the reason the traditions refused to name the endpoint.',
+    accent: 'Owned',
+  },
 };
 
 function buildPost(post, navPosts) {

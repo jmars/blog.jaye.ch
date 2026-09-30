@@ -281,6 +281,15 @@
       "summary": "The living cosmos has a reading for the collapse — and that is its danger: the safeguard is structural, a plane of many participants and a practitioner who does not stand above it.",
       "published": false,
       "series": "frames"
+    },
+    {
+      "slug": "the-owned-cosmos",
+      "file": "the-owned-cosmos.md",
+      "navLabel": "the owned cosmos",
+      "kind": "argument",
+      "summary": "The third possibility: a frame with a reading, a purpose, and a seat — the cosmological form of every case study, and why the traditions refused to name the endpoint.",
+      "published": false,
+      "series": "frames"
     }
   ]
 }
