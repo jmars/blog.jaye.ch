@@ -1015,10 +1015,21 @@ function inlineSidenotes(body) {
     if (inner) notes.set(m[1], inner);
   }
   let placed = 0;
-  const out = body.replace(/<a\s[^>]*class="footnote-ref"[^>]*>[\s\S]*?<\/a>/g, (ref) => {
+  // A sidenote is a float whose containing block must be the prose column, so
+  // that the -15rem right margin puts it in the page margin BESIDE its passage.
+  // Inside a <table> the reference is in a table cell, whose containing block is
+  // the cell — the float has no margin to reach and lands on the cell's own text
+  // and its neighbour's. So a reference inside a table keeps the endnote only:
+  // the note is never abandoned, since the endnotes block carries every one.
+  const tables = [...body.matchAll(/<table\b[\s\S]*?<\/table>/g)].map((m) => [
+    m.index,
+    m.index + m[0].length,
+  ]);
+  const inTable = (at) => tables.some(([a, b]) => at >= a && at < b);
+  const out = body.replace(/<a\s[^>]*class="footnote-ref"[^>]*>[\s\S]*?<\/a>/g, (ref, at) => {
     const id = /href="#([^"]+)"/.exec(ref);
     const note = id && notes.get(id[1]);
-    if (!note) return ref;
+    if (!note || inTable(at)) return ref;
     placed++;
     return `${ref}<span class="sidenote" aria-hidden="true">${note}</span>`;
   });
