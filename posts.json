@@ -436,6 +436,26 @@
       "date": "2026-09-30",
       "published": true,
       "series": "implications"
+    },
+    {
+      "slug": "egregores",
+      "file": "egregores.md",
+      "navLabel": "egregores",
+      "kind": "reading",
+      "summary": "A close reading of Mark Stavish's Egregores — the entity the corpus used for its predation account, read whole: a group-made mind that is normatively neutral, and the deprogramming chapter the blog never cited.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
+    },
+    {
+      "slug": "the-lucifer-effect",
+      "file": "the-lucifer-effect.md",
+      "navLabel": "the lucifer effect",
+      "kind": "reading",
+      "summary": "A close reading of Zimbardo's The Lucifer Effect — the situational thesis at book length, and the certified frame whose record has since collapsed: what the archive shows the Stanford Prison Experiment actually was.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
     }
   ]
 }

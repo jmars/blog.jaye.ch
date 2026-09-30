@@ -1710,6 +1710,22 @@ const POST_META = {
       'A close reading of Adams & Poncet\u2019s Two Esoteric Tarots: the tarot read as a frame made portable and instrumental \u2014 a fixed correspondence system, a spread of positions, and a reader \u2014 and the Dummett-Yates controversy as the checkable-from-outside dispute the corpus asks of any frame.',
     accent: 'Two Esoteric Tarots',
   },
+  'egregores': {
+    prompt: 'cat egregores.md',
+    tagline: 'a <b>reading</b>: the group-made mind read whole \u2014 an entity claim from an initiate, a neutral structure the corpus had only used for its worst case, and the exit chapter the blog never cited.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Mark Stavish\u2019s Egregores: the shared thought-form as a normative structure (a church has one too), the entity claim held without adopting it, and the deprogramming countermeasure the corpus cited only for the diagnosis.',
+    accent: 'Egregores',
+  },
+  'the-lucifer-effect': {
+    prompt: 'cat the-lucifer-effect.md',
+    tagline: 'a <b>reading</b>: the situation thesis at book length \u2014 and the certified frame whose record has since collapsed under the archive.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Zimbardo\u2019s The Lucifer Effect: disposition, situation, system \u2014 the corpus\u2019s own structural thesis in the secular register \u2014 against the now-contested record of the Stanford Prison Experiment it is built on, and the shadow where \u201cthe situation made me do it\u201d becomes a recoding of responsibility.',
+    accent: 'The Lucifer Effect',
+  },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',
     tagline: 'the <b>fit that fails</b>: getting ahead of the account \u2014 the rejection recoded as the target\u2019s symptom, the pivot to the network, and the accurate report made self-indicting.',
