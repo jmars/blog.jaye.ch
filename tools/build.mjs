@@ -1395,6 +1395,14 @@ const POST_META = {
       'The third possibility: a frame with a reading, a purpose, and a seat. The cosmological form of every case study in this series \u2014 and the reason the traditions refused to name the endpoint.',
     accent: 'Owned',
   },
+  'the-cosmos-that-refuses': {
+    prompt: 'cat the-cosmos-that-refuses.md',
+    tagline: 'the <b>refusal</b>: a correspondence with no endpoint \u2014 the oldest countermeasure, and why it is not enough.',
+    hint: '<a href="/">\u2190 home</a> · the fourth frame, with notes',
+    description:
+      'Apophatic cosmology: a frame with a correspondence and no nameable endpoint. The architectural countermeasure to the seat \u2014 and, because it can be claimed, not self-enforcing.',
+    accent: 'Refuses',
+  },
 };
 
 function buildPost(post, navPosts) {

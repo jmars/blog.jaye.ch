@@ -290,6 +290,15 @@
       "summary": "The third possibility: a frame with a reading, a purpose, and a seat — the cosmological form of every case study, and why the traditions refused to name the endpoint.",
       "published": false,
       "series": "frames"
+    },
+    {
+      "slug": "the-cosmos-that-refuses",
+      "file": "the-cosmos-that-refuses.md",
+      "navLabel": "the cosmos that refuses",
+      "kind": "argument",
+      "summary": "Apophatic cosmology: a correspondence with no endpoint — the architectural countermeasure to the seat, and, because it can be claimed, not self-enforcing.",
+      "published": false,
+      "series": "frames"
     }
   ]
 }
