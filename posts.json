@@ -2,6 +2,7 @@
   "home": {
     "file": "meditation-harm-summary.md"
   },
+  "featured": "the-operative-master",
   "posts": [
     {
       "slug": "meditation-harm",
@@ -371,6 +372,15 @@
       "summary": "A close reading of Frater Acher's Holy Heretics — the apophatic path of unknowing as a practice, and the book's own charge that organised orthodoxy, not unauthorised experience, is the poison.",
       "date": "2026-09-30",
       "published": true,
+      "series": "readings"
+    },
+    {
+      "slug": "undreaming-wetiko",
+      "file": "undreaming-wetiko.md",
+      "navLabel": "undreaming wetiko",
+      "kind": "reading",
+      "summary": "A close reading of Paul Levy's Undreaming Wetiko — the collapse named as a contagion, a cosmology with no intrinsic existence that can still kill, and a cure that is the corpus's own boundary: labelling the possessed is itself the virus.",
+      "published": false,
       "series": "readings"
     }
   ]

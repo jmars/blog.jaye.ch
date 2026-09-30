@@ -115,6 +115,19 @@ function checkDates(manifest) {
   }
 }
 
+/** The manifest's optional `featured` must name a real post, and in a
+ * deployable build a PUBLISHED one — a stale slug or a draft pointer fails the
+ * build rather than rendering a home page that silently drops the top slot. */
+function checkFeatured(manifest) {
+  const slug = manifest.featured;
+  if (!slug) return;
+  const post = manifest.posts.find((p) => p.slug === slug);
+  if (!post) throw new Error(`posts.json: featured '${slug}' is not a post`);
+  if (!post.published && !PREVIEW) {
+    throw new Error(`posts.json: featured '${slug}' is not published (do not feature a draft)`);
+  }
+}
+
 /* ---------- chrome (blog-design markup) ---------- */
 
 /** Sticky top nav, driven by the release manifest: home, then each published
@@ -381,6 +394,25 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
   .tl-mini li { grid-template-columns: 46px 1fr; }
   .tl-mini .m { display: none; }
 }
+
+/* ---------- the featured piece (the top slot on the home page) ----------
+   One deliberate highlight above the series: an accent-ruled card carrying the
+   featured post's title, kind, summary and a link. Deliberately not a card in
+   the .grid — it is a single thing, so it gets the full wrap width. */
+.feature {
+  background: var(--bg2); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+  border-radius: 10px; padding: 22px 24px 20px;
+}
+.feature .eyebrow {
+  display: block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+}
+.feature h2 { margin-bottom: 8px; }
+.feature h2 a { color: var(--fg); }
+.feature h2 a:hover { color: var(--accent); text-decoration: none; }
+.feature .f-sum { font-size: 15px; color: #33323a; margin-bottom: 14px; max-width: 60ch; }
+.feature .f-more { font-family: var(--mono); font-size: 13px; color: var(--accent2); }
+.feature .f-more:hover { color: var(--accent); }
 
 /* ---------- dose meter: reading progress, as accumulated dose ----------
    Decorative chrome (aria-hidden), and deliberately script-free: a scroll-driven
@@ -1073,6 +1105,24 @@ function buildHome(manifest) {
       .replace(/, ([^,]*)$/, ', and $1') +
     '.';
 
+  // A featured piece, if the manifest names one (`"featured": "<slug>"`), shown
+  // above everything else — the top slot on the home page, the one thing a
+  // visitor sees before the series. The slug must resolve to a published post
+  // (checkFeatured), so a stale or draft reference fails the build rather than
+  // silently rendering nothing.
+  const featured = manifest.featured
+    ? manifest.posts.find((p) => p.slug === manifest.featured)
+    : null;
+  const featureBlock = featured
+    ? `<section><div class="wrap">` +
+      `<div class="feature">` +
+      `<span class="eyebrow">\u2605 featured \u00b7 ${featured.kind}</span>` +
+      `<h2><a href="/${featured.slug}/">${titleOf(featured)}</a></h2>` +
+      `<p class="f-sum">${featured.summary}</p>` +
+      `<a class="f-more" href="/${featured.slug}/">read it \u2192</a>` +
+      `</div></div></section>`
+    : '';
+
   // A mini-timeline of the most recent pieces, so the home page shows what is
   // new without leaving for /timeline/. It is the first MINI rows of that same
   // day-grouped list, so the two pages can never disagree about what is recent
@@ -1097,6 +1147,7 @@ function buildHome(manifest) {
     `</ol></div></section>`;
 
   const html =
+    `${featureBlock}\n` +
     `${miniTimeline}\n` +
     sections +
     `\n<section><div class="wrap">` +
@@ -1595,6 +1646,14 @@ const POST_META = {
       'A close reading of Frater Acher\u2019s Holy Heretics: apophatic mysticism as metered practice, and the book\u2019s own argument that the antagonism runs between unmediated experience and organised orthodoxy \u2014 which the corpus reads back into the Western column.',
     accent: 'The Holy Heretics',
   },
+  'undreaming-wetiko': {
+    prompt: 'cat undreaming-wetiko.md',
+    tagline: 'a <b>reading</b>: the collapse named as a contagion \u2014 a mind-virus with no existence of its own that can still kill, and a cure the corpus already wrote down.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Paul Levy\u2019s Undreaming Wetiko: the self-content collapse named as a transmissible mind-virus \u2014 a frame with \u201cno intrinsic, independent existence\u201d that can nevertheless kill \u2014 whose own remedy is legibility, and whose own trap is the detector move the corpus forbids.',
+    accent: 'Undreaming Wetiko',
+  },
 };
 
 function buildPost(post, navPosts) {
@@ -1759,6 +1818,7 @@ const postsToBuild = PREVIEW ? manifest.posts : navPosts;
 
 checkFootnotes();
 checkDates(manifest);
+checkFeatured(manifest);
 
 rmSync(DIST, { recursive: true, force: true });
 // The feed, the sitemap and robots are built from the PUBLISHED posts even in a
