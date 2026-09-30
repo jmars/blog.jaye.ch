@@ -1782,6 +1782,14 @@ const POST_META = {
       'A close reading of the Quareia curriculum as a whole: the modern magical training the blog has cited in extracts, read for its structure, its pace, and where it puts the check.',
     accent: 'Quareia',
   },
+  'black-abbot-white-magic': {
+    prompt: 'cat black-abbot-white-magic.md',
+    tagline: 'a <b>reading</b>: the abbot and the angelic mind \u2014 Trithemius read whole, and the Steganographia held in plain sight.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Frater Acher\u2019s Black Abbot White Magic: Johannes Trithemius, the angelic mind, and a text the tradition could never decide was angel magic or cryptography \u2014 the hidden frame the corpus\u2019s owns readings keep circling.',
+    accent: 'Black Abbot, White Magic',
+  },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',
     tagline: 'the <b>fit that fails</b>: getting ahead of the account \u2014 the rejection recoded as the target\u2019s symptom, the pivot to the network, and the accurate report made self-indicting.',
@@ -1789,6 +1797,14 @@ const POST_META = {
     description:
       'The sequel to The Operative Master: what happens when the position is refused \u2014 the operator gets ahead of the story, recoding the rejection as a symptom, pivoting from the target to the surrounding support structures, and turning the target\u2019s own accurate report into the evidence against them.',
     accent: 'Ahead of the Story',
+  },
+  'the-assumed-seat': {
+    prompt: 'cat the-assumed-seat.md',
+    tagline: 'the <b>undefended position</b>: authority taken by assumption rather than claim, and the objection made to cost more than it is worth.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 the occupancy, and the boundary, with notes',
+    description:
+      'The other companion to The Operative Master: a position occupied without a claim \u2014 so there is nothing to contest \u2014 held by making every objection cost more than the objection is worth, and by letting the room read reaction rather than cause.',
+    accent: 'The Assumed Seat',
   },
 };
 

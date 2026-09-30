@@ -438,6 +438,15 @@
       "series": "implications"
     },
     {
+      "slug": "the-assumed-seat",
+      "file": "the-assumed-seat.md",
+      "navLabel": "the assumed seat",
+      "kind": "argument",
+      "summary": "The position nobody defended: authority taken by assumption rather than claim, and the provocation calibrated so that a challenger's reaction becomes the evidence against them.",
+      "published": false,
+      "series": "implications"
+    },
+    {
       "slug": "egregores",
       "file": "egregores.md",
       "navLabel": "egregores",
@@ -503,6 +512,16 @@
       "navLabel": "quareia",
       "kind": "reading",
       "summary": "A close reading of the Quareia curriculum whole — the practice the blog has been quoting in modules, read end to end.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
+    },
+    {
+      "slug": "black-abbot-white-magic",
+      "file": "black-abbot-white-magic.md",
+      "navLabel": "black abbot, white magic",
+      "kind": "reading",
+      "summary": "A close reading of Acher's Black Abbot White Magic — Trithemius's angelic magic and the Steganographia read as a frame hidden in plain sight, and the third Acher book.",
       "date": "2026-09-30",
       "published": true,
       "series": "readings"
