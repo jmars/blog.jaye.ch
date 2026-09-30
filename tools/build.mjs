@@ -1508,8 +1508,18 @@ function checkFootnotes() {
   const problems = [];
   for (const name of readdirSync(dir).filter((f) => f.endsWith('.md'))) {
     const src = readFileSync(join(dir, name), 'utf8');
-    const defs = new Set([...src.matchAll(/^\[\^([A-Za-z0-9]+)\]:/gm)].map((m) => m[1]));
-    const refs = new Set([...src.matchAll(/\[\^([A-Za-z0-9]+)\](?!:)/g)].map((m) => m[1]));
+    const defs = new Set();
+    const refs = new Set();
+    for (const m of src.matchAll(/\[\^([A-Za-z0-9]+)\]/g)) {
+      // A DEFINITION is a marker followed by ':' AT THE START OF A LINE. A marker
+      // followed by ':' anywhere else is ordinary prose — "…ended on a claim[^x]:
+      // text" — and must count as a reference, or a legitimate sentence reads as
+      // an unused note. (The old regex misfired on exactly that three times.)
+      const before = src.slice(Math.max(0, m.index - 60), m.index);
+      const atLineStart = /(^|\n)[ \t]*$/.test(before);
+      const isDef = atLineStart && src[m.index + m[0].length] === ':';
+      (isDef ? defs : refs).add(m[1]);
+    }
     const unused = [...defs].filter((k) => !refs.has(k));
     const undefined_ = [...refs].filter((k) => !defs.has(k));
     if (unused.length) problems.push(`  ${name}: definition without an inline marker: ${unused.join(', ')}`);
