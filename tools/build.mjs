@@ -32,12 +32,15 @@
  * insert. The manifest also carries each post's `date` — the calendar day it
  * first went live, written by hand (it was recovered from the commit that first
  * published each post, and is now a manifest field rather than something derived
- * at build time). The build renders that date; it never invents one. A published
- * post with no date fails the build: the timeline, the feed and the sitemap all
- * rest on it. Only a day is known, never a time, so posts published the same day
- * are ordered by manifest position — which is why that position must be the
- * publication order — and the feed's pubDate carries midnight UTC as the
- * conventional stand-in for "this day" while the sitemap's lastmod is a date.
+ * at build time). The build renders that date; it never invents one. The day is
+ * the AUTHOR'S LOCAL day, not UTC — work finished after 22:00 UTC is the next day
+ * in Paris, and the first dates derived here were a day off for exactly that
+ * reason. A published post with no date fails the build: the timeline, the feed
+ * and the sitemap all rest on it. Only a day is known, never a time, so posts
+ * published the same day are ordered by manifest position — which is why that
+ * position must be the publication order — and the feed's pubDate carries
+ * midnight UTC as the conventional stand-in for "this day" while the sitemap's
+ * lastmod is a date.
  *
  *   node tools/build.mjs            (run from the repo root)
  *   PREVIEW=1 node tools/build.mjs  build drafts too — LOCAL PREVIEW ONLY,
