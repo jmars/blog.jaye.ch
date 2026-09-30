@@ -1371,6 +1371,14 @@ const POST_META = {
       'One scale up: what a culture takes reality to be is a frame like any other \u2014 it supplies a reading, it can be checked or not, and someone benefits from the naming.',
     accent: 'Variable',
   },
+  'the-machine-has-no-reading': {
+    prompt: 'cat the-machine-has-no-reading.md',
+    tagline: 'the <b>blind spot</b>: a frame with no category for the collapse cannot see it \u2014 and so cedes the reading to whoever supplies one.',
+    hint: '<a href="/">\u2190 home</a> · what the machine frame can and cannot see, with notes',
+    description:
+      'Why a materialist cosmology cannot measure the collapse: no category means misfiling, not absence — and an unfilled category is a vacancy a coercive frame can occupy.',
+    accent: 'Reading',
+  },
 };
 
 function buildPost(post, navPosts) {

@@ -263,6 +263,15 @@
       "summary": "One scale up: what a culture takes reality to be is a frame like any other — it supplies a reading, it can be checked or not, and someone benefits from the naming.",
       "published": false,
       "series": "frames"
+    },
+    {
+      "slug": "the-machine-has-no-reading",
+      "file": "the-machine-has-no-reading.md",
+      "navLabel": "the machine has no reading",
+      "kind": "argument",
+      "summary": "Why a materialist cosmology cannot measure the collapse: no category means misfiling, not absence — and an unfilled category is a vacancy a coercive frame can occupy.",
+      "published": false,
+      "series": "frames"
     }
   ]
 }
