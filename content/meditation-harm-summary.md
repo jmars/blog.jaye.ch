@@ -18,8 +18,8 @@ caught by relocated measurement — the body, the behaviour, an outside observer
 the traditions built and modern delivery dropped: a frame before you arrive, a community around you, a
 pace metered, and a holder chosen in advance who can act when the state cannot act for itself.
 
-The same mechanism has more than one address — **in minds, in groups, in machines**. A person can run
-it; so can anyone with something to gain from standing on the far side of it. The posts are grouped by
+The same mechanism has more than one address — **in minds, in groups, in the frames they live inside**.
+A person can run it; so can anyone with something to gain from standing on the far side of it. The posts are grouped by
 **what kind of claim each one is**:
 
 - **The mechanism** — the measured model: the runaway, the cliff, the invisibility — and the
@@ -27,8 +27,12 @@ it; so can anyone with something to gain from standing on the far side of it. Th
 - **The implications** — arguments built on cited literature: how the collapse is engineered, what
   frame it is wrapped in, who holds it, what the traditions encoded against it, and why a label is not
   a mechanism.
+- **The frames** — arguments about the largest frame of all: what a culture takes reality to be, whether
+  a cosmology names an endpoint, and where it leaves a seat.
 - **The case studies** — documented cases, read through the mechanism: how a surrounding environment
   pre-supplies the levers a predator would otherwise have to build.
+- **The readings** — one book at a time, at the book's own scale: the source texts the arguments rest on,
+  read whole, with what each one corrects in the rest of the blog.
 
 *(An **agentic mechanism** — the same collapse on a different substrate — is in preparation.)*
 

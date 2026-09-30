@@ -1182,12 +1182,12 @@ function buildHome(manifest) {
 
   return {
     title: 'A mechanism that hides itself — blog.jaye.ch',
-    shareTitle: 'A mechanism that hides itself — in minds, in groups, in machines',
+    shareTitle: 'A mechanism that hides itself — in minds, in groups, in the frames they live inside',
     type: 'website',
     description:
-      'A measured control-theoretic mechanism of a collapse that cannot see itself — in minds, in groups, in machines — and how a surrounding environment pre-supplies the levers a predator needs.',
+      'A measured mechanism of a collapse that cannot see itself — in minds, in groups, in the frames they live inside — and what it takes to name a structure without sorting people into a verdict.',
     prompt: 'cat start-here.md',
-    heroTitle: 'A mechanism that <span class="fx">hides itself</span> — in minds, in groups, in machines',
+    heroTitle: 'A mechanism that <span class="fx">hides itself</span> — in minds, in groups, in the frames they live inside',
     tagline,
     body: html,
     navCurrent: '/',
@@ -1325,7 +1325,7 @@ function feedXml(posts) {
     `  <channel>\n` +
     `    <title>blog.jaye.ch</title>\n` +
     `    <link>${BASE}/</link>\n` +
-    `    <description>A mechanism that hides itself — in minds, in groups, in machines: a measured control-theoretic account of a self-referential collapse, and the places it shows up.</description>\n` +
+    `    <description>A mechanism that hides itself — in minds, in groups, in the frames they live inside: a measured account of a collapse that cannot report itself, the frames that decide what it means, and the discipline of describing structures without diagnosing people.</description>\n` +
     `    <language>en</language>\n` +
     `    <atom:link href="${BASE}/feed.xml" rel="self" type="application/rss+xml"/>\n` +
     `    <!-- Dates are the manifest's, and only a day is known: each item's\n` +
