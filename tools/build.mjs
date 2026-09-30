@@ -53,11 +53,12 @@ const BASE = 'https://blog.jaye.ch';
  * page's section names exactly; a series with nothing published contributes
  * nothing anywhere (a draft never appears). 'cases' is the documented tier —
  * case studies, distinct from the measured mechanism and the argued
- * implications. */
+ * implications. 'frames' is the largest scale — the cosmology itself. */
 const SERIES = [
   { key: 'mechanism', label: 'the mechanism' },
   { key: 'implications', label: 'the implications' },
   { key: 'cases', label: 'the case studies' },
+  { key: 'frames', label: 'the frames' },
 ];
 const seriesLabel = (key) => (SERIES.find((s) => s.key === key) || { label: key }).label;
 
@@ -946,6 +947,12 @@ function buildHome(manifest) {
       status: 'arguments',
     },
     {
+      key: 'frames',
+      name: 'The frames',
+      hint: '// arguments about the largest frame of all — the cosmology a culture is inside',
+      status: 'arguments',
+    },
+    {
       key: 'cases',
       name: 'The case studies',
       hint: '// documented case studies — how an environment enables predation, read through the mechanism',
@@ -1355,6 +1362,14 @@ const POST_META = {
     description:
       'The Western esoteric tradition ran the same induction, named the same failure and built the same safeguards into a syllabus \u2014 and published its own predation account.',
     accent: 'Column',
+  },
+  'the-frame-is-a-variable': {
+    prompt: 'cat the-frame-is-a-variable.md',
+    tagline: 'the <b>largest frame</b>: a cosmology is a frame too \u2014 and the same three questions apply to it.',
+    hint: '<a href="/">\u2190 home</a> · the series opener, with notes',
+    description:
+      'One scale up: what a culture takes reality to be is a frame like any other \u2014 it supplies a reading, it can be checked or not, and someone benefits from the naming.',
+    accent: 'Variable',
   },
 };
 

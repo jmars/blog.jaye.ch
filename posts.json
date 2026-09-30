@@ -254,6 +254,15 @@
       "summary": "A first-person account: a practitioner describes the environment that supplies the frame, reports being recruited and getting out — and contradicts this series where it matters most.",
       "published": true,
       "series": "cases"
+    },
+    {
+      "slug": "the-frame-is-a-variable",
+      "file": "the-frame-is-a-variable.md",
+      "navLabel": "the frame is a variable",
+      "kind": "argument",
+      "summary": "One scale up: what a culture takes reality to be is a frame like any other — it supplies a reading, it can be checked or not, and someone benefits from the naming.",
+      "published": false,
+      "series": "frames"
     }
   ]
 }
