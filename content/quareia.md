@@ -250,7 +250,7 @@ the student's own orientation as their purpose. That does not make them inert: a
 specified point in a syllabus is a real structure. But the enforcement the blog claimed is not something
 these lessons do. §5 takes that up.
 
-**The checks that *are* outside the practitioner are two.** The first is the clinician, in the four-grades
+**The checks that *are* outside the practitioner are three.** The first is the clinician, in the four-grades
 form above. The second is a mentoring scheme, described as an **application** whose subject is the work
 itself:
 
@@ -379,26 +379,29 @@ The series reports the presence or absence of a **safeguard**, a **metered pace*
 as search results, scoped to the text. Here the result differs from previous readings in one way that
 matters: **the referral is abundant, and the blog's own word for the other two is nearly absent.**
 
-**"Safeguard" occurs twice in the two course texts, and neither safeguards the student's mind.** In the
-apprentice course text, once: a magician's "lifespan will be safeguarded" — an effect of skilled practice, in a
-lesson on demons.[^app63] In the initiate course text, once: "I will put certain safeguards
-into the action", of a designed exercise in which a student creates a vessel and then has to remove what
-moves in — a safeguard in a **rite**, not a fence around a person.[^ini18] Across the four adept texts, twice
-more: a quotation of Elizabeth I's Tilbury oration (the text quoting her), and the lodge appendix's
-"safeguarding against power grabs", which protects a **group** from its own leader.[^ad11] A search shows only
-what it indexes, so the claim is scoped: **the vocabulary of institutional protection appears in this
-curriculum only where it is restraining a Hierophant.** Everything the blog means by "safeguard" here is
+**The safeguard family occurs three times in the two course texts, and none of them safeguards the student's
+mind.** In the apprentice course text, twice: a magician's "lifespan will be safeguarded" — an effect of skilled
+practice, in a lesson on demons;[^app63] and a routing rule for the inner temples, "an additional safeguard to
+going into an inner temple via the library", where the library's contacts decide which temples a student
+reaches.[^app82] In the initiate course text, once: "I will put certain safeguards into the action", of a
+designed exercise in which a student creates a vessel and then has to remove what moves in — a safeguard in a
+**rite**, not a fence around a person.[^ini18] Across the four adept texts, three times more: a quotation of
+Elizabeth I's Tilbury oration (the text quoting her), and the lodge appendix's "safeguarding against power
+grabs", which protects a **group** from its own leader;[^ad11] and an instruction for the practitioner's own
+survival, "if you want to safeguard your own life should you be caught up in such a tide".[^ad14b] A search
+shows only what it indexes, so the claim is scoped: **the vocabulary of institutional protection appears in
+this curriculum only where it is restraining a Hierophant.** Everything the blog means by "safeguard" here is
 present under other names.
 
 **There is a metered pace, and it is stated as comprehension rather than caution.** "Pace yourself" occurs
-three times in the course texts;[^adv] once it is joined by a safety rationale — "for your own safety", on the
-sequence fence[^app107] — and otherwise by reasons of learning. "supervisor" returns **0** hits in the course
-texts, and "prerequisit" **0**.
+three times in the course texts, each time for reasons of learning;[^adv] the one occurrence joined by a safety
+rationale is not a pace instruction but the sequence fence — "for your own safety".[^app107] "supervisor"
+returns **0** hits in the course texts, and "prerequisit" **0**.
 
 **The clinical vocabulary is the anomaly, and it is mixed.** The counts are itemised in [^abs]; the point
-here is what they are made of. "Doctor" is the commonest term by far, and nearly every instance is the text's
-own narrative or a case account rather than an instruction to a reader. "Clinic" is a research programme, the
-word "subclinical", and an acupuncture reference. **And here is the negative finding inside
+here is what they are made of. "Doctor" is the commonest of the named referral terms, and nearly every
+instance is the text's own narrative or a case account rather than an instruction to a reader. "Clinic" is a
+research programme, the word "subclinical", and an acupuncture reference. **And here is the negative finding inside
 the positive one:** the single occurrence of "therapist" in the apprentice course text is not a referral at all. It
 is a **personality description** in the astrology lesson — "This is the therapist who is only interested in
 your troubles and never discloses anything about themselves, the martyr, the Human Resources
@@ -427,7 +430,7 @@ each rung; the course's puts a **requirement** at each rung and a **refusal to b
 leaves the verdict with the practitioner. That is not a weaker claim. It is a different one, and it is more
 honest about its own limits than the blog was.
 
-**The strengthened instrument is the referral.** This curriculum does not have a doctor sentence. It has a
+**The strengthened instrument is the referral.** This curriculum does not have only a doctor sentence. It has a
 rule about **who may assess**, one about what must be **exhausted first**, one about the **order of care**, an
 instruction to **withdraw and refer** in the worst case, and a **health check performed by the practitioner
 on the practitioner** at the grade boundary. The blog's uses of the single sentence are not wrong; they are
@@ -451,9 +454,9 @@ line-break hyphenation is joined and their line breaks are not preserved; curly 
 rendered here as straight ASCII; the spaced en dash is rendered as an em dash; page-adjacent numerals and the
 source's footnote markers are dropped from quotations; where the per-book texts differ in punctuation the
 course texts are quoted.
-**Absences reported as search results, scoped to the two course texts:** "safeguard" 1 and 1, neither about a
-student; "supervisor" 0; "prerequisit" 0; "not for everyone" 0; and the clinical and pace counts itemised in
-§6, terms listed in [^abs]. **Inferred, as this post's contribution:** that the curriculum's protective
+**Absences reported as search results, scoped to the two course texts:** the "safeguard" family 2 and 1, none
+about a student's mind; "supervisor" 0; "prerequisit" 0; "not for everyone" 0; and the clinical and pace counts
+itemised in §6, terms listed in [^abs]. **Inferred, as this post's contribution:** that the curriculum's protective
 mechanism is content-embeddedness rather than supervision; that its grade checkpoints are self-assessments by
 its own description, and therefore not gates in the blog's sense; and that the referral is a four-grade
 triage protocol rather than a single sentence. **Not adjudicated and not adopted:** the curriculum's
@@ -473,7 +476,7 @@ Book One (*Quareia—The Apprentice*, ISBN 978-0-9933480-0-6), the Initiate Book
 the Adept volumes Book Eleven (978-1-911134-11-4) and Book Fourteen (978-1-911134-17-6) among them — and they
 differ from the course texts in punctuation and layout: an example met while verifying is the mid-term
 summary's "if you are seriously backed into a corner and I can see that you truly do need help, then I will
-converse with you", which the Book Five text prints as "…truly do need help then I will converse with you".
+converse with you", which the Book Three text prints as "…truly do need help then I will converse with you".
 Quotations here follow the course texts. **Licensing:** the copyright pages of the apprentice and initiate
 volumes carry "© Josephine McCarthy", "All rights reserved", and — where the texts include it — "Permission
 granted to reproduce for personal use only"; the course advises that the work be done in sequence. Every
@@ -522,15 +525,16 @@ lesson's three graded exercises and the flame/Void material are at 5–7. The ca
 at marker 6. The Void is named here for the first time in the curriculum ("a state of mind and a state of
 power called the Void… the nothing from which all things flow", marker 6); its development as a defence
 ("that is the inner bullet-proof vest needed for inner work: absolute stillness in the 'nothing'") is at
-Module 1, Lesson 4, marker 12. The blog's separate account of the Void — from McCarthy's "Working with the
-Void," in the Quareia vision archive — is cited in [^wc] and is not in these texts.
+Module 1, Lesson 4, page marker 47 of the course text (12 is the printed book page). The blog's separate
+account of the Void — from McCarthy's "Working with the Void," in the Quareia vision archive — is cited in
+[^wc] and is not in these texts.
 
 [^app15]: Apprentice, Module 1, Lesson 5, "Inner Senses", page markers 67 and 69. The rule-out material
 (musical hallucination as a rare form of tinnitus, with "brain tumours, epilepsy, migraines" and OCD as
 triggers; "The other biological event that can be mistaken for inner hearing is symptoms of paranoid
 schizophrenia. In such cases there is often a whole array of mental health symptoms that help to rule out
 inner hearing") is at marker 67. The referral passage is at marker 69, inside the section on inner hearing.
-A third clause follows the referral and is part of the same discipline: the positive criterion is a subject
+A third clause precedes the referral and is part of the same discipline: the positive criterion is a subject
 "mentally stable, healthy, and most important of all, the event in question is a manifestation of an
 experience that the subject has always had" (marker 67).
 
@@ -552,7 +556,8 @@ step in it. The blog's use of the quotation, and its scope, are discussed in §5
 ones learn how to survive, how to interact with all sorts of deities, and learn as adepts how to take their
 place in the vast community of natural forces. Their lifespan will be safeguarded (though not prolonged…
 remember Decima?) and they will have a much better chance of living their full potential lifespan". This is
-one of the record's two occurrences of "safeguard" in the course texts; the other is [^ini18].
+one of the course texts' three occurrences of the safeguard family; the apprentice text's other is [^app82],
+the initiate text's is [^ini18].
 
 [^app64]: Apprentice, Module 6, Lesson 4, "Parasites", page marker 905: "One word of caution. The
 presentations of parasite infestation and mental illness are often very similar, to the point that it can be
@@ -584,6 +589,12 @@ imagination, the mentor will tell you", 1021–1022); the self-assessment ("Ther
 this; everyone develops in their own way. Being able to self-assess honestly, without fear of failure, and
 without grandstanding or ego, is a good skill.", 1023); and the difficulty case ("waiting at the wall",
 1020–1021).
+
+[^app82]: Apprentice, Module 8, "Inner Temples", Lesson 2, "The Inner Library", page marker 1199, on
+approaching the inner temples through the library: "There is an additional safeguard to going into an inner
+temple via the library that I will use in this module, and that is allowing the inner contacts of the library to
+decide what temples you have access to, and which ones you do not." This is the apprentice course text's second
+occurrence of the safeguard family; the first is [^app63].
 
 [^app86]: Apprentice, Module 8, "Inner Temples", Lesson 6, "North", page marker 1244, in the material on
 the northern root temples and the release of what is clung to: "As you learn to explore these temples in a
@@ -624,22 +635,22 @@ task reads "If you are being mentored then you can discuss these with your mento
 
 [^ini18]: Initiate, Module I, "Core Initiate Skills", Lesson 8, "Vessels and Windows", page markers 156 and
 164. The child exclusion is at the head of the practical work: "Warning: do not do this exercise if you have
-children in the house — just read this part of the lesson and…". The text's other occurrence of "safeguard"
-is at marker 164: "I want you to experience what it is like to have a feral being move into a vessel, and
-then you have to remove it. The way we will do this is not dangerous, as I will put certain safeguards into
-the action…".
+children in the house — just read this part of the lesson and…". The initiate course text's occurrence of
+"safeguard" is at marker 164: "I want you to experience what it is like to have a feral being move into a
+vessel, and then you have to remove it. The way we will do this is not dangerous, as I will put certain
+safeguards into the action…".
 
-[^ini21]: Initiate, Module II, "Exorcism I: The Basics", Lesson 1, "Assessing", page markers 180–184.
+[^ini21]: Initiate, Module II, "Exorcism I: The Basics", Lesson 1, "Assessing", page markers 179–184.
 Quoted: "This is the most spectacular type of presentation, and the one most often mistaken for possession.
-It can even fool a doctor if they have little or no knowledge of the occult or religion." (180); "But they
+It can even fool a doctor if they have little or no knowledge of the occult or religion." (179); "But they
 are not; they are dealing with a very ill person. And it is really important to be able to make that
 distinction, because such a person is in need of immediate and highly specialised medical care." (180);
 "The treatment of such illnesses is still in the early phase of understanding in medical terms, but the role
 of the exorcist has no place in that treatment, and can often make the situation worse." (182); and, in the
 same lesson, the check the curriculum sets beside a performance of possession: where the presentation is "a
-very calculatedly created drama to gain attention", "the simple thing that often stops the claim of
-possession… is the suggestion of being sectioned or committed to a psychiatric unit and medicated" (page
-marker 181 of the initiate course text; the Book Six text is headed "Lesson 1. Assessing").
+very calculatedly created drama to gain attention", it "can often be brought to a screeching halt by the
+suggestion of being sectioned or committed to a psychiatric unit and medicated" (page marker 181 of the
+initiate course text; the Book Six text is headed "Lesson 1. Assessing").
 
 [^ini23]: Initiate, Module II, Lessons 3 and 4, and Module VIII, Lesson 1. Quoted: "Do not fall into the trap
 of feeling you have to fix everything. If it needs a magician, get to work. If not, walk away. Those
@@ -738,6 +749,11 @@ between theoretical study and practical application." The lesson's framing sente
 The module's exercise is a set of written case scenarios to be worked and reasoned about, with the
 assessment to be made by the student.
 
+[^ad14b]: Adept, Book Fourteen, module VII ("Adept Exorcism"), lesson 5 ("Objects and Resonance"), section
+5.8, "Fate pattern resonance", page marker 75 of the Book Fourteen text: "But if you want to safeguard your own
+life should you be caught up in such a tide, or that of someone close to you whom you know would shift how they
+operated if you made some suggestions, then there are some things you can do."
+
 [^wc]: The blog's own earlier citations of this curriculum, verified against the texts for this post.
 [The western column](/the-western-column/): "to stay solid, safe and sane… in slow, careful steps" (it cites
 apprentice Module 4, Lesson 4 — correct; see [^app41] for the sentence's scope); the ego-inflation passage
@@ -747,9 +763,9 @@ apprentice Module 4, Lesson 4 — correct; see [^app41] for the sentence's scope
 creep into your magical work. Not only can you end up with magical wars in your house between deities who do
 not like each other or do not match, but you can also end up with parasited vessels in your house."); and the
 health-and-doctor guidance, cited to the Initiate Module 8, which is in these texts at Module VIII, Lesson 5,
-"Magical Impact, Attack, and Curses I", page marker 128 ("Keep a close eye on your health and if you get a
-minor infection that you would not normally take medicine for, go see a doctor and get some. A magical
-attack can seriously amplify minor illnesses."). The column's own sentence about the curriculum, quoted in
+"Magical Impact, Attack, and Curses I", page marker 128 of the Book Nine text ("Keep a close eye on your
+health and if you get a minor infection that you would not normally take medicine for, go see a doctor and get
+some. A magical attack can seriously amplify minor illnesses."). The column's own sentence about the curriculum, quoted in
 §5, is: "a graded system with a gate at each rung means nobody arrives at the deep state on a whim, and no
 one gets there without the previous stage having been checked." [Egregores](/egregores/) credits the
 referral to this curriculum and draws the contrast with a book that supplies no route to a clinician;
@@ -757,12 +773,13 @@ referral to this curriculum and draws the contrast with a book that supplies no 
 row. Those uses are not re-read here beyond the quotations they carry.
 
 [^abs]: The search terms behind §6, run case-insensitively with word boundaries against the two course
-texts: **safeguard(s)** 1 (apprentice, [^app63]) and 1 (initiate, [^ini18]); **supervisor** 0 and 0;
+texts: **safeguard family** (safeguarded, safeguard, safeguards — the wider family, not just the plural)
+2 (apprentice, [^app63], [^app82]) and 1 (initiate, [^ini18]); **supervisor** 0 and 0;
 **prerequisit\*** 0 and 0; **pace yourself** 1 and 2; **not for everyone**, **not suitable for you**,
 **do not attempt** 0 in both (outside the "please do not do this work" fence of [^app107]); **doctor(s)** 6
 and 30; **physician** 0 and 1; **therapist** 1 and 0 (the apprentice hit is [^app18]); **psychotherapist** 0
 and 1; **psychiatry** 0 and 1; **psychiatrist** 1 and 2; **psychologist** 1 and 3; **mental health** 4 and
-17; **clinic(al)** 2 and 6; **hospital** present in both; **danger(ous)** 157 and 177; **warn(ing|s|ed)** 95
+17; **clinic(al)** 2 and 2; **hospital** present in both; **danger(ous)** 157 and 177; **warn(ing|s|ed)** 95
 and 101; **careful(ly)** 92 and 211; **mentor(ing|ed|s)** 20 and 25; **assessment** 7 and 9; **stop and** 16
 and 10. Counts are inflated in places by the texts' own duplication of running heads and by ordinary
 English usage (a "danger" in a myth, a "careful" step in a ritual), and are reported as counts rather than

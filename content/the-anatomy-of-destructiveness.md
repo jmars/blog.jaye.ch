@@ -355,7 +355,7 @@ the negation of the other but its **substitute**, chosen when the first is unava
 
 ## 7. The three cases, and what a case is for here
 
-Part III contains three clinical case studies of named historical figures — Stalin ("a Clinical Case of
+Part III contains four clinical case studies of named historical figures — Stalin ("a Clinical Case of
 Nonsexual Sadism"), Himmler ("a Clinical Case of Anal-Hoarding Sadism"), and Hitler ("a Clinical Case of
 Necrophilia"), the central exhibit.
 
@@ -417,7 +417,7 @@ historical hour arrived."[^ch13]
 
 That is a detection programme. It is offered in good faith, and it is exactly the move the blog's rule
 exists to prevent: the step from *this is how a structure works* to *here is how to recognise a
-person*.[^label] The book's counterweight sits in the same paragraph — "But even the most evil man is
+person*.[^label] The book's counterweight sits in the paragraph just before it — "But even the most evil man is
 human and calls for our compassion", and "clinical analysis must not be used to obscure the moral problem
 of evil"[^ch13] — but it is a counterweight, not a refusal. The blog will take the first half of Fromm's
 closing pages and leave the second.
@@ -482,7 +482,7 @@ exploitative cannot easily be talked out of it. And his prediction is one the bl
 > be considered to be suffering from an illness."[^ch11]
 
 Take away the condition and the disposition does not express — which is [the follower post](/the-follower/)
-again, with a clinical case behind it. And note the harder clause in the same section, which is where the
+again, with a clinical case behind it. And note the harder clause, in the Introduction, which is where the
 blog's hope about what text can do gets its ceiling: "Unless this happens he can be domesticated, but he
 cannot be cured."[^intro]
 
@@ -491,7 +491,7 @@ position and dissolved the person into it; Fromm's case is that **the position a
 and that the formed character — not the position alone — is what makes an exploitative structure durable,
 repeatable and transferable. The blog may describe that, because it is a structure and not a verdict,
 provided it keeps three conditions the book itself supplies: formed and not innate; continuous and not
-binary; motive-level and never act-level. **And it must refuse a fourth step that the book itself takes**
+binary; and formed by life-conditions rather than given. **And it must refuse a fourth step that the book itself takes**
 — from describing the structure to identifying the person, which is the recognition programme of §7.
 Fromm, not this blog, is the one who wrote that "Even the most sadistic and destructive man is human, as
 human as the saint" and that he "can also be called a man who took the wrong way in search of his
@@ -502,7 +502,7 @@ his framework can be taken without the programme.
 
 ## 9. Counterweights, in the body
 
-Four, and each is a thing this reading would be wrong to leave out.
+Five, and each is a thing this reading would be wrong to leave out.
 
 **First, the book's own hedges are substantial, and they are why it is not a typology.** Chapter 12's
 methodological section opens with the rule any diagnostic use must start from: "The presence of one or
@@ -575,11 +575,11 @@ left outside it: "therapy" 12, "psychotherapy" 2, "therapist" 2, both inside a r
 "patient" 24. "Psychiatry" 8, "psychiatrist(s)" 8, "psychiatric" 5, and most of those are in the
 Bibliography, in footnotes thanking colleagues, or in the book's own argument about the value of labels.
 "Doctor" 3: twice the physician who treated Hitler's mother, once Himmler admonishing the SS
-physician-in-chief. "Hospital" 4: a place a defendant might be sent instead of prison, and one case
+physician-in-chief. "Hospital" 4: a place a defendant might be sent instead of prison, sampling ("hospital inmates"), the Stalin passage, and one case
 history.
 
 **What the book has instead is the reverse of a safeguard, and this is the finding.** Chapter 12's
-methodological section closes by asking "would it not be of great social and political significance to
+methodological section asks, as the sixth of its numbered questions, "would it not be of great social and political significance to
 know what percentage of the population can be considered to be predominantly necrophilous or
 predominantly biophilous", and calls for an adequate sample studied by a method that would "permit us to
 recognize the driving and largely unconscious forces behind manifest behavior and opinions."[^ch12] The
@@ -611,12 +611,12 @@ psychoanalyst, sociolo[gist]…"), which is the Open Road edition's own apparatu
 [^file]: **The text.** Read from a complete digital text of that edition, following the revised Owl
 Book text of 1992 (Open Road Integrated Media, 2013, ISBN 978-1-4804-0193-8). Every quotation was located
 and checked character for character against it. Its sections stand out of book order — the text opens in
-the middle of chapter 13 and places the Contents page near the end — and its running heads are
+the top of chapter 13 and places the Contents page near the end — and its running heads are
 unreliable, so every citation in this post is by chapter and section.
 
 [^cite]: **The audit.** Case-insensitive search for "fromm" across `content/` (48 files at the time of
 writing): **zero hits**. The name appears in the tree only in `posts.json` and `tools/build.mjs`, both
-of them the plumbing for this post, and once in the planning note `continuity.md`, in the list of unmined
+of them the plumbing for this post, and in the planning note `continuity.md`, in the list of unmined
 library material that names "the Fromm/Arendt/Zimbardo books". Arendt was read eleventh and Zimbardo
 ninth; this is the third of the three.
 
@@ -807,7 +807,7 @@ destructiveness contains no route for a reader who is already inside it.
 [^abs]: **Absence and presence reported as search results, scoped to the text of this edition.**
 Case-insensitive, whole-word counts over the text of this edition: "safeguard" **0**,
 "safeguards" **0**, "safeguarding" **1**; "pace" **0** ("pace" as a substring occurs 30 times, every one
-of them inside "space"); "referral" **0**; "informed consent" **0**; "consent" 4 (all in historical and
+of them inside "space"); "referral" **0**; "informed consent" **0**; "consent" 4 (historical, political and biographical passages,
 political passages); "clinic" **0** and "clinician" **0**; "clinical" 45; "therapy" 12; "psychotherapy"
 2; "therapist" 2; "psychiatry" 8; "psychiatrist" 3 and "psychiatrists" 5; "psychiatric" 5; "physician"
 12; "doctor" 3; "hospital" 4; "diagnosis" 17; "cure" 5, "cured" 2. The two "therapist" hits are both
@@ -838,8 +838,8 @@ assessed; nothing in this post validates, disqualifies or restricts anyone's exp
 restorations inside quoted matter**, all reported rather than tidied: "controlled" for the text's
 "controllers" (ch. 3); "Hitlers" for the text's "Hitters" (ch. 13); "would be dominantly necrophilous"
 for the text's "would he dominantly" and "wants to be more" for "wants to he more" (ch. 12); the text's
-small-capital openings ("A N ANALYTIC", "T HE MAN OF THE INSTINCTIVISTS") are quoted in normal case, and
+small-capital openings ("A N ANALYTIC") are quoted in normal case, and
 a stray footnote digit that breaks the instinct/character sentence in the Introduction is marked at the
-point where it falls (§4). Its typographic quotes are rendered here as straight ASCII quotes, and the
+point where it falls (§4). Its typographic quotes are rendered here as straight ASCII quotes, its closed-up em dashes spaced out, and the
 syllogism in §3, which the text prints as one continuous sentence, is set out on three lines with its
 wording unchanged.

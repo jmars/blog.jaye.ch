@@ -473,7 +473,8 @@
       "navLabel": "the anatomy of destructiveness",
       "kind": "reading",
       "summary": "A close reading of Fromm's The Anatomy of Human Destructiveness — the necrophilous character as a structure, and the biophilia that answers it.",
-      "published": false,
+      "date": "2026-09-30",
+      "published": true,
       "series": "readings"
     },
     {
@@ -482,7 +483,8 @@
       "navLabel": "geosophia",
       "kind": "reading",
       "summary": "A close reading of Stratton-Kent's Geosophia — the underworld tradition read as the practice the blog's Western column lacks.",
-      "published": false,
+      "date": "2026-09-30",
+      "published": true,
       "series": "readings"
     },
     {
@@ -491,7 +493,8 @@
       "navLabel": "quareia",
       "kind": "reading",
       "summary": "A close reading of the Quareia curriculum whole — the practice the blog has been quoting in modules, read end to end.",
-      "published": false,
+      "date": "2026-09-30",
+      "published": true,
       "series": "readings"
     },
     {
