@@ -443,7 +443,8 @@
       "navLabel": "the assumed seat",
       "kind": "argument",
       "summary": "The position nobody defended: authority taken by assumption rather than claim, and the provocation calibrated so that a challenger's reaction becomes the evidence against them.",
-      "published": false,
+      "date": "2026-09-30",
+      "published": true,
       "series": "implications"
     },
     {
