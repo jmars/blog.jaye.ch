@@ -1403,6 +1403,14 @@ const POST_META = {
       'Apophatic cosmology: a frame with a correspondence and no nameable endpoint. The architectural countermeasure to the seat \u2014 and, because it can be claimed, not self-enforcing.',
     accent: 'Refuses',
   },
+  'the-deep-inheritance': {
+    prompt: 'cat the-deep-inheritance.md',
+    tagline: 'the <b>inherited frame</b>: two mythic families, one without a telos and one with \u2014 the oldest form of the series\u2019 question.',
+    hint: '<a href="/">\u2190 home</a> · the series closer, with notes',
+    description:
+      'Witzel\u2019s deep-mythology finding as the fourth convergence: the frames a person is inside were inherited tens of millennia ago \u2014 and the oldest disagreement is about whether reality has an endpoint.',
+    accent: 'Inheritance',
+  },
 };
 
 function buildPost(post, navPosts) {
