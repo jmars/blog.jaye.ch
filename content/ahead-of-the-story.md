@@ -22,7 +22,7 @@ discrediting — is an **inference**, offered as one. It names no living person'
 diagnoses no one; it describes a **structure**. It is not a diagnostic instrument and it is not a
 cult-detector, and §9 states that boundary and holds it: no gauging, no list of what to say, no way
 to identify who is doing this. **No intention is required** for the mechanism — the operator may
-sincerely believe the recoding, and it is the corpus's own finding that sincerity makes the
+sincerely believe the recoding, and it is the blog's own finding that sincerity makes the
 structure worse rather than better. The counterweights are in the body, as they are everywhere in
 this series.
 
@@ -278,7 +278,7 @@ room.[^witch]
 
 ## 8. Fascination and public relations
 
-**The corpus is not inventing this.** Every part of the move above is named somewhere else, in more than one
+**The blog is not inventing this.** Every part of the move above is named somewhere else, in more than one
 tradition — and the naming is worth recording, because the operation arrives in two vocabularies that are
 usually kept apart, the vocabulary of **magic** and the vocabulary of **management**, and the separation is
 part of what keeps it hard to see as one thing.
@@ -361,7 +361,7 @@ refuse a position that was never there, and a person can be defensive in the ord
 post describes a mechanism, not a verdict on either party, and [the label post](/the-label/)'s rule
 holds throughout — a description of a structure is not a finding about anyone's mind.[^label]
 
-Then the honest limit, which the corpus located.
+Then the honest limit, which the blog located.
 
 **None of this requires an intention.** The coercion post's finding is that sincerity makes a
 harmful frame *worse*: "Someone who says it because they believe it is not manipulating, and is
@@ -417,7 +417,7 @@ That is why the pivot targets the network first, and it is the sentence this cas
 
 > **The network is where the check lives. Kill the network and you kill the check.**
 
-Two limits, in the body, because the corpus's readings found them.
+Two limits, in the body, because the blog's readings found them.
 
 **The check is a person, not an instrument.** The previous post's counterweight: "The absence of a seat does not supply a check."[^om]
 Its mirror: the *presence* of one old friend does not supply one

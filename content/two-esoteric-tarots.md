@@ -1,6 +1,6 @@
 # Two Esoteric Tarots
 
-### Seventh of the `readings`, one book at its own scale — the first frame the corpus has been asked to read that fits in a hand, two researchers each arguing from their own book, and a centuries-old dispute that can be audited from a library by anyone with no stake in the answer
+### Seventh of the `readings`, one book at its own scale — the first frame the blog has been asked to read that fits in a hand, two researchers each arguing from their own book, and a centuries-old dispute that can be audited from a library by anyone with no stake in the answer
 
 *Seventh of the `readings`, and the first whose unit is not an argument but an **object**. The frames
 series — [the frame is a variable](/the-frame-is-a-variable/) through [the cosmos that
@@ -40,7 +40,7 @@ proverb: "Tell me and I'll forget, show me and I may remember, involve me and I'
 is the author of *The Game of Saturn: Decoding the Sola-Busca Tarocchi* (2017); Poncet of a forthcoming
 *The Tarot of Marsilio*.[^tet] Both have brought a thesis; the convenor has brought a question.[^names]
 
-The blog owes this one a reading because **the corpus has never read the tarot**, and the tarot is a
+The blog owes this one a reading because **the blog has never read the tarot**, and the tarot is a
 frame. Every case study in this series has been about an environment: something a person is inside, which
 supplies the meaning of a state that cannot read itself. A deck of cards is not an environment. It is a
 thing, and it is used — and because it is a thing it can be exhibited, dated and checked, which is what §4
@@ -97,7 +97,7 @@ stranger one: it is made in the first person by someone in the room.
 splits the question in two.** The table is public, fixed and inert — anyone can check whether a card sits
 where a table says it sits, and the check changes nothing. The utterance is not checkable, and is issued by
 someone who benefits from its holding. [The owned cosmos](/the-owned-cosmos/) required a single check; the
-deck hands the corpus a checkable component and an uncheckable one welded into one object. Which of the two
+deck hands the blog a checkable component and an uncheckable one welded into one object. Which of the two
 has been argued over is §4's answer: the table.
 
 **Does it leave a seat?** Yes, and this is the reading's sharpest point — because here the seat is
@@ -110,7 +110,7 @@ said so](/the-machine-said-so/): an authority that cannot be argued with, becaus
 with — except that here there *is* somebody present, and the automatism claim is what removes them from the
 line of responsibility. The move which closes this seat is a claim about **who is speaking**.
 
-**And the book supplies the corpus with the adjective.** Adams describes time in the Sola-Busca's ritual
+**And the book supplies the blog with the adjective.** Adams describes time in the Sola-Busca's ritual
 programme and reaches for the word twice: "we encounter time in its most instrumental sense";[^ix] "we find
 ourselves at a very instrumental end of the spiritual spectrum, one more usually associated with goetia than
 with classical theurgy."[^ix] *Instrumental* is the right word for
@@ -218,7 +218,7 @@ reading should not tidy on the author's behalf.
 
 ## 4. The check: a dispute that can be audited from a library
 
-This is the part of the book the corpus has direct use for, because the corpus's test arrives here as an
+This is the part of the book the blog has direct use for, because the blog's test arrives here as an
 actual dispute between named people, in a public record, with a stated standard of evidence.
 
 Pedreros's question frames it: "Or was Michael Dummett right when he insisted that there was no such thing
@@ -322,7 +322,7 @@ the source will separate from the source.
 **And there is a brake to apply immediately, which is this series' own.** The lever
 [the environment](/the-environment/) named is about **predation** — the price a predator does not have to
 pay. There is no predator in this book: two researchers have written about two decks, and nobody is
-recruiting anyone. What the corpus owes is the lever's **shape** and not its **charge** — not "is this
+recruiting anyone. What the blog owes is the lever's **shape** and not its **charge** — not "is this
 being used on someone" but "who issued this warrant, and would the issuer recognise the use it is being put
 to". Applied here the second question has a checkable answer, because Ficino's own position on planetary
 influence is in the file:
@@ -450,28 +450,28 @@ which a route to a clinician would be expected.
 
 One correction, stated once, and then its second clause.
 
-> **The corpus's frame inventory has been a list of environments, and it now needs an object. A tarot deck
+> **The blog's frame inventory has been a list of environments, and it now needs an object. A tarot deck
 > is not a cosmology: it is a fixed correspondence system, plus a set of positions, plus a reader who
 > supplies the reading, and it is carried, dealt and read rather than lived in. It supplies the series with
 > a frame type the case studies could not reach — a frame made portable and instrumental — and it splits
-> the corpus's single test in two, because the table is public, fixed and checkable while the utterance is
-> issued in the first person by someone who benefits from it. The corpus had one question for a frame. An
+> the blog's single test in two, because the table is public, fixed and checkable while the utterance is
+> issued in the first person by someone who benefits from it. The blog had one question for a frame. An
 > object asks two, and the history has been argued on the half that can survive being checked.**
 
 The clause that follows is about [the environment](/the-environment/)'s fourth lever — "a pre-certified
-frame". That lever was written about a culture supplying the warrant for a **teacher**, and the corpus has
+frame". That lever was written about a culture supplying the warrant for a **teacher**, and the blog has
 never had to carry it into a case where the warrant is claimed by named living researchers for an
 **artwork**. Here it is, and the carrier is different in a way that matters: the authority invoked is the
 object of study. So the second correction is narrower than the first and sharper:
 
 > **The warrant lever has a second carrier — a researcher claiming a warrant for an artwork, with the
-> certifying authority being the very material under investigation — and the corpus should carry its shape
+> certifying authority being the very material under investigation — and the blog should carry its shape
 > without importing its charge. There is no predator in this book. What the lever is good for here is a
 > question, not an accusation: does the authority cited certify the claim being made with it? In this book
 > the answer is checkable, and it is *no* — Ficino's planets do not influence the sublunar world, on the
 > book's own account of him, and the deck that needs them to is not his.**
 
-Neither correction touches anything the corpus has argued about frames, seats or checks. Both change what
+Neither correction touches anything the blog has argued about frames, seats or checks. Both change what
 the blog may say it read: a series about cosmologies has just taken an object as a source, and a series
 about warrants has just found one issued for a picture.
 
@@ -479,12 +479,12 @@ about warrants has just found one issued for a picture.
 
 ## 9. What a reading is for
 
-A reading holds one source whole and asks what a blog that has quoted sources for years now has to change.
+A reading holds one source whole and asks what a blog that has quoted sources all along now has to change.
 This one returns a convergence, a correction and a gap.
 
-**The convergence is that the corpus's test arrived as a real dispute, and survived it.** The series'
+**The convergence is that the blog's test arrived as a real dispute, and survived it.** The series'
 requirement — *a check that does not benefit from the answer* — has been found missing in six successive
-readings, in every cosmology it has examined. Here the corpus's question about frames is being fought over
+readings, in every cosmology it has examined. Here the blog's question about frames is being fought over
 by named people, in dated, public, third-party-readable documents, over an object that sits in a national
 gallery, with one of the parties on record as asking for the evidence that would refute him. That is a
 frame being checked by someone who does not benefit — not by an insider's rite, not by a lineage, not by a
@@ -492,24 +492,24 @@ credential of any kind.
 
 **The correction is an inventory correction with a hypothesis inside it.** The series has four frames, all
 cosmologies, and its rule about frames was written at cosmological scale: keep the endpoint unnamed, keep
-the route plural, keep a check that does not stand to gain. A deck is the first frame the corpus has met
+the route plural, keep a check that does not stand to gain. A deck is the first frame the blog has met
 that **names its endpoint, has a single fixed route, and sits in a hand** — and it is not a failing frame,
 because it is not claiming to be an environment. It is an instrument, and an instrument's check is whether
-the thing works: a different question from whether a cosmology is true, and one the corpus has never asked
+the thing works: a different question from whether a cosmology is true, and one the blog has never asked
 in this register. That does not weaken the rule. It locates it: **the rule about frames is a rule about
 environments.**
 
-**And the gap is the one the corpus keeps finding.** Two researchers, each the author of the thesis he is
+**And the gap is the one the blog keeps finding.** Two researchers, each the author of the thesis he is
 defending, are the only interpreters at the end of the evidence they have assembled; the strongest sentence
 in the book is the convenor's; the dating is an inference from imagery, marked as such by the person making
 it. This book supplies a **public record** and not a second reader of the object — and the record,
-unusually, is enough for the one thing the corpus needed, which is that the argument be auditable. The
-corpus can cite the dispute. It cannot cite either party to it.
+unusually, is enough for the one thing the blog needed, which is that the argument be auditable. The
+blog can cite the dispute. It cannot cite either party to it.
 
 Which leaves the reading's own bottom line, handed over almost unrepaired by the researcher who has spent the
 most years with a deck bought for him on a nineteenth birthday: the Tarot de Marseille "with its
 multilayered content and combinatorial structure, is a fantastic instrument to produce unique experiences
-in the reader, and in this way excludes any form of literality."[^xi] The corpus has been saying a version
+in the reader, and in this way excludes any form of literality."[^xi] The blog has been saying a version
 of that about frames at every scale — that the frame supplies the reading, and that whoever supplies the
 reading holds the lever. It now has it from inside the trade, in a sentence that does not know it is a
 finding: **an instrument produces experiences. It does not certify them.**
@@ -539,7 +539,7 @@ footnoted in the file as "to be published by Scarlet Imprint in 2024"; and Ponce
 "Ficino's Little Academy of Careggi", *Bruniana & Campanelliana* XIX, 67–76, and "Le triomphe de la vie",
 *Bruniana & Campanelliana* XXIII, 505–512.
 
-[^names]: **On attribution**, because the corpus's proven failure mode is address. This is a recorded
+[^names]: **On attribution**, because the blog's proven failure mode is address. This is a recorded
 conversation among three named participants, and the file labels turns by first name: "**César**" is
 César Pedreros, the convenor; "**Peter**" is Peter Mark Adams; "**Christophe**" is Christophe Poncet. The
 Foreword is signed "César Pedreros / June 2023, Santiago de Chile" (line break shown as " / ") and is attributed here to Pedreros
@@ -872,8 +872,8 @@ single occurrence of "safeguarded" concerns transmitting knowledge); no metered 
 "pace" are inside "space"); and 0 hits for the clinical and risk vocabulary listed in note [^abs], with
 "risk" once, as a historical danger the text leaves undated. **Inferred, as this post's
 contribution:** that a tarot deck is a **frame made portable and instrumental** — a correspondence system
-plus positions plus a reader — and therefore a frame **type** the corpus's cosmological inventory does not
-contain; that it splits the corpus's single frame-test into a checkable table and an uncheckable utterance;
+plus positions plus a reader — and therefore a frame **type** the blog's cosmological inventory does not
+contain; that it splits the blog's single frame-test into a checkable table and an uncheckable utterance;
 and that the closing of the seat in a reading is a claim about who is speaking rather than a claim about
 the deck. **Not adjudicated:** the question whether the tarot was esoteric before the mid-eighteenth
 century; the book is read as showing that the dispute over it is **checkable** — dated, named, public and

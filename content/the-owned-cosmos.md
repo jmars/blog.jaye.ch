@@ -180,7 +180,7 @@ And the traditions knew exactly which side they were on, which is why
 **The traditions that had the longest experience of this territory spent it declining to name the
 destination** — which removes the seat, because a seat is a place at an endpoint, and an endpoint
 nobody may name has no place to stand at. The refusal is not obscurantism. It is the **architectural
-countermeasure to this post's frame**, and it is the strongest evidence in the whole corpus that the
+countermeasure to this post's frame**, and it is the strongest evidence in the whole series that the
 traditions understood the danger from the inside.
 
 ---
@@ -245,7 +245,7 @@ does not stand to gain. Every frame can be run well or run as a seat. The rule i
 
 Which leaves the series one post from where it began: the traditions declined to name the endpoint, and
 the West has a long record of the same refusal — which is the subject of the fifth post, and which turns
-out to be the oldest countermeasure in the corpus.
+out to be the oldest countermeasure in the blog.
 
 ---
 

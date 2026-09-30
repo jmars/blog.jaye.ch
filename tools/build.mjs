@@ -1667,15 +1667,15 @@ const POST_META = {
     tagline: 'a <b>reading</b>: the path of unknowing as a practice \u2014 and a practitioner\u2019s charge that the orthodoxy, not the heretic, is the poison.',
     hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
     description:
-      'A close reading of Frater Acher\u2019s Holy Heretics: apophatic mysticism as metered practice, and the book\u2019s own argument that the antagonism runs between unmediated experience and organised orthodoxy \u2014 which the corpus reads back into the Western column.',
+      'A close reading of Frater Acher\u2019s Holy Heretics: apophatic mysticism as metered practice, and the book\u2019s own argument that the antagonism runs between unmediated experience and organised orthodoxy \u2014 which the blog reads back into the Western column.',
     accent: 'The Holy Heretics',
   },
   'undreaming-wetiko': {
     prompt: 'cat undreaming-wetiko.md',
-    tagline: 'a <b>reading</b>: the collapse named as a contagion \u2014 a mind-virus with no existence of its own that can still kill, and a cure the corpus already wrote down.',
+    tagline: 'a <b>reading</b>: the collapse named as a contagion \u2014 a mind-virus with no existence of its own that can still kill, and a cure the blog already wrote down.',
     hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
     description:
-      'A close reading of Paul Levy\u2019s Undreaming Wetiko: the self-content collapse named as a transmissible mind-virus \u2014 a frame with \u201cno intrinsic, independent existence\u201d that can nevertheless kill \u2014 whose own remedy is legibility, and whose own trap is the detector move the corpus forbids.',
+      'A close reading of Paul Levy\u2019s Undreaming Wetiko: the self-content collapse named as a transmissible mind-virus \u2014 a frame with \u201cno intrinsic, independent existence\u201d that can nevertheless kill \u2014 whose own remedy is legibility, and whose own trap is the detector move the blog forbids.',
     accent: 'Undreaming Wetiko',
   },
   'memories-dreams-reflections': {
@@ -1699,7 +1699,7 @@ const POST_META = {
     tagline: 'a <b>reading</b>: the spirits before the ships \u2014 a deep-prehistory argument read at its own scale, and against what the frames series took from it.',
     hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
     description:
-      'A close reading of Gordon White\u2019s Star.Ships: the case that the spirits came first and the evidence it rests on \u2014 where it is strong, where it is contested, and how the corpus\u2019s inherited-frame finding relates to it.',
+      'A close reading of Gordon White\u2019s Star.Ships: the case that the spirits came first and the evidence it rests on \u2014 where it is strong, where it is contested, and how the blog\u2019s inherited-frame finding relates to it.',
     accent: 'Star.Ships',
   },
   'two-esoteric-tarots': {
@@ -1707,15 +1707,15 @@ const POST_META = {
     tagline: 'a <b>reading</b>: a frame built by named hands \u2014 the tarot, the lineage claimed for it, and the authority over what the cards are, which is a dispute you can check from outside.',
     hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
     description:
-      'A close reading of Adams & Poncet\u2019s Two Esoteric Tarots: the tarot read as a frame made portable and instrumental \u2014 a fixed correspondence system, a spread of positions, and a reader \u2014 and the Dummett-Yates controversy as the checkable-from-outside dispute the corpus asks of any frame.',
+      'A close reading of Adams & Poncet\u2019s Two Esoteric Tarots: the tarot read as a frame made portable and instrumental \u2014 a fixed correspondence system, a spread of positions, and a reader \u2014 and the Dummett-Yates controversy as the checkable-from-outside dispute the blog asks of any frame.',
     accent: 'Two Esoteric Tarots',
   },
   'egregores': {
     prompt: 'cat egregores.md',
-    tagline: 'a <b>reading</b>: the group-made mind read whole \u2014 an entity claim from an initiate, a neutral structure the corpus had only used for its worst case, and the exit chapter the blog never cited.',
+    tagline: 'a <b>reading</b>: the group-made mind read whole \u2014 an entity claim from an initiate, a neutral structure the blog had only used for its worst case, and the exit chapter the blog never cited.',
     hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
     description:
-      'A close reading of Mark Stavish\u2019s Egregores: the shared thought-form as a normative structure (a church has one too), the entity claim held without adopting it, and the deprogramming countermeasure the corpus cited only for the diagnosis.',
+      'A close reading of Mark Stavish\u2019s Egregores: the shared thought-form as a normative structure (a church has one too), the entity claim held without adopting it, and the deprogramming countermeasure the blog cited only for the diagnosis.',
     accent: 'Egregores',
   },
   'the-lucifer-effect': {
@@ -1723,8 +1723,16 @@ const POST_META = {
     tagline: 'a <b>reading</b>: the situation thesis at book length \u2014 and the certified frame whose record has since collapsed under the archive.',
     hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
     description:
-      'A close reading of Zimbardo\u2019s The Lucifer Effect: disposition, situation, system \u2014 the corpus\u2019s own structural thesis in the secular register \u2014 against the now-contested record of the Stanford Prison Experiment it is built on, and the shadow where \u201cthe situation made me do it\u201d becomes a recoding of responsibility.',
+      'A close reading of Zimbardo\u2019s The Lucifer Effect: disposition, situation, system \u2014 the blog\u2019s own structural thesis in the secular register \u2014 against the now-contested record of the Stanford Prison Experiment it is built on, and the shadow where \u201cthe situation made me do it\u201d becomes a recoding of responsibility.',
     accent: 'The Lucifer Effect',
+  },
+  'thought-reform': {
+    prompt: 'cat thought-reform.md',
+    tagline: 'a <b>reading</b>: the eight criteria at source \u2014 the framework the blog has quoted all along, read whole, and the checklist it became.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Robert Jay Lifton\u2019s Thought Reform and the Psychology of Totalism: the totalism framework at source, its eight criteria read whole rather than through summaries \u2014 and the certified checklist the anti-cult movement made of it.',
+    accent: 'Thought Reform',
   },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',

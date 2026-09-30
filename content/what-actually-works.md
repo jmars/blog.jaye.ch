@@ -125,7 +125,7 @@ sophistication, no checking.
   is ordinal and unvalidated.
 - **Not a claim that support is unnecessary.** The result is that *a* support works where *a
   monitored* one fails. Complexity is the failure mode, not support.
-- **Scoped, on the corpus's own instruction.** The cheap-versus-elaborate contrast is a property
+- **Scoped, on the blog's own instruction.** The cheap-versus-elaborate contrast is a property
   of the **post-collapse-settled assay**, not of deployment — the paper flags this explicitly.
   It is a statement about rescuing an already-stuck system, and nothing more.
 - **Not about "knowing" in the human sense.** The "knowing floor" is a cost term, not a person

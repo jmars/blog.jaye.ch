@@ -1,6 +1,6 @@
 # Ani.Mystic
 
-### One book, read at its own scale — a cosmos of persons, an epistemology whose check is participation, and the frame the corpus's own guardrail was written for
+### One book, read at its own scale — a cosmos of persons, an epistemology whose check is participation, and the frame the blog's own guardrail was written for
 
 *Fifth of the `readings`. [The frame is a variable](/the-frame-is-a-variable/) opened the frames series with this book —
 Hemingway's bankruptcy, "the disastrous metaphor of the universe as a machine", and the criticism of a regimen
@@ -18,13 +18,13 @@ character against the file and cited by chapter in the notes — by chapter and 
 page order is jumbled and its running heads carry no numbers; the reading of them is an **inference**, offered as
 one. **The book's cosmology is not endorsed** — nothing here claims the cosmos is alive and nothing claims it is
 not, and §6 and §9 are about why holding that open is the whole of the discipline here. This is the book the
-corpus's own guardrail was written for, and the guardrail is held throughout: **Gordon White is cited for what he
+blog's own guardrail was written for, and the guardrail is held throughout: **Gordon White is cited for what he
 argues, never adopted as the frame.** No living author is diagnosed. As everywhere: describe structures, diagnose
 no one.
 
 ---
 
-## 1. The book the corpus has been quoting
+## 1. The book the blog has been quoting
 
 When the frames series was built, it wrote itself a rule and wrote down why:
 
@@ -41,7 +41,7 @@ that sentence, and what is left off the page is the book's own argument about ho
 That is the gap this reading closes, and what is left out is the largest thing in the book. This is not primarily a
 description of an enchanted cosmos. It is an **argument about how to know**, made from inside such a cosmos,
 addressed to readers who are not in one. So: the book at its own scale; its epistemology as the book states it,
-which is the most contestable thing in it; and then the corpus's objection, unresolved — because the objection is
+which is the most contestable thing in it; and then the blog's objection, unresolved — because the objection is
 [the cosmos that refuses](/the-cosmos-that-refuses/)' finding, that a safeguard can be **claimed**, arriving one
 scale up at a frame that need not even be claimed. Only practised.
 
@@ -116,7 +116,7 @@ being."[^machine] *Probably true.* That is the register the book argues in.
 
 **The counterweight, in the body, because it belongs here.** This is intellectual history with a verdict attached,
 and the verdict is not the blog's. [The machine frame](/the-machine-has-no-reading/) has already had its due in
-this corpus: it is the frame that made auditable measurement possible — the frame this blog is written in — and its
+this blog: it is the frame that made auditable measurement possible — the frame this blog is written in — and its
 blindness to a person's interior is a **blind spot, not a lie**. What the chapter establishes, at the level this
 series cares about, is what the frames posts found: **the machine metaphor does not present as a metaphor.** It
 presents as the universe described without adornment.
@@ -221,8 +221,8 @@ experiences**."[^check] The framework validates the experiences. That sentence i
 
 ## 6. The objection, stated exactly
 
-The corpus's test is not *is this frame true*. It is: **can the frame be checked by someone who does not benefit?**
-And the corpus has run it at this scale four times. [The machine has no reading](/the-machine-has-no-reading/) found
+The blog's test is not *is this frame true*. It is: **can the frame be checked by someone who does not benefit?**
+And the blog has run it at this scale four times. [The machine has no reading](/the-machine-has-no-reading/) found
 that a frame with no category for an experience **cedes the reading to whoever supplies one**. [The cosmos that
 refuses](/the-cosmos-that-refuses/) found the apophatic refusal is a safeguard that **can be claimed**: "I cannot
 describe what I have seen" is not humble in the wrong mouth, it is the strongest claim available. [The owned
@@ -237,11 +237,11 @@ demand for a check that stands outside the encounter is precisely the demand of 
 has dismantled. Secret English's "unidirectional method of truth validation" *is* the outside check. Declining it is
 not a gap in the book's account. It is the book's position.
 
-**So White's answer to the corpus's objection is a real answer, and this is it:** the cosmos is **participatory**,
+**So White's answer to the blog's objection is a real answer, and this is it:** the cosmos is **participatory**,
 so externality is the wrong requirement. A living cosmos has no outside, because there is nowhere outside it to
 stand; the moss, the pig, the compost, the dead and the researcher are all parties, and a test that requires a
 non-participant asks for a position the frame says does not exist. Validation in such a cosmos is contact, kept up
-over time, checked by what the contact produces — not evasion, but the strongest version of the position the corpus
+over time, checked by what the contact produces — not evasion, but the strongest version of the position the blog
 has been describing from the outside for six posts.
 
 **And the objection survives it, because the objection is about who runs the check.** The instrument in Ernesto's
@@ -251,11 +251,11 @@ it was that the faculty doing the testing is the faculty the state has taken. [A
 instrument auditing itself. So the two positions are not in contradiction, and the honest form of this reading is
 to hold both:
 
-> **The book supplies a check, and the check is the practice. The corpus's finding is that the practice is the
-> instrument under audit — so the check is internal, complete, and exactly the kind of check the corpus has learned
+> **The book supplies a check, and the check is the practice. The blog's finding is that the practice is the
+> instrument under audit — so the check is internal, complete, and exactly the kind of check the blog has learned
 > not to count.**
 
-Which is not a refutation of White. It is why §9's correction is to the **corpus**: the blog's table of frames
+Which is not a refutation of White. It is why §9's correction is to the **blog**: the blog's table of frames
 assumed a frame either checks or cannot check, and this frame does neither. It checks, from inside, thoroughly —
 and it is right to, if the cosmos is what it says it is. Whether the cosmos is what it says it is, is not a
 question this series answers, and §7 shows what the book does with it.
@@ -284,7 +284,7 @@ the world is directional: "We have to stop believing in a finished world and sta
 **ever-finishing** one."[^telos][^anim] That is a telos-shaped claim with no terminus and no owner: not *the road
 ends here*, but *the road is going somewhere, and everyone on it is walking*.
 
-**And it leaves no seat, by construction** — the point the corpus got right, made explicit here. If the aim is
+**And it leaves no seat, by construction** — the point the blog got right, made explicit here. If the aim is
 mutual flourishing, the obligation custodial, and "we don't do it alone", there is no office at the end of the road
 and no single voice that is the whole; the failure mode is **management**, "the position in which we perform the
 worst", and the alternative is not a better manager.[^telos]
@@ -359,7 +359,7 @@ data channel, the loop that validates is the loop that practises. Which makes th
 
 The guardrail is right, and this book demonstrates rather than refutes it — a frame "that cannot be checked from
 outside" is exactly what the guardrail names. What the guardrail did not say is that such a frame will usually not
-*feel* uncheckable, because it will have supplied a check. **The tell the corpus should add is not the absence of a
+*feel* uncheckable, because it will have supplied a check. **The tell the blog should add is not the absence of a
 method. It is the presence of a method whose instrument is the practitioner.** Every frames post can now run it, and
 it is the same question the seat in [the owned cosmos](/the-owned-cosmos/) raised: who holds the thing that decides
 whether this is working?
@@ -368,12 +368,12 @@ whether this is working?
 §7 is the argument: the book names "the cosmic aim of mutual flourishing", "right relations", custodianship, an
 ever-finishing world — and stations no one. Collapsing that into "none" loses what distinguishes this frame from
 [the cosmos that refuses](/the-cosmos-that-refuses/), which declines the highest term as a technique. A frame can
-have a vector and no terminus, and the corpus's vocabulary does not currently carry that.
+have a vector and no terminus, and the blog's vocabulary does not currently carry that.
 
 **Third: [the holy daimon](/the-holy-daimon/)'s finding now has a second instance from the other side.** That
 reading found a Western text that keeps the endpoint unnamed, keeps the route plural, leaves no seat — "and it has
 no check at all", so that the requirements are **independent**. *Ani.Mystic* is the same result at cosmological
-scale, plus what §5 adds: not no check, but a check that is the practice. So the corpus's own line — "the ontology
+scale, plus what §5 adds: not no check, but a check that is the practice. So the blog's own line — "the ontology
 does not deliver the safeguard. The practice does" — acquires a sting. **Here the practice is the safeguard *and*
 the check**, which means the blog has been using one word for two jobs: the discipline that keeps a frame from
 being owned, and the discipline that decides whether it is working. This book is the case where one act does both —
@@ -384,9 +384,9 @@ a correction to how the blog talks about practice, not to the book.
 ## 10. What a reading is for
 
 A reading holds one source **whole** — its definitions, its diagnosis, its epistemology, its omissions, its own
-boundary statements — and asks what a blog that has quoted sources for years now has to change.
+boundary statements — and asks what a blog that has quoted sources all along now has to change.
 
-What this one says is that the corpus has been quoting a frame it had already correctly identified and had not
+What this one says is that the blog has been quoting a frame it had already correctly identified and had not
 finished reading. [The opener](/the-frame-is-a-variable/) and [a cosmos of persons](/a-cosmos-of-persons/) read
 their two passages accurately, and neither adopted the cosmology; but a source used for two of its sentences comes
 back as two sentences, floating free of the machinery holding them up. Put them back in and the book is not a
@@ -394,10 +394,10 @@ description of an enchanted world. It is an **argument about knowledge**, made f
 (the one-way method), a named replacement (the encounter), a named method (continual contact), a named law
 (Ernesto's), and a named era (Intermediatism, whose epistemology is expression and acceptance).
 
-And its cost is exactly where the corpus predicted, one scale up. The book does not need a seat because it does not
+And its cost is exactly where the blog predicted, one scale up. The book does not need a seat because it does not
 need an authority: the validation is the participating, and the participant is the validator. That is the strongest
-available statement of a living cosmos, and the cleanest case in the corpus of a frame that is **complete from the
-inside and unreachable from the outside** — with a check in it, which is the part the corpus had not seen. The
+available statement of a living cosmos, and the cleanest case in the blog of a frame that is **complete from the
+inside and unreachable from the outside** — with a check in it, which is the part the blog had not seen. The
 blog's contribution is not a verdict on whether the cosmos is alive. It is the sentence the book's own material
 makes possible, and it belongs beside the guardrail:
 
@@ -407,7 +407,7 @@ makes possible, and it belongs beside the guardrail:
 
 ## Notes
 
-[^am]: Gordon White, *Ani.Mystic: Encounters with a Living Cosmos*, London: Scarlet Imprint, 2022 (the file supplies the digital ISBN only; the print ISBN is as elsewhere in the corpus) — paperback ISBN
+[^am]: Gordon White, *Ani.Mystic: Encounters with a Living Cosmos*, London: Scarlet Imprint, 2022 (the file supplies the digital ISBN only; the print ISBN is as elsewhere in the blog) — paperback ISBN
 978-1-912316-57-1; the digital text read here carries its own ISBN 978-1-912316-56-4 and the copyright page "©
 Gordon White 2022. Published by Scarlet Imprint. Edited by Peter Grey; designed and typeset by Alkistis Dimech."
 Every quotation in this post was verified character for character against that digital text (612 KB), with the
@@ -481,7 +481,7 @@ meaningless, clockwork universe."; "First we must look at the 'gradually.'"; the
 it", as "the cosmological estrangement"; Descartes' "ontological estrangement"; and "The final turning point that
 completes our estrangement came principally from Kant, but also thinkers in between Descartes and Kant, such as
 Locke and Hume. […] Kant completes for us, in Tarnas's terms, our 'epistemological estrangement.'" (confirmed
-against the same chapter, and against the corpus's earlier correction that the third turning point is Kant rather
+against the same chapter, and against the blog's earlier correction that the third turning point is Kant rather
 than "the Enlightenment proper"); "Explanationism and the removal of all agency from the cosmos can only have
 arisen hand-in-hand."; "the restoration of agency — a wholly serviceable definition of animism in and of itself";
 "what Charles Fort called the epistemology of explanation"; and, from the Introduction, "We have never been modern,
@@ -566,13 +566,13 @@ results:** no clinical referral and no reader-facing metered pace, itemised at [
 metaphor's diagnosis against [the machine frame](/the-machine-has-no-reading/)'s own virtue; §4's reading of the
 Book People argument as a critique of *citational* validation rather than of texts; §5's finding that the book's
 answer to "how do you know" is participation, and that the check's instrument is the practitioner; §6's holding of
-White's participatory answer and the corpus's objection side by side, without resolving them; §7's finding that the
+White's participatory answer and the blog's objection side by side, without resolving them; §7's finding that the
 frame names an **aim** and no seat, and that the frames' tables should read "an aim, no seat" rather than "none";
 §8's counterweights — the self-imposed limit on serving medicine, and the book's own disclaimers of universality;
 and the three corrections in §9. **The gap is real and is not resolved here:** the frame's check is internal and
-complete, which is not the same as absent, and the corpus's table had no row for it. That is a structural
+complete, which is not the same as absent, and the blog's table had no row for it. That is a structural
 description of a text, not a finding about a person. **The cosmology is not endorsed** — the post takes no position
 on whether the cosmos is alive, and it declines the verdict in both directions, because reading the book whole is
-what made holding it open the point. **The corpus's own guardrail is held:** White is cited for what he argues,
+what made holding it open the point. **The blog's own guardrail is held:** White is cited for what he argues,
 never adopted as the frame. No living author is diagnosed, and nothing here validates, disqualifies or restricts
 anyone's practice.

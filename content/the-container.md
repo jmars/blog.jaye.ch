@@ -151,7 +151,7 @@ list, reported by the person it happened to.
 
 ## 6. A lever this series has no name for
 
-His account contains something the blog's corpus lacks, and it is a real addition.
+His account contains something the blog's other posts lack, and it is a real addition.
 
 He calls it **"program reinforcement"** — the periodic event, inside a container, that **confirms the
 content**, and that members experience as *validation*:

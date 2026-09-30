@@ -88,7 +88,7 @@ can be inside an institution and have the encounter.
 
 ---
 
-## 3. The seat, inverted — and the distinction the corpus already drew
+## 3. The seat, inverted — and the distinction the blog already drew
 
 The book's strongest exhibit is a case, and it is the case the blog's own framing predicts. Symeon the New
 Theologian wrote down his experience of the divine light in the tenth century; the book states the
@@ -105,7 +105,7 @@ record — the tradition "is not kept, confined or curated by any kind of **manm
 account of a personal, deeply transformative experience of divinity's darkness as well as its piercing rays
 of light."[^symeon]
 
-**The counterweight is already in the corpus, and it binds here.** [The owned cosmos](/the-owned-cosmos/)
+**The counterweight is already in the blog, and it binds here.** [The owned cosmos](/the-owned-cosmos/)
 wrote the distinction this post must not lose: what matters is not *mediated versus unmediated* but **open
 mediation against closed mediation** — several routes against one, a mediator accountable outside themselves
 against a mediator who is the reason you cannot get through any other way. *Holy Heretics* is itself a
@@ -225,7 +225,7 @@ enough to enable them to undertake their own journey**."[^teach] What it lacks i
 So *"we stand united as holy heretics"* is a **class, not a body**. The unity is shared experience, and a
 class of isolated practitioners has no member who can read another's state — the one safeguard this blog's
 model says cannot be located inside the person having the experience. **The book supplies the instrument the
-frames series asked for** (a criterion, in §4) **and not the one the corpus says is required** (another
+frames series asked for** (a criterion, in §4) **and not the one the blog says is required** (another
 reader). That is the split, and where this reading lands.
 
 **A counterweight, because the book is not merely silent.** It prints its sources' failures and asks the
@@ -300,7 +300,7 @@ order**, so the West's own move — to write the safeguards **into the training*
 **Second, the row about a curriculum gets a third shape.** [The Western column](/the-western-column/)'s "a
 curriculum is a safeguard" was already qualified by [the holy daimon](/the-holy-daimon/), which is not a
 curriculum. *Holy Heretics* is a book with a **prerequisite** — BOOK I gates BOOK II by instruction, and
-nothing enforces it but the reader. The corpus therefore holds the row three ways: a graded syllabus
+nothing enforces it but the reader. The blog therefore holds the row three ways: a graded syllabus
 (enforced), a book with no gate, and a book with a stated gate and none. The requirement survives all three;
 the **guarantee** accompanies it in one.
 
@@ -315,7 +315,7 @@ exists, with an internal criterion, and it still leaves the practitioner the onl
 post predicted.** That post could not republish a technique because it is useful to an operator and useless to
 the target. Here a practitioner republishes a *rite* — and the asymmetry holds, because a rite is not gauging:
 it hands over a procedure for the practitioner's own ascent, not a method of reading a person and finding the
-vacancy. **That is the line the corpus can now draw**, cleaner than "the sources publish it": publishable is
+vacancy. **That is the line the blog can now draw**, cleaner than "the sources publish it": publishable is
 the operation addressed to the person doing it, not the appraisal aimed at someone who has not asked.
 
 ---
@@ -323,10 +323,10 @@ the operation addressed to the person doing it, not the appraisal aimed at someo
 ## 9. What a reading is for
 
 A reading holds one source **whole** — its thesis, its structure, its exercises, its omissions — and asks what
-a blog that has quoted sources for years now has to change. What this one says is a split finding, and the
+a blog that has quoted sources all along now has to change. What this one says is a split finding, and the
 split is the honest result.
 
-**This is the strongest practice-side object the corpus has met** — the apophatic refusal turned into a
+**This is the strongest practice-side object the blog has met** — the apophatic refusal turned into a
 metered discipline, with a criterion rather than a mood, and three of the five safeguards stated in its own
 voice. **And it is missing precisely the safeguards that require a second person**, which it does not conceal
 but states. So: **a practice can supply its own criterion, and a criterion is still not a second reader.**

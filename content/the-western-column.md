@@ -232,7 +232,7 @@ Western column documenting its own predation in public, by name, and calling it 
 more than most of the traditions in this series managed.
 
 And he closes with the countermeasure, which is [the label post](/the-label/)'s rule and
-[safeguards](/safeguards/)' fifth, in the plainest English in the corpus:
+[safeguards](/safeguards/)' fifth, in the plainest English in the blog:
 
 > "Just because the spirits want someone in charge does not mean that you are obliged to listen to
 > them. Remember, **you are in charge of your spiritual path, not spirits, not Chiefs, and not
@@ -269,7 +269,7 @@ cultural. They are what a practice needs, and the West derived them independentl
 
 ## 7. What the West adds that the others do not
 
-Three things, and each is a real addition to the corpus.
+Three things, and each is a real addition to the blog.
 
 **One — the state has a defensive use.** §3: the same collapse the series treats as the danger is used
 by the Western tradition as a **shield**, because an emptied form has nothing for a predator to seize.
@@ -393,7 +393,7 @@ https://www.quareia.com/texts) — the graded description ("As a magical
 beginner… As an initiate it is a threshold place… As an adept, the void is the stepping into the
 consciousness of Divinity"); the defensive use ("slipping into the void causes you to become invisible
 from an inner perspective… There is no human spirit form for the being to grab a hold of"); and the
-meditation itself, which is the same flame-into-void sequence as the corpus note "Meditation of the
+meditation itself, which is the same flame-into-void sequence as the blog's note "Meditation of the
 Void."
 
 [^initiate]: McCarthy, J., *Quareia: The Initiate*, course texts free online at

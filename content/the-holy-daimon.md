@@ -137,7 +137,7 @@ That is the process by which we co-create the worlds we live in."[^rest]
 is true of anyone's attention. What can be reported exactly is the **prescription** — a manual on the
 same territory as [the Western column](/the-western-column/)'s material, stating that the work turns
 outward, toward plural beings including non-human ones, and that the practitioner becomes no one.
-Nothing in the corpus has said that before, and it comes from the genre most likely to put a self at the
+Nothing in the blog has said that before, and it comes from the genre most likely to put a self at the
 centre of a cosmos.
 
 ---
@@ -200,7 +200,7 @@ leaves the blog with a source that is candid and uncheckable at once.
 
 ---
 
-## 8. The gap — no referral, and the levers the corpus already names
+## 8. The gap — no referral, and the levers the blog already names
 
 Here is the finding that must be stated most carefully, because it is a **negative** one. The digital
 text of *Holy Daimon* contains **no clinical referral** — no instruction anywhere to take a symptom to a
@@ -223,7 +223,7 @@ emotion, and **in the absence of any other kind of orientation**".[^trust] [The 
 shows why that is the problem: a member sees the inconsistencies in *other* containers and
 cannot see their own — **the container is the instrument doing the auditing**.[^container] The book's
 instruction is that configuration stated as a requirement: judge your own state, with no other
-orientation, using yourself as the instrument. It is what the corpus says cannot report its own failure,
+orientation, using yourself as the instrument. It is what the blog says cannot report its own failure,
 and the book states the requirement rather than answering it.
 
 **And there is a second thing in the body.** The Memory part reports the retreat at the centre of its
@@ -278,10 +278,10 @@ made a frame unsafe, and removing it did not supply the missing instrument.
 
 A reading is not a review and not a debunking. The book is not on trial; the blog's own habits are. What
 a reading does is hold one source **whole** — its lexicon, its epigraphs, its structure, its omissions,
-its evidence — and ask what a blog that has quoted sources for years now has to change.
+its evidence — and ask what a blog that has quoted sources all along now has to change.
 
 What this one says is a split finding, and the split is the honest result. **It is the cleanest instance
-in the corpus of a relation that is unowned** — and **the cleanest instance of a frame with no outside
+in the blog of a relation that is unowned** — and **the cleanest instance of a frame with no outside
 instrument:** no referral, no gate, self-judgement stated *as* the requirement, and two sequences of
 five that each hand the unwritten step over. The lack of a seat did not remove the exposure; it moved
 it, from a person at an endpoint onto the practitioner alone with their own report. A book can be candid
@@ -374,7 +374,7 @@ digital text of Frater Acher's *Holy Daimon* (Scarlet Imprint, 2018, 2023; digit
 978-1-912316-81-6), checked character for character and cited in the notes; the Crowley, Perls and
 papyrus epigraphs quoted as the book prints them. Inferred, as this post's — §3's reading of *systasis*
 against the seat; §4's split finding that the book refuses authority while its model states an
-asymmetry; §5's reading of the outward direction against the corpus's inward induction; §6's finding
+asymmetry; §5's reading of the outward direction against the blog's inward induction; §6's finding
 that both five-stage sequences are incomplete and say so; §7's reading of the diary as evidence offered
 and withheld at once; and the three corrections in §8. **The gap is real and is not resolved here:**
 this book contains no clinical referral, where [the Western column](/the-western-column/) records a

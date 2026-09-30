@@ -127,7 +127,7 @@ the beginning the record reaches. This post does not lean on the chronology; the
 
 **Which does not make the later frame worse.** It is the frame that produced almost everything this
 blog cites: the Vedic, Babylonian, Greek, Abrahamic and Hermetic traditions are all Laurasian, and
-[sacred-science](/sacred-science/)'s apophatic refusal — the strongest countermeasure in the corpus —
+[sacred-science](/sacred-science/)'s apophatic refusal — the strongest countermeasure in the blog —
 grew **inside** the frame that names an endpoint. The finding is narrower and better: **a frame with an
 endpoint can hold the refusal**, and one of the oldest traditions did exactly that. The safeguard is
 not the shape. It never was.
@@ -147,7 +147,7 @@ of data points that Dr Witzel **studiously avoids**."[^starships] A method that 
 surviving motifs can be right about the **relationships** and wrong about the **clock**, and the two
 errors are independent.
 
-**And the corpus's own examples show the trap.** The same book mounts an argument about the Younger
+**And the blog's own examples show the trap.** The same book mounts an argument about the Younger
 Dryas and the flood stories — a hypothesis in genuine scientific dispute, with published rebuttals, and
 White lists one in his own bibliography ("Comet theory false; doesn't explain cold snap at the end of
 the Ice Age")[^starships]. Which is to say: *Star.Ships* is careful and it is also a **thesis with a

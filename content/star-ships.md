@@ -2,13 +2,13 @@
 
 ### Sixth of the `readings`, one book at its own scale — a prehistory that argues the spirits came first, a mythic phylogeny its own author calls provisional, and the correction the blog owes the book it has already been quoting
 
-*Sixth of the `readings`, and the first to read a book the corpus is **already using**. [The deep
+*Sixth of the `readings`, and the first to read a book the blog is **already using**. [The deep
 inheritance](/the-deep-inheritance/) took Michael Witzel's deep-mythology split through Gordon White and
 flagged its dates as model-dependent reconstructions; [a cosmos of persons](/a-cosmos-of-persons/) drew on
 White's later **[Ani.Mystic](/ani-mystic/)** for the personhood of a living cosmos. Both did the right thing: they held
 **White as a source about the material, never as the frame**. This reading has to do that and one thing
 more — take the book whole, at its own scale, and say what it argues when nobody is quoting it for a
-thesis. Which turns out to matter, because the book's own claim is not the one the corpus took from it.
+thesis. Which turns out to matter, because the book's own claim is not the one the blog took from it.
 What follows is the thesis in the book's words, the four kinds of claim it is built from, the correction
 the blog owes, and the register in which its author writes: a practitioner for whom the spirits are not
 metaphor — held at that distance, and not adopted.*
@@ -58,7 +58,7 @@ And the reason the blog owes it a reading rather than a quotation is exactly tha
 [The deep inheritance](/the-deep-inheritance/) is built on the Witzel layer of this book — the
 Gondwanan/Laurasian split, the 65,000 and 40,000 year figures, the warning that the split's homeland
 "requires the use of data points that Dr Witzel studiously avoids". Every one of those is here, and §4 and
-§5 read them **as this book presents them**, which is not how the corpus has them.
+§5 read them **as this book presents them**, which is not how the blog has them.
 
 ---
 
@@ -120,7 +120,7 @@ sentence says what discipline the transfer-claim is submitted to.
 
 ## 3. Four kinds of claim, and the one test the book applies to them
 
-This is the section the corpus most needs, because the corpus has quoted this book for one kind of claim
+This is the section the blog most needs, because the blog has quoted this book for one kind of claim
 and the book makes four.
 
 **The first kind is archaeological, and it is the book's floor.** Göbekli Tepe, its layers and its dating;
@@ -199,7 +199,7 @@ Witzel's book arrives in chapter III with an adjective that matters:
 > between cultural groups, or place mankind in a specific part of the world at a previously-unknown
 > date."[^ch3]
 
-The scheme chapter III sets out has **three parts, not two**, and the third is the one the corpus does not
+The scheme chapter III sets out has **three parts, not two**, and the third is the one the blog does not
 carry. The method, in the book's words:
 
 > "Witzel categorises the planet's mythologies into two macro-groups; examples of both still exist today;
@@ -228,14 +228,14 @@ anything dug up. The author says which parts are inference: Pan-Gaea is "Witzel'
 reconstruction"; the Laurasian homeland is unknown: "Pinpointing the best case for precisely where in Asia
 requires the use of data points that Dr Witzel studiously avoids".[^myth][^recon]
 
-One more thing about the dates, because the corpus got this right and the book deserves the credit: White
+One more thing about the dates, because the blog got this right and the book deserves the credit: White
 does not present them as excavated. He presents them as a **clock read off a tree**, and says plainly that
 the readings will move. Where the book *does* lean on an excavated date it says so in the same register —
 the Botswana python site is "the oldest archaeological evidence of ritual ever found on earth", dated
 70,000 years, and it is brought in as **support for a reconstruction**, not as the reconstruction's
 basis.[^myth]
 
-**And here is where the corpus's summary and the book part company, and it is not a quibble.** The corpus's
+**And here is where the blog's summary and the book part company, and it is not a quibble.** The blog's
 §4 read the chronology as a sequence — "the **telos was added later.** The forest of stories comes first;
 the novel — beginning, middle, end — comes after, in Eurasia, and then spreads." The book forbids exactly
 that reading, in the section on Gondwana mythology:
@@ -255,13 +255,13 @@ telos at all; §5 takes that up as the correction.
 
 Four parts, and the first is the one that changes an argument.
 
-**First, the corpus turned a model into a finding, and a three-part scheme into two.** [The deep
+**First, the blog turned a model into a finding, and a three-part scheme into two.** [The deep
 inheritance](/the-deep-inheritance/) states the finding as a **phylogeny** and then, in its §2, sorts the
 world's mythologies "into two deep families with a shared root". That is a fair summary of the two living
 families — but the book names the root as a **third category** with its own name, its own date range
 (150,000–65,000 years) and its own status, which is **reconstruction with no extant examples**. The blog
 has been carrying the tree while walking past the branch the author labels tentative. This is an extension
-in the literal sense: the missing category is the one that would have made the corpus's own caution —
+in the literal sense: the missing category is the one that would have made the blog's own caution —
 *these are reconstructions* — more visible rather than less.
 
 **Second, and this is the correction with content: "the telos was added later" is the reading the book
@@ -275,10 +275,10 @@ distinguishes the families is a difference in magical emphasis:
 
 Not a stage of development, and not an endpoint. A blog whose own rule is that *frames are inherited, not
 invented* should find that comfortable rather than inconvenient: an inherited layer is not a phase anybody
-graduates out of, which is what the corpus has been saying about frames all along, and the book says it
-about stories in one image about aeroplane cabin classes.
+graduates out of — which is the rule the blog's frames series runs, and which it owes to this material —
+and the book says it about stories in one image about aeroplane cabin classes.
 
-**Third, the book's position on the Younger Dryas is not the one the corpus attributed to it.** [The deep
+**Third, the book's position on the Younger Dryas is not the one the blog attributed to it.** [The deep
 inheritance](/the-deep-inheritance/) says the book "mounts an argument about the Younger Dryas and the
 flood stories", and cites the rebuttal it "lists in his own bibliography". The book reports the hypothesis
 as the frontrunner — "Currently, the Younger Dryas Impact Hypothesis, out of Harvard, is the frontrunning
@@ -291,8 +291,8 @@ which is the opposite of mounting an argument for it:
 > side of the supposed meteor event […]. Once again, the facts remain and the interpretation needs
 > revising."[^fire]
 
-The Southern Methodist University entry the corpus quotes is in this book's bibliography **because the book
-uses its finding**, not as an opponent's rebuttal listed as a concession. And the corpus's quotation of
+The Southern Methodist University entry the blog quotes is in this book's bibliography **because the book
+uses its finding**, not as an opponent's rebuttal listed as a concession. And the blog's quotation of
 that entry is **truncated mid-sentence without an ellipsis** — the title continues past "cold snap at the
 end of the Ice Age" to "Clovis changes or mass animal extinction."[^bib] Two small things; both are the
 failure mode this series exists to catch, and both are corrected above. What the book does argue is the
@@ -300,7 +300,7 @@ failure mode this series exists to catch, and both are corrected above. What the
 at the end of the Ice Age and thinnest where the least was, a claim about distribution rather than about a
 comet.[^ch6]
 
-**Fourth, the corpus flattened a contested argument into a convergence, and the flattening was not
+**Fourth, the blog flattened a contested argument into a convergence, and the flattening was not
 necessary.** [The deep inheritance](/the-deep-inheritance/) framed Witzel-through-White as the series'
 "fourth convergence", and to reach that it used the two-family split as the unit. The book's own use of the
 split is weaker and better: it is "our best interpretive framework for exploring these correlations", and
@@ -320,7 +320,7 @@ convergence"* cannot. So the correction, stated once and plainly:
 > the western magical tradition, that the myth families are a tool for seeing that, that the families are
 > not stages, and that the tool has seven named shortcomings.**
 
-None of that makes the corpus's argument wrong. It makes its **attribution** wrong, which is correction
+None of that makes the blog's argument wrong. It makes its **attribution** wrong, which is correction
 enough, and it moves the blog's use of this book from *lever* to *source* — which is the whole purpose of
 this series.
 
@@ -402,7 +402,7 @@ instruments whose resolution is lower, and the book says so at the moment it cha
 caution, later, is against building worlds out of fragments: "you are a farmer who discovers a Roman coin
 in a field in Somerset and declares that the empire began right here by your apple trees."[^ch4]
 
-**Second: the dating is a reconstruction, and the corpus's caution is right.** This is the crux, so it is
+**Second: the dating is a reconstruction, and the blog's caution is right.** This is the crux, so it is
 stated once more plainly: the families are inferred from surviving motifs, the root has no surviving
 examples, the timelines are "guaranteed" to move, and the author of the underlying study is described as
 avoiding the very data points that would locate the origin. A method that reconstructs a tree from
@@ -467,7 +467,7 @@ requirement of the king to return to them to secure his own immortality and safe
 tribe/city."[^abs] The word belongs to the cosmology being described, not to the reader being addressed.
 
 **There is no metered pace, because there is no practice to meter.** The book is a prehistory and not a
-manual. The corpus's meter question — how fast, how often, under whose eye — has no answer here because it
+manual. The blog's meter question — how fast, how often, under whose eye — has no answer here because it
 has no question: there are **0** hits for "meditat", **0** for "mentor", **0** for "ethic", and the single
 occurrence of "unprepared" is the Prologue's "dangers abound for the unprepared", which is a warning about
 journeys to the spirit world in general and not a schedule.[^abs] There is exactly **one** caution addressed
@@ -500,36 +500,37 @@ text.
 
 ## 9. What a reading is for
 
-A reading holds one source whole and asks what a blog that has quoted sources for years now has to change.
+A reading holds one source whole and asks what a blog that has quoted sources all along now has to change.
 What this one changes is smaller than a mechanism and larger than a citation.
 
 **The correction is an attribution correction, and it has three parts.** The blog carried a three-category
 reconstruction as two families; it carried a model its author labels provisional as a finding, calling it a
 convergence; it read a chronology as a sequence — *the telos was added later* — in the one book that
 forbids that reading in a sentence about aeroplane cabin classes; and it attributed to this book an
-argument for a comet the book reports the evidence against. None of those touch the corpus's structural
+argument for a comet the book reports the evidence against. None of those touch the blog's structural
 claim that frames are inherited rather than chosen. All of them touch what the blog may say this book says.
 
 **The extension is that the book's own test is the blog's test.** *Star.Ships* runs an **obligation of
 proof** across six instances and faults a rival theory for its **unfalsifiability**, applies both to claims
 on its own side of the argument, and — where it cannot apply them — says so in the plainest clause it has:
-"interpretation, if not explanation". The corpus has spent five readings looking for exactly this in its
+"interpretation, if not explanation". The series has spent five readings looking for exactly this in its
 sources and has repeatedly found it absent. Here it is present, in a book about spirits, on the same pages
 as the spirits. That is the strongest thing in this reading.
 
-**And the gap is the one the corpus keeps finding.** A single-authored synthesis has one interpreter at the
+**And the gap is the one the blog keeps finding.** A single-authored synthesis has one interpreter at the
 end of its evidence chain, and this book's practitioner dimension — its claim that some spirits are old,
 that some have survived, that the technique reaches them — is offered where no instrument in the book can
-check it, including the book's own. The corpus's requirement, at every scale, is a check that does not
+check it, including the book's own. The blog's requirement, at every scale, is a check that does not
 benefit from the answer. This book supplies **an instrument** and not a second party. The blog can quote it
 with the boundaries §3 to §7 have drawn, and cannot cite it as corroboration — which is the guardrail the
-corpus already had, now with a reason attached from inside the book.
+blog already had, now with a reason attached from inside the book.
 
 Which leaves the reading's own bottom line, and it is the one this book hands over in its final section,
 about a book that compares the world's stories and knows what it is doing: *your microscope and your
-telescope always belong to you*. The corpus has been saying a version of that about frames at every scale.
-It now has it from a practitioner who arrived at it about comparison, and drew the one conclusion this blog
-draws: **look with your own instrument, and say whose it is.**
+telescope always belong to you*. The blog has been running a version of that rule about frames at every
+scale, and it owes this material for the frame it runs on. It now has it from a practitioner who arrived at
+it about comparison, and drew the one conclusion this blog draws: **look with your own instrument, and say
+whose it is.**
 
 ---
 
@@ -814,7 +815,7 @@ own sentence that the categorisation is "not an evolutionary one" and on its own
 Dryas evidence; §6's finding that the book marks the seam between its evidence claims and its interpretive
 ones, including the phrase "interpretation, if not explanation"; §7's four counterweights, of which the
 last two — the book's own revisionism at site level, and its first-person warrant in "Who Owns These
-Stories?" — are recorded as structures and not judged; and the closing claim that the corpus may use this
+Stories?" — are recorded as structures and not judged; and the closing claim that the blog may use this
 book and may not rest on it. **The cosmology is not endorsed** — nothing here claims the spirits are real
 and nothing claims they are not, and §6 is about why both verdicts are refused; the book's practitioner
 claims are reported, not adopted. No living author is diagnosed, the ownership question is **not

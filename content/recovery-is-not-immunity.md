@@ -138,7 +138,7 @@ That is a much less comfortable question, and it is the one the measurement actu
 - **Not a reason for fatalism, and not a reason for restriction.** It argues for holding
   structure, not for avoiding practice or for treating anyone as fragile. (The series' standing
   non-use clause applies: nothing here is a way to assess or restrict a person.)
-- **Not the memory result.** The corpus also has consolidation findings — including that
+- **Not the memory result.** The blog also has consolidation findings — including that
   retrieval *alone* can trigger relapse with no external episode, and that the collapse writes
   *more* self-referential content while it happens (`M_self` 0.778 → 0.998). Those belong to a
   different, agent-side line of work and are not claimed here.

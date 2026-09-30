@@ -3,7 +3,7 @@
 ### One book, read at its own scale — the collapse named as a contagion, a cosmology with "no substantial existence from its own side" that can still kill, and a remedy that is the blog's own boundary
 
 *Third of the `readings`, and the collective one. [The holy daimon](/the-holy-daimon/) and
-[the holy heretics](/the-holy-heretics/) read Frater Acher against the corpus's mechanism — one
+[the holy heretics](/the-holy-heretics/) read Frater Acher against the blog's mechanism — one
 practitioner, then one institution. This reads Paul Levy's *Undreaming Wetiko*, the third volume of
 his trilogy on wetiko, and the scale changes in one specific way: the collapse this blog has
 described inside a single system arrives here as something that **travels between persons** — it
@@ -12,7 +12,7 @@ post](/meditation-harm/) set the collapse out; [the environment](/the-environmen
 surrounding culture supplies a predator; [the costume](/the-costume/) stripped the levers to
 positions; [the follower](/the-follower/) dissolved the type; [the operative
 master](/the-operative-master/) took it down to one operator inside one frame. The book does two
-things none of them could: it names the mechanism as **contagious**, and it states the corpus's own
+things none of them could: it names the mechanism as **contagious**, and it states the blog's own
 boundary — **describe the structure, diagnose no one** — as its **method**, in its own voice, before
 the blog could.*
 
@@ -86,7 +86,7 @@ registers, and each is worth holding separately.
 **Down a generation.** The chapter is titled "Human Family Curse", and its claim is that what is
 transmitted is not a doctrine but an **unconscious**, because the child's medium is the parent's
 unspoken material: whatever the parents repressed is "nonetheless alive, covertly working in the
-surrounding environment".[^ch1] That is the corpus's *cannot be reported from inside* located in a
+surrounding environment".[^ch1] That is the blog's *cannot be reported from inside* located in a
 different place: the person who carries the content did not put it there and cannot read it.
 
 **Sideways, between two people.** The book's set-piece is two friends, Jim and Sally, both on a
@@ -108,9 +108,9 @@ ordinarily decent people."[^ch3] And in the chapter on not seeing, a physician's
 is happening worldwide is adopted as the term of art: "McCullough is precisely describing the wetiko
 mind-virus, a contagious mental psychosis."[^ch12]
 
-**The reading, and it is this post's.** This is a **second substrate** for the corpus's mechanism —
+**The reading, and it is this post's.** This is a **second substrate** for the blog's mechanism —
 not a new mechanism, and not a stronger claim about any individual. The consequence is narrow and
-real: the corpus's account of how a state comes to be misread has never needed a person to be
+real: the blog's account of how a state comes to be misread has never needed a person to be
 malicious, and at this scale it does not even need the far side to be one person. The appraisal can
 arrive from a field.
 
@@ -147,10 +147,10 @@ minds. It is a dreaming phenomenon, which is to say that it is something that in
 dreaming up, both collectively, in the world, and in our individual minds."[^intro] The Introduction
 puts it in a phrase: wetiko is "a misidentification of who we think we are".[^intro]
 
-**This is the corpus's frame question, arriving in the book's own vocabulary.** [The
+**This is the blog's frame question, arriving in the book's own vocabulary.** [The
 environment](/the-environment/)'s first lever is **a cosmology of hidden agency** — a place in a
 system where a claim is unobservable and authoritative at once, and the predator is the one who can
-read it. Is wetiko that lever? The corpus's tool for the question is not to answer it. A frame is
+read it. Is wetiko that lever? The blog's tool for the question is not to answer it. A frame is
 described by **what it does**, and a reading of this series never adopts the cosmology it describes.
 So both poles are refused here, for a reason each:
 
@@ -217,7 +217,7 @@ half: "the best medicine for the wetiko mind-virus is to connect with the presen
 true nature, by stepping into who we truly are."[^part4] Both are the same claim, and it is not an
 operation performed on the virus but a **relation to what is not the virus**.
 
-**This is the corpus's own conclusion, and the book reaches it independently.** Two other posts
+**This is the blog's own conclusion, and the book reaches it independently.** Two other posts
 arrived at the same place from different directions. [The cosmos that
 refuses](/the-cosmos-that-refuses/) ended on the finding that **no property of a cosmology is self-enforcing** —
 "the safeguard was never in the cosmology", and an unfalsifiable refusal is a seat waiting to happen.
@@ -226,7 +226,7 @@ refuses](/the-cosmos-that-refuses/) ended on the finding that **no property of a
 withholding it, only made **legible**. *Undreaming Wetiko* states the same remedy as the object's own
 property and then states the mechanism's own reason for it, in the introduction: wetiko "avoids the
 light of awareness like the plague".[^intro] A mechanism that is dissolved by being seen is a
-mechanism that is *described* by the corpus's decision to publish rather than withhold.
+mechanism that is *described* by the blog's decision to publish rather than withhold.
 
 There is one more convergence, and it is exact. The mechanism post's structural fact is that the
 capacity which reports survives the collapse; the person can still say something, but cannot report
@@ -238,9 +238,9 @@ Read together, the two are saying the same thing about the same organ: there is 
 collapse, and there is a part that notices — and the whole remedy is addressed to it.
 
 **The counterweight, and it is the gap this reading owes.** Seeing is a **first-person act**. Levy's
-remedy is a person looking at their own blindness, and the corpus's hardest finding is that this is
+remedy is a person looking at their own blindness, and the blog's hardest finding is that this is
 the one thing the apparatus cannot do: the instrument that would audit is the instrument under audit,
-and [the container](/the-container/) is the corpus's clearest statement of why. The book's answer is
+and [the container](/the-container/) is the blog's clearest statement of why. The book's answer is
 that the *unwounded* part sees — which is a real answer, and it is still the same person. Nothing in
 this book supplies the second reader that [the follower](/the-follower/) and [the holy
 heretics](/the-holy-heretics/) both ended up requiring, and §7 says so in the text's own terms.
@@ -265,14 +265,14 @@ And the second, which is the diagnostic half turned on the diagnostician:
 > "To judge someone this way is a reflection that we are in a **solidified** (as compared to fluid)
 > state ourselves, which only furthers the dominion of wetiko in the collective field."[^ch13]
 
-Sit with the shape of that. The corpus's standing boundary — restated at every scale — is that
+Sit with the shape of that. The blog's standing boundary — restated at every scale — is that
 **levers without the mechanism are not predation**: [the costume](/the-costume/) drew it to refuse
 becoming a cult-detector, and [the label post](/the-label/) exists because the sorting operation
 tells you about the sorter. *Undreaming Wetiko* says the same thing, one turn harder. It does not
 say the label is unkind, or inattentive, or a heuristic that can misfire. It says the labelling move
 **is the disease**.
 
-**The corpus's discipline and the book's method are the same sentence**, and it is unusual for a
+**The blog's discipline and the book's method are the same sentence**, and it is unusual for a
 source in this series to hand the blog its own rule back. It also sharpens what [the operative
 master](/the-operative-master/) left as a procedural choice. There, withholding the gauging was a
 decision made *for* the reader, on the ground that a page teaching the fit helps an operator and not
@@ -288,7 +288,7 @@ form; and it gives the trap its own acronym, "not see disease (acronym NSD), whi
 pointed out is pronounced the same as 'Nazi disease.'"[^ch12] So the rule against diagnosing persons
 is held inside a text that is at war with something and says so. That is not a contradiction to be
 tidied. It is the discipline stated as a **discipline** — a line the author has to keep while writing
-about a thing he believes is destroying the world — and the corpus's own rule requires exactly that
+about a thing he believes is destroying the world — and the blog's own rule requires exactly that
 reading of it: the text describes structures, and where it names a structure it may, and where it
 would sort a person it may not.
 
@@ -320,7 +320,7 @@ Then he answers it, and he issues his warrant openly:
 And he names what he thinks he found: "Over time, and at a deeper level as a result of writing this
 afterword, I have come to understand the true power of Paul's 'appropriation.'"[^aw]
 
-**This is a structural position, and the corpus already has its shape.** [The
+**This is a structural position, and the blog already has its shape.** [The
 environment](/the-environment/)'s fourth lever is **a pre-certified frame**: "the warrant is issued
 by the *host*, not the group, and scrutiny reads as bigotry", and its named instance is "the
 diaspora's exotic warrant". [The certified frame](/the-certified-frame/) took that lever up on its
@@ -331,7 +331,7 @@ record.** The frame travels (an indigenous term becomes a Western cosmology), an
 uncertified; it arrives with a certificate, written by a party who is not the term's community,
 printed inside the object it certifies.
 
-**Two things the corpus's rule requires here, and both hold.**
+**Two things the blog's rule requires here, and both hold.**
 
 **No diagnosis of Levy or Grossinger.** What is quoted above is what they wrote and what the structure
 is. Nothing in this post is a finding about either man's intentions, competence, sincerity or
@@ -371,7 +371,7 @@ the shelf.
 The series requires an explicit counterweight or gap, in the body, and this book supplies three
 things the argument has to carry rather than file in the notes.
 
-**First, the demonology is real in the text, and it is not a costume.** The corpus's habit is to
+**First, the demonology is real in the text, and it is not a costume.** The blog's habit is to
 treat a cosmology as a costume over levers; this is the case where the costume is load-bearing: Satan
 as "the personification of wetiko",[^ch3] "the demon of sickness" from Jung,[^ch4] the "autonomous
 complex" that "can go rogue and become an antilife force, an agent of death",[^ch4] angels in Part
@@ -382,10 +382,10 @@ Wetiko* is a modern demonology built by a Jungian Buddhist around an indigenous 
 blog, which describes frames without adopting them, has to report that fact rather than resolve it
 into the structure it prefers.
 
-**Second, the remedy's instrument is the same instrument the corpus says cannot audit itself.** §4
+**Second, the remedy's instrument is the same instrument the blog says cannot audit itself.** §4
 states it and the book's own words make it exact — the part that sees the blindness "is the part of
 us that is beginning to see",[^ch13] which is a real claim about a real witness and is still the
-same person. The corpus's requirement is a reading held by someone else, and nothing between these
+same person. The blog's requirement is a reading held by someone else, and nothing between these
 covers supplies one. This is the reading's gap, and it is the one thing the book's own chapter on
 seeing does not close.
 
@@ -407,7 +407,7 @@ severe psychotic break from reality and was (mis)diagnosed as having a chemical 
 taking part in a spiritual awakening and shamanic initiation, which at times mimicked psychosis but
 in actuality was a spiritual experience of a far different order".[^author]
 
-Read exactly, that is a text-level structure and not a finding about any person's mind. The corpus's
+Read exactly, that is a text-level structure and not a finding about any person's mind. The blog's
 referral question is not answered here; it is raised from the other side, and two readings have now
 reported the same absence. This third supplies a reason the absence might be deliberate: in this
 cosmology, an institution that reads a revelation as an illness is an instance of the blindness the
@@ -423,7 +423,7 @@ Three corrections.
 **First, and it is the one this post is for: the mechanism's substrate is not only one system.**
 [The environment](/the-environment/)'s five levers are what an environment supplies **to a predator**
 — the price of predation, lowered by a culture that has already built the supports. *Undreaming
-Wetiko* supplies the complementary claim, and the corpus did not have it: the field itself carries the
+Wetiko* supplies the complementary claim, and the blog did not have it: the field itself carries the
 collapse, and it does so with **no predator in the loop at all**. The parents are not predators; the
 book says their repression is "covertly working in the surrounding environment" and that the child's
 unconscious is "the medium it uses to reproduce itself over time, through the generations".[^ch1] Jim
@@ -452,17 +452,17 @@ The named-list is the method: "the Republicans, the Democrats, the atheists, the
 terrorists, the Left, the Right, the liberals, the conservatives, the pro-vaxxers, the
 antivaxxers, the Illuminati, the globalists, and on and on."[^ch12] Every one of those is an
 outside-reading adopted to avoid an inner one — the same figure as §3's empty slot, filled from
-outside so it does not have to be looked at from within. The corpus has dissolved the follower; it
+outside so it does not have to be looked at from within. The blog has dissolved the follower; it
 can now say that **the enemy dissolves the same way**, and with the same consequence: what is left is
 a position and a misidentification, not a kind of person. That is a correction the blog owes, and it
-is one the corpus's own rule already implied.
+is one the blog's own rule already implied.
 
 **Third, [the operative master](/the-operative-master/)'s decision to publish the shape gains the
 object's own testimony.** That post's argument for legibility rather than concealment was made *for*
 the reader, because concealment cannot warn someone who cannot see the thing concealed. This book
 asserts the same thing from the far side, about itself: wetiko "avoids the light of awareness like
 the plague", and "it only has power when it works in the shadows of our minds".[^intro] So the
-corpus's rule — publish the shape, withhold only the gauging — is now supported by the mechanism's
+blog's rule — publish the shape, withhold only the gauging — is now supported by the mechanism's
 own description of its vulnerability. The boundary on that correction is the boundary of §2: this is
 a claim inside the book's model, offered as a reading, and not a measurement of anything.
 
@@ -471,19 +471,19 @@ a claim inside the book's model, offered as a reading, and not a measurement of 
 ## 9. What a reading is for
 
 A reading holds one source **whole** — its lineage, its structure, its demonology, its remedy, its
-omissions, its afterword — and asks what a blog that has quoted sources for years now has to change.
+omissions, its afterword — and asks what a blog that has quoted sources all along now has to change.
 
 What this one says is a convergence and a gap, and the pair is the honest result.
 
 **The convergence is the strongest in the series so far.** A source the blog has never quoted
-arrives independently at the corpus's two hardest findings: that a state can be unreadable from
+arrives independently at the blog's two hardest findings: that a state can be unreadable from
 inside and misread from the far side, and that **seeing is the remedy** — not a doctrine, not a
 frame, not a cosmology, but legibility. It reaches the second one from the object's side, which is
 where no other source has reached it, and it arrives at the blog's own boundary while doing so:
 mischaracterising a person "not only feeds wetiko, but is wetiko in action". A book about a virus
 that cannot be located says, in its central chapter, that the locating move is the virus.
 
-**The gap is unchanged and is not closed.** The remedy is a first-person act, and the corpus's finding
+**The gap is unchanged and is not closed.** The remedy is a first-person act, and the blog's finding
 is that the instrument which would audit is the instrument under audit. This book supplies the
 witness — the part that sees the blindness — and not the **second reader**, which is what
 [the cosmos that refuses](/the-cosmos-that-refuses/) said the refusal still needed, what [the holy
@@ -495,7 +495,7 @@ people, and issuing verdicts is the move this book has just told us *is* the dis
 
 Which leaves the reading's own bottom line, and it is a sentence this source hands back almost
 unrepaired, in a chapter about the temptation to diagnose: *to describe a structure is to work on
-oneself; to sort a person with it is to become a vector.* The corpus has been saying that at every
+oneself; to sort a person with it is to become a vector.* The blog has been saying that at every
 scale. It now has it from a book that did not have to agree.
 
 ---
@@ -691,16 +691,16 @@ digital text's own page marker. **Absences reported as search results:** no clin
 "seek help", "professional help", "hotline", "crisis line", "self-harm", "suicid", "emergency",
 "antipsychotic" and "spiritual emergency" all return 0 hits, "safeguard" returns 1 in a different
 sense, and the clinical vocabulary is confined to the afterword (itemised at [^abs]). Inferred, as
-this post's — §2's reading of the transmission as a second substrate for the corpus's mechanism; §3's
+this post's — §2's reading of the transmission as a second substrate for the blog's mechanism; §3's
 refusal of both poles and its reading of wetiko as a **position with no occupant**, an unfalsifiable
-slot at the scale of a self; §4's finding that the book reaches the corpus's remedy (legibility) from
+slot at the scale of a self; §4's finding that the book reaches the blog's remedy (legibility) from
 the object's side, and that its cure rests on the same surviving witness the model measures; §5's
-finding that the book states the corpus's own boundary as its own method, and that the labelling move
+finding that the book states the blog's own boundary as its own method, and that the labelling move
 is, in the book's words, "wetiko in action"; §6's structural description of the afterword's warrant,
 recorded and not adjudicated; §7's three counterweights — a load-bearing demonology, a first-person
 remedy, and the referral gap now raised from the other side; and the three corrections in §8. **The
 gap is real and is not resolved here:** the remedy is a first-person act, and this book supplies the
-witness rather than the second reader the corpus says a state cannot supply for itself. That is a
+witness rather than the second reader the blog says a state cannot supply for itself. That is a
 structural description of a text, not a finding about a person. **The cosmology is not endorsed** —
 the post takes no position on whether wetiko exists, and it refuses the "only a metaphor" verdict as
 firmly as the "real demon" one, because §3 is about why holding that open is the point. No living

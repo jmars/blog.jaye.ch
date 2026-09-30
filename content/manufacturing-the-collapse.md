@@ -109,7 +109,10 @@ the intent of conversion, and converting activities are framed as being friendly
 casual."**
 
 **Robert Lifton**[^lifton], studying the same phenomenon and then tracking it into cults, named the
-methods — and several of them are *physiological*, not merely social:
+methods — and several of them are *physiological*, not merely social. The phrasing quoted below is from
+Lifton's 1991 restatement of the criteria (the note cites it alongside the 1961/1989 book, whose chapter 22
+states the same themes in its own words — including "a fear of extinction or annihilation" where the 1991
+restatement reads "collapse"):
 
 - **Milieu control** — control of all communication in the environment, which he describes as
   "an attempt to manage an individual's **inner** communication," maintained by isolation and
@@ -200,7 +203,7 @@ Lifton's **sacred science**, **loading the language**, and **doctrine over perso
 - The loaded language makes the doctrine the *medium* of thought, so it stops feeling like a
   belief and starts feeling like the shape of reality.
 
-And here the corpus supplies the piece that closes the loop. The risk post's companion
+And here the blog supplies the piece that closes the loop. The risk post's companion
 finding — Pons et al. 2026[^pons] — is that meditation-triggered states **phenomenologically identical
 to depersonalization** were rated by the people who had them as **"more welcome, pleasant, and
 spiritually meaningful"** than the same state in a clinical group.

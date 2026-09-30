@@ -382,7 +382,7 @@
       "file": "undreaming-wetiko.md",
       "navLabel": "undreaming wetiko",
       "kind": "reading",
-      "summary": "A close reading of Paul Levy's Undreaming Wetiko — the collapse named as a contagion, a cosmology with no intrinsic existence that can still kill, and a cure that is the corpus's own boundary: labelling the possessed is itself the virus.",
+      "summary": "A close reading of Paul Levy's Undreaming Wetiko — the collapse named as a contagion, a cosmology with no intrinsic existence that can still kill, and a cure that is the blog's own boundary: labelling the possessed is itself the virus.",
       "date": "2026-09-30",
       "published": true,
       "series": "readings"
@@ -412,7 +412,7 @@
       "file": "star-ships.md",
       "navLabel": "star.ships",
       "kind": "reading",
-      "summary": "A close reading of Gordon White's Star.Ships — the deep-prehistory argument that the spirits came first, read at its own scale and against the corpus's inherited-frame finding.",
+      "summary": "A close reading of Gordon White's Star.Ships — the deep-prehistory argument that the spirits came first, read at its own scale and against the blog's inherited-frame finding.",
       "date": "2026-09-30",
       "published": true,
       "series": "readings"
@@ -442,7 +442,7 @@
       "file": "egregores.md",
       "navLabel": "egregores",
       "kind": "reading",
-      "summary": "A close reading of Mark Stavish's Egregores — the entity the corpus used for its predation account, read whole: a group-made mind that is normatively neutral, and the deprogramming chapter the blog never cited.",
+      "summary": "A close reading of Mark Stavish's Egregores — the entity the blog used for its predation account, read whole: a group-made mind that is normatively neutral, and the deprogramming chapter the blog never cited.",
       "date": "2026-09-30",
       "published": true,
       "series": "readings"
@@ -453,6 +453,16 @@
       "navLabel": "the lucifer effect",
       "kind": "reading",
       "summary": "A close reading of Zimbardo's The Lucifer Effect — the situational thesis at book length, and the certified frame whose record has since collapsed: what the archive shows the Stanford Prison Experiment actually was.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
+    },
+    {
+      "slug": "thought-reform",
+      "file": "thought-reform.md",
+      "navLabel": "thought reform",
+      "kind": "reading",
+      "summary": "A close reading of Lifton's Thought Reform and the Psychology of Totalism — the eight criteria the blog has run all along on secondary summaries, read at source, and the certified checklist they became.",
       "date": "2026-09-30",
       "published": true,
       "series": "readings"

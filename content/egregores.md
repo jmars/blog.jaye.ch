@@ -1,15 +1,15 @@
 # Egregores
 
-### Eighth of the `readings`, one book at its own scale — the book the corpus had already been quoting for two years, read whole for the first time, and found to be arguing the opposite of the case it was borrowed for
+### Eighth of the `readings`, one book at its own scale — the book the blog had already been quoting, read whole for the first time, and found to be arguing the opposite of the case it was borrowed for
 
-*Eighth of the `readings`, and the first whose occasion is the corpus's own use of it. [The western
+*Eighth of the `readings`, and the first whose occasion is the blog's own use of it. [The western
 column](/the-western-column/) quoted this book for one thing: a magical order destroyed by the very
 structure it was built around, the predation account with the brainwashing line in it. [Ahead of the
 story](/ahead-of-the-story/) quoted it for another: the Butler formulation of the shared thought-form,
 read as a fact about groups. Both borrowings were accurate, and both took **a worst case and a
 mechanism**. Neither post read the book. This one does — and finds that the claim underneath the worst
 case is the opposite of a pathology, that the same structure is what a healthy group runs on, and that
-the book's countermeasure, which the corpus never cited, has a **pace** in it.*
+the book's countermeasure, which the blog never cited, has a **pace** in it.*
 
 *Status.* This post reads **one** source. The quotations are verbatim from the digital text, checked
 character for character against the file and cited in the notes by chapter and section; the reading of
@@ -30,12 +30,12 @@ Traditions in Rochester, Vermont, in 2018 — paperback ISBN 978-1-62055-577-4, 
 appendix is a 1929 narrative of a group's attempt to revive the egregore of the Roman Empire; the first —
 **Appendix 1**, "Personal Accounts of
 Disengaging from an Egregore" — is three first-person accounts by former members of three different
-organisations, and that is where the corpus's interest has been.[^app2][^app1]
+organisations, and that is where the blog's interest has been.[^app2][^app1]
 
 Two corrections to the chapter list the brief carried: "A Modern Example of the War of the Egregores",
 "The Power of the Egregore", "Watch Your Dreams" and "Language as a Control Mechanism" are **sections of
 chapter 1**, and "The Golden Dawn Egregore" and "Walter Ernest Butler" are **sections of chapter 2** — a
-small thing until one notices that the corpus's first borrowing is not from a chapter at all.
+small thing until one notices that the blog's first borrowing is not from a chapter at all.
 
 Both borrowings are quoted in the posts that made them. [The western column](/the-western-column/) §5 has
 the predation — the Secret Chiefs "relentlessly demanding of superhuman effort", the recruits whipped in
@@ -46,7 +46,7 @@ of your spiritual path, not spirits, not Chiefs, and not Imperators."[^wc][^app1
 into the collective thought-form but, equally, into each member there also passes the influence of the
 group as a whole", and the warning that dependence made "mandatory upon all its members" is "treading a
 dangerous and slippery path".[^wc][^ch2] That is in **chapter 2**, quoted by Stavish from W. E. Butler's
-1970 article "The Egregore of a School". So the corpus has had, for two years, one piece of the book's
+1970 article "The Egregore of a School". So the blog has had one piece of the book's
 worst material and one piece of its mechanism, and has never had its claim.
 
 ---
@@ -87,7 +87,7 @@ three questions, unusually candid about what kind of inquiry this is:
 > to what ends?"[^intro]
 
 The second and third are questions about **management** — who runs the collective body, and to what end —
-and that is why the book is legible to a corpus that has spent fifteen posts on how groups hold positions.
+and that is why the book is legible to a blog that has spent fifteen posts on how groups hold positions.
 Then the bracket, which the book supplies itself:
 
 **The group-mind is not the occult part.** Before the book's claim is weighed, it is worth separating
@@ -102,7 +102,7 @@ group is not a heap of persons.
 
 What the occult register adds is not the collective mind but its **autonomy** — that the groupmind is an
 *entity*, with its own existence, that can outlive its members and act on them. That is the claim to hold
-open, and it is the whole distance between Le Bon and Stavish. The corpus's method applies exactly: the
+open, and it is the whole distance between Le Bon and Stavish. The blog's method applies exactly: the
 shared mind is a **structure**, and whether the structure is also a **being** is the part the blog does
 not decide.
 
@@ -116,9 +116,9 @@ a figure of speech for a shared mood. Where the book claims a **being**, this po
 
 ## 3. The word, which does not mean what the book says it means
 
-**The book has a term with a history, and the history has the shape the corpus keeps finding: an old name
+**The book has a term with a history, and the history has the shape the blog keeps finding: an old name
 carrying a new claim.** This is a small philological point with a large consequence, and it is the kind of check
-the corpus asks of every frame — what does the authority claim, and does it survive contact with the source?
+the blog asks of every frame — what does the authority claim, and does it survive contact with the source?
 
 Read Éliphas Lévi, the writer the modern usage is traced to, and his *Eggrégore* is a biblical giant:
 
@@ -154,16 +154,16 @@ years old and was attached to the word by a man who got its root wrong.
 
 **What that does to this reading, and what it does not.** It does not make Stavish's *phenomenon* wrong; a
 group can share a mind whether or not the word for it is old. It makes the **claim of lineage** wrong — and
-that is the corpus's own subject arriving inside a single word. A **borrowed pedigree** is exactly the
-"pre-certified frame" the corpus names as a lever: the warrant issued by a host, before anyone checks the
+that is the blog's own subject arriving inside a single word. A **borrowed pedigree** is exactly the
+"pre-certified frame" the blog names as a lever: the warrant issued by a host, before anyone checks the
 issuer. The egregore's name is a warrant of that kind. The thing itself, if it exists, is new; the name it is
-given is ancient; and the gap between them is where the authority is smuggled. Which is why the corpus's
+given is ancient; and the gap between them is where the authority is smuggled. Which is why the blog's
 method applies here with unusual force: **read what the text says, not what its name implies.**
 
 ***
 
 
-## 4. The neutrality — the centre the corpus missed
+## 4. The neutrality — the centre the blog missed
 
 Here is the finding of this reading, in one sentence. **The book's egregore is not a pathology.** It is
 ordinary equipment, and the book says so in its most quoted definition, in the foreword, in the chapter
@@ -178,7 +178,7 @@ it is **directional**, and the direction comes from the members. Butler's expans
 explicit: "Each member of the group pours energy into the collective thought-form but, equally, into each
 member there also passes the influence of the group as a whole."[^ch2] Nothing in the structure chooses,
 and everything in it has a bias: towards more of itself. Then Butler does the thing that makes this section
-necessary, and it is the passage the corpus has never quoted:
+necessary, and it is the passage the blog has never quoted:
 
 > "where the mental and psychic conditions justify such domination by the collective Group mind for a
 > limited period, **such dependence upon the Egregore may even be remedial**. But any organization, which
@@ -199,7 +199,7 @@ other living organisms".[^ch7] What that looks like in the book's own examples i
 unglamorous. Chapter 7 adds the school alumni association, "one of the stranger manifestations of a group
 mind and also one of the most common"; chapter 1 adds the family egregore, where "families who achieve
 renown or are even feared over several generations do so in part because of the egregore they have built
-up around themselves".[^ch7][^ch1] The predation the corpus borrowed is in this book. It is not what the
+up around themselves".[^ch7][^ch1] The predation the blog borrowed is in this book. It is not what the
 book is about.
 
 Against [the environment](/the-environment/), which asked what a predator does **not** have to build
@@ -275,7 +275,7 @@ book.
 
 ## 6. Language as a control mechanism
 
-The section of chapter 1 with that title is the purest corpus territory in the book. Its argument is that
+The section of chapter 1 with that title is the purest blog territory in the book. Its argument is that
 a tradition's **self-description** is part of how its egregore is maintained — that the frame is carried
 in the wording, and that a membership taught to define itself only in its own terms has handed the
 definition to the structure:
@@ -300,14 +300,14 @@ be limited consciously.[^ch7] The clearest version of the mechanism is in chapte
 > directing them to."[^ch7]
 
 Hear, believe, act. That is [the mechanism post](/meditation-harm/)'s install-the-frame step in the idiom
-of a communications department, and it is a real addition to the corpus's vocabulary, because it names the
+of a communications department, and it is a real addition to the blog's vocabulary, because it names the
 **third** clause as the operative one: a narrative heard and believed but not acted on has not taken, and
 the test of a frame is behaviour.
 
 The counterweight goes here rather than at the end. **As stated, this argument cannot fail.** Any
 tradition that maintains its own definitions exhibits the mechanism; any tradition that does not also
 exhibits something, by neglect. A frame that explains both the control and the absence of control is not
-making a prediction, and the corpus's own rule applies — an instrument that cannot return "undecided" will
+making a prediction, and the blog's own rule applies — an instrument that cannot return "undecided" will
 return something else. The salvageable version is narrower: the **definition** of the group's terms is a
 resource, someone holds it, and who holds it is checkable.
 
@@ -371,12 +371,12 @@ a shared mind has removed the person who did it.
 This is the reading's second occasion. [The western column](/the-western-column/) used this book for the
 diagnosis and never for the prescription; it quoted one closing imperative — "you are in charge of your
 spiritual path" — and treated that as the book's countermeasure. It is a countermeasure, and it is one
-sentence. **Chapter 7 is a procedure**, and the corpus has never cited it.
+sentence. **Chapter 7 is a procedure**, and the blog has never cited it.
 
 **First, the honest scale of the problem.** Extraction is compared, without hedging, to leaving a
 mind-control cult: it is "the same thing as demonstrated in **deprogramming from destructive mind-control
 cults (DMCC)**".[^ch7] And then the sentence that keeps the comparison from becoming an accusation, which
-is the most careful line in the book and the one this corpus most needed:
+is the most careful line in the book and the one this blog most needed:
 
 > "It is important to note that **all egregores are cults in the classical sense of the word, but not all
 > are cults in the modern pejorative sense.**"[^ch7]
@@ -471,7 +471,7 @@ Stavish from Butler and attributed by Butler to Dion Fortune:
 
 That is an outside check in the exact sense this series means: it cannot be performed from inside the
 group's own terms, it looks at people rather than at claims, and it is checkable by anyone. Set beside the
-"you are in charge of your spiritual path" line the corpus already had, it is the stronger instrument — the
+"you are in charge of your spiritual path" line the blog already had, it is the stronger instrument — the
 first tells the practitioner to trust their own authority, the second to look at the output.
 
 So the answer to this reading's second question is: **yes, the book supplies a real countermeasure.** A
@@ -498,7 +498,7 @@ practice, and the word "safeguard" does not occur. A search shows only what it i
 scoped: within this text, the referral is absent.
 
 This matters more here than in the other readings, for two reasons. **First, because of what this book
-contains.** It is the corpus's most explicit Western account of groups that **damage people** — members
+contains.** It is the blog's most explicit Western account of groups that **damage people** — members
 whipped in closets, a leader who "had the discipline and ethics of an eight-yearold child", a school
 destroyed, a Chief whose involvement with the occult began "through a complete psychotic break" after
 which "he was cataleptic for about a month and was briefly institutionalized."[^app1] In the second
@@ -506,7 +506,7 @@ appendix account, a man in the aftermath of a grand master's death reports chest
 enough for an emergency room.[^app1] The material is this close to a clinical boundary. The book never
 names one.
 
-**Second, because of the contrast inside the corpus.** [The western column](/the-western-column/) §4
+**Second, because of the contrast inside the blog.** [The western column](/the-western-column/) §4
 singled out the clinical referral as "the single most striking passage in the Western material" — and
 credited it to Josephine McCarthy's Quareia curriculum: "Clean yourself up magically, and **if you are
 still hearing them, go see a doctor.**"[^wc] The book it used for the predation account of the West
@@ -523,7 +523,7 @@ wrote a whole chapter on extraction and did not write the sentence.
 
 Two corrections, and they are the same correction seen from two ends.
 
-**One: the corpus took the book's marked-as-dramatic appendix and left its thesis.** The quotation [the
+**One: the blog took the book's marked-as-dramatic appendix and left its thesis.** The quotation [the
 western column](/the-western-column/) §5 uses — the closets, the whipping, the burnout, the brainwashing,
 the spirits-and-Chiefs line — is in **Appendix 1**, and the appendix has a preamble that changes what the
 material is. In full:
@@ -535,24 +535,24 @@ material is. In full:
 > each reader to compare the statements of the following people with their own personal experiences to
 > see if there is anything that may be of value to them."[^app1]
 
-The book says, in its own voice, that the accounts the corpus used are **selected for being dramatic**, and
+The book says, in its own voice, that the accounts the blog used are **selected for being dramatic**, and
 that "many people have positive experiences". Those three accounts — a former member of a Tibetan Buddhist
 organisation, a former member of a worldwide initiatic fraternity, and the writer of the Secret Chiefs
 account — are introduced as examples, "for the sake of comparison", with each writer supplying their own
-recollection. The corpus's note to that material describes it as "the account of the order"; the passage
+recollection. The blog's note to that material describes it as "the account of the order"; the passage
 is a contributed first-person account in an appendix, and the writer of it is not named.[^wc][^app1]
 
 Set that beside the book's thesis, and the flattening is exact. The book's claim is that a group's shared
 mind is **amoral**, **born of necessity, one might even say accidentally**, **possibly remedial**, able to
 **inspire or enslave**, and that **there are egregores that are healthy for some people** — "one need only
 look at the number of people who overcome addictions, health concerns, or emotional distress by
-interacting with healthy support groups."[^ch7] The corpus took the three accounts the book flags as its
+interacting with healthy support groups."[^ch7] The blog took the three accounts the book flags as its
 dramatic cases, and left the ordinary case the book spends six chapters on. That is the same failure of
 reading [Star.Ships](/star-ships/) caught in [the deep inheritance](/the-deep-inheritance/) — a book's
 *strongest available* figure taken as the book's frame, when the book's own text is weaker and better.
-It happened here to the corpus's own most careful post about the West.
+It happened here to the blog's own most careful post about the West.
 
-**Two: the corpus took the diagnosis and left the prescription.** [The western column](/the-western-column/)
+**Two: the blog took the diagnosis and left the prescription.** [The western column](/the-western-column/)
 §5 closes on the "you are in charge of your spiritual path, not spirits, not Chiefs, and not Imperators"
 line and calls it "the countermeasure". It is a countermeasure, and it is a **verdict** — an assertion of
 authority against the structure. The book's **procedure** is chapter 7, which that post does not cite: the
@@ -560,17 +560,17 @@ support requirement, the box, the one-month floor and the six-week ideal, the on
 benchmark, the two-year ceiling, the promise-and-delivery checklist, the manner-rule on therapeutic
 blasphemy, the Tuesday destruction of the tools, the three-point standing defence, and Fortune's fruits
 test. That is some twenty pages of programme, and it is the thing this series was arguing for when it said
-the Western column writes safeguards **into the training**. The corpus found the sentence. It missed the
+the Western column writes safeguards **into the training**. The blog found the sentence. It missed the
 chapter.
 
 Both corrections run the same way as the reading's central finding: **the book is not a predation case
 with a warning attached. It is a treatment of an ordinary structure that sometimes eats its host, and it
-prescribes, at length, what to do when it does.** The corpus published the worst page and the closing
+prescribes, at length, what to do when it does.** The blog published the worst page and the closing
 sentence. Three things follow. **One** — the frame inventory gains a third kind of object: [a cosmos of
 persons](/a-cosmos-of-persons/) has a reading and no seat, [the owned cosmos](/the-owned-cosmos/) has a
 seat, and the book supplies a **shared position nobody occupies** — [the environment
 post](/the-environment/) given a name and a metabolism, with the harm appearing inside it as an
-**appointment** rather than as a property of the thing itself. **Two** — the corpus's argument about the
+**appointment** rather than as a property of the thing itself. **Two** — the blog's argument about the
 ordinary case acquires its opposite from the same source: a tradition's shared mind is what a tradition
 runs on, and the disaster is the structure with a closed reader, not the structure. **Three** — the
 positive programme gains a **rate**, which the blog has never had. The book's own conclusion offers the
@@ -583,7 +583,7 @@ Frames are not ranked by their content, and the question that has an answer is w
 can check it. This blog will not say there is no good or evil. It will say what it has said from the
 beginning, and what this book, read whole, supports — **a group-made mind is ordinary, it is directional,
 and the harm is in the seat**. The Western tradition that knew the most about it wrote down both the
-disaster and the treatment, in one book, with the treatment longer, and this is the first time the corpus
+disaster and the treatment, in one book, with the treatment longer, and this is the first time the blog
 has read them together.
 
 ---
@@ -631,8 +631,7 @@ cosmology: "join a certain good Egregor" is not an instruction this blog can giv
 destruction is described in terms — "the energetic link", "residual etheric links" — that the blog
 brackets. But the **shape** of the prescription survives the bracketing: a support requirement, a rate, a
 checklist, a manner-rule, a documented separation with a date, and an explicit permission to return. Those
-are the parts a reader who does not accept the metaphysics can use, and the parts the corpus should have
-had two years ago.
+are the parts a reader who does not accept the metaphysics can use, and the parts the blog should have had all along.
 
 ---
 
@@ -823,7 +822,7 @@ process of its revival than an existing strong and vital one" (114300). The appe
 reading only as the book's own closing structure: its final exhibit is a documented attempt to reactivate
 a dead group mind, reported by its participants.
 
-[^wc]: The corpus's two prior uses of the book, corrected in §9. [The western
+[^wc]: The blog's two prior uses of the book, corrected in §9. [The western
 column](/the-western-column/) §5 and its note (the one citing Stavish) — the predation passage, called there "the
 account of the order"; the post's text describes it as "Mark Stavish's *Egregores*… contains an account of
 a magical order — the author is describing a school he was inside". The passage is in Appendix 1, a
@@ -833,7 +832,7 @@ book's own thesis chapters say the opposite thing about egregores in general. [A
 story](/ahead-of-the-story/) §8 and its note (the Butler/egregore citation) — the Butler formulations from chapter 2, used
 there as "§5 stated as a fact about groups"; that note cites Butler via Stavish accurately, and the
 passage's own continuation ("such dependence upon the Egregore may even be remedial") is the part the
-corpus's neutrality argument was missing. This post does not repeat [the western
+blog's neutrality argument was missing. This post does not repeat [the western
 column](/the-western-column/) §5–§7; it reads the rest of the book, and states in §9 exactly which
 sentences the two posts took.
 
@@ -876,7 +875,7 @@ quotations.
 "safeguard", "physician", "therapist", "psychiatry", "psychosis", "counsel", "supervis"); the single
 "psychiatr" hit and the three "doctor" hits are itemised at [^gap]; and the metered pace that *is* present
 belongs to the countermeasure, not to the practice (one month minimum, six weeks ideally, one month per
-year of involvement, up to two years). **The correction this reading makes:** the corpus's two prior uses
+year of involvement, up to two years). **The correction this reading makes:** the blog's two prior uses
 of this book took, respectively, its **marked-as-dramatic appendix** (Appendix 1, three contributed
 accounts the book introduces as "dramatic and… chosen for this very quality") and its **mechanism**
 (Butler as quoted in chapter 2), and left the book's thesis — that a group's shared mind is **amoral**,
