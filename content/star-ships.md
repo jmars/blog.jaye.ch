@@ -258,8 +258,7 @@ Four parts, and the first is the one that changes an argument.
 inheritance](/the-deep-inheritance/) states the finding as a **phylogeny** and then, in its §2, sorts the
 world's mythologies "into two deep families with a shared root". That is a fair summary of the two living
 families — but the book names the root as a **third category** with its own name, its own date range
-(150,000–65,000 years) and its own status, which is **reconstruction with no extant examples**. The blog
-has been carrying the tree while walking past the branch the author labels tentative. This is an extension
+(150,000–65,000 years) and its own status, which is **reconstruction with no extant examples**. The blog has been carrying the two-family tree while walking past the branch the author labels tentative. This is an extension
 in the literal sense: the missing category is the one that would have made the blog's own caution —
 *these are reconstructions* — more visible rather than less.
 

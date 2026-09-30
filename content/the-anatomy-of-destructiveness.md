@@ -7,8 +7,7 @@ rather than a personality, and warned that the instrument which would sort peopl
 that fails; [the Lucifer Effect post](/the-lucifer-effect/) read the social psychology the blog had
 been running unnamed and found the study underneath it broken; [Eichmann in Jerusalem](/eichmann-in-jerusalem/)
 took the blog's most-quoted phrase back to its source and found a faculty where the blog had assumed a
-structure. This is the third book the tree's own planning note files in that group, and the one the
-blog has never cited at all — a psychology that refuses the position-versus-personality split from the
+structure. This is the third book in that group, and the one the blog has never cited at all — a psychology that refuses the position-versus-personality split from the
 other side, argues that something **inside the person** is also real and describable, and would put it
 on a scale and count it.*
 
@@ -38,9 +37,7 @@ The text's sections stand out of book order and its running heads are unreliable
 citations below are by chapter and section, the way the other readings have handled damaged texts.[^file]
 
 Two facts belong before the reading. **The blog has never cited him**: a case-insensitive search for
-"Fromm" across `content/` returns nothing, not one line, in any post.[^cite] He appears in the tree only
-in the planning note that files him with Arendt and Zimbardo as unmined, and in the build plumbing for
-this post.
+"Fromm" across the blog returns nothing, not one line, in any post.[^cite] Arendt was read at the eleventh reading and Zimbardo at the ninth; this is the third of the three.
 
 **And he is the hardest of them to place.** The blog's method has two standing forms. The first is
 *describe structures, diagnose no one*, which forbids the diagnosis of a person. The second is stronger:
@@ -614,11 +611,7 @@ and checked character for character against it. Its sections stand out of book o
 the top of chapter 13 and places the Contents page near the end — and its running heads are
 unreliable, so every citation in this post is by chapter and section.
 
-[^cite]: **The audit.** Case-insensitive search for "fromm" across `content/` (48 files at the time of
-writing): **zero hits**. The name appears in the tree only in `posts.json` and `tools/build.mjs`, both
-of them the plumbing for this post, and in the planning note `continuity.md`, in the list of unmined
-library material that names "the Fromm/Arendt/Zimbardo books". Arendt was read eleventh and Zimbardo
-ninth; this is the third of the three.
+[^cite]: **The audit.** A case-insensitive search for "Fromm" across every post on the blog (and the home page) returns **zero hits**. The three books arrived together as a group in the reading list this series works from; Arendt was read at the eleventh reading and Zimbardo at the ninth, and this is the third of the three.
 
 [^intro]: **Introduction: Instincts and Human Passions**. "man's aggressive behavior as manifested in war, crime,
 personal quarrels, and all kinds of destructive and sadistic behavior is due to a phylogenetically
@@ -821,7 +814,7 @@ edition's copyright page (Holt, Rinehart and Winston, 1973; the Owl Book revised
 Road edition, ISBN 978-1-4804-0193-8); the text's shape and its out-of-book-order sections; the Contents-derived structure; every quotation,
 checked character for character against it and cited by chapter and section; the counts in §10, which are
 search results over the text of this edition; and the audit in §1, which is a count over
-`content/`. Reported as **the book's own content and not adjudicated**: the instinctivist and behaviourist
+the blog's own posts. Reported as **the book's own content and not adjudicated**: the instinctivist and behaviourist
 theses as Fromm states them, the two-aggression distinction, the character-structure account and its norm,
 necrophilia and biophilia, and the three clinical cases — Stalin, Himmler and Hitler — including the
 Hitler chapter's method, its sources and their stated reliability, its reaction-formation arguments, and
