@@ -1678,6 +1678,14 @@ const POST_META = {
       'A close reading of Gordon White\u2019s Star.Ships: the case that the spirits came first and the evidence it rests on \u2014 where it is strong, where it is contested, and how the corpus\u2019s inherited-frame finding relates to it.',
     accent: 'Star.Ships',
   },
+  'two-esoteric-tarots': {
+    prompt: 'cat two-esoteric-tarots.md',
+    tagline: 'a <b>reading</b>: a frame built by named hands \u2014 the tarot, the lineage claimed for it, and the authority over what the cards are, which is a dispute you can check from outside.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Adams & Poncet\u2019s Two Esoteric Tarots: the tarot read as a frame made portable and instrumental \u2014 a fixed correspondence system, a spread of positions, and a reader \u2014 and the Dummett-Yates controversy as the checkable-from-outside dispute the corpus asks of any frame.',
+    accent: 'Two Esoteric Tarots',
+  },
 };
 
 function buildPost(post, navPosts) {

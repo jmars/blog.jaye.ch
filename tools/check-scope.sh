@@ -53,9 +53,12 @@ fi
 
 # --- 3. forbidden strings in tracked text ------------------------------------
 # Generic patterns only: a raw transcript reference, or an ORCID-style
-# identifier. Project-specific strings come from `.scope-local`. The guard's own
-# files necessarily mention these patterns, so they are excluded from the scan.
-FORBIDDEN_STRINGS='transcript|[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9Xx]'
+# identifier. The `transcript` pattern is word-bounded, so it catches
+# "transcript"/"transcripts" but not the ordinary word "transcription" (which
+# tripped it in a Jung quotation about writing down his fantasies).
+# Project-specific strings come from `.scope-local`. The guard's own files
+# necessarily mention these patterns, so they are excluded from the scan.
+FORBIDDEN_STRINGS='transcripts?\b|[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9Xx]'
 if [ -n "$SCOPE_LOCAL_STRINGS" ]; then
   FORBIDDEN_STRINGS="$FORBIDDEN_STRINGS|$SCOPE_LOCAL_STRINGS"
 fi

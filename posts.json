@@ -413,6 +413,16 @@
       "date": "2026-09-30",
       "published": true,
       "series": "readings"
+    },
+    {
+      "slug": "two-esoteric-tarots",
+      "file": "two-esoteric-tarots.md",
+      "navLabel": "two esoteric tarots",
+      "kind": "reading",
+      "summary": "A close reading of Adams & Poncet's Two Esoteric Tarots — a frame built by named people with a claimed lineage, and the authority over what the cards 'are' as a dispute auditable from outside.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
     }
   ]
 }
