@@ -2,7 +2,10 @@
   "home": {
     "file": "meditation-harm-summary.md"
   },
-  "featured": "the-operative-master",
+  "featured": [
+    "the-operative-master",
+    "ahead-of-the-story"
+  ],
   "posts": [
     {
       "slug": "meditation-harm",
@@ -423,6 +426,16 @@
       "date": "2026-09-30",
       "published": true,
       "series": "readings"
+    },
+    {
+      "slug": "ahead-of-the-story",
+      "file": "ahead-of-the-story.md",
+      "navLabel": "ahead of the story",
+      "kind": "argument",
+      "summary": "What an operator does when the fit is refused: recode the rejection as the target's symptom, pivot to the surrounding support structures, and make the target's own accurate report do the discrediting.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "implications"
     }
   ]
 }

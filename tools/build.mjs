@@ -115,16 +115,22 @@ function checkDates(manifest) {
   }
 }
 
-/** The manifest's optional `featured` must name a real post, and in a
- * deployable build a PUBLISHED one — a stale slug or a draft pointer fails the
- * build rather than rendering a home page that silently drops the top slot. */
+/** The manifest's optional `featured` must name a real post (or a list of
+ * them), and in a deployable build a PUBLISHED one — a stale slug or a draft
+ * pointer fails the build rather than rendering a home page that silently drops
+ * the top slot. */
 function checkFeatured(manifest) {
-  const slug = manifest.featured;
-  if (!slug) return;
-  const post = manifest.posts.find((p) => p.slug === slug);
-  if (!post) throw new Error(`posts.json: featured '${slug}' is not a post`);
-  if (!post.published && !PREVIEW) {
-    throw new Error(`posts.json: featured '${slug}' is not published (do not feature a draft)`);
+  const slugs = Array.isArray(manifest.featured)
+    ? manifest.featured
+    : manifest.featured
+      ? [manifest.featured]
+      : [];
+  for (const slug of slugs) {
+    const post = manifest.posts.find((p) => p.slug === slug);
+    if (!post) throw new Error(`posts.json: featured '${slug}' is not a post`);
+    if (!post.published && !PREVIEW) {
+      throw new Error(`posts.json: featured '${slug}' is not published (do not feature a draft)`);
+    }
   }
 }
 
@@ -397,8 +403,10 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 
 /* ---------- the featured piece (the top slot on the home page) ----------
    One deliberate highlight above the series: an accent-ruled card carrying the
-   featured post's title, kind, summary and a link. Deliberately not a card in
-   the .grid — it is a single thing, so it gets the full wrap width. */
+   featured post's title, kind, summary and a link. One or a pair — a pair sits
+   side by side as one block on a wide screen and stacks on a narrow one.
+   Deliberately not cards in the .grid — the feature is its own thing. */
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
 .feature {
   background: var(--bg2); border: 1px solid var(--line); border-left: 4px solid var(--accent);
   border-radius: 10px; padding: 22px 24px 20px;
@@ -1105,21 +1113,37 @@ function buildHome(manifest) {
       .replace(/, ([^,]*)$/, ', and $1') +
     '.';
 
-  // A featured piece, if the manifest names one (`"featured": "<slug>"`), shown
-  // above everything else — the top slot on the home page, the one thing a
-  // visitor sees before the series. The slug must resolve to a published post
+  // A featured piece — or a PAIR — if the manifest names one (`"featured":
+  // "<slug>"` or `"featured": ["<slug>", ...]`), shown above everything else at
+  // the top of the home page. Every slug must resolve to a published post
   // (checkFeatured), so a stale or draft reference fails the build rather than
-  // silently rendering nothing.
-  const featured = manifest.featured
-    ? manifest.posts.find((p) => p.slug === manifest.featured)
-    : null;
-  const featureBlock = featured
+  // silently rendering nothing. Two are rendered side by side as one block,
+  // because a pair can be a single operation described from both ends.
+  const featSlugs = Array.isArray(manifest.featured)
+    ? manifest.featured
+    : manifest.featured
+      ? [manifest.featured]
+      : [];
+  const featPosts = featSlugs
+    .map((s) => manifest.posts.find((p) => p.slug === s))
+    .filter(Boolean);
+  const featureBlock = featPosts.length
     ? `<section><div class="wrap">` +
-      `<div class="feature">` +
-      `<span class="eyebrow">\u2605 featured \u00b7 ${featured.kind}</span>` +
-      `<h2><a href="/${featured.slug}/">${titleOf(featured)}</a></h2>` +
-      `<p class="f-sum">${featured.summary}</p>` +
-      `<a class="f-more" href="/${featured.slug}/">read it \u2192</a>` +
+      (featPosts.length > 1
+        ? `<div class="hint"># one operation, described from both ends</div>`
+        : '') +
+      `<div class="feature-grid">` +
+      featPosts
+        .map(
+          (p) =>
+            `<div class="feature">` +
+            `<span class="eyebrow">\u2605 featured \u00b7 ${p.kind}</span>` +
+            `<h2><a href="/${p.slug}/">${titleOf(p)}</a></h2>` +
+            `<p class="f-sum">${p.summary}</p>` +
+            `<a class="f-more" href="/${p.slug}/">read it \u2192</a>` +
+            `</div>`,
+        )
+        .join('') +
       `</div></div></section>`
     : '';
 
@@ -1685,6 +1709,14 @@ const POST_META = {
     description:
       'A close reading of Adams & Poncet\u2019s Two Esoteric Tarots: the tarot read as a frame made portable and instrumental \u2014 a fixed correspondence system, a spread of positions, and a reader \u2014 and the Dummett-Yates controversy as the checkable-from-outside dispute the corpus asks of any frame.',
     accent: 'Two Esoteric Tarots',
+  },
+  'ahead-of-the-story': {
+    prompt: 'cat ahead-of-the-story.md',
+    tagline: 'the <b>fit that fails</b>: getting ahead of the account \u2014 the rejection recoded as the target\u2019s symptom, the pivot to the network, and the accurate report made self-indicting.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 the damage control, and the boundary, with notes',
+    description:
+      'The sequel to The Operative Master: what happens when the position is refused \u2014 the operator gets ahead of the story, recoding the rejection as a symptom, pivoting from the target to the surrounding support structures, and turning the target\u2019s own accurate report into the evidence against them.',
+    accent: 'Ahead of the Story',
   },
 };
 
