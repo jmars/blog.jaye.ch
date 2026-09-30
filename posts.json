@@ -362,6 +362,16 @@
       "date": "2026-09-30",
       "published": true,
       "series": "implications"
+    },
+    {
+      "slug": "the-holy-heretics",
+      "file": "the-holy-heretics.md",
+      "navLabel": "the holy heretics",
+      "kind": "reading",
+      "summary": "A close reading of Frater Acher's Holy Heretics — the apophatic path of unknowing as a practice, and the book's own charge that organised orthodoxy, not unauthorised experience, is the poison.",
+      "date": "2026-09-30",
+      "published": true,
+      "series": "readings"
     }
   ]
 }

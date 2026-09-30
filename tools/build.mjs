@@ -1587,6 +1587,14 @@ const POST_META = {
       'The one-to-one case of the levers-as-positions: a reading of a person\u2019s own frame that fits it, so the frame does the installing \u2014 experienced as recognition, and therefore unreportable from inside.',
     accent: 'Operative Master',
   },
+  'the-holy-heretics': {
+    prompt: 'cat the-holy-heretics.md',
+    tagline: 'a <b>reading</b>: the path of unknowing as a practice \u2014 and a practitioner\u2019s charge that the orthodoxy, not the heretic, is the poison.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of Frater Acher\u2019s Holy Heretics: apophatic mysticism as metered practice, and the book\u2019s own argument that the antagonism runs between unmediated experience and organised orthodoxy \u2014 which the corpus reads back into the Western column.',
+    accent: 'The Holy Heretics',
+  },
 };
 
 function buildPost(post, navPosts) {
