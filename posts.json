@@ -9,6 +9,7 @@
       "navLabel": "the failure mode",
       "kind": "measured",
       "summary": "The mechanism end to end — the runaway, the cliff, and why the state it lands in cannot see itself.",
+      "date": "2026-09-24",
       "published": true,
       "series": "mechanism"
     },
@@ -18,6 +19,7 @@
       "navLabel": "the damping dial",
       "kind": "prediction",
       "summary": "Who is at risk: anxiety-proneness read as low damping, and the cheap test — tolerance, not settling time — that would settle it.",
+      "date": "2026-09-24",
       "published": true,
       "series": "mechanism"
     },
@@ -28,6 +30,7 @@
       "kind": "measured",
       "series": "mechanism",
       "summary": "The rescue result: a cheap fixed floor beats an elaborate one — and re-checking your support is what destroys it.",
+      "date": "2026-09-24",
       "published": true
     },
     {
@@ -37,6 +40,7 @@
       "kind": "measured",
       "series": "mechanism",
       "summary": "A full rescue buys the recovered state nothing against the next trigger — the threshold restored is the threshold the next episode drains.",
+      "date": "2026-09-24",
       "published": true
     },
     {
@@ -45,6 +49,7 @@
       "navLabel": "the engineered collapse",
       "kind": "argument",
       "summary": "The same collapse run deliberately — Schein, Lifton, Stein — and the inversion: the same three guardrails, two of them flipped.",
+      "date": "2026-09-24",
       "published": true,
       "series": "implications"
     },
@@ -54,6 +59,7 @@
       "navLabel": "the sacred science",
       "kind": "argument",
       "summary": "Why “the observer collapses reality” and “union with God” are one move — and how the frame steers the collapse to an owned destination.",
+      "date": "2026-09-24",
       "published": true,
       "series": "implications"
     },
@@ -63,6 +69,7 @@
       "navLabel": "the empty leader",
       "kind": "argument",
       "summary": "The person at the top: leader and follower share one dissociation pointing opposite ways — the group as his externalized self.",
+      "date": "2026-09-24",
       "published": true,
       "series": "implications"
     },
@@ -72,6 +79,7 @@
       "navLabel": "the follower",
       "kind": "argument",
       "summary": "The follower is a position, not a personality — seventy years of research tried to name the type and dissolved it instead. Expression is conditional; the instrument failed at .20.",
+      "date": "2026-09-29",
       "published": true,
       "series": "implications"
     },
@@ -82,6 +90,7 @@
       "kind": "argument",
       "series": "implications",
       "summary": "Seven contemplative traditions, with no contact with each other, named this failure and prescribed the same five safeguards — primary-source passages.",
+      "date": "2026-09-24",
       "published": true
     },
     {
@@ -90,6 +99,7 @@
       "navLabel": "the safeguards",
       "kind": "argument",
       "summary": "What the traditions that survive the collapse wrote down — ethics first, metered pace, plural community, a teacher who points past himself, discernment as procedure — and why the clinical field is re-deriving the same list.",
+      "date": "2026-09-24",
       "published": true,
       "series": "implications"
     },
@@ -99,6 +109,7 @@
       "navLabel": "the label",
       "kind": "argument",
       "summary": "\"Cult\" is a category that does harm — to the people it is meant to protect — and the sources this series leans on helped justify kidnapping. Why it names mechanisms instead.",
+      "date": "2026-09-24",
       "published": true,
       "series": "implications"
     },
@@ -108,6 +119,7 @@
       "navLabel": "the costume",
       "kind": "argument",
       "summary": "The levers without the mysticism: a masonic lodge and a false-bottomed suitcase run the same structure as the mystics — so the lever is a position, not a belief.",
+      "date": "2026-09-29",
       "published": true,
       "series": "implications"
     },
@@ -117,6 +129,7 @@
       "navLabel": "the machine said so",
       "kind": "argument",
       "summary": "The unfalsifiable authority without a person: Horizon, Robodebt and the Dutch childcare affair — and the finding that measurement is not a safeguard, auditable measurement is.",
+      "date": "2026-09-29",
       "published": true,
       "series": "implications"
     },
@@ -126,6 +139,7 @@
       "navLabel": "the differential",
       "kind": "argument",
       "summary": "The clinic in the model: the state is ambiguous by construction, the instruments false-positive, and the honest measure is impairment, duration — and a holder.",
+      "date": "2026-09-29",
       "published": true,
       "series": "implications"
     },
@@ -135,6 +149,7 @@
       "navLabel": "after the room",
       "kind": "argument",
       "summary": "The state cannot initiate its own exit: an outside relationship is necessary, a verdict is the harm — deprogramming, exit counselling, and the in-between time.",
+      "date": "2026-09-29",
       "published": true,
       "series": "implications"
     },
@@ -144,6 +159,7 @@
       "navLabel": "the western column",
       "kind": "argument",
       "summary": "The Western esoteric tradition ran the same induction, named the same failure and built the same safeguards into a syllabus — and published its own predation account.",
+      "date": "2026-09-30",
       "published": true,
       "series": "implications"
     },
@@ -153,6 +169,7 @@
       "navLabel": "the pattern",
       "kind": "case study",
       "summary": "The case studies, opening: one mechanism in four environments — and the finding that the environment sets the price, not whether the move is used.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -162,6 +179,7 @@
       "navLabel": "the environment",
       "kind": "case study",
       "summary": "The method: what a predator never has to build, because the surrounding culture already built it — an inventory of pre-supplied levers.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -171,6 +189,7 @@
       "navLabel": "the witch and the debt",
       "kind": "case study",
       "summary": "Hidden agency: a cosmology in which harm is real but invisible and suffering is a debt — the unfalsifiable slot, pre-supplied.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -180,6 +199,7 @@
       "navLabel": "the ladder of light",
       "kind": "case study",
       "summary": "Ranked inner state: enlightenment as a hierarchy nobody can check — and why wanting the next rung is obedience.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -189,6 +209,7 @@
       "navLabel": "the sanctioned trance",
       "kind": "case study",
       "summary": "The state itself: where dissociation is already holy, the damage arrives pre-legitimised and the alarm is off.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -198,6 +219,7 @@
       "navLabel": "the certified frame",
       "kind": "case study",
       "summary": "The destination: a host culture certifies the teacher before he arrives — and the check on him reads as bigotry.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -207,6 +229,7 @@
       "navLabel": "the empty vessel",
       "kind": "case study",
       "summary": "The same mechanism outside Brazil: a guru who taught emptying the self and being filled with him — in a tradition that had already named the state and called it not the goal.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -216,6 +239,7 @@
       "navLabel": "the new jerusalem",
       "kind": "case study",
       "summary": "An environment that supplies nothing: post-Soviet Ukraine, the vacuum, and the group that filled it — the same mechanism as Brazil and Japan, at a different price.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -225,6 +249,7 @@
       "navLabel": "the designed method",
       "kind": "case study",
       "summary": "The one case where the group did not find a dissociation but designed one: a technique written to produce the state on schedule, then read as the goal.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -234,6 +259,7 @@
       "navLabel": "the breakthrough",
       "kind": "case study",
       "summary": "The same manufactured collapse with no mysticism at all: est and the Landmark Forum — fatigue, confrontation, the state, and the appraisal sold as “Transformation.”",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -243,6 +269,7 @@
       "navLabel": "set and setting",
       "kind": "case study",
       "summary": "The mechanism's third route: the same state appraised as breakthrough or bad trip — and “set and setting” is the frame lever, named by the field as a risk factor.",
+      "date": "2026-09-29",
       "published": true,
       "series": "cases"
     },
@@ -252,6 +279,7 @@
       "navLabel": "the container",
       "kind": "case study",
       "summary": "A first-person account: a practitioner describes the environment that supplies the frame, reports being recruited and getting out — and contradicts this series where it matters most.",
+      "date": "2026-09-30",
       "published": true,
       "series": "cases"
     },
@@ -261,6 +289,7 @@
       "navLabel": "the frame is a variable",
       "kind": "argument",
       "summary": "One scale up: what a culture takes reality to be is a frame like any other — it supplies a reading, it can be checked or not, and someone benefits from the naming.",
+      "date": "2026-09-30",
       "published": true,
       "series": "frames"
     },
@@ -270,6 +299,7 @@
       "navLabel": "the machine has no reading",
       "kind": "argument",
       "summary": "Why a materialist cosmology cannot measure the collapse: no category means misfiling, not absence — and an unfilled category is a vacancy a coercive frame can occupy.",
+      "date": "2026-09-30",
       "published": true,
       "series": "frames"
     },
@@ -279,6 +309,7 @@
       "navLabel": "a cosmos of persons",
       "kind": "argument",
       "summary": "The living cosmos has a reading for the collapse — and that is its danger: the safeguard is structural, a plane of many participants and a practitioner who does not stand above it.",
+      "date": "2026-09-30",
       "published": true,
       "series": "frames"
     },
@@ -288,6 +319,7 @@
       "navLabel": "the owned cosmos",
       "kind": "argument",
       "summary": "The third possibility: a frame with a reading, a purpose, and a seat — the cosmological form of every case study, and why the traditions refused to name the endpoint.",
+      "date": "2026-09-30",
       "published": true,
       "series": "frames"
     },
@@ -297,6 +329,7 @@
       "navLabel": "the cosmos that refuses",
       "kind": "argument",
       "summary": "Apophatic cosmology: a correspondence with no endpoint — the architectural countermeasure to the seat, and, because it can be claimed, not self-enforcing.",
+      "date": "2026-09-30",
       "published": true,
       "series": "frames"
     },
@@ -306,6 +339,7 @@
       "navLabel": "the deep inheritance",
       "kind": "argument",
       "summary": "Witzel's deep-mythology finding as the fourth convergence: the frames a person is inside were inherited tens of millennia ago — and the oldest disagreement is about whether reality has an endpoint.",
+      "date": "2026-09-30",
       "published": true,
       "series": "frames"
     }

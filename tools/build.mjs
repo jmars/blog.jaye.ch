@@ -23,9 +23,14 @@
  * nav label and `published` state. Published posts build to dist/<slug>/;
  * unpublished ones are staged drafts — not written to dist at all and absent
  * from every nav, from the feed/sitemap, and from the command line. Flipping
- * `"published": true` is the whole release step. The manifest carries no dates,
- * so nothing generated here invents one: the feed has no pubDate, the sitemap
- * no lastmod.
+ * `"published": true` is the whole release step. The manifest also carries each
+ * post's `date` — the calendar day it first went live, written by hand (it was
+ * recovered from the commit that first published each post, and is now a
+ * manifest field rather than something derived at build time). The build renders
+ * that date; it never invents one. A published post with no date fails the
+ * build: the timeline, the feed and the sitemap all rest on it. Only a day is
+ * known, never a time, so the feed's pubDate carries midnight UTC as the
+ * conventional stand-in for "this day" and the sitemap's lastmod is a date.
  *
  *   node tools/build.mjs            (run from the repo root)
  *   PREVIEW=1 node tools/build.mjs  build drafts too — LOCAL PREVIEW ONLY,
@@ -57,8 +62,8 @@ const BASE = 'https://blog.jaye.ch';
 const SERIES = [
   { key: 'mechanism', label: 'the mechanism' },
   { key: 'implications', label: 'the implications' },
-  { key: 'cases', label: 'the case studies' },
   { key: 'frames', label: 'the frames' },
+  { key: 'cases', label: 'the case studies' },
 ];
 const seriesLabel = (key) => (SERIES.find((s) => s.key === key) || { label: key }).label;
 
@@ -81,6 +86,26 @@ const esc = (s) =>
 /** XML text/attribute escaping — esc plus the apostrophe (RSS descriptions
  * are quoted text, so every literal must be accounted for). */
 const xesc = (s) => esc(s).replaceAll("'", '&apos;');
+
+/** A manifest `date` (YYYY-MM-DD) as an RFC 822 stamp for RSS. Only the day is
+ * known; midnight UTC is the conventional stand-in, not a measured time. */
+const rfc822 = (date) => new Date(`${date}T00:00:00Z`).toUTCString();
+
+/** Every PUBLISHED post must carry a valid `date` (YYYY-MM-DD): the timeline,
+ * the feed and the sitemap are all built from it, so its absence is a release
+ * gate, not a warning. A staged draft need not have one yet. */
+function checkDates(manifest) {
+  const isDay = (d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) && !Number.isNaN(Date.parse(d));
+  const bad = manifest.posts.filter((p) => p.published && !isDay(p.date));
+  if (bad.length) {
+    throw new Error(
+      `posts.json: published post(s) with no valid 'date' (YYYY-MM-DD): ${bad.map((p) => p.slug).join(', ')}`,
+    );
+  }
+  for (const p of manifest.posts.filter((p) => !p.published && p.date && !isDay(p.date))) {
+    warn(`draft '${p.slug}' has a malformed date '${p.date}' — it will not appear on the timeline`);
+  }
+}
 
 /* ---------- chrome (blog-design markup) ---------- */
 
@@ -125,6 +150,7 @@ function nav(current, navPosts) {
     `<span class="brand">blog.<span class="fx">jaye</span>.ch</span>` +
     `<span class="links">` +
     here('/', 'home') +
+    here('/timeline/', "what's new") +
     SERIES.map(dropdown).join('') +
     `</span></div></nav>`
   );
@@ -318,6 +344,35 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 .postnav a:hover { color: var(--accent); }
 .postnav .dir { display: block; font-size: 12px; color: var(--dim); }
 .postnav .t { display: block; margin-top: 3px; }
+
+/* ---------- timeline (the "what's new" page) ----------
+   One row per day: the date in a fixed mono column, the day's pieces beside it.
+   The design system's .timeline is a pre-formatted terminal block (white-space:
+   pre); a list of titled links must wrap, so this is a plain list grid and the
+   date column collapses to a stacked line on a narrow screen. */
+.tl { list-style: none; margin: 8px 0 0; padding: 0; }
+.tl > li { display: grid; grid-template-columns: 118px 1fr; gap: 6px 20px; padding: 20px 0; border-top: 1px solid var(--line); }
+.tl .d { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.tl ul { list-style: none; margin: 0; padding: 0; }
+.tl ul li { margin-bottom: 14px; }
+.tl ul li:last-child { margin-bottom: 0; }
+.tl ul a { font-size: 16.5px; font-weight: 600; letter-spacing: -0.01em; }
+.tl .m { display: block; font-family: var(--mono); font-size: 12px; color: var(--dim); margin-top: 3px; }
+@media (max-width: 560px) {
+  .tl > li { grid-template-columns: 1fr; gap: 8px; }
+}
+
+/* the home page's mini-timeline: the same list, one compact row per piece
+   (short date, title, series), where the full page groups by day */
+.tl-mini { list-style: none; margin: 8px 0 0; padding: 0; }
+.tl-mini li { display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; align-items: baseline; padding: 9px 0; border-top: 1px solid var(--line); }
+.tl-mini .d { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+.tl-mini a { font-size: 15.5px; font-weight: 600; letter-spacing: -0.01em; }
+.tl-mini .m { font-family: var(--mono); font-size: 11.5px; color: var(--dim); text-align: right; }
+@media (max-width: 560px) {
+  .tl-mini li { grid-template-columns: 46px 1fr; }
+  .tl-mini .m { display: none; }
+}
 
 /* ---------- dose meter: reading progress, as accumulated dose ----------
    Decorative chrome (aria-hidden), and deliberately script-free: a scroll-driven
@@ -673,6 +728,9 @@ function paletteAssets(navPosts) {
     pages.push({ slug: p.slug, title: titleOf(p), series: p.series || '', kind: p.kind || '' });
   }
   const data = { pages, series: series.map((key) => ({ key, label: seriesLabel(key) })) };
+  // the timeline is a page like any other but it is not a post, so the palette
+  // is told about it explicitly; 'unfiled' is the listing's own group for it.
+  data.pages.push({ slug: 'timeline', title: "What's new", series: '', kind: 'page' });
   const html =
     `<div class="palette" id="palette" role="dialog" aria-label="command line" hidden>` +
     `<div class="palette-box">` +
@@ -998,7 +1056,31 @@ function buildHome(manifest) {
       .replace(/, ([^,]*)$/, ', and $1') +
     '.';
 
+  // A mini-timeline of the most recent pieces, so the home page shows what is
+  // new without leaving for /timeline/. It reuses the timeline's own manifest
+  // order: `published` posts only in a deployable build, staged ones too under
+  // PREVIEW, so the two pages can never disagree about what is recent.
+  const MINI = 8;
+  const recentAll = manifest.posts.filter((p) => PREVIEW || p.published);
+  const recent = recentAll.slice(-MINI).reverse();
+  const miniTimeline =
+    `<section><div class="wrap">` +
+    `<h2>What's new</h2>` +
+    `<div class="hint"># the last ${recent.length} of ${recentAll.length} · ` +
+    `<a href="/timeline/">all of it, newest first →</a></div>` +
+    `<ol class="tl-mini">` +
+    recent
+      .map(
+        (p) =>
+          `<li><span class="d">${(p.date || '').slice(5)}</span>` +
+          `<a href="/${p.slug}/">${titleOf(p)}</a>` +
+          `<span class="m">${seriesLabel(p.series)}</span></li>`,
+      )
+      .join('') +
+    `</ol></div></section>`;
+
   const html =
+    `${miniTimeline}\n` +
     sections +
     `\n<section><div class="wrap">` +
     `<h2>Where to start</h2>` +
@@ -1042,10 +1124,11 @@ function build404(navPosts) {
     `<h2>Nothing here</h2>` +
     `<div class="hint"># the path you asked for is not one of the pages</div>` +
     `<div class="prose">` +
-    `<p>Every address on this site is one of the pages below — the summary, or a ` +
-    `post in one of its ${NUM_WORD[seriesCount] || seriesCount} series. There is no other content, and nothing was ` +
+    `<p>Every address on this site is one of the pages below — the summary, ` +
+    `<a href="/timeline/">what's new</a>, or a post in one of its ${NUM_WORD[seriesCount] || seriesCount} series. ` +
+    `There is no other content, and nothing was ` +
     `deleted to hide it.</p>` +
-    `<ul><li><a href="/">Home — where to start</a></li>${links}</ul>` +
+    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li>${links}</ul>` +
     `<p>If you followed a link from somewhere else, the link is stale; the pieces ` +
     `above are current.</p>` +
     `</div></div></section>`;
@@ -1063,6 +1146,45 @@ function build404(navPosts) {
   };
 }
 
+/** The timeline — every published piece, newest first, grouped by the day it
+ * went live. This is why the manifest gained a `date` at all: without one this
+ * page could not exist, and the manifest is the only honest source for it (the
+ * build renders the field, it never derives or invents one).
+ *
+ * A real page, not a discovery file: it is written to dist and it is in the
+ * sitemap. It is built from navPosts so a PREVIEW build shows a staged post in
+ * place; in a deployable build navPosts is the published list alone. */
+function buildTimeline(navPosts) {
+  const dated = navPosts.filter((p) => p.date);
+  const days = [...new Set(dated.map((p) => p.date))].sort().reverse();
+  const item = (p) =>
+    `<li><a href="/${p.slug}/">${titleOf(p)}</a>` +
+    `<span class="m">${seriesLabel(p.series)} · ${p.kind}</span></li>`;
+  const body = days
+    .map((day) => {
+      // newest first within a day: manifest order is append order, so reverse it
+      const on = dated.filter((p) => p.date === day).reverse();
+      return `<li class="day"><span class="d">${day}</span><ul>${on.map(item).join('')}</ul></li>`;
+    })
+    .join('');
+  const count = dated.length;
+  return {
+    title: "What's new — blog.jaye.ch",
+    shareTitle: "What's new — blog.jaye.ch",
+    type: 'website',
+    description: `Every published piece on blog.jaye.ch, newest first — ${count} pieces over ${days.length} days.`,
+    prompt: 'ls -lt',
+    heroTitle: `What's <span class="fx">new</span>`,
+    tagline: 'every published piece, newest first — with the day it went live.',
+    body:
+      `<section><div class="wrap">` +
+      `<div class="hint"># every published piece, newest first · ${count} over ${days.length} day${days.length === 1 ? '' : 's'}</div>` +
+      `<ol class="tl">${body}</ol>` +
+      `</div></section>`,
+    navCurrent: '/timeline/',
+  };
+}
+
 /* ---------- discovery files: feed, sitemap, robots ---------- */
 
 /** The published posts, in manifest order. Every generated file uses this list
@@ -1073,10 +1195,11 @@ function published(manifest) {
   return manifest.posts.filter((p) => p.published);
 }
 
-/** RSS 2.0. There is no date field in posts.json and none is invented here, so
- * the feed carries no pubDate and no lastBuildDate: an undated feed is honest,
- * a fabricated one would be a lie about every post. A note in the channel says
- * so, rather than leaving the omission to look like an oversight. */
+/** RSS 2.0. Each item carries the post's manifest `date` as its pubDate — the
+ * day it went live, and nothing more precise. Only a calendar day is known, so
+ * the stamp is midnight UTC (rfc822's conventional stand-in for a date); no
+ * lastBuildDate is emitted, because a build time is not a property of the
+ * content and would make the feed differ between two identical builds. */
 function feedXml(posts) {
   const items = posts
     .map((p) => {
@@ -1086,6 +1209,7 @@ function feedXml(posts) {
         `      <title>${xesc(titleOf(p))}</title>\n` +
         `      <link>${url}</link>\n` +
         `      <guid isPermaLink="true">${url}</guid>\n` +
+        `      <pubDate>${rfc822(p.date)}</pubDate>\n` +
         `      <description>${xesc(p.summary)}</description>\n` +
         (p.series ? `      <category>${xesc(seriesLabel(p.series))}</category>\n` : '') +
         (p.kind ? `      <category>${xesc(p.kind)}</category>\n` : '') +
@@ -1102,20 +1226,29 @@ function feedXml(posts) {
     `    <description>A mechanism that hides itself — in minds, in groups, in machines: a measured control-theoretic account of a self-referential collapse, and the places it shows up.</description>\n` +
     `    <language>en</language>\n` +
     `    <atom:link href="${BASE}/feed.xml" rel="self" type="application/rss+xml"/>\n` +
-    `    <!-- Posts carry no publication date: the manifest has none, and none is\n` +
-    `         invented, so items have no pubDate. Order is the site's own (series,\n` +
-    `         then reading order within the series). -->\n` +
+    `    <!-- Dates are the manifest's, and only a day is known: each item's\n` +
+    `         pubDate is that day at midnight UTC, not a measured time. -->\n` +
     `${items}\n` +
     `  </channel>\n` +
     `</rss>\n`
   );
 }
 
-/** Absolute URLs for the home page and every published post. No lastmod, for the
- * same reason as the feed. */
+/** Absolute URLs for the home page, the timeline, and every published post.
+ * `lastmod` carries the post's day (date-only, per the sitemap spec), from the
+ * same manifest field the feed uses. */
 function sitemapXml(posts) {
-  const urls = [BASE + '/', ...posts.map((p) => `${BASE}/${p.slug}/`)]
-    .map((u) => `  <url>\n    <loc>${u}</loc>\n  </url>`)
+  const urls = [
+    { loc: BASE + '/', lastmod: null },
+    { loc: `${BASE}/timeline/`, lastmod: posts.map((p) => p.date).sort().pop() || null },
+    ...posts.map((p) => ({ loc: `${BASE}/${p.slug}/`, lastmod: p.date })),
+  ]
+    .map(
+      (u) =>
+        `  <url>\n    <loc>${u.loc}</loc>\n` +
+        (u.lastmod ? `    <lastmod>${u.lastmod}</lastmod>\n` : '') +
+        `  </url>`,
+    )
     .join('\n');
   return (
     `<?xml version="1.0" encoding="utf-8"?>\n` +
@@ -1574,6 +1707,7 @@ if (PREVIEW) {
 const postsToBuild = PREVIEW ? manifest.posts : navPosts;
 
 checkFootnotes();
+checkDates(manifest);
 
 rmSync(DIST, { recursive: true, force: true });
 // The feed, the sitemap and robots are built from the PUBLISHED posts even in a
@@ -1589,6 +1723,10 @@ for (const post of postsToBuild) {
   });
 }
 written.push({ rel: '404.html', html: writePage('404.html', build404(navPosts), navPosts) });
+written.push({
+  rel: 'timeline/index.html',
+  html: writePage('timeline/index.html', buildTimeline(navPosts), navPosts),
+});
 
 writeFile('feed.xml', feedXml(livePosts));
 writeFile('sitemap.xml', sitemapXml(livePosts));
