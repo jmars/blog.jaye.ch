@@ -236,6 +236,15 @@
       "summary": "The mechanism's third route: the same state appraised as breakthrough or bad trip — and “set and setting” is the frame lever, named by the field as a risk factor.",
       "published": true,
       "series": "cases"
+    },
+    {
+      "slug": "the-container",
+      "file": "the-container.md",
+      "navLabel": "the container",
+      "kind": "case study",
+      "summary": "A first-person account: a practitioner describes the environment that supplies the frame, reports being recruited and getting out — and contradicts this series where it matters most.",
+      "published": false,
+      "series": "cases"
     }
   ]
 }

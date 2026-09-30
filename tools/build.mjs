@@ -1340,6 +1340,14 @@ const POST_META = {
       'Seventy years of research tried to name the follower as a personality type and dissolved the type instead: expression is conditional, the position is relational, and the instrument failed at .20.',
     accent: 'Follower',
   },
+  'the-container': {
+    prompt: 'cat the-container.md',
+    tagline: 'the <b>first-person account</b>: a practitioner describes the environment that supplies the frame — and contradicts this series where it matters most.',
+    hint: '<a href="/">\u2190 home</a> · the account from inside, with notes',
+    description:
+      'A pseudonymous practitioner\u2019s own account of being recruited, waking up and getting out — independently describing frame-supply, rationalisation, the holder move, and a confirming-miracles lever this series had not named.',
+    accent: 'Container',
+  },
 };
 
 function buildPost(post, navPosts) {
