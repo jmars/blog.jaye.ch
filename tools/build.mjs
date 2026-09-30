@@ -410,9 +410,9 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 .feature h2 { margin-bottom: 8px; }
 .feature h2 a { color: var(--fg); }
 .feature h2 a:hover { color: var(--accent); text-decoration: none; }
-.feature .f-sum { font-size: 15px; color: #33323a; margin-bottom: 14px; max-width: 60ch; }
-.feature .f-more { font-family: var(--mono); font-size: 13px; color: var(--accent2); }
-.feature .f-more:hover { color: var(--accent); }
+.feature .f-sum { font-size: 15px; color: var(--dim); margin-bottom: 14px; max-width: 60ch; }
+.feature .f-more { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.feature .f-more:hover { color: var(--accent2); }
 
 /* ---------- dose meter: reading progress, as accumulated dose ----------
    Decorative chrome (aria-hidden), and deliberately script-free: a scroll-driven
