@@ -40,8 +40,8 @@ traditions gave — arrived at from a completely different direction.
 
 ## 2. What the frame says the cosmos is made of
 
-Take the description first, from an ethnography of Pohnpei — and read it as a **frame**, in the way the
-previous post read materialist-naturalism, without adopting it.
+Take the description first, from White's account of Pohnpei, drawing on its ethnography — and read it as
+a **frame**, in the way the previous post read materialist-naturalism, without adopting it.
 
 > "It is noteworthy that there is little or no distinction between the human and the non-human.
 > **Everything is made of the same 'stuff' which is a kind of personhood**… Removing the 'separateness'
@@ -127,7 +127,7 @@ Now the part the post has to say, because a reader could have taken the last thr
 recommendation, and this series does not make those.
 
 **A cosmos of persons includes harmful persons.** This is not a footnote. Every case study in this
-series is, in its own idiom, a cosmos of persons — the container, the archons, the worm, the entities
+series is, in its own idiom, a cosmos of persons — the container, the archons, the entities
 that interfere, the spirits that demand.[^mechanism] **The frames that predate predation are themselves animist
 frames**, and the predation happens *inside* them. "Everything is a person" is not a safeguard; it is a
 description of the **plane** on which the contest takes place.
@@ -225,17 +225,25 @@ occupied one. That is [the sacred science](/sacred-science/) at the scale of a w
 
 ## Notes
 
-[^animystic]: White, G., *Ani.Mystic: Encounters with a Living Cosmos*, Scarlet Imprint, 2021 — the
-personhood passage from the Pohnpei ethnography ("little or no distinction between the human and the
-non-human… the same 'stuff' which is a kind of personhood"); the consequence for the concept of nature
-("leaving no room for the notion of 'nature'"); Ingold's line on custodianship ("Human beings do not so
-much transform the material world as play their part, along with other creatures, in the world's
-transformation of itself"); the observation that "your universe suddenly gets a lot more crowded"; the
+[^animystic]: White, G., *Ani.Mystic: Encounters with a Living Cosmos*, Scarlet Imprint, 2022 (ISBN
+978-1-912316-57-1) — the personhood passage, which is White's own account of Pohnpei drawing on its
+ethnography rather than a quotation from an ethnographer ("little or no distinction between the human
+and the non-human… the same 'stuff' which is a kind of personhood"); the consequence for the concept of
+nature ("leaving no room for the notion of 'nature'"); Ingold's line on custodianship, quoted by White
+("Human beings do not so much transform the material world as play their part, along with other
+creatures, in the world's transformation of itself" — Ingold, T., *The Perception of the Environment:
+Essays on Livelihood, Dwelling and Skill*, Routledge, 2000, p. 80, ISBN 978-0-415-22832-9); the
+observation that "your universe suddenly gets a lot more crowded," which is White's own sentence; the
 criticism of practitioners who treat a regimen as "optional ambiance"; and the quotation of Bayo
-Akomolafe's question ("What if the way we respond to the crisis is part of the crisis?"). The works
-White draws on here include Tim Ingold's essays and Tyson Yunkaporta's *Sand Talk* (Text Publishing,
-2019), and the argument for thought-worlds rather than one world variously seen is associated with
-Eduardo Viveiros de Castro and Eduardo Kohn.
+Akomolafe's question ("What if the way we respond to the crisis is part of the crisis?"), which White
+attributes to Akomolafe. The works White draws on here include Tim Ingold's essays and Yunkaporta, T.,
+*Sand Talk: How Indigenous Thinking Can Save the World*, Text Publishing, Melbourne, 2019 (ISBN
+978-1-925773-99-6); the argument for many worlds rather than one world variously seen is that of
+Viveiros de Castro, E., *The Relative Native: Essays on Indigenous Conceptual Worlds*, HAU Books, 2015
+(ISBN 978-0-9905050-3-7) — his multinaturalism, "one culture, many natures," in White's summary — and
+Kohn, E., *How Forests Think: Toward an Anthropology Beyond the Human*, University of California Press,
+2013 (ISBN 978-0-520-27611-6), whose "provincialise human thought" White discusses in the same
+section.
 
 [^mechanism]: The frame's function — [the coercion post](/manufacturing-the-collapse/) — and the
 state's invisibility, [the mechanism post](/meditation-harm/).

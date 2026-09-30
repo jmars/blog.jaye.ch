@@ -205,9 +205,9 @@ required conditions, in contemplative vocabulary.
 | **Community plural, not exclusive** | *kalyāṇa-mittatā*, SN 45.2; the sangha | a holder that cannot be owned; no single point of capture |
 | **The teacher points past himself** | four reliances; Kālāma Sutta; DN 16 | the anti-empty-leader rule: self-content must not terminate at him |
 | **Discernment as procedure** | Ignatius, *Exercises* 313–336; John of the Cross; spiritual direction | the state cannot read itself — an external read is required |
-| **The endpoint is not named** | apophatic theology; *nettī netti* | removes the telos a frame would otherwise steer the collapse toward |
+| **The endpoint is not named** *(the series' sixth — see below)* | apophatic theology; *neti neti* | removes the telos a frame would otherwise steer the collapse toward |
 
-Six safeguards, one function: **they keep the collapse un-owned.** The frame is not supplied
+The traditions prescribe **five** of these — the first five rows — and [the metaphysics post](/sacred-science/) found the **sixth** independently, in the same traditions' refusal to name an endpoint. Six doors, one function: **they keep the collapse un-owned.** The frame is not supplied
 by the person who benefits from it, the community cannot be monopolised, the pace cannot be
 accelerated by someone else's urgency, the teacher cannot become the destination, the state
 cannot be read from inside, and the end cannot be named. Each is a closed door on one of the

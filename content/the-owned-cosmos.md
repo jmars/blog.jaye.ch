@@ -176,7 +176,7 @@ any other way. The first is [the certified frame](/the-certified-frame/) reverse
 checking its teacher. The second is every case study in this series.
 
 And the traditions knew exactly which side they were on, which is why
-[sacred-science](/sacred-science/) §8 found the apophatic refusal: *nettī netti*, "not this, not that."
+[sacred-science](/sacred-science/) §8 found the apophatic refusal: *neti neti*, "not this, not that."
 **The traditions that had the longest experience of this territory spent it declining to name the
 destination** — which removes the seat, because a seat is a place at an endpoint, and an endpoint
 nobody may name has no place to stand at. The refusal is not obscurantism. It is the **architectural
@@ -196,9 +196,9 @@ this series does not adjudicate them. It has said that since the opener and it s
 temptation to say otherwise is strongest.
 
 **Second: no one is diagnosed.** The historical office is described as an institution, and no living
-person is discussed at all. And the seat is a **position**, not a type: the argument is that *anyone*
-standing in a seat with one closed route is in the structure, which is why the case studies were
-careful to describe mechanisms and name no one.
+person is discussed other than as a source. And the seat is a **position**, not a type: the argument
+is that *anyone* standing in a seat with one closed route is in the structure, which is why the case
+studies were careful to describe mechanisms and name no one.
 
 **Third: the series does not recommend a frame — and this post is the reason, stated as a result rather
 than a hedge.** The series has now described three. The machine frame cedes the reading. A cosmos of
@@ -213,10 +213,10 @@ Which is not a recommendation, because it does not tell a reader what is true. I
 **look at** — and that is the only thing a series about frames can honestly offer.
 
 **Fourth: the disciplines of the previous two posts are not suspended here.** The machine frame is not
-the villain (§3 of the previous post: its checkability is why this blog exists). A cosmos of persons is
-not the hero (that post's §5: the ontology does not deliver the safeguard). And the owned cosmos is not
-automatically an abuse (§6 of this one: everyone is mediated). **The frame is not the harm. The closed
-seat is.**
+the villain (§5 of [the machine post](/the-machine-has-no-reading/) — its checkability is why this blog
+exists). A cosmos of persons is not the hero (§5 of [that post](/a-cosmos-of-persons/) — the ontology
+does not deliver the safeguard). And the owned cosmos is not automatically an abuse (§6 of this one:
+everyone is mediated). **The frame is not the harm. The closed seat is.**
 
 ---
 
@@ -251,19 +251,20 @@ out to be the oldest countermeasure in the corpus.
 
 ## Notes
 
-[^starships]: White, G., *Star.Ships: A Prehistory of the Spirits*, Scarlet Imprint, 2016 — the Egyptian
-material on the mediated cosmos: the king's "ritual communion with the spirits of the land of Egypt,"
-whose purpose was "to reach across to the more subtle spiritual world that upholds and vitalizes the
-physical world, in order to ensure a beneficent connection with it and an unhampered flow of energies
-from it to the physical"; the office named as "the divine mediator between the spirit world and the
-physical world for the entire country – the state-appointed shaman"; and the "microcosm/macrocosm view
-of the universe as Mind of God" that White notes "you would be forgiven for mistaking as Hermetic."
+[^starships]: White, G., *Star.Ships: A Prehistory of the Spirits*, Scarlet Imprint, 2016 (ISBN
+978-0-9931200-9-1; quotations checked against the digital edition, eISBN 978-0-9931200-8-4) — the
+Egyptian material on the mediated cosmos: the king's "ritual communion with the spirits of the land of
+Egypt," whose purpose was "to reach across to the more subtle spiritual world that upholds and vitalizes
+the physical world, in order to ensure a beneficent connection with it and an unhampered flow of
+energies from it to the physical"; the office named as "the divine mediator between the spirit world and
+the physical world for the entire country – the state-appointed shaman"; and the "microcosm/macrocosm
+view of the universe as Mind of God" that White notes "you would be forgiven for mistaking as Hermetic."
 White is cited for the historical description; the framing of the seat is this series'.
 
 [^sacred]: The argument at the scale of a doctrine — [the sacred science](/sacred-science/): the
 collapse has no inherent endpoint, the frame supplies a telos, a telos is a location, a location can be
-owned, and the owner becomes "the mediator of the destination." And §8 of that post, on the apophatic
-refusal (*nettī netti*) as the safety mechanism.
+owned, and those who hold the route are "the mediators of the destination." And §8 of that post, on the
+apophatic refusal (*neti neti*) as the safety mechanism.
 
 [^safeguards]: The five safeguards, and the teacher who points past himself — [the traditions
 post](/what-the-traditions-knew/) and [the safeguards](/safeguards/).

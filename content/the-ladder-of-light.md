@@ -177,7 +177,7 @@ case inverts it: it is the *deliberate* claim, dressed as sincerity, that the ru
 institution that claims to rank attainment is also the institution that made the claim a crime.
 
 **The other refused the endpoint.** As [the sacred science](/sacred-science/) argued, the traditions
-with the longest record are apophatic — *nettī netti*, "not this, not that" — and their refusal to
+with the longest record are apophatic — *neti neti*, "not this, not that" — and their refusal to
 name the destination is a **safety mechanism**: a collapse aimed at a named end can be owned, and a
 teacher can stand at the end he supplied. The same logic applies one level down. A teacher who
 **points past himself** cannot be the ladder's top; a tradition that refuses to say where the path

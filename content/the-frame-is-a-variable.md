@@ -17,7 +17,7 @@ author is diagnosed, and no cosmology is endorsed.
 
 ## 1. Everything so far has been about a frame smaller than this
 
-Six series' worth of argument rests on one claim: **the collapse has no inherent meaning, so a meaning
+Three series' worth of argument rests on one claim: **the collapse has no inherent meaning, so a meaning
 has to be supplied — and whoever supplies it holds the lever.** That is
 [the coercion post](/manufacturing-the-collapse/); it is why [the traditions](/what-the-traditions-knew/)
 kept refusing to name the endpoint; it is why [the Costume](/the-costume/) could strip the mysticism
@@ -63,12 +63,15 @@ following because the mechanism of it is exactly this series'. He draws on **Ric
 Passion of the Western Mind*, and the three turning points Tarnas identifies "that most contributed to
 what he calls our **cosmological estrangement**":[^animystic] the Copernican model, which "relativised
 our relationship to the universe and decentred the human experience of it"; then Descartes, who "gave
-us an **'ontological estrangement'**"; and then the Enlightenment proper, "which is where we go from
-'gradually' to 'suddenly.'"[^animystic]
+us an **'ontological estrangement'**"; and then Kant, who "completes for us, in Tarnas's terms, our
+**'epistemological estrangement.'**" White's own marker for the end of the sequence is the Enlightenment
+proper, "which is where we go from 'gradually' to 'suddenly.'"[^tarnas]
 
-**Cosmological estrangement, then ontological estrangement.** Read those two phrases as this series
-would. The first is the **frame** being replaced — the cosmos stops being a place with persons in it.
-The second is deeper: the **person** is redefined, and with it what a person is *made of*.
+**Cosmological estrangement, then ontological estrangement, then epistemological.** Read the first two
+as this series would. The first is the **frame** being replaced — the cosmos stops being a place with
+persons in it. The second is deeper: the **person** is redefined, and with it what a person is *made of*.
+The third is deeper again, and this series will meet it: even the *reading* is now interpretive, which is
+to say the frame runs all the way down.
 
 ---
 
@@ -194,10 +197,10 @@ there** — is [the sacred science](/sacred-science/) at the scale of a world, a
 
 ## 7. What the first post claims, and what it does not
 
-**It claims a scale shift, and the scale shift is the whole content of it.** The series has argued for
-twelve posts that a frame is a variable and that the frame decides the collapse's meaning. This post
-says that the largest frame is not exempt — and that the same three questions apply to it: what does it
-name, is it checkable, and who benefits from the naming.
+**It claims a scale shift, and the scale shift is the whole content of it.** The series has argued,
+across twenty-eight posts, that a frame is a variable and that the frame decides the collapse's
+meaning. This post says that the largest frame is not exempt — and that the same three questions apply
+to it: what does it name, is it checkable, and who benefits from the naming.
 
 **It does not claim the machine frame is wrong**, or that the living cosmos is right, or that a reader
 should change what they believe. Both are frames under analysis. The blog's contribution has never
@@ -217,15 +220,22 @@ unoccupied.
 
 ## Notes
 
-[^animystic]: White, G., *Ani.Mystic: Encounters with a Living Cosmos*, Scarlet Imprint, 2021 — the
-Hemingway passage and "the disastrous metaphor of the universe as a machine"; the drawing on Tarnas'
-*The Passion of the Western Mind* for the three turning points and the terms "cosmological
-estrangement" and "ontological estrangement"; the personhood passage ("little or no distinction
-between the human and the non-human… the same 'stuff' which is a kind of personhood"); and the criticism
-of practitioners who treat a regimen as "optional ambiance." White's companion volume, *Star.Ships: A
-Prehistory of the Spirits* (Scarlet Imprint, 2016), builds the deep-mythology case on Michael Witzel's
-*The Origins of the World's Mythologies* (Oxford, 2012) — the Laurasian/Gondwanan split — and is the
-subject of a later post in this series.
+[^animystic]: White, G., *Ani.Mystic: Encounters with a Living Cosmos*, Scarlet Imprint, 2022 (ISBN
+978-1-912316-57-1) — the Hemingway passage, which White quotes from *The Sun Also Rises* ("How did you
+go bankrupt?" "Two ways. Gradually, then suddenly."), and "the disastrous metaphor of the universe as a
+machine"; the personhood passage ("little or no distinction between the human and the non-human… the
+same 'stuff' which is a kind of personhood"); and the criticism of practitioners who treat a regimen as
+"optional ambiance." White's companion volume, *Star.Ships: A Prehistory of the Spirits*, Scarlet
+Imprint, 2016 (ISBN 978-0-9931200-9-1), builds the deep-mythology case on Witzel, E. J. M., *The
+Origins of the World's Mythologies*, Oxford University Press, 2012 (ISBN 978-0-19-536746-1) — the
+Laurasian/Gondwanan split — and is the subject of a later post in this series.
+
+[^tarnas]: Tarnas, R., *The Passion of the Western Mind: Understanding the Ideas That Have Shaped Our
+World View*, Harmony Books, 1991; Pimlico, 1996 (ISBN 978-0-7126-7332-7) — quoted and summarised by
+White in *Ani.Mystic* ch. 1, which is the source of every phrase above. The three turning points, in
+White's account: the Copernican model ("cosmological estrangement"), Descartes ("ontological
+estrangement"), and Kant, with Locke and Hume in between ("epistemological estrangement"). "Gradually,
+then suddenly" applied to the Enlightenment is White's own framing, not one of Tarnas's three.
 
 [^mechanism]: The model this series extends — [the mechanism post](/meditation-harm/) — and the frame's
 function, [the coercion post](/manufacturing-the-collapse/): the frame supplies the reading of a state

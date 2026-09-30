@@ -48,15 +48,15 @@ part, because the two are not rivals:
 That structure is worth holding precisely, because it is not silence and it is not vagueness. It is a
 claim about the **limits of predication**: you may say true things, and none of them is *it*.
 
-And it is not one tradition. The same move appears, independently and across a thousand years, in
-places with no contact at all: the **Christian** apophaticism whose classic text is Pseudo-Dionysius'
-*Mystical Theology*; the **Upanishadic** *neti neti* — "neither this, nor that," the Upanishads' way of
-describing Brahman by denying every description[^apo]; the **Buddhist** way of negation, whose
-tetralemma (*catuṣkoṭi*) refuses all four positions — is, is not, both, neither — as a technique rather
-than a picture of the world; **Taoism**, whose foundational text opens by saying that the Tao that can
-be spoken is not the Tao; and the **Islamic** *ta'tīlī* and the Sufi *fanā*' in the same family. The
-variety is real, and the structural commonality is what this series cares about: **the highest term
-cannot be named.[^apo]
+And it is not one tradition. The same move appears across traditions, in different metaphysical
+vocabularies and over more than a thousand years: the **Christian** apophaticism whose classic text is
+Pseudo-Dionysius' *Mystical Theology*; the **Upanishadic** *neti neti* — "neither this, nor that," the
+Brihadaranyaka Upanishad's way of describing Brahman by denying every description[^apo]; the
+**Buddhist** way of negation, whose tetralemma (*catuṣkoṭi*) refuses all four positions — is, is not,
+both, neither — as a technique rather than a picture of the world; **Taoism**, whose foundational text
+opens by saying that the Tao that can be spoken is not the Tao; and the **Islamic** *ta'tīl* and the
+Sufi *fanā*' in the same family. The variety is real, and the structural commonality is what this series
+cares about: **the highest term cannot be named.[^apo]
 
 And in every case, the refusal is not a failure of nerve. It is a **technique**, taught, transmitted,
 and defended — which is why it belongs in a post about cosmologies and not in a post about silence.
@@ -221,7 +221,7 @@ keep a check that does not benefit, and keep the pace metered.
 
 Which leaves one post in this series, and it is the one that makes the case for the whole of it. The
 refusal appears in the Christian tradition, in the Upanishads, in Buddhist Madhyamaka, in Taoism, and in
-Islam — **with no contact between them, and centuries apart.** That is the same convergence the
+Islam — **each in its own vocabulary, and centuries apart.** That is the same convergence the
 traditions post found, and the clinic, and the Western column. The last post is that convergence, at the
 scale this series has been working at: **what a mythic inheritance, older than writing, has to do with
 any of this.**
@@ -236,9 +236,15 @@ negation ("to speak only in terms of what may not be said about God"), paired wi
 it; Pseudo-Dionysius' *Mystical Theology* as the classic Christian text; the Upanishadic *neti neti*
 ("neither this, nor that," the Brihadaranyaka Upanishad's description of Brahman); the Buddhist way of
 negation and the *catuṣkoṭi*; the Taoist opening that the Tao which can be spoken is not the Tao; and
-the Islamic *ta'tīlī* and Sufi *fanā*' in the same family. Background:
-https://en.wikipedia.org/wiki/Apophatic_theology — treated here as a description of a family of
-traditions, not as a claim about the divine.
+the Islamic *ta'tīl* and Sufi *fanā*' in the same family. Background, and the source of the
+characterisations above: https://en.wikipedia.org/wiki/Apophatic_theology — treated here as a
+description of a family of traditions, not as a claim about the divine. Sources for the primary texts:
+Pseudo-Dionysius, *The Mystical Theology*, in *Pseudo-Dionysius: The Complete Works*, trans. C.
+Luibheid, Paulist Press, 1987 (ISBN 978-0-8091-2838-9); *Bṛhadāraṇyaka Upaniṣad* 2.3.6, in P. Olivelle
+(trans.), *Upaniṣads*, Oxford World's Classics, Oxford University Press, 1996 (ISBN
+978-0-19-954025-9); Nāgārjuna, *Mūlamadhyamakakārikā*, trans. M. Siderits & S. Katsura, *Nāgārjuna's
+Middle Way*, Wisdom Publications, 2013 (ISBN 978-1-61429-050-6); Lao Tzu, *Tao Te Ching*, trans. D. C.
+Lau, Penguin Classics, 1963, ch. 1 (ISBN 978-0-14-044131-4).
 
 [^sacred]: The argument that the refusal is a safety mechanism — [the sacred science](/sacred-science/)
 §8, and its table pairing the apophatic tradition (which does not name the endpoint, so the collapse

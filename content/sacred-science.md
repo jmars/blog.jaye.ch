@@ -207,7 +207,7 @@ Here is the tell, and it is beautifully diagnostic.
 
 The traditions that have the longest experience with this territory are strikingly careful
 about *not* specifying the endpoint. The vocabulary is **apophatic**[^apophatic] — negative theology,
-*nettī netti*, "not this, not that." The instruction is to refuse to say what the ultimate is,
+*neti neti*, "not this, not that." The instruction is to refuse to say what the ultimate is,
 and to keep refusing, because every positive statement about it is a thing the self has made
 — and therefore a thing that can bind.
 
@@ -267,7 +267,7 @@ in-scanner reports of ego dissolution correlate with the "mystical" quality of e
 the DMN, so the two accounts converge on the same generator — and on it having gone quiet.
 https://pmc.ncbi.nlm.nih.gov/articles/PMC10032309
 
-[^apophatic]: Apophatic ("negative") theology — the *via negativa*, *nettī netti*, "not this,
+[^apophatic]: Apophatic ("negative") theology — the *via negativa*, *neti neti*, "not this,
 not that." https://en.wikipedia.org/wiki/Apophatic_theology
 
 *Marking:* documented — the history of the consciousness-causes-collapse interpretation and its

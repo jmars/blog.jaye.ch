@@ -51,7 +51,7 @@ world's mythologies into two deep families with a shared root.
 > characteristic of a Gondwana mythology is that the creation/destruction story is absent and the
 > universe has always existed and will always exist.**"[^starships]
 
-And where it survives: "Sub-Saharan Africa, Australia, New Guinea and parts of the western Pacific — all
+And where it survives: "Sub-Saharan Africa, Australia, New Guinea and parts of the western Pacific, all
 places of **long-term isolation** from other cultures."[^starships]
 
 **Laurasian mythology — the later layer, roughly 40,000 years:**
@@ -144,8 +144,8 @@ errors are independent.
 
 **And the corpus's own examples show the trap.** The same book mounts an argument about the Younger
 Dryas and the flood stories — a hypothesis in genuine scientific dispute, with published rebuttals, and
-White quotes one ("Comet theory false; doesn't explain cold snap at the end of the Ice Age") in his own
-bibliography[^starships]. Which is to say: *Star.Ships* is careful and it is also a **thesis with a
+White lists one in his own bibliography ("Comet theory false; doesn't explain cold snap at the end of
+the Ice Age")[^starships]. Which is to say: *Star.Ships* is careful and it is also a **thesis with a
 side**, and a post in this series has to say so rather than borrowing its authority.
 
 **So this post does not lean on the chronology.** Its claim is about the **structure** — two inherited
@@ -220,19 +220,20 @@ The blog's contribution is not a cosmology, and it is not a warning about anyone
 
 ## Notes
 
-[^starships]: White, G., *Star.Ships: A Prehistory of the Spirits*, Scarlet Imprint, 2016, drawing on
-Witzel, M., *The Origins of the World's Mythologies*, Oxford University Press, 2012 — the two mythic
-families: Gondwana mythology ("This is the cosmology our ancestors took with them when they left
-Africa… 'a forest of stories'… probably the defining characteristic of a Gondwana mythology is that the
-creation/destruction story is absent and the universe has always existed and will always exist"),
-surviving in "Sub-Saharan Africa, Australia, New Guinea and parts of the western Pacific — all places
-of long-term isolation"; Laurasian mythology ("mankind developed what Witzel calls 'our first novel'…
-begin with the creation of the world/universe and end with its destruction… the killing of a dragon or
-monster, a Golden Age and a Flood as punishment for mankind"); White's note that pinpointing the origin
-"requires the use of data points that Dr Witzel studiously avoids"; and the Younger-Dryas/flood debate,
-including the rebuttal White lists in his own bibliography ("Comet theory false; doesn't explain cold
-snap at the end of the Ice Age"). White is cited for the description of the finding; the dating is
-treated as contested; the framing is this series'.
+[^starships]: White, G., *Star.Ships: A Prehistory of the Spirits*, Scarlet Imprint, 2016 (ISBN
+978-0-9931200-9-1; quotations checked against the digital edition, eISBN 978-0-9931200-8-4), drawing on
+Witzel, E. J. M., *The Origins of the World's Mythologies*, Oxford University Press, 2012 (ISBN
+978-0-19-536746-1) — the two mythic families: Gondwana mythology ("This is the cosmology our ancestors
+took with them when they left Africa… 'a forest of stories'… probably the defining characteristic of a
+Gondwana mythology is that the creation/destruction story is absent and the universe has always existed
+and will always exist"), surviving in "Sub-Saharan Africa, Australia, New Guinea and parts of the western
+Pacific, all places of long-term isolation"; Laurasian mythology ("mankind developed what Witzel calls
+'our first novel'… begin with the creation of the world/universe and end with its destruction… the
+killing of a dragon or monster, a Golden Age and a Flood as punishment for mankind"); White's note that
+pinpointing the origin "requires the use of data points that Dr Witzel studiously avoids"; and the
+Younger-Dryas/flood debate, including the rebuttal White lists in his own bibliography ("Comet theory
+false; doesn't explain cold snap at the end of the Ice Age"). White is cited for the description of the
+finding; the dating is treated as contested; the framing is this series'.
 
 [^traditions]: The three earlier convergences — [what the traditions knew](/what-the-traditions-knew/)
 (seven contemplative traditions), [the Western column](/the-western-column/), and

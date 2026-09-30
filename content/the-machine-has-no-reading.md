@@ -42,8 +42,8 @@ That is this post's claim, and the rest of it takes the claim apart.
 ## 2. What the machine frame says the universe is made of
 
 Take the description of the frame from the people who study it, stated as flat as possible. Gordon
-White, drawing on the anthropology of the subject — Ingold, Descola, the ontological turn — sets out
-what he calls **materialist-naturalism** as a pair of premises, and then as a picture:
+White, drawing on the anthropology of the subject — Ingold, Viveiros de Castro, the ontological turn —
+sets out what he calls **materialist-naturalism** as a pair of premises, and then as a picture:
 
 > "**Materialism** is the premise that only physical things exist and that all events – including human
 > thought – are as a result of material processes. **Naturalism** is the premise that the universe
@@ -168,8 +168,9 @@ spot are opposite.
 **One response is to notice it.** A frame that knows it has no reading for the interior can still
 *measure the consequences* — it can build the harm-monitoring framework, count the adverse effects,
 distinguish duration from symptom from impact, and institute the referral that says *this is not our
-category, go to the clinician* ([the differential](/the-differential/) found exactly this, and it is the
-machine frame doing its honest work). It can also simply decline to pronounce: *we have no reading for
+category, go to the clinician* ([the differential](/the-differential/) found the measures and
+[the Western column](/the-western-column/) found the referral written into a curriculum — the machine
+frame doing its honest work). It can also simply decline to pronounce: *we have no reading for
 this; that is a limit, not a finding.*[^differential]
 
 **The other response is to pathologise the gap** — to treat the absence of a category as evidence
@@ -239,26 +240,30 @@ it has already named.
 
 ## Notes
 
-[^animystic]: White, G., *Ani.Mystic: Encounters with a Living Cosmos*, Scarlet Imprint, 2021 — the
-definition of materialist-naturalism ("Materialism is the premise that only physical things exist…"
-"Naturalism is the premise that the universe operates according to blind forces and natural laws…"),
-the description of "the predominant so-called western view of the universe as a place devoid of purpose,
-in which impersonal, often random, forces impact a universe composed exclusively of dead matter," and
-the characterisation of the psychologised reading of inner experience ("the assumption that there is no
-external reality to names, spirits or thoughts and all that is required is to trick one part of your
-mind with another"). White is cited for his description of the frame; the framing of this post is this
-series'.
+[^animystic]: White, G., *Ani.Mystic: Encounters with a Living Cosmos*, Scarlet Imprint, 2022 (ISBN
+978-1-912316-57-1) — the definition of materialist-naturalism ("Materialism is the premise that only
+physical things exist…" "Naturalism is the premise that the universe operates according to blind forces
+and natural laws…"), White's own wording, not a quotation inside him; his own description of "the
+predominant so-called western view of the universe as a place devoid of purpose, in which impersonal,
+often random, forces impact a universe composed exclusively of dead matter"; and the characterisation
+of the psychologised reading of inner experience ("the assumption that there is no external reality to
+names, spirits or thoughts and all that is required is to trick one part of your mind with another"),
+which White offers in criticism of practitioners who shortcut a ritual sequence — the "one part of your
+mind" sentence is his gloss on the materialist assumption, not a claim of his own. White is cited for
+his description of the frame; the framing of this post is this series'.
 
 [^mechanism]: The state and the instrument failure — [the mechanism post](/meditation-harm/): the
 reasoning faculty at baseline while the self-content generator is annihilated, and the DES-T
-dissociation taxon's **54% false-positive rate in non-clinical samples** (Leavitt, 1999,
-"Dissociative Experiences Scale Taxon and Measurement of Dissociative Pathology," *J. Clin. Psychol.
-Med. Settings*).
+dissociation taxon's **54% false-positive rate in non-clinical samples** — Leavitt, F. (1999),
+"Dissociative Experiences Scale Taxon and Measurement of Dissociative Pathology: Does the Taxon Add to
+an Understanding of Dissociation and Its Associated Pathologies?", *Journal of Clinical Psychology in
+Medical Settings* 6(4): 427–440; DOI 10.1023/A:1026275916184.
 
 [^differential]: On the clinical consequence — [the differential](/the-differential/): the state cannot
 be diagnosed from the state, only from impairment, duration and autonomic signs; the harm-monitoring
-framework that distinguishes symptom, valence and impact; and the clinical referral built into the
-practitioner's own curriculum that this post reads as the machine frame doing its honest work.
+framework that distinguishes symptom, valence and impact; and [the Western column](/the-western-column/)
+for the clinical referral built into the practitioner's own curriculum, which this post reads as the
+machine frame doing its honest work.
 
 [^label]: On the step from description to verdict — [the label post](/the-label/), and
 [the-machine-said-so](/the-machine-said-so/) on the difference between measurement and *auditable*
