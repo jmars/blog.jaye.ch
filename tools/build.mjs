@@ -787,7 +787,7 @@ function paletteAssets(navPosts) {
     `autocapitalize="off" spellcheck="false"></div>` +
     `<div class="palette-out" role="status"></div>` +
     `</div></div>`;
-  paletteCache = { html, script: `<script>\n${PALETTE_JS(data)}</script>\n` };
+  paletteCache = { html, script: `<script>\n${stripJsComments(PALETTE_JS(data))}</script>\n` };
   return paletteCache;
 }
 
@@ -1975,9 +1975,11 @@ written.push({
   html: writePage('timeline/index.html', buildTimeline(navPosts), navPosts),
 });
 
-writeFile('feed.xml', feedXml(livePosts));
-writeFile('sitemap.xml', sitemapXml(livePosts));
-writeFile('robots.txt', robotsTxt());
+const writtenFiles = [];
+const writeDiscovery = (rel, text) => { writeFile(rel, text); writtenFiles.push({ rel, text }); };
+writeDiscovery('feed.xml', feedXml(livePosts));
+writeDiscovery('sitemap.xml', sitemapXml(livePosts));
+writeDiscovery('robots.txt', robotsTxt());
 log(
   `discovery files list ${livePosts.length} published post(s)` +
     (PREVIEW && livePosts.length !== manifest.posts.length
@@ -1985,7 +1987,74 @@ log(
       : ''),
 );
 
+/** The workshop-leak gate: a page must not tell the reader how the blog is
+ * built. Two whole audits were needed to find leaks that had reached the public
+ * HTML — internal filenames and paths, file sizes, extraction mechanics — and
+ * the second found two that the first fix had missed, so this runs on every
+ * build rather than when someone remembers to look.
+ *
+ * It scans the RENDERED output (the same text a reader gets, including inlined
+ * widget scripts and CSS), not the sources: a leak can enter through an inlined
+ * asset even when the prose is clean, which is exactly how the build.mjs and
+ * tools/viz comments got out. Patterns are deliberately tight — a file path, a
+ * size claim, a comment delimiter in emitted code — because the posts
+ * legitimately contain words like "characters", "the file" in a quotation, or
+ * "scan". Where a legitimate use exists it is named in `allowed` or the pattern
+ * is narrowed until it cannot match it. Fail loudly rather than warn: a leak
+ * that ships is not recoverable by later noticing it. */
+function checkWorkshop(html) {
+  const patterns = [
+    // internal filenames and paths (a reader has none of these)
+    [/\b(?:build|check-scope|extract-css|viz-smoke|viz-shots)\.(?:mjs|sh)\b/, 'internal script name'],
+    [/\btools\/(?:build|viz|check-scope)[\w./-]*/, 'internal path'],
+    [/\bposts\.json\b|\bcontinuity\.md\b|\bblog\.css\b/, 'internal file name'],
+    [/(?:^|["'\s(])(?:~|\/home\/[a-z])\/[\w./-]+/, 'local filesystem path'],
+    [/\b[\w.-]+\.(?:txt|mjs|json)\b(?=[\s"',.)]|$)/, 'source-file name'],
+    // file-size / extraction-mechanics claims
+    [/\b\d[\d,]{2,}\s*(?:bytes|KB|MB)\b/i, 'file size'],
+    [/\b\d[\d,]{3,}\s+characters\b/, 'character count'],
+    [/\bno newline\b|\bwhitespace[- ]collaps|\bjumbled page order\b|\bwatermark-delimited\b/i, 'extraction mechanics'],
+    // authoring references
+    [/\bthe brief\b|\bthe reading list\b|\bthe manifest\b|\bthe plumbing\b|\bthe build\b(?!\s+in\b)/i, 'authoring reference'],
+    // a comment delimiter that reached emitted code
+    [/\/\*\s*[-=]*\s*[a-z]/i, 'source comment in emitted code'],
+    [/^\s*\/\/\s/m, 'source comment in emitted code'],
+  ];
+  // Legitimate uses the tight patterns above could still catch, by exact text.
+  const allowed = [
+    'the build in', 'the build of', // ordinary prose, not the build process
+  ];
+  const problems = [];
+  for (const [re, what] of patterns) {
+    for (const m of html.matchAll(new RegExp(re, re.flags.includes('g') ? re.flags : re.flags + 'g'))) {
+      const at = m.index;
+      const window = html.slice(Math.max(0, at - 60), at + 60).replace(/\s+/g, ' ');
+      if (allowed.some((a) => window.toLowerCase().includes(a))) continue;
+      problems.push(`  ${what}: ${JSON.stringify(window.trim())}`);
+    }
+  }
+  return problems;
+}
+
+/** Run checkWorkshop over every written page and file, and fail the build. */
+function checkWorkshopAll(written, files) {
+  const problems = [];
+  for (const { rel, html } of written) {
+    for (const p of checkWorkshop(html)) problems.push(`${rel}:${p}`);
+  }
+  for (const { rel, text } of files) {
+    for (const p of checkWorkshop(text)) problems.push(`${rel}:${p}`);
+  }
+  if (problems.length) {
+    throw new Error(
+      `workshop leak(s) in the rendered output — a reader must never see how the blog is built:\n` +
+        problems.join('\n'),
+    );
+  }
+}
+
 checkLinks(written, manifest);
+checkWorkshopAll(written, writtenFiles);
 if (PREVIEW) {
   console.log(
     '***********************************************************************\n' +
