@@ -183,6 +183,14 @@ function nav(current, navPosts) {
     here('/timeline/', "what's new") +
     here('/map/', 'the map') +
     SERIES.map(dropdown).join('') +
+    // The reader-facing theme control. Its visible word IS the current mode
+    // (auto → light → dark → auto), so the state is never carried by colour
+    // alone; the sentence — what the mode means and what a click does — lives in
+    // aria-label/title, which THEME_JS keeps in step. The static text below is
+    // the auto default: every page ships it, and the head script rewrites it
+    // only when the reader stored a choice.
+    `<button class="theme-toggle" id="theme-toggle" type="button"` +
+    ` aria-label="theme: auto — click for light" title="theme: auto — click for light">auto</button>` +
     `</span></div></nav>`
   );
 }
@@ -279,6 +287,53 @@ function footer() {
   );
 }
 
+/** The warm dark palette's declarations, scoped to `root`.
+ *
+ * Written ONCE and emitted under both root selectors (see the dark block in
+ * PAGE_CSS): `:root:not([data-theme="light"])` inside the prefers-color-scheme
+ * media query — the OS-following default — and `:root[data-theme="dark"]`
+ * inside `@media screen` — the reader's explicit choice, which has to win over
+ * the OS. The parameter is the root selector only; every declaration lives here,
+ * so the two renderings cannot drift.
+ *
+ * Each rule carries the root prefix rather than the whole block sitting inside
+ * `:root { … }`: the component overrides (`nav`, `.prose code`, …) are rules for
+ * other elements, and nesting them in the `:root` block would be invalid CSS
+ * that every browser drops on the floor.
+ *
+ * The component rules take the prefix inside `:where(…)`, which contributes NO
+ * specificity — so `:where(:root[data-theme="dark"]) p` weighs exactly what the
+ * bare `p` weighed, and the rest of the cascade is untouched. This is load-
+ * bearing: the dark literals deliberately LOSE to some class rules in the design
+ * system (the home page's `.tl-mini .m` keeps `--dim` rather than taking the
+ * `#ddd7cd` a `p` receives), and an ordinary prefixed selector — specificity
+ * (0,2,1) — would silently win those arguments instead and re-colour text that
+ * the palette had left alone. The token re-declaration keeps the plain selector:
+ * it has to out-rank the design system's own `:root`, and custom properties have
+ * no competing declaration inside this block to protect.
+ */
+const DARK_DECLS = (root) => {
+  const w = `:where(${root})`;
+  return `  ${root} { color-scheme: dark;
+    --bg: #1a1816;
+    --bg2: #232120;
+    --fg: #efeae2;
+    --dim: #a9a29a;
+    --accent: #e88b86;
+    --accent2: #8ab4f8;
+    --line: #3a3733; }
+  ${w} nav { background: rgba(26, 24, 22, 0.90); }
+  ${w} p, ${w} .stack td.desc, ${w} ul.checks li { color: #ddd7cd; }
+  ${w} .prose code { color: #f0a8a2; }
+  ${w} .prose a { text-decoration-color: rgba(138, 180, 248, 0.40); }
+  ${w} .dropdown .menu a:hover { background: rgba(232, 139, 134, 0.12); }
+  ${w} .cta-btn, ${w} .cta-btn:hover { color: #1a1816; }
+  ${w} .note { background: #2e2120; color: #f0b6b0; }
+  ${w} .warn { background: #2b2619; border-left-color: #c79a3c; color: #e8cd93; }
+  ${w} .palette { background: rgba(0, 0, 0, 0.55); }
+`;
+};
+
 /** Page-level CSS layered AFTER the design system.
  *
  * Reading styles (.prose serif typography, blockquotes, tables, footnotes) live
@@ -342,6 +397,22 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .dropdown > .menu { transition: opacity 120ms ease-out; }
 }
+
+/* ---------- the theme control ----------
+   nav() emits it; THEME_JS (see THEME_JS above) cycles auto → light → dark and
+   keeps the label honest. It reads as a control rather than one more nav link —
+   a hairline box, the same dim weight as its neighbours — and every colour is a
+   token, so it adapts with the palette it switches. The visible word is the
+   mode; the sentence is in aria-label/title, never in colour alone. It is NOT
+   .viz: the figure smoke test drives .viz button, and this is not a figure
+   control. */
+.theme-toggle {
+  font-family: var(--mono); font-size: 12px; line-height: 1.2;
+  color: var(--dim); background: none; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px;
+}
+.theme-toggle:hover { color: var(--fg); border-color: var(--dim); }
+.theme-toggle:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
 
 /* ---------- contents (long posts) ----------
    Built by toc() from the rendered body's own <h2 id> headings, so every link
@@ -519,28 +590,20 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
    engine read comes from them), then the handful of literals the design package
    hard-codes. All text keeps AA: --fg 12.5:1, --dim 7.0:1, --accent 7.2:1,
    --accent2 8.5:1 against --bg, and the callouts ≥ 8.9:1. Scoped to screen, so
-   a printed page is black on white whatever the reader's system preference. */
+   a printed page is black on white whatever the reader's system preference.
+
+   The declarations themselves are NOT written here: they come from DARK_DECLS
+   (above), emitted under both selectors — the OS-following default and the
+   reader's explicit choice — so the two renderings cannot drift apart. */
+:root { color-scheme: light dark; }
 @media screen and (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --bg: #1a1816;
-    --bg2: #232120;
-    --fg: #efeae2;
-    --dim: #a9a29a;
-    --accent: #e88b86;
-    --accent2: #8ab4f8;
-    --line: #3a3733;
-  }
-  nav { background: rgba(26, 24, 22, 0.90); }
-  p, .stack td.desc, ul.checks li { color: #ddd7cd; }
-  .prose code { color: #f0a8a2; }
-  .prose a { text-decoration-color: rgba(138, 180, 248, 0.40); }
-  .dropdown .menu a:hover { background: rgba(232, 139, 134, 0.12); }
-  .cta-btn, .cta-btn:hover { color: #1a1816; }
-  .note { background: #2e2120; color: #f0b6b0; }
-  .warn { background: #2b2619; border-left-color: #c79a3c; color: #e8cd93; }
-  .palette { background: rgba(0, 0, 0, 0.55); }
-}
+${DARK_DECLS(':root:not([data-theme="light"])')}}
+@media screen {
+  /* an explicit light choice on a dark-OS machine: the tokens stay light, and
+     the form controls and scrollbars have to be told, or the UA keeps painting
+     them dark. */
+  :root[data-theme="light"] { color-scheme: light; }
+${DARK_DECLS(':root[data-theme="dark"]')}}
 
 /* ---------- print ----------
    A paper copy of the essay: the chrome and every control go, the prose runs
@@ -803,6 +866,79 @@ function paletteAssets(navPosts) {
   return paletteCache;
 }
 
+/** The theme control's script — the ONE script in <head>.
+ *
+ * Two jobs, in two halves, because a page can only have one pre-paint moment:
+ *
+ *  - The top runs SYNCHRONOUSLY in <head>, before the first paint: if the reader
+ *    stored a choice, `data-theme` is on <html> before any style is resolved, so
+ *    there is no flash of the other palette. No stored choice leaves the
+ *    attribute off, which IS auto (the prefers-color-scheme default) — a reader
+ *    who never touches the control sees exactly the site as it was.
+ *  - The rest waits for DOMContentLoaded, because the head runs before the
+ *    button exists: it adopts the current mode (fixing the label the static
+ *    markup shipped as "auto") and cycles auto → light → dark → auto on click.
+ *
+ * Storage is wrapped in try/catch: a reader with storage disabled gets a working
+ * toggle for the session instead of a thrown error and a dead control.
+ *
+ * NO COMMENTS in this string, and none in the markup it touches: the emitted
+ * page is gated (checkWorkshop) on a comment delimiter in emitted code, so a
+ * comment here — or in the control's markup — fails the build. The prose belongs
+ * on this comment, in the source, where the build strips it.
+ */
+const THEME_JS = `(function () {
+  'use strict';
+  var KEY = 'theme';
+  var NEXT = { auto: 'light', light: 'dark', dark: 'auto' };
+  var root = document.documentElement;
+  function read() {
+    try {
+      var v = localStorage.getItem(KEY);
+      return v === 'light' || v === 'dark' ? v : 'auto';
+    } catch (e) {
+      return 'auto';
+    }
+  }
+  function write(mode) {
+    try {
+      if (mode === 'auto') localStorage.removeItem(KEY);
+      else localStorage.setItem(KEY, mode);
+    } catch (e) {}
+  }
+  function label(mode) {
+    return 'theme: ' + mode + ' — click for ' + NEXT[mode];
+  }
+  function apply(mode, btn) {
+    if (mode === 'auto') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', mode);
+    if (!btn) return;
+    btn.textContent = mode;
+    btn.setAttribute('aria-label', label(mode));
+    btn.setAttribute('title', label(mode));
+  }
+  var mode = read();
+  apply(mode, null);
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    apply(mode, btn);
+    btn.addEventListener('click', function () {
+      mode = NEXT[mode] || 'auto';
+      apply(mode, btn);
+      write(mode);
+    });
+  });
+})();`;
+
+/** The pre-paint half of THEME_JS, as it is emitted into <head>.
+ *
+ * Deliberately `<script>` with no newline after it: tools/viz-smoke.mjs finds a
+ * page's figure script with `/<script>\\n([\\s\\S]*?)\\n<\\/script>/`, so a head
+ * script that opened with a newline would be lifted out of the page in place of
+ * the engine and the figures would never be tested. */
+const THEME_HEAD = `<script>${THEME_JS}</script>`;
+
 /** Full self-contained document. */
 function page({ title, description, prompt, heroTitle, tagline, body, navCurrent, type = 'article', shareTitle, noindex = false }, navPosts) {
   const designCss = stripComments(readFileSync(CSS, 'utf8'));
@@ -834,6 +970,7 @@ function page({ title, description, prompt, heroTitle, tagline, body, navCurrent
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+${THEME_HEAD}
 ${meta}
 <style>
 ${designCss}</style>
@@ -1998,6 +2135,14 @@ const POST_META = {
     description:
       'A close reading of Proclus\u2019 Theology of Plato in Thomas Taylor\u2019s translation: the Neoplatonist frame at full length \u2014 the One, the negations that name it, the ladder of the gods, and the one thing the blog has been asking of every frame it reads.',
     accent: 'On the Theology of Plato',
+  },
+  'proclus-elements-of-theology': {
+    prompt: 'cat proclus-elements-of-theology.md',
+    tagline: 'a <b>reading</b>: the frame as a proof \u2014 two hundred and eleven propositions, derived rather than argued, with no ritual and no one acting anywhere in it.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of a system of propositions, with notes',
+    description:
+      'A close reading of Proclus\u2019 Elements of Theology: the same frame as a deduction \u2014 propositions from a first principle to the soul\u2019s ascent, with the theurgy stripped out, and what a claim does when nothing in the system performs it.',
+    accent: 'The Elements of Theology',
   },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',

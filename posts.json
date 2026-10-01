@@ -576,6 +576,16 @@
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
+    },
+    {
+      "slug": "proclus-elements-of-theology",
+      "file": "proclus-elements-of-theology.md",
+      "navLabel": "proclus, the elements of theology",
+      "kind": "reading",
+      "summary": "A close reading of Proclus\u2019 Elements of Theology \u2014 the same frame stated as a proof: two hundred and eleven propositions derived from a first principle, with no ritual, no mediator and no operator anywhere in it.",
+      "date": "2026-10-01",
+      "published": true,
+      "series": "readings"
     }
   ]
 }

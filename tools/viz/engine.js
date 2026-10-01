@@ -70,6 +70,26 @@ var VIZ = (function () {
   var MONO = 'SFMono-Regular, Menlo, Consolas, monospace';
   var SANS = '-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
+  /**
+   * Drop the cached tokens and redraw every mounted widget.
+   *
+   * `tokens` is read from :root once — at the first figure's first draw — so a
+   * theme change makes it stale and every figure would keep the palette it was
+   * first drawn in. A widget's redraw IS its window resize handler
+   * (bag.onResize), so one dispatched resize re-runs every mounted widget, and
+   * they re-read the tokens now that the cache is gone.
+   *
+   * The page's theme control does not have to call this: the observers that
+   * watchTheme() installs see the change itself (see below). It is exported for
+   * a caller that wants to force a redraw.
+   */
+  function refreshTheme() {
+    tokens = null;
+    if (typeof window.dispatchEvent === 'function' && typeof window.Event === 'function') {
+      window.dispatchEvent(new window.Event('resize'));
+    }
+  }
+
   /* ---------------------------------- formatting -------------------------------- */
 
   /** Compact decimal: at most `digits` places, trailing zeros trimmed. */
@@ -1012,9 +1032,37 @@ var VIZ = (function () {
     shareSlots = [];
   }
 
+  /** Redraw the figures when the theme changes under them.
+   *
+   * The theme has two independent sources and each needs its own trigger: the
+   * reader's choice arrives as a `data-theme` attribute written on <html> (a
+   * mutation, which a MutationObserver sees), and the OS preference can change
+   * with no DOM trace at all — the auto case, where the attribute is absent and
+   * only the media query moves.
+   *
+   * Every API is probed with typeof first: the smoke test runs a whole page in
+   * happy-dom, where a missing MutationObserver or matchMedia has to be a no-op
+   * rather than a throw that kills the page's figures.
+   */
+  var themeObserver = null;
+
+  function watchTheme() {
+    var root = document.documentElement;
+    if (root && typeof window.MutationObserver === 'function') {
+      themeObserver = new window.MutationObserver(refreshTheme);
+      themeObserver.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+    if (typeof window.matchMedia === 'function') {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      if (mq && typeof mq.addEventListener === 'function') mq.addEventListener('change', refreshTheme);
+      else if (mq && typeof mq.addListener === 'function') mq.addListener(refreshTheme);
+    }
+  }
+
   function boot() {
     if (booted) return; // a second call is a no-op
     booted = true;
+    watchTheme();
     // the fragment the page arrived with, if it is this engine's (a plain
     // heading anchor is not, and is left exactly where the browser put it)
     initial = parseState(window.location.hash);
@@ -1043,6 +1091,7 @@ var VIZ = (function () {
     boot: boot,
     mountAll: mountAll,
     unmountAll: unmountAll,
+    refreshTheme: refreshTheme,
     token: token,
     fmt: fmt,
     ticks: ticks,
