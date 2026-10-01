@@ -13,8 +13,9 @@
  *   - unmounts everything and checks the canvas and controls are gone and the
  *     authored markup (noscript + caption) survives.
  *
- * The page list is discovered from posts.json, so a new post with a figure is
- * covered with no change here. Run it against a normal or a PREVIEW build:
+ * The page list is discovered from posts.json plus the built standalone pages
+ * under dist/, so a new post with a figure — or a new page that is not a post —
+ * is covered with no change here. Run it against a normal or a PREVIEW build:
  *
  *     PREVIEW=1 SKIP_CSS=1 ./build.sh && node tools/viz-smoke.mjs
  *
@@ -22,7 +23,7 @@
  * node_modules, then the fixpoint-linux sibling checkout); override with
  * HAPPY_DOM=/path/to/node_modules/happy-dom.
  */
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -55,16 +56,30 @@ const CTX_METHODS = ['setTransform','resetTransform','clearRect','save','restore
   'measureText','translate','scale','rotate','transform','clip','drawImage','createLinearGradient',
   'createRadialGradient','createPattern','getImageData','putImageData'];
 
-/** slug -> the widgets its built page declares, discovered from the manifest. */
+/** slug -> the widgets its built page declares.
+ *
+ * Posts are discovered from the manifest. A STANDALONE page (the timeline, the
+ * map) has no entry there, so the built tree is scanned as well — keyed by its
+ * own directory under dist/, which is where the page is served from. Without
+ * this, a figure on a page that is not a post would be a seat nothing ever
+ * calls: built, shipped, and never run. */
 function pages() {
   const manifest = JSON.parse(readFileSync(join(ROOT, 'posts.json'), 'utf8'));
   const out = [];
-  for (const p of manifest.posts) {
-    const file = join(ROOT, 'dist', p.slug, 'index.html');
-    if (!existsSync(file)) continue;
+  const seen = new Set();
+  const add = (key, file) => {
+    if (seen.has(key) || !existsSync(file)) return;
+    seen.add(key);
     const html = readFileSync(file, 'utf8');
     const names = [...html.matchAll(/data-viz=(["'])([a-z0-9-]+)\1/g)].map((m) => m[2]);
-    if (names.length) out.push([p.slug, names]);
+    if (names.length) out.push([key, names]);
+  };
+  for (const p of manifest.posts) add(p.slug, join(ROOT, 'dist', p.slug, 'index.html'));
+  const dist = join(ROOT, 'dist');
+  if (existsSync(dist)) {
+    for (const entry of readdirSync(dist, { withFileTypes: true })) {
+      if (entry.isDirectory()) add(entry.name, join(dist, entry.name, 'index.html'));
+    }
   }
   return out;
 }

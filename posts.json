@@ -556,6 +556,26 @@
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
+    },
+    {
+      "slug": "the-orphic-hymns",
+      "file": "the-orphic-hymns.md",
+      "navLabel": "the orphic hymns",
+      "kind": "reading",
+      "summary": "A close reading of the Orphic Hymns — a frame enacted rather than argued: no doctrine, no thesis, and a cosmos named into presence by invocation.",
+      "date": "2026-10-01",
+      "published": true,
+      "series": "readings"
+    },
+    {
+      "slug": "proclus-theology-of-plato",
+      "file": "proclus-theology-of-plato.md",
+      "navLabel": "proclus, on the theology of plato",
+      "kind": "reading",
+      "summary": "A close reading of Proclus\u2019 Theology of Plato in Thomas Taylor\u2019s translation \u2014 the frame that argues, in a hierarchy of mediation, for a cosmos with an explicit claim on how things are.",
+      "date": "2026-10-01",
+      "published": true,
+      "series": "readings"
     }
   ]
 }

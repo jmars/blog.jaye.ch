@@ -1,4 +1,4 @@
-# A mechanism that hides itself — and where it runs
+# Instruments, not verdicts — and where it runs
 
 *The model and the paper are in the mechanism series; the pointers below are the fastest route in.*
 

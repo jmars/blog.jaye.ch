@@ -181,6 +181,7 @@ function nav(current, navPosts) {
     `<span class="links">` +
     here('/', 'home') +
     here('/timeline/', "what's new") +
+    here('/map/', 'the map') +
     SERIES.map(dropdown).join('') +
     `</span></div></nav>`
   );
@@ -403,6 +404,12 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
   .tl-mini li { grid-template-columns: 46px 1fr; }
   .tl-mini .m { display: none; }
 }
+
+/* ---------- the map page ---------- */
+/* Five series across is one table a phone cannot fit (it needs ~640px). Like a
+   code block, it scrolls sideways on its own rather than widening the page. */
+.mapt { overflow-x: auto; }
+.mapt table { min-width: 620px; }
 
 /* ---------- the featured piece (the top slot on the home page) ----------
    One deliberate highlight above the series: an accent-ruled card carrying the
@@ -779,9 +786,11 @@ function paletteAssets(navPosts) {
     pages.push({ slug: p.slug, title: titleOf(p), series: p.series || '', kind: p.kind || '' });
   }
   const data = { pages, series: series.map((key) => ({ key, label: seriesLabel(key) })) };
-  // the timeline is a page like any other but it is not a post, so the palette
-  // is told about it explicitly; 'unfiled' is the listing's own group for it.
+  // the timeline and the map are pages like any other but they are not posts, so
+  // the palette is told about them explicitly; 'unfiled' is the listing's own
+  // group for them.
   data.pages.push({ slug: 'timeline', title: "What's new", series: '', kind: 'page' });
+  data.pages.push({ slug: 'map', title: 'The map', series: '', kind: 'page' });
   const html =
     `<div class="palette" id="palette" role="dialog" aria-label="command line" hidden>` +
     `<div class="palette-box">` +
@@ -1213,13 +1222,13 @@ function buildHome(manifest) {
     `</div></section>`;
 
   return {
-    title: 'A mechanism that hides itself — blog.jaye.ch',
-    shareTitle: 'A mechanism that hides itself — in minds, in groups, in the frames they live inside',
+    title: 'Instruments, not verdicts — blog.jaye.ch',
+    shareTitle: 'Instruments, not verdicts — in minds, in groups, in the frames they live inside',
     type: 'website',
     description:
-      'A measured mechanism of a collapse that cannot see itself — in minds, in groups, in the frames they live inside — and what it takes to name a structure without sorting people into a verdict.',
+      'Instruments, not verdicts — in minds, in groups, in the frames they live inside: what it takes to name a structure without sorting people into a verdict.',
     prompt: 'cat start-here.md',
-    heroTitle: 'A mechanism that <span class="fx">hides itself</span> — in minds, in groups, in the frames they live inside',
+    heroTitle: 'Instruments, not <span class="fx">verdicts</span> — in minds, in groups, in the frames they live inside',
     tagline,
     body: html,
     navCurrent: '/',
@@ -1249,10 +1258,10 @@ function build404(navPosts) {
     `<div class="hint"># the path you asked for is not one of the pages</div>` +
     `<div class="prose">` +
     `<p>Every address on this site is one of the pages below — the summary, ` +
-    `<a href="/timeline/">what's new</a>, or a post in one of its ${NUM_WORD[seriesCount] || seriesCount} series. ` +
+    `<a href="/timeline/">what's new</a>, <a href="/map/">the map</a>, or a post in one of its ${NUM_WORD[seriesCount] || seriesCount} series. ` +
     `There is no other content, and nothing was ` +
     `deleted to hide it.</p>` +
-    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li>${links}</ul>` +
+    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li>${links}</ul>` +
     `<p>If you followed a link from somewhere else, the link is stale; the pieces ` +
     `above are current.</p>` +
     `</div></div></section>`;
@@ -1319,6 +1328,151 @@ function buildTimeline(navPosts) {
   };
 }
 
+/* ---------- the map: the links the pieces make to one another ---------- */
+
+/** The blog's own cross-references, read out of the prose.
+ *
+ * A node is a piece in nav order; an edge is one link from one piece to another
+ * — the absolute in-site link form the posts are written in, `](/<slug>/)` —
+ * de-duplicated per pair, because a piece that points at the same piece five
+ * times still makes one link. Edges are READ, never inferred: a resemblance
+ * between a piece and a book it never links to is not a citation, and this page
+ * does not draw a guess as though it were one. */
+function mapGraph(navPosts) {
+  const nodes = navPosts.map((p) => ({
+    slug: p.slug,
+    title: titleOf(p),
+    series: p.series || '',
+    // the blog's own rule: one book, one piece — every reading IS a book
+    book: p.series === 'readings',
+  }));
+  const known = new Set(nodes.map((n) => n.slug));
+  const seen = new Set();
+  const edges = [];
+  for (const p of navPosts) {
+    const file = join(ROOT, 'content', p.file);
+    // a staged draft can reach the nav before its text lands: that is a node
+    // with nothing to read yet, not a reason to stop
+    if (!existsSync(file)) continue;
+    for (const m of readFileSync(file, 'utf8').matchAll(/\]\(\/([a-z0-9-]+)\//g)) {
+      const to = m[1];
+      const key = `${p.slug}>${to}`;
+      if (to === p.slug || !known.has(to) || seen.has(key)) continue;
+      seen.add(key);
+      edges.push([p.slug, to]);
+    }
+  }
+  return { nodes, edges };
+}
+
+/** The map — every piece on a ring, every link between them a curve.
+ *
+ * Modelled on buildTimeline: a real page, written to dist and listed in the
+ * sitemap. The graph is derived from the pieces themselves (mapGraph) and the
+ * table under the prose is the same edge list aggregated by series, so the
+ * figure and the table cannot disagree about how many links there are. Where a
+ * point sits is a layout; the counts are not. */
+function buildMap(navPosts) {
+  const { nodes, edges } = mapGraph(navPosts);
+  const at = new Map(nodes.map((n, i) => [n.slug, i]));
+  const groups = SERIES
+    .map((s) => ({
+      key: s.key,
+      label: s.label,
+      nodes: nodes.map((n, i) => (n.series === s.key ? i : -1)).filter((i) => i >= 0),
+    }))
+    .filter((g) => g.nodes.length);
+  // A piece whose series the site does not know — including none at all — has no
+  // column of its own, and a table that quietly dropped it would stop summing to
+  // the links the figure draws. The rest of the build already calls such a piece
+  // unfiled (see the terminal's listing); the map gives it the group it is due,
+  // so every edge has a row and a column to land in.
+  const known = new Set(SERIES.map((s) => s.key));
+  const strays = nodes.map((n, i) => (known.has(n.series) ? -1 : i)).filter((i) => i >= 0);
+  if (strays.length) groups.push({ key: 'unfiled', label: 'unfiled', nodes: strays });
+  const groupOf = new Map();
+  for (const g of groups) for (const i of g.nodes) groupOf.set(nodes[i].slug, g.key);
+  // the table is keyed by the GROUP each end sits in, not by the raw series
+  // string, so it counts exactly the edges the figure draws
+  const seriesOf = nodes.map((n) => groupOf.get(n.slug));
+  const count = (from, to) =>
+    edges.filter(([a, b]) => seriesOf[at.get(a)] === from && seriesOf[at.get(b)] === to).length;
+  const books = nodes.filter((n) => n.book).length;
+
+  const table =
+    `<div class="mapt"><table>` +
+    `<caption>The links the series make to one another — counted from the pieces' own links, not from any ` +
+    `resemblance between them, and one link per pair of pieces however often one names the other. Each row ` +
+    `is where a link starts, each column where it ends.</caption>` +
+    `<thead><tr><th scope="col">from ↓ to →</th>` +
+    groups.map((g) => `<th scope="col">${esc(g.key)}</th>`).join('') +
+    `</tr></thead><tbody>` +
+    groups
+      .map(
+        (g) =>
+          `<tr><th scope="row">${esc(g.key)}</th>` +
+          groups.map((h) => `<td>${count(g.key, h.key)}</td>`).join('') +
+          `</tr>`,
+      )
+      .join('') +
+    `</tbody></table></div>`;
+
+  const prose =
+    `<p>Every piece on the blog is a point on this ring and every link one piece makes to another is a curve ` +
+    `across it: ${nodes.length} pieces, and ${edges.length} links between different pairs of them. That ` +
+    `count is of pairs, not of mentions — a piece that points at another five times still draws one line. ` +
+    `The ring is grouped by series — ` +
+    `${groups.map((g) => g.label).join(', ')} — and inside a group the pieces run in the order they were ` +
+    `published, with a gap between the groups.</p>` +
+    `<p>An edge is a link, and nothing more. If a piece points at another, there is a curve from the first ` +
+    `to the second. It is not agreement, not a citation, and not a claim that the two are about the same ` +
+    `thing — only that one of them points at the other, which is the one thing that can be counted here ` +
+    `without guessing.</p>` +
+    `<p>The ${books} pieces that are close readings of a book are drawn as squares: on this blog one book is ` +
+    `one piece, every time. The rest are circles.</p>` +
+    `<p>Where a point sits is a layout choice, made so that the curves can be told apart; the counts are not a ` +
+    `layout. Hover or focus a point to see what it links to and what links back to it — the line under the ` +
+    `figure says which — and click it to read it.</p>`;
+
+  // the figure's data, handed to the widget the way the palette gets its list:
+  // in the page body, as JSON, with `<` escaped so nothing in it can close the
+  // script element early
+  const json = JSON.stringify({
+    nodes: nodes.map((n) => ({ slug: n.slug, title: n.title, series: n.series, book: n.book })),
+    groups: groups.map((g) => ({ key: g.key, label: g.label, nodes: g.nodes })),
+    edges: edges.map(([a, b]) => [at.get(a), at.get(b)]),
+  }).replaceAll('<', '\\u003c');
+
+  return {
+    title: 'The map — blog.jaye.ch',
+    shareTitle: 'The map — blog.jaye.ch',
+    type: 'website',
+    description:
+      `Every piece on the blog as a point on a ring, and every link between them as a curve — ` +
+      `${edges.length} links between different pairs of ${nodes.length} pieces, derived from the links the ` +
+      `pieces themselves make.`,
+    prompt: 'netstat -a',
+    heroTitle: `The <span class="fx">map</span>`,
+    tagline:
+      `every piece, and the links between them — <b>${edges.length}</b> links between different pairs of ` +
+      `<b>${nodes.length}</b> pieces.`,
+    body:
+      `<section><div class="wrap">` +
+      `<div class="hint"># ${nodes.length} pieces · ${edges.length} links between different pairs of them — one link per pair, however often a piece names another</div>` +
+      `<div class="prose">${prose}${table}</div>` +
+      `<div class="viz" data-viz="map">\n` +
+      `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the blog as a ` +
+      `ring: every piece is a point, a piece that is a close reading is a square, and a curve joins two ` +
+      `pieces when one of them links to the other. The table above gives the same links as counts.</p></noscript>\n` +
+      `  <p class="viz-caption">Schematic — a map of the links between the pieces, not a measurement of ` +
+      `anything else. A position on the ring is a layout; the number of links is a count of links.</p>\n` +
+      `</div>\n` +
+      `<script type="application/json" id="viz-data-map">${json}</script>` +
+      `</div></section>`,
+    navCurrent: '/map/',
+  };
+}
+
 /* ---------- discovery files: feed, sitemap, robots ---------- */
 
 /** The published posts, in manifest order. Every generated file uses this list
@@ -1357,7 +1511,7 @@ function feedXml(posts) {
     `  <channel>\n` +
     `    <title>blog.jaye.ch</title>\n` +
     `    <link>${BASE}/</link>\n` +
-    `    <description>A mechanism that hides itself — in minds, in groups, in the frames they live inside: a measured account of a collapse that cannot report itself, the frames that decide what it means, and the discipline of describing structures without diagnosing people.</description>\n` +
+    `    <description>Instruments, not verdicts — in minds, in groups, in the frames they live inside: a measured account of a collapse that cannot report itself, the frames that decide what it means, and the discipline of describing structures without diagnosing people.</description>\n` +
     `    <language>en</language>\n` +
     `    <atom:link href="${BASE}/feed.xml" rel="self" type="application/rss+xml"/>\n` +
     `${items}\n` +
@@ -1373,6 +1527,7 @@ function sitemapXml(posts) {
   const urls = [
     { loc: BASE + '/', lastmod: null },
     { loc: `${BASE}/timeline/`, lastmod: posts.map((p) => p.date).sort().pop() || null },
+    { loc: `${BASE}/map/`, lastmod: posts.map((p) => p.date).sort().pop() || null },
     ...posts.map((p) => ({ loc: `${BASE}/${p.slug}/`, lastmod: p.date })),
   ]
     .map(
@@ -1828,6 +1983,22 @@ const POST_META = {
       'A close reading of the Chaldean Oracles, in Majercik\u2019s text and translation: the theurgic root of the Western lineage, read whole \u2014 the fire, the flower of mind, Hecate, and the ascent the framework runs on.',
     accent: 'The Chaldean Oracles',
   },
+  'the-orphic-hymns': {
+    prompt: 'cat the-orphic-hymns.md',
+    tagline: 'a <b>reading</b>: the frame enacted \u2014 a hymnal with no doctrine, and a cosmos named into presence by invocation.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of a hymnal, with notes',
+    description:
+      'A close reading of the Orphic Hymns in Athanassakis and Wolkow\u2019s edition: a liturgical frame with no thesis, where the epithets are the theology and the incense is the correspondence \u2014 read against the two books the blog just finished, which both rest on it.',
+    accent: 'The Orphic Hymns',
+  },
+  'proclus-theology-of-plato': {
+    prompt: 'cat proclus-theology-of-plato.md',
+    tagline: 'a <b>reading</b>: the frame that argues \u2014 a hierarchy of mediation, an explicit claim on how things are, and an ascent the system says is safe.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of a system, with notes',
+    description:
+      'A close reading of Proclus\u2019 Theology of Plato in Thomas Taylor\u2019s translation: the Neoplatonist frame at full length \u2014 the One, the negations that name it, the ladder of the gods, and the one thing the blog has been asking of every frame it reads.',
+    accent: 'On the Theology of Plato',
+  },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',
     tagline: 'the <b>fit that fails</b>: getting ahead of the account \u2014 the rejection recoded as the target\u2019s symptom, the pivot to the network, and the accurate report made self-indicting.',
@@ -2028,6 +2199,7 @@ written.push({
   rel: 'timeline/index.html',
   html: writePage('timeline/index.html', buildTimeline(navPosts), navPosts),
 });
+written.push({ rel: 'map/index.html', html: writePage('map/index.html', buildMap(navPosts), navPosts) });
 
 const writtenFiles = [];
 const writeDiscovery = (rel, text) => { writeFile(rel, text); writtenFiles.push({ rel, text }); };
@@ -2067,7 +2239,7 @@ function checkWorkshop(html) {
     // file-size / extraction-mechanics claims
     [/\b\d[\d,]{2,}\s*(?:bytes|KB|MB)\b/i, 'file size'],
     [/\b\d[\d,]{3,}\s+characters\b/, 'character count'],
-    [/\bno newline\b|\bwhitespace[- ]collaps|\bjumbled page order\b|\bwatermark-delimited\b/i, 'extraction mechanics'],
+    [/\bno newline\b|\bwhitespace[- ]collaps|\bjumbled page order\b|\bwatermark-delimited\b|\bthe scan\b|\bthe extract\b/i, 'extraction mechanics'],
     // authoring references
     [/\bthe brief\b|\bthe reading list\b|\bthe manifest\b|\bthe plumbing\b|\bthe build\b(?!\s+in\b)/i, 'authoring reference'],
     // a comment delimiter that reached emitted code
