@@ -1,0 +1,474 @@
+{
+  "a-cosmos-of-persons": {
+    "emblem": "a ring of many figures",
+    "file": "content/headers/a-cosmos-of-persons.png",
+    "key": "28b928dab56fa1cc|sd_xl_base_1.0.safetensors|4|01ab5e756f6b",
+    "reroll": 1,
+    "seconds": 24.2,
+    "seed": 1762459769
+  },
+  "after-the-room": {
+    "emblem": "a door standing half-open",
+    "file": "content/headers/after-the-room.png",
+    "key": "183ed240727407ef|sd_xl_base_1.0.safetensors|4|8bcd808950ae",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 879457351
+  },
+  "ahead-of-the-story": {
+    "emblem": "an arrow returned to its sender",
+    "file": "content/headers/ahead-of-the-story.png",
+    "key": "e74aead185db30d8|sd_xl_base_1.0.safetensors|4|79868503457d",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 1117559861
+  },
+  "ani-mystic": {
+    "emblem": "A held empty frame",
+    "file": "content/headers/ani-mystic.png",
+    "key": "915545104a71584b|sd_xl_base_1.0.safetensors|4|0cbfb5a889f1",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 2121644947
+  },
+  "anxiety-damping": {
+    "emblem": "a single dial, needle off-centre",
+    "file": "content/headers/anxiety-damping.png",
+    "key": "e4d840472f38c17b|sd_xl_base_1.0.safetensors|4|50ccb47084cd",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 1379559523
+  },
+  "black-abbot-white-magic": {
+    "emblem": "a codex hiding a codex",
+    "file": "content/headers/black-abbot-white-magic.png",
+    "key": "05733124c4805864|sd_xl_base_1.0.safetensors|4|f5faab9b5f0d",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 1855066926
+  },
+  "egregores": {
+    "emblem": "vessel ringed by seated figures",
+    "file": "content/headers/egregores.png",
+    "key": "d6806d72dc338048|sd_xl_base_1.0.safetensors|4|3be93f9f8b1c",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 1560195769
+  },
+  "eichmann-in-jerusalem": {
+    "emblem": "a desk in a glass booth",
+    "file": "content/headers/eichmann-in-jerusalem.png",
+    "key": "9601603c84b729e9|sd_xl_base_1.0.safetensors|4|1d16f6c754f6",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 190020001
+  },
+  "empty-leader": {
+    "emblem": "Hollow bust, mirrored inner void",
+    "file": "content/headers/empty-leader.png",
+    "key": "89931767cc2259e7|sd_xl_base_1.0.safetensors|4|b7ce3785885c",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 2143864487
+  },
+  "geosophia": {
+    "emblem": "roots beneath a stone slab",
+    "file": "content/headers/geosophia.png",
+    "key": "5310bd90aa41451b|sd_xl_base_1.0.safetensors|4|b61d7aeeb264",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 448344966
+  },
+  "iamblichus-on-the-mysteries": {
+    "emblem": "a libation bowl pouring itself",
+    "file": "content/headers/iamblichus-on-the-mysteries.png",
+    "key": "5f0b95c20e0c7972|sd_xl_base_1.0.safetensors|4|1e8e9e5546bd",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 1692023323
+  },
+  "manufacturing-the-collapse": {
+    "emblem": "trapdoor above a cradle",
+    "file": "content/headers/manufacturing-the-collapse.png",
+    "key": "de906eb3965c888b|sd_xl_base_1.0.safetensors|4|28b1c5ba3517",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 729905288
+  },
+  "meditation-harm": {
+    "emblem": "gauge whose needle pierces itself",
+    "file": "content/headers/meditation-harm.png",
+    "key": "166c74d317513143|sd_xl_base_1.0.safetensors|4|9f99017a7298",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 759844261
+  },
+  "memories-dreams-reflections": {
+    "emblem": "a well with a lowered lamp",
+    "file": "content/headers/memories-dreams-reflections.png",
+    "key": "3bd1f828d11075d7|sd_xl_base_1.0.safetensors|4|d49b86f2bed9",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 1954713274
+  },
+  "picatrix": {
+    "emblem": "an open manual with a vacant chair",
+    "file": "content/headers/picatrix.png",
+    "key": "274e6081d075eacb|sd_xl_base_1.0.safetensors|4|bfac6299edb5",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 848390858
+  },
+  "proclus-elements-of-theology": {
+    "emblem": "a single tapering spiral",
+    "file": "content/headers/proclus-elements-of-theology.png",
+    "key": "8fd04ac43a9a0e05|sd_xl_base_1.0.safetensors|4|3884d11ae162",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 562441138
+  },
+  "proclus-theology-of-plato": {
+    "emblem": "a stepped hierarchy of descending circles",
+    "file": "content/headers/proclus-theology-of-plato.png",
+    "key": "4fab3935d9add752|sd_xl_base_1.0.safetensors|4|212cc42e3d57",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 1518442167
+  },
+  "quareia": {
+    "emblem": "a gated stair, fourteen treads",
+    "file": "content/headers/quareia.png",
+    "key": "c4c96b770195c80f|sd_xl_base_1.0.safetensors|4|8d5b3d505a0f",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 1640816962
+  },
+  "recovery-is-not-immunity": {
+    "emblem": "a drained and refilled vessel",
+    "file": "content/headers/recovery-is-not-immunity.png",
+    "key": "43ed3c4f809d42c7|sd_xl_base_1.0.safetensors|4|3559b10a128c",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 595223175
+  },
+  "sacred-science": {
+    "emblem": "collapsing rings into framed point",
+    "file": "content/headers/sacred-science.png",
+    "key": "feb342aedfcbe35d|sd_xl_base_1.0.safetensors|4|d399b4014626",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 351072021
+  },
+  "safeguards": {
+    "adopted": true,
+    "emblem": "a hand pointing past itself",
+    "file": "content/headers/safeguards.png",
+    "key": "1cf7ba7ddfdd8f2d|sd_xl_base_1.0.safetensors|4|fcb34263f9ba",
+    "reroll": 2,
+    "seed": 854571659
+  },
+  "set-and-setting": {
+    "adopted": true,
+    "emblem": "A doorframe standing alone",
+    "file": "content/headers/set-and-setting.png",
+    "key": "dd761afda88e1dfe|sd_xl_base_1.0.safetensors|4|64db7cddd7b8",
+    "reroll": 3,
+    "seed": 318110468
+  },
+  "star-ships": {
+    "emblem": "a star-crowned hill temple",
+    "file": "content/headers/star-ships.png",
+    "key": "0272bee4fc2c1255|sd_xl_base_1.0.safetensors|4|8f528a947664",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 1441458881
+  },
+  "the-anatomy-of-destructiveness": {
+    "emblem": "a marionette with severed strings",
+    "file": "content/headers/the-anatomy-of-destructiveness.png",
+    "key": "f7ddd3106f59cccf|sd_xl_base_1.0.safetensors|4|2ed785c3b87c",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 1817573456
+  },
+  "the-assumed-seat": {
+    "emblem": "chair seated by its shadow",
+    "file": "content/headers/the-assumed-seat.png",
+    "key": "6063f06327073ffb|sd_xl_base_1.0.safetensors|4|d5c0b39277e4",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 1480549739
+  },
+  "the-blood-of-the-earth": {
+    "emblem": "an oil derrick over an emptying basin",
+    "file": "content/headers/the-blood-of-the-earth.png",
+    "key": "6c2b75ca7477fb83|sd_xl_base_1.0.safetensors|4|fabbc25d2c0f",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 219854259
+  },
+  "the-breakthrough": {
+    "emblem": "a single empty seminar chair",
+    "file": "content/headers/the-breakthrough.png",
+    "key": "731aa70979be2def|sd_xl_base_1.0.safetensors|4|eb262710b217",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 850163026
+  },
+  "the-certified-frame": {
+    "emblem": "an empty certified frame",
+    "file": "content/headers/the-certified-frame.png",
+    "key": "7a80f3a390bd7909|sd_xl_base_1.0.safetensors|4|79a385f4a7ad",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 206197011
+  },
+  "the-chaldean-oracles": {
+    "emblem": "a flower of pure fire",
+    "file": "content/headers/the-chaldean-oracles.png",
+    "key": "a125c736c6f444ac|sd_xl_base_1.0.safetensors|4|7a2834f8e4ef",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 552268340
+  },
+  "the-container": {
+    "emblem": "A vessel holding a smaller vessel",
+    "file": "content/headers/the-container.png",
+    "key": "8066a607b7a1391e|sd_xl_base_1.0.safetensors|4|ae8d8d9309c5",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 345805979
+  },
+  "the-cosmos-that-refuses": {
+    "emblem": "a ladder with no top rung",
+    "file": "content/headers/the-cosmos-that-refuses.png",
+    "key": "2402a338d3cfb563|sd_xl_base_1.0.safetensors|4|2bea631df382",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 47974008
+  },
+  "the-costume": {
+    "emblem": "suitcase with false bottom",
+    "file": "content/headers/the-costume.png",
+    "key": "92d816062414257c|sd_xl_base_1.0.safetensors|4|40f541cf8565",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 925473484
+  },
+  "the-deep-inheritance": {
+    "emblem": "a phylogenetic tree, two-layered",
+    "file": "content/headers/the-deep-inheritance.png",
+    "key": "7e2dc9dd8bd24d32|sd_xl_base_1.0.safetensors|4|53ab11705ce8",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 1296786865
+  },
+  "the-designed-method": {
+    "emblem": "a five-stage hourglass",
+    "file": "content/headers/the-designed-method.png",
+    "key": "d759807f87eb2796|sd_xl_base_1.0.safetensors|4|dddf69617551",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 519102748
+  },
+  "the-differential": {
+    "emblem": "a balance with identical pans",
+    "file": "content/headers/the-differential.png",
+    "key": "f5df807fd117c9a3|sd_xl_base_1.0.safetensors|4|edc6d18004a3",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 855282031
+  },
+  "the-empty-vessel": {
+    "emblem": "a poured-out vessel",
+    "file": "content/headers/the-empty-vessel.png",
+    "key": "ff2b9cca8f15902d|sd_xl_base_1.0.safetensors|4|8a34c26c43dc",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 1779241486
+  },
+  "the-environment": {
+    "emblem": "a rack of pre-mounted levers",
+    "file": "content/headers/the-environment.png",
+    "key": "532f61b2b409dc6f|sd_xl_base_1.0.safetensors|4|885e361630ff",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 324341894
+  },
+  "the-follower": {
+    "adopted": true,
+    "emblem": "a dissolving silhouette figure",
+    "file": "content/headers/the-follower.png",
+    "key": "cd122f35bfd8586d|sd_xl_base_1.0.safetensors|4|c0386cbbae9a",
+    "reroll": 3,
+    "seed": 1312986358
+  },
+  "the-frame-is-a-variable": {
+    "emblem": "nested frames, innermost removed",
+    "file": "content/headers/the-frame-is-a-variable.png",
+    "key": "dfb59650ff773126|sd_xl_base_1.0.safetensors|4|ae100382a4a4",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 748124436
+  },
+  "the-holy-daimon": {
+    "emblem": "Two vessels, almost touching",
+    "file": "content/headers/the-holy-daimon.png",
+    "key": "6f24dc20d8294876|sd_xl_base_1.0.safetensors|4|09a7ca690e38",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 389360804
+  },
+  "the-holy-heretics": {
+    "emblem": "a gate with no bar",
+    "file": "content/headers/the-holy-heretics.png",
+    "key": "f368661a43c057b7|sd_xl_base_1.0.safetensors|4|a4c014d597d5",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 532871778
+  },
+  "the-label": {
+    "emblem": "A pasted label, mechanism beneath",
+    "file": "content/headers/the-label.png",
+    "key": "926a30d1fd9b31ae|sd_xl_base_1.0.safetensors|4|5016d383f06a",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 422273885
+  },
+  "the-ladder-of-light": {
+    "emblem": "a ladder whose top rung is missing",
+    "file": "content/headers/the-ladder-of-light.png",
+    "key": "bd1e6256866963c6|sd_xl_base_1.0.safetensors|4|7e5e31d1e164",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 1822751037
+  },
+  "the-lucifer-effect": {
+    "emblem": "a balance with one pan fallen",
+    "file": "content/headers/the-lucifer-effect.png",
+    "key": "a5d45bebffd3b3dc|sd_xl_base_1.0.safetensors|4|b42b16b337f4",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 1580602965
+  },
+  "the-machine-has-no-reading": {
+    "emblem": "a card catalogue drawer, one slot empty",
+    "file": "content/headers/the-machine-has-no-reading.png",
+    "key": "c462696291a737c5|sd_xl_base_1.0.safetensors|4|6c6b7c72f537",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 1402307949
+  },
+  "the-machine-said-so": {
+    "emblem": "an empty oracular slot",
+    "file": "content/headers/the-machine-said-so.png",
+    "key": "df2c39095f4d96c3|sd_xl_base_1.0.safetensors|4|3c4913fd1a17",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 566232685
+  },
+  "the-new-jerusalem": {
+    "emblem": "an unoccupied throne, radiating",
+    "file": "content/headers/the-new-jerusalem.png",
+    "key": "d8a20f56beee482a|sd_xl_base_1.0.safetensors|4|23ef761dcd4c",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 418183164
+  },
+  "the-operative-master": {
+    "emblem": "a key fitting a lock",
+    "file": "content/headers/the-operative-master.png",
+    "key": "1634743a71f1656f|sd_xl_base_1.0.safetensors|4|15df665c8b80",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 1566149122
+  },
+  "the-orphic-hymns": {
+    "emblem": "a offering bowl with rising smoke",
+    "file": "content/headers/the-orphic-hymns.png",
+    "key": "4171f8f13cc91b9f|sd_xl_base_1.0.safetensors|4|46730541c767",
+    "reroll": 1,
+    "seconds": 26.0,
+    "seed": 1588431298
+  },
+  "the-owned-cosmos": {
+    "emblem": "an occupied axial throne",
+    "file": "content/headers/the-owned-cosmos.png",
+    "key": "0d0684325dffcb1d|sd_xl_base_1.0.safetensors|4|2d0693515c56",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 8737755
+  },
+  "the-same-move": {
+    "emblem": "one weight, four pedestals",
+    "file": "content/headers/the-same-move.png",
+    "key": "13ca182b9e86910b|sd_xl_base_1.0.safetensors|4|16c4cea3189a",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 350497823
+  },
+  "the-sanctioned-trance": {
+    "emblem": "bell with clapper removed",
+    "file": "content/headers/the-sanctioned-trance.png",
+    "key": "0c8c303727cad95c|sd_xl_base_1.0.safetensors|4|5991221218f0",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 1989980607
+  },
+  "the-western-column": {
+    "emblem": "A barred threshold gate",
+    "file": "content/headers/the-western-column.png",
+    "key": "d17a77630db2d94d|sd_xl_base_1.0.safetensors|4|f37a9cd3c1e3",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 977742718
+  },
+  "the-witch-and-the-debt": {
+    "emblem": "a balance sinking on emptiness",
+    "file": "content/headers/the-witch-and-the-debt.png",
+    "key": "5abe4460bad5e9f5|sd_xl_base_1.0.safetensors|4|a315ba2402ba",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 1802888542
+  },
+  "thought-reform": {
+    "emblem": "a scored slate, eight empty boxes",
+    "file": "content/headers/thought-reform.png",
+    "key": "c7f0c5f71a8d500c|sd_xl_base_1.0.safetensors|4|417d052bf80a",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 2013215139
+  },
+  "two-esoteric-tarots": {
+    "emblem": "a single tarot card, back showing",
+    "file": "content/headers/two-esoteric-tarots.png",
+    "key": "cc89add76b863d78|sd_xl_base_1.0.safetensors|4|8cdd3de03791",
+    "reroll": 1,
+    "seconds": 24.1,
+    "seed": 129618391
+  },
+  "undreaming-wetiko": {
+    "emblem": "a spore print, radiating",
+    "file": "content/headers/undreaming-wetiko.png",
+    "key": "8a7f5fd8c8d27866|sd_xl_base_1.0.safetensors|4|cc731038569e",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 140908098
+  },
+  "what-actually-works": {
+    "adopted": true,
+    "emblem": "a stepped threshold holding weight",
+    "file": "content/headers/what-actually-works.png",
+    "key": "9c41fc32e21f34e1|sd_xl_base_1.0.safetensors|4|9b99fa5bf84e",
+    "reroll": 2,
+    "seed": 90331049
+  },
+  "what-the-traditions-knew": {
+    "emblem": "seven circles converging on one point",
+    "file": "content/headers/what-the-traditions-knew.png",
+    "key": "1b913ff123b2f100|sd_xl_base_1.0.safetensors|4|7fea1102c888",
+    "reroll": 1,
+    "seconds": 24.0,
+    "seed": 1432881034
+  }
+}

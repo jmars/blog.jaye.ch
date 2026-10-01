@@ -596,6 +596,24 @@
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
+    },
+    {
+      "slug": "plotinus-collected-writings",
+      "file": "plotinus-collected-writings.md",
+      "navLabel": "plotinus, collected writings",
+      "kind": "reading",
+      "summary": "A close reading of Plotinus in Thomas Taylor\u2019s translations \u2014 the founder of the line, whose ascent is by turning inward, and whose successor rejected that route for having nothing performed outside the thinker.",
+      "published": false,
+      "series": "readings"
+    },
+    {
+      "slug": "porphyry-cave-of-the-nymphs",
+      "file": "porphyry-cave-of-the-nymphs.md",
+      "navLabel": "porphyry, on the cave of the nymphs",
+      "kind": "reading",
+      "summary": "A close reading of Porphyry\u2019s On the Cave of the Nymphs \u2014 the ascent given a location: a cave in the Odyssey read as the cosmos, with two gates, and the soul\u2019s descent into generation drawn as geography.",
+      "published": false,
+      "series": "readings"
     }
   ]
 }

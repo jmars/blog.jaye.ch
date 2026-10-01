@@ -16,3 +16,10 @@ screenshots/
 
 # Local working state (session continuity)
 continuity.md
+
+# QC contact sheets + render candidates (local only, ~226MB)
+content/headers/_qc/
+
+# python bytecode from the header tooling
+__pycache__/
+content/headers/*.png

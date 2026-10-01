@@ -18,6 +18,17 @@
  *            (post, link, cites, source), with the rules declared as data. It
  *            answers which pieces are related to a hit, and why.
  *
+ * The vocabulary itself is held as a MINIMAL ACYCLIC AUTOMATON (built in
+ * tools/build.mjs) rather than as a string of words: the client walks it back
+ * out at load, in the sorted order the postings are indexed by, and a query
+ * wrapped in slashes is answered by walking the same automaton with a small NFA
+ * — which is what lets a pattern match the MIDDLE of a word, a question no
+ * posting list can be asked. A word behind a `~` is answered by the same
+ * automaton a third way: an edit-distance row is carried down it and a branch is
+ * abandoned the moment it leaves the budget, so every word within k edits of the
+ * query is found without measuring the query against each of the fifteen
+ * thousand words in turn.
+ *
  * The build inlines this file into the page, comment-free. Phase 2 replaces the
  * lexical and datalog INTERNALS (the Zig datalog-dafsa engine) behind this same
  * surface, so everything the page writes against is the interface below and
@@ -26,7 +37,16 @@
  *   Search.providers = { lexical(q, opts), vector(q, opts), graph(q, opts) }
  *                    (a lexical entry also carries `named`: the query named it
  *                    by an exact term hit, which outranks a similar/neighbour)
- *   Search.query(text, opts) -> { results: [{i, score, why}], counts }
+ *   Search.matchPattern(body, opts) -> { terms, capped }
+ *   Search.matchFuzzy(word, k) -> { words: [{w, d}], capped }
+ *   Search.matchPrefix(prefix, cap) -> { terms, capped }
+ *   Search.query(text, opts) -> { results: [{i, score, why}], counts, marks }
+ *
+ * Three things read the same automaton three more ways for the reader, and none
+ * of them has an index of its own: the words that BEGIN with what is being typed
+ * (the box's completions), the words within an edit of a word that found nothing
+ * (the "did you mean"), and the fuzzy walk above. All three are reported when a
+ * bound stops them — a bounded list and a short one look the same otherwise.
  */
 (function () {
   'use strict';
@@ -34,8 +54,13 @@
   var DIM = 160;          // vector dimensions, fixed: the hash's modulus
   var SEED_N = 6;         // hits handed to the graph rules as their seeds
   var PREFIX_CAP = 120;   // vocabulary terms one prefix may expand to
+  var FUZZY_CAP = 200;    // vocabulary terms one fuzzy word may expand to
   var RESULT_CAP = 24;    // results returned for one query
   var GRAPH_CAP = 12;     // results the graph may add that no word or vector found
+  var COMPLETE_CAP = 8;   // vocabulary terms the box offers for one typed prefix
+  var COMPLETE_MIN = 3;   // characters a word needs before any are offered
+  var SUGGEST_CAP = 24;   // near words one typo may be weighed against
+  var THIN = 2;           // results at or below which a misspelling is offered
   var TUPLE_CAP = 4000;   // facts the datalog evaluator may derive per query
   var ROUND_CAP = 8;      // semi-naive rounds before the evaluator stops
   /* The fusion weights order pieces WITHIN a rank; they do not decide the rank
@@ -52,6 +77,11 @@
   var GW = { related: 0.34, points_at: 0.26, same_series: 0.20, near: 0.14 };
   var VEC_FLOOR = 0.34;   // a piece must reach this fraction of the best cosine
   var WORD = /[a-z][a-z'-]+/g;
+  /* A fuzzy term: one or two tildes and the word they mark. The word obeys the
+   * index's rule below (three characters and longer, no stopword), so `~ab` is
+   * nothing rather than a walk for a word the list cannot hold. */
+  var FUZZY_MARK = /~{1,2}[a-z][a-z'-]*/g;
+  var FUZZY_TILDES = /^~+/;
 
   /** A piece's rank: 1 when the query's words literally name it (an exact term
    * hit in its prose), 0 otherwise. A piece only the vectors called similar, or
@@ -91,9 +121,16 @@
    * stopwords dropped, each word once — the index's own rule, so a query is
    * read exactly as the pieces were. A query of stopwords alone has no terms at
    * all: they were never indexed (they are the words that join nothing), and
-   * answering "the" with fifty-eight pieces would be noise, not an answer. */
+   * answering "the" with fifty-eight pieces would be noise, not an answer.
+   *
+   * A word behind a `~` is NOT one of these. It is a fuzzy term (see
+   * `fuzzyTerms`), matched against the whole list by an edit-distance walk
+   * rather than looked up, and leaving it in the ordinary words as well would
+   * make the `~` a decoration: `~proclus` would be answered by the exact
+   * lookups for `proclus` and the walk would decide nothing. No piece's prose
+   * contains a `~`, so this cannot take a word away from an ordinary query. */
   function tokenize(text, stop) {
-    var ws = String(text).toLowerCase().match(WORD) || [];
+    var ws = String(text).toLowerCase().replace(FUZZY_MARK, ' ').match(WORD) || [];
     var out = [], i, w;
     for (i = 0; i < ws.length; i++) {
       w = ws[i];
@@ -102,13 +139,250 @@
     return out;
   }
 
+  /* ---------- the query's fuzzy terms ------------------------------------- */
+
+  /** The words a query asks for fuzzily, read off the RAW text: the word behind
+   * one `~` is matched within one edit, behind two within two. One tilde is the
+   * typo people actually make; two is an explicit widening, because an edit
+   * budget of two reaches several times as many words and a list that answers
+   * with everything is not an answer. */
+  function fuzzyTerms(text, stop) {
+    var s = String(text).toLowerCase(), out = [], m, w;
+    FUZZY_MARK.lastIndex = 0;
+    while ((m = FUZZY_MARK.exec(s))) {
+      w = m[0].replace(FUZZY_TILDES, '');
+      if (w.length >= 3 && !stop[w]) out.push({ q: w, k: m[0].length - w.length });
+    }
+    return out;
+  }
+
+  /* ---------- the automaton the words are held in -------------------------- */
+
+  /** The sixty-four characters the build wrote the automaton in (tools/build.mjs,
+   * DAFSA_ENC — the two must agree, or every word comes back as nonsense). */
+  var ENC = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_~';
+  var ENC_AT = (function () {
+    var m = {}, i;
+    for (i = 0; i < ENC.length; i++) m[ENC.charAt(i)] = i;
+    return m;
+  })();
+
+  /**
+   * The automaton, decoded from the three streams the build emitted. State ids
+   * run in post-order (a state's children are always lower-numbered), which is
+   * what the delta column relies on: a transition stores its source's id minus
+   * its target's, so the target is `i - delta`.
+   */
+  function decodeDafsa(d) {
+    var s = d.s, l = d.l, t = d.t;
+    var n = s.length;
+    var off = new Int32Array(n + 1), fin = new Uint8Array(n), to = new Int32Array(l.length);
+    var e = 0, at = 0, i, k;
+    for (i = 0; i < n; i++) {
+      var c = ENC_AT[s.charAt(i)];
+      fin[i] = c >>> 5;
+      var deg = c & 31;
+      off[i] = e;
+      for (k = 0; k < deg; k++) {
+        var v = 0, mul = 1, cv;
+        do {
+          cv = ENC_AT[t.charAt(at++)];
+          v += (cv & 31) * mul;
+          mul *= 32;
+        } while (cv >= 32);
+        to[e++] = i - v;
+      }
+    }
+    off[n] = e;
+    return { n: n, off: off, fin: fin, to: to, lbl: l, root: n - 1 };
+  }
+
+  /**
+   * The words, walked back out of the automaton.
+   *
+   * A depth-first walk that takes each state's transitions in label order and
+   * writes a word whenever it passes a final state. The order is the whole
+   * point: it is the sorted order — a word is written before any word it
+   * begins, and siblings are visited in alphabetical order — so the position a
+   * word comes out at IS its row in the postings. The vocabulary therefore
+   * needs no index of its own in the page: it is stored as the automaton, and
+   * every query holds the same array it always did.
+   */
+  function dafsaTerms(g) {
+    var out = [], chars = [];
+    (function visit(st) {
+      if (g.fin[st]) out.push(chars.join(''));
+      for (var e = g.off[st]; e < g.off[st + 1]; e++) {
+        chars.push(g.lbl.charAt(e));
+        visit(g.to[e]);
+        chars.pop();
+      }
+    })(g.root);
+    return out;
+  }
+
+  /* ---------- the same automaton, walked with an edit budget --------------- */
+
+  /**
+   * The words within `k` edits of a query word, walked over the automaton with a
+   * DP row — NOT by measuring the query against every word of the list, which
+   * would pay an edit-distance matrix per word (measured on this vocabulary:
+   * 25 ms a query against 0.1 ms at k=1 and 0.7 ms at k=2 here).
+   *
+   * The row carried at a state holds the distance between each PREFIX of the
+   * query and the word prefix the path spells: descending a transition computes
+   * the next row from the previous one plus that label, and a branch is dropped
+   * as soon as the row's smallest entry passes k. Dropping the whole branch is
+   * what makes it cheap, and it is sound because a row's minimum never falls as
+   * the word grows — every way of computing a new cell produces at least the
+   * smallest entry of the row above it. A final state whose query-length cell is
+   * within k is a word of the answer, carrying the distance it was found at.
+   *
+   * The operation is OSA (optimal string alignment): an adjacent SWAP counts as
+   * ONE edit, not two, so `proculs` for `proclus` — the commonest typo there is —
+   * is one edit away and not two. Seeing a swap needs the row one step further
+   * back than plain Levenshtein does, so each state carries two rows and the
+   * label it arrived by.
+   *
+   * The automaton is acyclic, so a (state, row, row-before, label) reached again
+   * could only re-derive what it derived the first time, and the walk remembers
+   * the ones that reached no word — but it is NOT built here: the key has to
+   * carry all four, and building it costs more than the revisits it saves.
+   * Measured over the whole vocabulary at k=2 — every term of the list as a
+   * query — 12.0 s without it against 37.1 s with it, and no query reached
+   * 20,000 states either way. The pruning is what bounds the walk.
+   *
+   * The cap is the page's usual one, and it is REPORTED: a short query is within
+   * two edits of hundreds of words, the walk stops at the cap in the list's own
+   * order, and the line above the results says so rather than letting a bounded
+   * list look like a short one.
+   */
+  function fuzzyWalk(g, q, k, cap) {
+    var m = q.length, words = [], chars = [], capped = false;
+    var qi = new Int32Array(m + 1), j;
+    for (j = 1; j <= m; j++) qi[j] = q.charCodeAt(j - 1);
+
+    function visit(st, row, prev, last) {
+      var e, c, cc, next, min, v, jj;
+      if (g.fin[st] && row[m] <= k) {
+        words.push({ w: chars.join(''), d: row[m] });
+        if (words.length >= cap) { capped = true; return true; }
+      }
+      for (e = g.off[st]; e < g.off[st + 1]; e++) {
+        c = g.lbl.charAt(e);
+        cc = g.lbl.charCodeAt(e);
+        next = new Int32Array(m + 1);
+        next[0] = row[0] + 1;
+        min = next[0];
+        for (jj = 1; jj <= m; jj++) {
+          v = Math.min(row[jj] + 1, next[jj - 1] + 1, row[jj - 1] + (qi[jj] === cc ? 0 : 1));
+          if (prev && jj > 1 && last === q.charAt(jj - 1) && c === q.charAt(jj - 2)) {
+            v = Math.min(v, prev[jj - 2] + 1);
+          }
+          next[jj] = v;
+          if (v < min) min = v;
+        }
+        if (min > k) continue;
+        chars.push(c);
+        if (visit(g.to[e], next, row, c)) { chars.pop(); return true; }
+        chars.pop();
+      }
+      return false;
+    }
+
+    var root0 = new Int32Array(m + 1);
+    for (j = 0; j <= m; j++) root0[j] = j;
+    visit(g.root, root0, null, null);
+    return { words: words, capped: capped };
+  }
+
+  /* ---------- the same automaton, walked down a prefix ---------------------- */
+
+  /**
+   * The words that BEGIN with a prefix, taken off the automaton rather than off
+   * a scan of the list: descend the transitions the prefix spells (a missing
+   * label is a prefix no word has), then enumerate what the state reached
+   * accepts, in label order, which is the list's own order. A DAFSA merges
+   * suffixes, so the state reached is shared with every other word that gets
+   * there — what it accepts IS the set of completions, so sharing changes
+   * nothing.
+   *
+   * The enumeration is bounded (a two- or three-letter prefix reaches hundreds
+   * of words) and the bound is REPORTED: an enumerating walk that stopped is a
+   * different answer from a list that ended, and only one of them is honest to
+   * show without a word about it.
+   */
+  function prefixWalk(g, prefix, cap) {
+    var st = g.root, i, e, next, out = [], chars = [], capped = false;
+    for (i = 0; i < prefix.length; i++) {
+      next = -1;
+      for (e = g.off[st]; e < g.off[st + 1]; e++) {
+        if (g.lbl.charAt(e) === prefix.charAt(i)) { next = g.to[e]; break; }
+      }
+      if (next < 0) return { terms: out, capped: false };
+      st = next;
+    }
+    (function visit(s) {
+      if (g.fin[s]) {
+        out.push(prefix + chars.join(''));
+        // one word PAST the offer is what proves there are more: stopping at
+        // the cap itself cannot tell a list that ended from one that was cut
+        if (out.length > cap) return true;
+      }
+      for (var e2 = g.off[s]; e2 < g.off[s + 1]; e2++) {
+        chars.push(g.lbl.charAt(e2));
+        if (visit(g.to[e2])) { chars.pop(); return true; }
+        chars.pop();
+      }
+      return false;
+    })(st);
+    if (out.length > cap) { out.length = cap; capped = true; }
+    return { terms: out, capped: capped };
+  }
+
+  /* ---------- the misspelling a thin answer offers ------------------------- */
+
+  /**
+   * The one word of the query that is not in the list and has a word within one
+   * edit of it — the "did you mean" the page offers when almost nothing was
+   * found. It is the SAME walk the `~` syntax uses (fuzzyWalk, budget one), not
+   * a second matcher: a query that returns nothing and a query the reader wrote
+   * with a `~` are asking the list the same question.
+   *
+   * A word the list already holds is never offered a correction (it was
+   * answered), and the correction replaces the misspelled word IN the query, so
+   * a phrase keeps its other words. Nothing is rewritten without being shown:
+   * the page prints the word it has in mind and the reader runs it or does not.
+   */
+  function suggestWords(idx, text, toks) {
+    if (!idx.dafsa || !toks.length) return null;
+    var best = null, i, wi, hit, cand, re, corrected;
+    for (i = 0; i < toks.length; i++) {
+      if (idx.at[toks[i]] !== undefined) continue;
+      hit = fuzzyWalk(idx.dafsa, toks[i], 1, SUGGEST_CAP);
+      for (wi = 0; wi < hit.words.length; wi++) {
+        cand = hit.words[wi];
+        if (!best || cand.d < best.d || (cand.d === best.d && cand.w < best.to)) {
+          best = { from: toks[i], to: cand.w, d: cand.d, capped: hit.capped };
+        }
+      }
+    }
+    if (!best) return null;
+    re = new RegExp('\\b' + escRe(best.from) + '\\b', 'i');
+    corrected = String(text).replace(re, best.to);
+    if (corrected === String(text)) return null;
+    best.corrected = corrected;
+    return best;
+  }
+
   /* ---------- the index, decoded from the page's own data block ---------- */
 
   function makeIndex(data) {
     var stop = {}, parts = String(data.stop || '').split(' ');
     var i, d;
     for (i = 0; i < parts.length; i++) if (parts[i]) stop[parts[i]] = 1;
-    var terms = data.lex.terms ? data.lex.terms.split(' ') : [];
+    var dafsa = data.lex.dafsa ? decodeDafsa(data.lex.dafsa) : null;
+    var terms = dafsa ? dafsaTerms(dafsa) : [];
     var at = {};
     for (i = 0; i < terms.length; i++) at[terms[i]] = i;
     var strong = {}, st = data.lex.strong || [];
@@ -126,7 +400,7 @@
       dim: data.dim || DIM, n: n, stop: stop, terms: terms, at: at,
       postings: data.lex.postings, strong: strong, docs: data.docs,
       vec: data.vec, vnorm: vnorm, graph: data.graph, source: source,
-      hints: data.hints || [],
+      dafsa: dafsa, hints: data.hints || [],
     };
   }
 
@@ -158,8 +432,28 @@
   /** Exact and prefix lookup over the sorted vocabulary, scored as tf-idf with a
    * binary term frequency and title/heading hits weighted above body hits. Each
    * result also says whether the query's words NAMED it (`named`: at least one
-   * exact term hit, not a prefix), which is the rank the fusion sorts on. */
-  function lexical(idx, text, opts) {
+   * exact term hit, not a prefix), which is the rank the fusion sorts on.
+   *
+   * A fuzzy term lands in the same postings, the same idf and the same
+   * title/heading boost — it is a term hit by a word the reader did not quite
+   * type. Two things differ, and both are the point:
+   *
+   *   - it NEVER sets `named`, so a word the query did not use can never be
+   *     ranked as one the query did. The rank is compared before any score, so
+   *     a piece found only fuzzily sits below every piece a literal word found,
+   *     however large the fuzzy score;
+   *   - its weight is scaled by how far the word it found is from the word it
+   *     asked for: 1 - d/(len+1), with the length of the word TYPED. One edit on
+   *     a fourteen-letter word is one wrong letter in fourteen and should cost
+   *     less than one edit on a three-letter word, which is a third of it. At
+   *     d = 0 the weight is the term's own, so `~proclus` alone finds what
+   *     `proclus` finds — one rank lower, which is what asking fuzzily means.
+   *
+   * `stats`, when given, is where the walk's own numbers go (words matched, the
+   * budget used, whether the cap stopped it, its time) so the page can report
+   * them; the search page passes one, a caller that only wants the list does
+   * not. */
+  function lexical(idx, text, opts, stats) {
     var toks = tokenize(text, idx.stop);
     var score = {}, why = {}, named = {}, i, j;
     var T = idx.terms.length;
@@ -183,6 +477,45 @@
         hi++;
       }
     }
+    var fz = fuzzyTerms(text, idx.stop);
+    if (stats) {
+      stats.words = 0;
+      stats.k = 0;
+      stats.capped = false;
+      stats.ms = 0;
+      stats.off = false;
+    }
+    if (fz.length && !idx.dafsa) {
+      // no automaton, no walk: the fuzzy terms are dropped and SAID to have been
+      // dropped, rather than silently answered with nothing (or thrown over)
+      if (stats) stats.off = true;
+    } else if (fz.length) {
+      var t0 = now(), fi, wi, hit, fq, fw, fd, ti, fpost, fst, fr, flabel;
+      for (fi = 0; fi < fz.length; fi++) {
+        fq = fz[fi].q;
+        hit = fuzzyWalk(idx.dafsa, fq, fz[fi].k, FUZZY_CAP);
+        if (hit.capped) { if (stats) stats.capped = true; }
+        if (stats && fz[fi].k > stats.k) stats.k = fz[fi].k;
+        for (wi = 0; wi < hit.words.length; wi++) {
+          ti = idx.at[hit.words[wi].w];
+          if (ti === undefined) continue;
+          if (stats) stats.words++;
+          fd = hit.words[wi].d;
+          fpost = idx.postings[ti];
+          fst = idx.strong[ti];
+          fw = idfOfIndex(idx, ti) * (1 - fd / (fq.length + 1));
+          flabel = 'fuzzy: "' + fq + '" → ' + hit.words[wi].w +
+            ' (' + fd + (fd === 1 ? ' edit)' : ' edits)');
+          for (j = 0; j < fpost.length; j++) {
+            var fd2 = fpost[j];
+            score[fd2] = (score[fd2] || 0) + fw * (fst && fst.indexOf(fd2) > 0 ? 2.6 : 1);
+            fr = why[fd2] || (why[fd2] = []);
+            if (fr.indexOf(flabel) < 0 && fr.length < 6) fr.push(flabel);
+          }
+        }
+      }
+      if (stats) stats.ms = Math.round((now() - t0) * 10) / 10;
+    }
     var out = [];
     for (var key in score) out.push({ i: +key, score: score[key], why: why[key], named: !!named[key] });
     return out;
@@ -193,6 +526,358 @@
     var named = {}, i;
     for (i = 0; i < lex.length; i++) if (lex[i].named) named[lex[i].i] = 1;
     return named;
+  }
+
+  /* ---------- a pattern, walked over the automaton ------------------------- */
+
+  /**
+   * The pattern syntax, and only it: literal characters, `.` for any character,
+   * `*` `+` `?` for repetition, `[abc]` / `[a-z]` / `[^abc]` for a set of
+   * characters, `|` to alternate between expressions, `()` to group them, and
+   * `^` and `$` for the start and the end of a word. There are no escapes and
+   * no counted repetition; a pattern using either is refused with a reason.
+   *
+   * It is compiled to a small NFA here and run by this file — never handed to
+   * the browser's own regular-expression engine, which backtracks, and a
+   * pattern typed into a search box is not a program to run.
+   *
+   * A pattern with nothing anchoring it matches at ANY position in a word, and
+   * that is the capability the word list does not have: it holds words, so it
+   * answers whole words and the beginnings of words, and a query that is only
+   * the middle of a word is not a lookup at all.
+   */
+  function parsePattern(body) {
+    var i = 0, anchoredStart = false, anchoredEnd = false;
+
+    function fail(msg) { throw new Error(msg); }
+
+    function charClass() {
+      i++;
+      var neg = false, set = {}, n = 0, k;
+      if (body.charAt(i) === '^') { neg = true; i++; }
+      while (i < body.length && body.charAt(i) !== ']') {
+        var c = body.charAt(i);
+        if (c === '\\') fail('a backslash escape is not supported');
+        if (body.charAt(i + 1) === '-' && i + 2 < body.length && body.charAt(i + 2) !== ']') {
+          var lo = c.charCodeAt(0), hi = body.charCodeAt(i + 2);
+          if (hi < lo) fail('the range in a character class runs backwards');
+          for (k = lo; k <= hi; k++) set[k] = 1;
+          i += 3;
+        } else {
+          set[c.charCodeAt(0)] = 1;
+          i++;
+        }
+        n++;
+      }
+      if (body.charAt(i) !== ']') fail('a character class is not closed');
+      if (!n) fail('an empty character class is not supported');
+      i++;
+      return { t: 'set', set: set, neg: neg };
+    }
+
+    function atom() {
+      var c = body.charAt(i);
+      if (!c) fail('the pattern ends where a character was expected');
+      if (c === '(') {
+        i++;
+        var inner = alt();
+        if (body.charAt(i) !== ')') fail('a group is not closed');
+        i++;
+        return inner;
+      }
+      if (c === '[') return charClass();
+      if (c === '.') { i++; return { t: 'any' }; }
+      if (c === '^') fail('^ is only supported at the beginning of the pattern');
+      if (c === '$') fail('$ is only supported at the end of the pattern');
+      if (c === '*' || c === '+' || c === '?') fail('there is nothing for "' + c + '" to repeat');
+      if (c === '{' || c === '}') fail('counted repetition is not supported');
+      if (c === '\\') fail('a backslash escape is not supported');
+      if (c < ' ' || c > '~') fail('the pattern holds a character that is not a printable one');
+      i++;
+      return { t: 'one', c: c };
+    }
+
+    function repeat() {
+      var a = atom(), c;
+      for (;;) {
+        c = body.charAt(i);
+        if (c === '*') { i++; a = { t: 'star', a: a }; }
+        else if (c === '+') { i++; a = { t: 'plus', a: a }; }
+        else if (c === '?') { i++; a = { t: 'opt', a: a }; }
+        else return a;
+      }
+    }
+
+    function concat() {
+      var parts = [], c;
+      while (i < body.length) {
+        c = body.charAt(i);
+        if (c === '|' || c === ')') break;
+        if (c === '$') {
+          if (i !== body.length - 1) fail('$ is only supported at the end of the pattern');
+          anchoredEnd = true;
+          i++;
+          break;
+        }
+        parts.push(repeat());
+      }
+      return parts.length === 1 ? parts[0] : { t: 'cat', parts: parts };
+    }
+
+    function alt() {
+      var branches = [concat()];
+      while (body.charAt(i) === '|') { i++; branches.push(concat()); }
+      return branches.length === 1 ? branches[0] : { t: 'alt', branches: branches };
+    }
+
+    if (body.charAt(0) === '^') { anchoredStart = true; i = 1; }
+    var ast = alt();
+    if (i < body.length) fail('there is more in the pattern than one expression');
+    return { ast: ast, anchoredStart: anchoredStart, anchoredEnd: anchoredEnd };
+  }
+
+  /** A pattern as a small NFA (Thompson's construction): a state that consumes
+   * one character code, a state that moves on nothing, and a split into two
+   * branches. Holes (unset exits) are patched as fragments are joined. */
+  function compileRe(p) {
+    var nfa = [];
+    function alloc(op) {
+      nfa.push({ op: op, set: null, neg: null, out: -1, out1: -1 });
+      return nfa.length - 1;
+    }
+    function patch(holes, target) {
+      for (var i = 0; i < holes.length; i++) {
+        if (holes[i][1]) nfa[holes[i][0]].out1 = target;
+        else nfa[holes[i][0]].out = target;
+      }
+    }
+    function compile(n) {
+      var s, k, f, g;
+      if (n.t === 'one' || n.t === 'any') {
+        s = alloc('char');
+        if (n.t === 'one') nfa[s].set = n.c.charCodeAt(0);
+        return { start: s, holes: [[s, 0]] };
+      }
+      if (n.t === 'set') {
+        s = alloc('char');
+        if (n.neg) nfa[s].neg = n.set;
+        else nfa[s].set = n.set;
+        return { start: s, holes: [[s, 0]] };
+      }
+      if (n.t === 'cat') {
+        if (!n.parts.length) {
+          s = alloc('eps');
+          return { start: s, holes: [[s, 0]] };
+        }
+        f = compile(n.parts[0]);
+        for (k = 1; k < n.parts.length; k++) {
+          g = compile(n.parts[k]);
+          patch(f.holes, g.start);
+          f = { start: f.start, holes: g.holes };
+        }
+        return f;
+      }
+      if (n.t === 'alt') {
+        f = compile(n.branches[0]);
+        for (k = 1; k < n.branches.length; k++) {
+          g = compile(n.branches[k]);
+          s = alloc('split');
+          nfa[s].out = f.start;
+          nfa[s].out1 = g.start;
+          f = { start: s, holes: f.holes.concat(g.holes) };
+        }
+        return f;
+      }
+      if (n.t === 'star') {
+        f = compile(n.a);
+        s = alloc('split');
+        nfa[s].out = f.start;
+        patch(f.holes, s);
+        return { start: s, holes: [[s, 1]] };
+      }
+      if (n.t === 'plus') {
+        f = compile(n.a);
+        s = alloc('split');
+        patch(f.holes, s);
+        nfa[s].out = f.start;
+        return { start: f.start, holes: [[s, 1]] };
+      }
+      f = compile(n.a); // '?'
+      s = alloc('split');
+      nfa[s].out = f.start;
+      return { start: s, holes: f.holes.concat([[s, 1]]) };
+    }
+    var frag = compile(p.ast);
+    var acc = alloc('accept');
+    patch(frag.holes, acc);
+    var pre = -1;
+    if (!p.anchoredStart) {
+      // with nothing anchoring it, the pattern may begin at ANY position, so a
+      // state that moves on nothing is always in the running set and the
+      // pattern is entered again from it after every character (see `walk`)
+      pre = alloc('eps');
+      nfa[pre].out = frag.start;
+    }
+    return { nfa: nfa, start: frag.start, acc: acc, pre: pre, sticky: !p.anchoredEnd };
+  }
+
+  /**
+   * A compiled pattern.
+   *
+   * `walk` carries a SET OF NFA STATES down the automaton's states and memoises
+   * it. Matching from an automaton state depends on that state and on the NFA
+   * set and on nothing else, and the automaton is acyclic, so a subtree that
+   * reaches no word is walked once and remembered; a subtree that does is
+   * walked for the words it holds. The cap bounds the other direction: a
+   * pattern such as /e/ reaches thousands of words, and the walk stops at the
+   * cap and reports that it did, because a bounded list and a short list look
+   * the same to a reader.
+   */
+  function Pattern(text, body) {
+    var p = parsePattern(body);
+    var c = compileRe(p);
+    this.text = text;
+    this.body = body;
+    this.nfa = c.nfa;
+    this.start = c.start;
+    this.acc = c.acc;
+    this.pre = c.pre;
+    this.sticky = c.sticky;
+    this.anchoredStart = p.anchoredStart;
+    this.clo = {};
+  }
+
+  /** A set of NFA states, closed over its moves on nothing and sorted, so it
+   * can be a key for the memo. */
+  Pattern.prototype.closure = function (list) {
+    var start = list.slice().sort(function (a, b) { return a - b; });
+    var k = start.join('.');
+    var had = this.clo[k];
+    if (had) return had;
+    var nfa = this.nfa, seen = {}, stack = start.slice(), i, j;
+    for (i = 0; i < start.length; i++) seen[start[i]] = 1;
+    while (stack.length) {
+      var nd = nfa[stack.pop()];
+      if (nd.op === 'char' || nd.op === 'accept') continue;
+      for (j = 0; j < 2; j++) {
+        var o = j ? nd.out1 : nd.out;
+        if (o < 0 || seen[o]) continue;
+        seen[o] = 1;
+        stack.push(o);
+      }
+    }
+    var out = [];
+    for (var id in seen) out.push(+id);
+    out.sort(function (a, b) { return a - b; });
+    this.clo[k] = out;
+    return out;
+  };
+
+  /** The states one character moves the set to. */
+  Pattern.prototype.step = function (list, code) {
+    var nfa = this.nfa, out = [], i, nd;
+    for (i = 0; i < list.length; i++) {
+      nd = nfa[list[i]];
+      if (nd.op !== 'char') continue;
+      if (nd.neg ? !nd.neg[code] : (nd.set === null || (typeof nd.set === 'number' ? nd.set === code : !!nd.set[code]))) {
+        out.push(nd.out);
+      }
+    }
+    return out;
+  };
+
+  /** The words the pattern reaches, in the vocabulary's own order. */
+  Pattern.prototype.walk = function (g) {
+    var self = this, matches = [], chars = [], dead = {}, capped = false;
+    var ACC = this.acc, sticky = this.sticky, NONE = [];
+    if (!g) return { terms: matches, capped: capped };
+    // unanchored: the empty move into the pattern is re-entered at every
+    // position, which is what makes an unanchored pattern match inside a word
+    var base = this.anchoredStart ? null : [this.pre];
+    var init = this.closure(base || [this.start]);
+
+    function visit(st, cur, hit) {
+      var matched, memo = null;
+      if (sticky && hit) {
+        // the pattern already matched on the way down, so every word below this
+        // state matches and nothing needs stepping
+        matched = true;
+      } else {
+        memo = st + '|' + cur.join('.');
+        if (dead[memo]) return false;
+        matched = cur.indexOf(ACC) >= 0;
+      }
+      var found = false;
+      if (g.fin[st] && matched) {
+        matches.push(chars.join(''));
+        if (matches.length >= PREFIX_CAP) { capped = true; return true; }
+        found = true;
+      }
+      for (var e = g.off[st]; e < g.off[st + 1]; e++) {
+        var next;
+        if (matched && sticky) {
+          next = NONE;
+        } else {
+          var nxt = self.step(cur, g.lbl.charCodeAt(e));
+          if (!nxt.length) {
+            if (!base) continue;
+            next = init;
+          } else {
+            next = self.closure(base ? base.concat(nxt) : nxt);
+          }
+        }
+        chars.push(g.lbl.charAt(e));
+        if (visit(g.to[e], next, matched)) found = true;
+        chars.pop();
+        if (capped) return true;
+      }
+      if (memo && !found) dead[memo] = 1;
+      return found;
+    }
+
+    visit(g.root, init, false);
+    return { terms: matches, capped: capped };
+  };
+
+  /** A query between slashes is a pattern, not a list of words. The wrapper is
+   * the whole syntax — a `/` cannot appear inside a pattern, which is the price
+   * of a delimiter a terminal-shaped box can carry. */
+  function patternOf(text) {
+    var raw = String(text).trim();
+    if (raw.length < 2 || raw.charAt(0) !== '/' || raw.charAt(raw.length - 1) !== '/') return null;
+    var body = raw.slice(1, raw.length - 1);
+    if (!body) return { text: raw, body: body, error: 'nothing is between the slashes' };
+    try {
+      return { text: raw, body: body, pattern: new Pattern(raw, body) };
+    } catch (e) {
+      return { text: raw, body: body, error: e.message };
+    }
+  }
+
+  /** A pattern's words, scored exactly as the words a plain query names: each
+   * is an exact term hit (so the piece holds the fusion's top rank), weighted
+   * by the idf of the word that matched and boosted where that word stands in
+   * a title or a heading. The reason carried is the pattern itself. */
+  function patternLexical(idx, pat, terms) {
+    var score = {}, why = {}, named = {}, label = 're: "' + pat.text + '"';
+    var i, j, ti, post, w, st, d, r;
+    for (i = 0; i < terms.length; i++) {
+      ti = idx.at[terms[i]];
+      if (ti === undefined) continue;
+      post = idx.postings[ti];
+      w = idfOfIndex(idx, ti);
+      st = idx.strong[ti];
+      for (j = 0; j < post.length; j++) {
+        d = post[j];
+        score[d] = (score[d] || 0) + w * (st && st.indexOf(d) > 0 ? 2.6 : 1);
+        named[d] = 1;
+        r = why[d] || (why[d] = []);
+        if (r.indexOf(label) < 0 && r.length < 6) r.push(label);
+      }
+    }
+    var out = [];
+    for (var key in score) out.push({ i: +key, score: score[key], why: why[key], named: true });
+    return out;
   }
 
   /* ---------- provider 2: the tf-idf vector space -------------------------- */
@@ -467,16 +1152,53 @@
   /* ---------- the fused query --------------------------------------------- */
 
   function query(text, opts) {
+    return runQuery(text, opts, 0);
+  }
+
+  /** The query, with the zero-result fuzzy fallback able to call it once more.
+   * `depth` bounds the recursion: the fallback runs the corrected text, and a
+   * corrected text that itself finds nothing is returned as it is rather than
+   * corrected again — one fallback per query, never a chain. */
+  function runQuery(text, opts, depth) {
     var idx = S._idx;
     opts = opts || {};
     var t0 = now();
-    var counts = { terms: 0, results: 0, related: 0, same_series: 0, points_at: 0, near: 0, derived: 0, capped: false, rounds: 0, graphOnlyDropped: 0, ms: 0 };
+    var counts = { terms: 0, results: 0, related: 0, same_series: 0, points_at: 0, near: 0, derived: 0, capped: false, rounds: 0, graphOnlyDropped: 0, ms: 0, pattern: '', matched: 0, reCapped: false, reError: '', fuzzy: 0, fuzzyWords: 0, fuzzyK: 0, fuzzyCapped: false, fuzzyMs: 0, fuzzyOff: false, sort: opts.sort || 'rel', suggest: null, fallbackFrom: '', fallbackTo: '' };
     if (!idx) return { results: [], counts: counts };
-    var toks = tokenize(text, idx.stop);
-    counts.terms = toks.length;
-    if (!toks.length) return { results: [], counts: counts };
-
-    var lex = lexical(idx, text, opts), vec = vector(idx, text, opts), i, key;
+    var pat = patternOf(text);
+    var lex, vec, toks = [], fzs = [], fstats = {}, marks = null, i, key, mi;
+    if (pat) {
+      // a pattern is NOT tokenised: its punctuation is the query, and a word
+      // list of what is left of it would answer a different question
+      counts.pattern = pat.text;
+      if (pat.error) {
+        counts.reError = pat.error;
+        counts.ms = Math.round((now() - t0) * 10) / 10;
+        return { results: [], counts: counts };
+      }
+      var hit = pat.pattern.walk(idx.dafsa);
+      counts.matched = hit.terms.length;
+      counts.reCapped = hit.capped;
+      lex = patternLexical(idx, pat, hit.terms);
+      vec = [];
+      marks = {};
+      for (mi = 0; mi < hit.terms.length; mi++) marks[hit.terms[mi]] = 1;
+    } else {
+      toks = tokenize(text, idx.stop);
+      fzs = fuzzyTerms(text, idx.stop);
+      counts.terms = toks.length;
+      counts.fuzzy = fzs.length;
+      // a query of nothing but a fuzzy term is still a query: the walk is the
+      // only signal it has, and the word list has no ordinary word to offer
+      if (!toks.length && !fzs.length) return { results: [], counts: counts };
+      lex = lexical(idx, text, opts, fstats);
+      vec = vector(idx, text, opts);
+      counts.fuzzyWords = fstats.words;
+      counts.fuzzyK = fstats.k;
+      counts.fuzzyCapped = fstats.capped;
+      counts.fuzzyMs = fstats.ms;
+      counts.fuzzyOff = fstats.off;
+    }
     var m = {}, why = {}, named = namedSet(lex), maxL = 0, maxV = 0;
     for (i = 0; i < lex.length; i++) if (lex[i].score > maxL) maxL = lex[i].score;
     for (i = 0; i < vec.length; i++) if (vec[i].score > maxV) maxV = vec[i].score;
@@ -524,9 +1246,40 @@
     var all = [];
     for (key in m) if (allowed(idx, +key, opts)) all.push({ i: +key, score: m[key], why: why[key] || [] });
     all.sort(function (a, b) { return tier(named, b.i) - tier(named, a.i) || b.score - a.score || a.i - b.i; });
+    // The other order the page offers: newest first, over the SAME results —
+    // the mode reorders the answer, it does not select a different one. The
+    // index carries each piece's own date, so nothing is derived. Ties fall
+    // back to the relevance order, so a day with several pieces is stable.
+    if (opts.sort === 'new') {
+      all.sort(function (a, b) {
+        var da = idx.docs[a.i].date || '', db = idx.docs[b.i].date || '';
+        if (da !== db) return da < db ? 1 : -1;
+        return tier(named, b.i) - tier(named, a.i) || b.score - a.score || a.i - b.i;
+      });
+    }
     counts.results = all.length;
     counts.ms = Math.round((now() - t0) * 10) / 10;
-    return { results: all.slice(0, opts.limit || RESULT_CAP), counts: counts };
+    // A thin answer is where a misspelling shows, and the walk for it is the
+    // same one a `~` runs — paid only when the answer is thin, so an ordinary
+    // query never enters it.
+    if (!pat && all.length <= THIN) counts.suggest = suggestWords(idx, text, toks);
+    // Zero results is the one case where the correction is RUN rather than
+    // offered. A typo should not dead-end: if the query found nothing and a word
+    // within one edit of one of its words exists, that word's search is done for
+    // the reader, and the page SAYS it did it ("no exact match — showing words
+    // within one edit of …", plus the results). It is only ever a zero-result
+    // fallback: a query with any hit is never silently expanded, and the reader's
+    // own words are never rewritten in the box. The correction itself comes from
+    // the same walk, so the two agree by construction.
+    if (!pat && all.length === 0 && counts.suggest && !counts.suggest.capped && depth < 1) {
+      var fb = runQuery(counts.suggest.corrected, opts, depth + 1);
+      if (fb.results.length) {
+        fb.counts.fallbackFrom = text;
+        fb.counts.fallbackTo = counts.suggest.to;
+        return fb;
+      }
+    }
+    return { results: all.slice(0, opts.limit || RESULT_CAP), counts: counts, marks: marks };
   }
 
   function now() {
@@ -539,6 +1292,22 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ESC[c]; }); }
   function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&'); }
 
+  /** Mark, in already-escaped HTML, every word the query reaches — the rule the
+   * snippet and the result title both use, so the two cannot drift apart. A
+   * pattern query marks the words the walk reached, not the pattern: the words
+   * are what the results are built from, and the pattern is a rule. */
+  function markText(html, toks, marks) {
+    if (marks) {
+      return html.replace(/[a-z][a-z'-]*/g, function (w) {
+        return marks[w.toLowerCase()] ? '<mark>' + w + '</mark>' : w;
+      });
+    }
+    if (!toks.length) return html;
+    var parts = toks.slice(0).sort(function (a, b) { return b.length - a.length; });
+    var re = new RegExp('\\b(?:' + parts.map(escRe).join('|') + ")[a-z'-]*", 'gi');
+    return html.replace(re, function (w) { return '<mark>' + w + '</mark>'; });
+  }
+
   /** A snippet with every word the query reaches marked, drawn from the piece's
    * own summary, headings and opening passage — the page says so, because the
    * full text of fifty-eight pieces is not in the page.
@@ -547,7 +1316,7 @@
    * piece's own summary for context; otherwise the summary (a sentence about the
    * piece); the opening is the last resort. A result the graph alone put here
    * matches nothing in any of them, and shows the summary like any other. */
-  function snippet(idx, i, toks) {
+  function snippet(idx, i, toks, marks) {
     var d = idx.docs[i], heads = d.heads || [], summary = d.summary || '', lede = d.lede || '';
     var hitHead = '', h, t;
     for (h = 0; h < heads.length && !hitHead; h++) {
@@ -567,73 +1336,112 @@
       if (start) text = text.replace(/^\S+\s/, '…');
     }
     var html = esc(text);
-    if (toks.length) {
-      var parts = toks.slice(0).sort(function (a, b) { return b.length - a.length; });
-      var re = new RegExp('\\b(?:' + parts.map(escRe).join('|') + ")[a-z'-]*", 'gi');
-      html = html.replace(re, function (w) { return '<mark>' + w + '</mark>'; });
-    }
-    return html;
+    return markText(html, toks, marks);
   }
 
-  function resultHtml(idx, r, toks) {
+  /** A result line. The title is marked by the SAME rule the snippet is: a
+   * result the query's words reached should say so where the reader looks
+   * first, not only in the passage under it. */
+  function resultHtml(idx, r, toks, marks) {
     var d = idx.docs[r.i];
     return '<li class="sr">' +
-      '<a class="sr-t" href="/' + esc(d.slug) + '/">' + esc(d.title) + '</a>' +
+      '<a class="sr-t" href="/' + esc(d.slug) + '/">' + markText(esc(d.title), toks, marks) + '</a>' +
       '<div class="sr-m">' + esc(d.series || 'unfiled') + ' · ' + esc(d.kind || '') + ' · ' + esc(d.date || '') +
       '<span class="sr-sc">' + r.score.toFixed(2) + '</span></div>' +
-      '<p class="sr-s">' + snippet(idx, r.i, toks) + '</p>' +
+      '<p class="sr-s">' + snippet(idx, r.i, toks, marks) + '</p>' +
       '<ul class="sr-w">' + r.why.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' +
       '</li>';
   }
 
   function render(idx, box, status, text, opts) {
     var res = query(text, opts || {});
-    var toks = tokenize(text, idx.stop);
+    var c = res.counts;
+    var toks = c.pattern ? [] : tokenize(text, idx.stop);
     if (!res.results.length) {
-      box.innerHTML = '<li class="sr-none">' +
-        (toks.length
-          ? 'Nothing in the published pieces answers to that.'
-          : 'Type a word — the pieces are searched by their words, their vectors and their links.') +
-        '</li>' +
-        (idx.hints.length && !toks.length
+      var msg;
+      if (c.reError) msg = 'That pattern is not one this page can read: ' + c.reError + '.';
+      else if (c.pattern) msg = c.matched
+        ? 'Nothing in the published pieces answers to the words that pattern reached.'
+        : 'No word in the list answers to that pattern.';
+      else if (toks.length) msg = 'Nothing in the published pieces answers to that.';
+      else if (c.fuzzy) msg = c.fuzzyOff
+        ? 'There is no word list in this page to match that against.'
+        : 'No word in the list is within ' + c.fuzzyK + (c.fuzzyK === 1 ? ' edit' : ' edits') +
+          ' of a word you marked. Two tildes widen it to two.';
+      else msg = 'Type a word — the pieces are searched by their words, their vectors and their links.';
+      box.innerHTML = '<li class="sr-none">' + esc(msg) + '</li>' +
+        (idx.hints.length && !toks.length && !c.pattern
           ? '<li class="sr-hint">Try: ' + idx.hints.map(function (h) {
               return '<button type="button" class="sr-go" data-q="' + esc(h) + '">' + esc(h) + '</button>';
             }).join(' ') + '</li>'
           : '');
     } else {
-      box.innerHTML = res.results.map(function (r) { return resultHtml(idx, r, toks); }).join('');
+      box.innerHTML = res.results.map(function (r) { return resultHtml(idx, r, toks, res.marks); }).join('');
     }
-    var c = res.counts;
     var shown = res.results.length;
-    status.textContent = shown
-      ? '# ' + shown + (c.results > shown ? ' of ' + c.results : '') + ' result' +
-        (c.results === 1 ? '' : 's') + ' · ' + c.ms + ' ms · the graph rules fired: ' +
+    var sug = c.suggest;
+    // When the correction was RUN rather than offered (the zero-result fallback),
+    // the line says so and names the word it used; the offer stays for the thin
+    // case, where the reader's own query did find something.
+    var note = c.fallbackFrom && shown
+      ? 'no exact match for "' + esc(c.fallbackFrom) + '" — showing words within one edit of ' +
+        '<b>' + esc(c.fallbackTo) + '</b>'
+      : sug
+        ? 'did you mean <button type="button" class="sr-go" data-q="' + esc(sug.corrected) + '">' +
+          esc(sug.to) + '</button>?' + (sug.capped ? ' (the near words stopped at ' + SUGGEST_CAP + ')' : '')
+        : '';
+    var head = '';
+    if (c.reError) {
+      head = '# nothing searched · the pattern ' + esc(c.pattern) + ' is not one this page can read: ' + esc(c.reError);
+    } else if (shown) {
+      head = '# ' + shown + (c.results > shown ? ' of ' + c.results : '') + ' result' +
+        (c.results === 1 ? '' : 's') + ' · ' + c.ms + ' ms · ' +
+        (c.pattern
+          ? 'the pattern ' + esc(c.pattern) + ' reached ' + c.matched + ' word' + (c.matched === 1 ? '' : 's') +
+            (c.reCapped ? ' (the list stops at ' + PREFIX_CAP + ')' : '') + ' · '
+          : '') +
+        (c.fuzzy
+          ? 'fuzzy: ' + (c.fuzzyOff
+              ? 'no word list to match against'
+              : c.fuzzyWords + ' word' + (c.fuzzyWords === 1 ? '' : 's') + ' within ' + c.fuzzyK +
+                (c.fuzzyK === 1 ? ' edit' : ' edits') +
+                (c.fuzzyCapped ? ' (the list stops at ' + FUZZY_CAP + ')' : '')) + ' · '
+          : '') +
+        (c.sort === 'new' ? 'newest first · ' : '') +
+        'the graph rules fired: ' +
         c.related + ' shared-citation, ' + c.points_at + ' link, ' + c.same_series + ' same-series, ' + c.near + ' two-hop' +
         (c.graphOnlyDropped
           ? ' · ' + c.graphOnlyDropped + ' graph-only result' + (c.graphOnlyDropped === 1 ? '' : 's') + ' beyond the cap'
           : '') +
-        (c.capped ? ' · expansion capped' : '')
-      : '';
+        (c.capped ? ' · expansion capped' : '');
+    }
+    if (head && note) status.innerHTML = head + ' · ' + note;
+    else if (head) status.textContent = head;
+    else if (note) status.innerHTML = '# nothing was found for that · ' + note;
+    else status.textContent = '';
     return res;
   }
 
-  /** `?q=` and the facets, so a search is a link someone can send. */
+  /** `?q=`, the facets and the result order, so a search is a link someone can
+   * send. The order is in the URL only when it is not the default one. */
   function readUrl() {
-    var q = '', s = '', k = '', raw = String((window.location && window.location.search) || '').replace(/^\?/, '');
+    var q = '', s = '', k = '', so = '', raw = String((window.location && window.location.search) || '').replace(/^\?/, '');
     var parts = raw ? raw.split('&') : [];
     for (var i = 0; i < parts.length; i++) {
       var kv = parts[i].split('='), val = decodeURIComponent(kv[1] || '');
       if (kv[0] === 'q') q = val;
       else if (kv[0] === 'series') s = val;
       else if (kv[0] === 'kind') k = val;
+      else if (kv[0] === 'sort') so = val;
     }
-    return { q: q, series: s, kind: k };
+    return { q: q, series: s, kind: k, sort: so };
   }
   function writeUrl(st) {
     var q = [];
     if (st.q) q.push('q=' + encodeURIComponent(st.q));
     if (st.series) q.push('series=' + encodeURIComponent(st.series));
     if (st.kind) q.push('kind=' + encodeURIComponent(st.kind));
+    if (st.sort && st.sort !== 'rel') q.push('sort=' + encodeURIComponent(st.sort));
     try {
       window.history.replaceState(null, '', '/search/' + (q.length ? '?' + q.join('&') : ''));
     } catch (e) { /* a browser that refuses history still searches */ }
@@ -647,27 +1455,199 @@
     if (!idx || !box || !input) return false;
     var series = document.getElementById('sf-series');
     var kind = document.getElementById('sf-kind');
+    var sortSel = document.getElementById('sf-sort');
+    var comp = document.getElementById('scomp');
+    var compList = document.getElementById('scomp-list');
+    var compCap = document.getElementById('scomp-cap');
     var url = readUrl();
     if (url.q) input.value = url.q;
     if (url.series && series) series.value = url.series;
     if (url.kind && kind) kind.value = url.kind;
+    if (url.sort && sortSel) sortSel.value = url.sort;
+    var sel = -1;              // the result the arrow keys have reached
+    var compTerms = [];        // the completions the box is offering
+    var compAt = -1;           // the one of them the arrow keys have reached
     function stateOf() {
-      return { q: input.value, series: series ? series.value : '', kind: kind ? kind.value : '' };
+      return {
+        q: input.value,
+        series: series ? series.value : '',
+        kind: kind ? kind.value : '',
+        sort: sortSel ? sortSel.value : '',
+      };
     }
     function run(push) {
       var st = stateOf();
-      render(idx, box, status, st.q, { series: st.series, kind: st.kind });
+      render(idx, box, status, st.q, { series: st.series, kind: st.kind, sort: st.sort });
+      sel = -1;
       if (push) writeUrl(st);
     }
+
+    /* ---- the keyboard's selection over the results ---------------------- */
+
+    function rows() { return box.querySelectorAll('li.sr'); }
+    function paintSel() {
+      var r = rows(), i;
+      for (i = 0; i < r.length; i++) {
+        if (i === sel) r[i].classList.add('sr-on');
+        else r[i].classList.remove('sr-on');
+      }
+      if (sel >= 0 && r[sel] && typeof r[sel].scrollIntoView === 'function') {
+        try { r[sel].scrollIntoView({ block: 'nearest' }); } catch (e) { }
+      }
+    }
+    function moveSel(d) {
+      var r = rows();
+      if (!r.length) return false;
+      sel = sel < 0 ? (d > 0 ? 0 : r.length - 1) : sel + d;
+      if (sel < 0) sel = 0;
+      if (sel >= r.length) sel = r.length - 1;
+      paintSel();
+      return true;
+    }
+    function edgeSel(key) {
+      var r = rows();
+      if (!r.length) return false;
+      sel = key === 'Home' ? 0 : r.length - 1;
+      paintSel();
+      return true;
+    }
+    function openSelected() {
+      var r = rows();
+      if (sel < 0 || !r[sel]) return false;
+      var a = r[sel].querySelector('a.sr-t');
+      if (!a) return false;
+      window.location.href = a.getAttribute('href');
+      return true;
+    }
+
+    /* ---- the completion list under the box ------------------------------ */
+    /* ARIA: the input is a combobox over a listbox (aria-expanded,
+     * aria-controls, aria-activedescendant), and each completion is an option.
+     * That is the pattern for a text field that raises a list of suggestions —
+     * the reader stays in the field and the DOM focus never leaves it, so
+     * aria-activedescendant is what tells assistive tech which option is
+     * current. A simpler choice (a plain list announced by role=status) was
+     * considered and rejected: the list is INTERACTIVE (arrows move in it,
+     * Enter takes one), and a status region is not operable. */
+
+    function wordAt() {
+      var v = input.value, pos = input.selectionStart, pre, m;
+      if (typeof pos !== 'number' || pos < 0 || pos > v.length) pos = v.length;
+      pre = v.slice(0, pos);
+      m = pre.match(/[a-z][a-z'-]*$/i);
+      if (m) return { word: m[0].toLowerCase(), start: pre.length - m[0].length, end: pos };
+      m = v.match(/[a-z][a-z'-]*$/i);
+      if (m) return { word: m[0].toLowerCase(), start: v.length - m[0].length, end: v.length };
+      return null;
+    }
+    function closeComp() {
+      compTerms = [];
+      compAt = -1;
+      if (comp) comp.hidden = true;
+      if (compList) compList.innerHTML = '';
+      if (compCap) { compCap.hidden = true; compCap.textContent = ''; }
+      input.setAttribute('aria-expanded', 'false');
+      input.removeAttribute('aria-activedescendant');
+    }
+    function paintComp() {
+      var lis = compList.children, i, on;
+      for (i = 0; i < lis.length; i++) {
+        on = i === compAt;
+        lis[i].className = on ? 'sc sc-on' : 'sc';
+        lis[i].setAttribute('aria-selected', on ? 'true' : 'false');
+      }
+      if (compAt >= 0) input.setAttribute('aria-activedescendant', 'scomp-' + compAt);
+      else input.removeAttribute('aria-activedescendant');
+    }
+    function openComp(prefix) {
+      if (!idx.dafsa || !comp || !compList || prefix.length < COMPLETE_MIN) { closeComp(); return false; }
+      var hit = prefixWalk(idx.dafsa, prefix, COMPLETE_CAP);
+      if (!hit.terms.length) { closeComp(); return false; }
+      compTerms = hit.terms;
+      compAt = -1;
+      compList.innerHTML = hit.terms.map(function (t, k) {
+        return '<li class="sc" id="scomp-' + k + '" role="option" aria-selected="false">' + esc(t) + '</li>';
+      }).join('');
+      if (compCap) {
+        compCap.hidden = !hit.capped;
+        compCap.textContent = hit.capped ? 'the list stops at ' + COMPLETE_CAP + ' words' : '';
+      }
+      comp.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+      return true;
+    }
+    function updateComp() {
+      var w = wordAt();
+      if (!w || w.word.length < COMPLETE_MIN) { closeComp(); return; }
+      openComp(w.word);
+    }
+    function moveComp(d) {
+      if (!compTerms.length) return false;
+      compAt = compAt < 0 ? (d > 0 ? 0 : compTerms.length - 1) : compAt + d;
+      if (compAt < 0) compAt = 0;
+      if (compAt >= compTerms.length) compAt = compTerms.length - 1;
+      paintComp();
+      return true;
+    }
+    function acceptComp(k) {
+      if (k < 0 || compTerms[k] === undefined) return false;
+      var w = wordAt();
+      if (!w) return false;
+      var v = input.value;
+      input.value = v.slice(0, w.start) + compTerms[k] + v.slice(w.end);
+      closeComp();
+      return true;
+    }
+
     run(false);
     var form = document.getElementById('sf');
-    if (form) form.addEventListener('submit', function (e) { e.preventDefault(); run(true); });
-    input.addEventListener('input', function () { run(true); });
+    if (form) form.addEventListener('submit', function (e) { e.preventDefault(); closeComp(); run(true); });
+    input.addEventListener('input', function () { run(true); updateComp(); });
     if (series) series.addEventListener('change', function () { run(true); });
     if (kind) kind.addEventListener('change', function () { run(true); });
+    if (sortSel) sortSel.addEventListener('change', function () { run(true); });
+    input.addEventListener('blur', function () {
+      // the list cannot be used without the field: leaving the field, or
+      // clicking one of its own options, closes it. The click is handled first
+      // (see below), so it is not lost to this.
+      if (compTerms.length) closeComp();
+    });
+    input.addEventListener('keydown', function (e) {
+      var k = e.key;
+      if (k === 'Escape') {
+        if (compTerms.length) { e.preventDefault(); closeComp(); return; }
+        if (sel >= 0) { e.preventDefault(); sel = -1; paintSel(); }
+        return;
+      }
+      if (k === 'ArrowDown' || k === 'ArrowUp') {
+        if (compTerms.length) { e.preventDefault(); moveComp(k === 'ArrowDown' ? 1 : -1); return; }
+        if (rows().length) { e.preventDefault(); moveSel(k === 'ArrowDown' ? 1 : -1); }
+        return;
+      }
+      if (k === 'Home' || k === 'End') {
+        if (compTerms.length) return;          // the list is open: it owns these
+        if (sel >= 0) { e.preventDefault(); edgeSel(k); }
+        return;
+      }
+      if (k === 'Enter') {
+        if (compTerms.length && compAt >= 0) { e.preventDefault(); acceptComp(compAt); run(true); return; }
+        if (!compTerms.length && sel >= 0 && openSelected()) e.preventDefault();
+      }
+    });
     box.addEventListener('click', function (e) {
       var el = e.target;
       if (el && el.className === 'sr-go') { input.value = el.getAttribute('data-q'); run(true); }
+    });
+    // the "did you mean" button is in the LINE above the results, not in the
+    // list: the offer belongs with what the page says it found, so it takes its
+    // own handler rather than the list's.
+    status.addEventListener('click', function (e) {
+      var el = e.target;
+      if (el && el.className === 'sr-go') { input.value = el.getAttribute('data-q'); run(true); }
+    });
+    if (compList) compList.addEventListener('mousedown', function (e) {
+      var li = e.target, lis = compList.children, i;
+      for (i = 0; i < lis.length; i++) if (lis[i] === li) { acceptComp(i); run(true); break; }
     });
     if (!url.q) { try { input.focus({ preventScroll: true }); } catch (e) { } }
     return true;
@@ -696,7 +1676,37 @@
       vector: function (q, opts) { return vector(S._idx, q, opts || {}); },
       graph: function (q, opts) { return graph(S._idx, q, opts || {}); },
     },
+    /** The words a pattern reaches, off the automaton — the query's own path
+     * into the index, exposed so a test can ask it directly. A pattern the
+     * reader cannot read comes back with `error`, never as an empty answer. */
+    matchPattern: function (body) {
+      var idx = S._idx;
+      if (!idx) return { terms: [], capped: false };
+      try {
+        return new Pattern('/' + body + '/', body).walk(idx.dafsa);
+      } catch (e) {
+        return { terms: [], capped: false, error: e.message };
+      }
+    },
     query: function (text, opts) { return query(text, opts); },
+    /** The words within `k` edits of a word, off the automaton — the fuzzy
+     * path into the index, exposed so a test can hold it against a plain scan of
+     * the word list. `k` defaults to one edit, the budget a single `~` asks for.
+     * With no automaton there is nothing to walk and the answer is empty. */
+    matchFuzzy: function (word, k) {
+      var idx = S._idx;
+      if (!idx || !idx.dafsa) return { words: [], capped: false };
+      return fuzzyWalk(idx.dafsa, String(word).toLowerCase(), k === undefined ? 1 : k, FUZZY_CAP);
+    },
+    /** The words that begin with a prefix, off the same automaton — the walk
+     * the box's completions use, exposed so a test can hold it against the word
+     * list. The cap defaults to the box's own, and is reported when it stops
+     * the walk. */
+    matchPrefix: function (prefix, cap) {
+      var idx = S._idx;
+      if (!idx || !idx.dafsa) return { terms: [], capped: false };
+      return prefixWalk(idx.dafsa, String(prefix).toLowerCase(), cap === undefined ? COMPLETE_CAP : cap);
+    },
     snippet: function (i, text) { return snippet(S._idx, i, tokenize(text, S._idx.stop)); },
     render: function (box, status, text, opts) { return render(S._idx, box, status, text, opts || {}); },
     readUrl: readUrl,

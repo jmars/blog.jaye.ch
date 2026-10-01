@@ -1,0 +1,930 @@
+{
+  "meditation-harm": {
+    "emblem": "gauge whose needle pierces itself",
+    "composition": "a single large circular gauge centred slightly left of a wide frame, its needle extended far past the dial rim to the right, the right third of the frame left empty except for the needle's overshoot",
+    "symbols": [
+      "a heavy ring dial with a single tick arc that stops partway around — the far end of the scale is simply absent, the arc terminates in clean blankness",
+      "one long straight needle whose tip extends beyond the dial and bends back, its point touching the needle's own midpoint",
+      "the dial's centre hub drawn as a small closed loop of two turns, a coil rather than a point",
+      "short radial stress marks around the hub only, dense at centre, fading to nothing before the rim"
+    ],
+    "accent": "the single oxblood wash fills the area between the needle and the point where it bends back on itself — the closed self-touching wedge",
+    "input_hash": "166c74d317513143",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, gauge whose needle pierces itself, a heavy ring dial with a single tick arc that stops partway around — the far end of the scale is simply absent, the arc terminates in clean blankness, one long straight needle whose tip extends beyond the dial and bends back, its point touching the needle's own midpoint, the dial's centre hub drawn as a small closed loop of two turns, a coil rather than a point, short radial stress marks around the hub only, dense at centre, fading to nothing before the rim, a single large circular gauge centred slightly left of a square frame, its needle extended far past the dial rim to the right, the right third of the frame left empty except for the needle's overshoot, single oxblood red accent on the single oxblood wash fills the area between the needle and the point where it bends back on itself — the closed self-touching wedge, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2907319990
+  },
+  "recovery-is-not-immunity": {
+    "emblem": "a drained and refilled vessel",
+    "composition": "a single tall vessel centred in the wide frame, slightly left of centre, with a thin drain channel running from its base off the right edge; empty paper above and to the right",
+    "symbols": [
+      "the vessel drawn twice-over in outline: its current full profile and, just inside it, the ghost of the drained profile it was rescued from",
+      "a horizontal threshold line scored across the vessel's neck at the height the fill restores to",
+      "the drain channel as a single groove that exits and re-enters the vessel at the same two points — a loop, not a leak",
+      "a small tick mark at the base registering the fill level identical on both sides of the loop"
+    ],
+    "accent": "the ghost of the drained profile inside the vessel carries the red wash",
+    "input_hash": "43ed3c4f809d42c7",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a drained and refilled vessel, the vessel drawn twice-over in outline: its current full profile and, just inside it, the ghost of the drained profile it was rescued from, a horizontal threshold line scored across the vessel's neck at the height the fill restores to, the drain channel as a single groove that exits and re-enters the vessel at the same two points — a loop, not a leak, a small tick mark at the base registering the fill level identical on both sides of the loop, a single tall vessel centred in the square frame, slightly left of centre, with a thin drain channel running from its base off the right edge; empty paper above and to the right, single oxblood red accent on the ghost of the drained profile inside the vessel carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 595215256
+  },
+  "what-actually-works": {
+    "emblem": "a stepped threshold holding weight",
+    "composition": "a single flat horizontal bar floating at the vertical centre of a wide frame, its underside a clean hard line, with a heavy compact mass resting squarely on top of it; all empty space above and to both sides, a short stub of descending line below the bar's left end showing where the mass would have fallen",
+    "symbols": [
+      "a dense solid block resting on the bar, perfectly centred, its weight implied by mass not shadow",
+      "the bar itself: dead flat, plain, thin — deliberately cheaper and simpler than the load it carries",
+      "a broken dotted vertical line beneath the bar's left edge, terminating short, marking the fall that did not happen",
+      "a second, thinner vertical line rising from the block toward the top of the frame that fades into disconnected dashes before arriving — the checking channel cut away mid-route"
+    ],
+    "accent": "the bar carries the red: a single flat red wash along the top surface of the threshold, the one surface the weight rests on",
+    "input_hash": "9c41fc32e21f34e1",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a stepped threshold holding weight, a dense solid block resting on the bar, perfectly centred, its weight implied by mass not shadow, the bar itself: dead flat, plain, thin — deliberately cheaper and simpler than the load it carries, a broken dotted vertical line beneath the bar's left edge, terminating short, marking the fall that did not happen, a second, thinner vertical line rising from the block toward the top of the frame that fades into disconnected dashes before arriving — the checking channel cut away mid-route, a single flat horizontal bar floating at the vertical centre of a square frame, its underside a clean hard line, with a heavy compact mass resting squarely on top of it; all empty space above and to both sides, a short stub of descending line below the bar's left end showing where the mass would have fallen, single oxblood red accent on the bar carries the red: a single flat red wash along the top surface of the threshold, the one surface the weight rests on, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2237798859
+  },
+  "manufacturing-the-collapse": {
+    "emblem": "trapdoor above a cradle",
+    "composition": "A horizontal platform with a hinged drop-section occupies the centre-left of the wide frame; directly beneath the opening, suspended at the lower third, a shallow bowl-shaped cradle hangs from cords that run up and knot to the platform's own frame — the mechanism and the catch are one object. The right half of the frame is empty paper. The platform reads as a bold horizontal mass; the hanging cradle as a small, dense cluster below it.",
+    "symbols": [
+      "a rectangular platform with one section drawn hinged and falling open, shown at a slight angle to read as a door mid-drop",
+      "the cradle below: a shallow curved bowl of hatched mass, sized exactly to the falling section — a fitted receptacle, not a safety net",
+      "two or three cords from the cradle tied to the underside of the platform itself, so the catcher and the cliff share one structure",
+      "a small trip-lever at the platform's edge: a short bar and notch, pure geometry, the only fine detail"
+    ],
+    "accent": "the cradle's inner curve carries the red wash — the fitted catch, not the falling door",
+    "input_hash": "de906eb3965c888b",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, trapdoor above a cradle, a rectangular platform with one section drawn hinged and falling open, shown at a slight angle to read as a door mid-drop, the cradle below: a shallow curved bowl of hatched mass, sized exactly to the falling section — a fitted receptacle, not a safety net, two or three cords from the cradle tied to the underside of the platform itself, so the catcher and the cliff share one structure, a small trip-lever at the platform's edge: a short bar and notch, pure geometry, the only fine detail, A horizontal platform with a hinged drop-section occupies the centre-left of the square frame; directly beneath the opening, suspended at the lower third, a shallow bowl-shaped cradle hangs from cords that run up and knot to the platform's own frame — the mechanism and the catch are one object. The right half of the frame is empty paper. The platform reads as a bold horizontal mass; the hanging cradle as a small, dense cluster below it., single oxblood red accent on the cradle's inner curve carries the red wash — the fitted catch, not the falling door, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2877381017
+  },
+  "sacred-science": {
+    "emblem": "collapsing rings into framed point",
+    "composition": "Centered and small in a wide frame: a nest of concentric rings that tighten and descend toward a single point at the lower middle, the point sitting inside a small open square; vast empty paper above and to either side, the whole figure occupying a third of the frame's width.",
+    "symbols": [
+      "six or seven concentric rings, each slightly smaller and slightly lower than the last, so the nest reads as narrowing inward",
+      "the innermost ring reduced to a solid dot — the one definite thing",
+      "a plain open square drawn around the dot, slightly larger than it, its corners crisp — the frame that receives the collapse",
+      "a thin vertical line dropped from the top edge of the frame down to the outermost ring, so the descent reads as guided rather than falling"
+    ],
+    "accent": "the solid dot at the centre of the collapse carries the red wash",
+    "input_hash": "feb342aedfcbe35d",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, collapsing rings into framed point, six or seven concentric rings, each slightly smaller and slightly lower than the last, so the nest reads as narrowing inward, the innermost ring reduced to a solid dot — the one definite thing, a plain open square drawn around the dot, slightly larger than it, its corners crisp — the frame that receives the collapse, a thin vertical line dropped from the top edge of the frame down to the outermost ring, so the descent reads as guided rather than falling, Centered and small in a square frame: a nest of concentric rings that tighten and descend toward a single point at the lower middle, the point sitting inside a small open square; vast empty paper above and to either side, the whole figure occupying a third of the frame's width., single oxblood red accent on the solid dot at the centre of the collapse carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 351064102
+  },
+  "empty-leader": {
+    "emblem": "Hollow bust, mirrored inner void",
+    "composition": "A single head-and-shoulders bust centred in the wide frame, drawn with a solid outer contour; the interior is not filled but cut away, and the cut-away void is itself shaped as a small second bust facing the opposite way. Equal empty paper on both sides; the double figure is the only mass on the page.",
+    "symbols": [
+      "an outer bust drawn as a clean closed silhouette with no facial features",
+      "the interior void shaped as a smaller inverted bust, facing away from the outer one",
+      "a thin arrow-like contour line threading through both heads, entering one side of the outer skull and exiting the other, passing straight through the inner void"
+    ],
+    "accent": "the small inner bust alone carries the red wash",
+    "input_hash": "89931767cc2259e7",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, Hollow bust, mirrored inner void, an outer bust drawn as a clean closed silhouette with no facial features, the interior void shaped as a smaller inverted bust, facing away from the outer one, a thin arrow-like contour line threading through both heads, entering one side of the outer skull and exiting the other, passing straight through the inner void, A single head-and-shoulders bust centred in the square frame, drawn with a solid outer contour; the interior is not filled but cut away, and the cut-away void is itself shaped as a small second bust facing the opposite way. Equal empty paper on both sides; the double figure is the only mass on the page., single oxblood red accent on the small inner bust alone carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2143856568
+  },
+  "the-follower": {
+    "emblem": "a dissolving silhouette figure",
+    "composition": "A single upright human figure centred in the frame, small against wide emptiness; from the shoulders up it is solid, but the lower body breaks into scattered fragments that thin out to nothing before either edge — the type coming apart from the measurement downward.",
+    "symbols": [
+      "a standing human silhouette, front-facing, arms at its sides, rendered as solid black mass",
+      "the mass fragmenting below the chest into small angular shards that drift outward and downward, growing sparser until they vanish",
+      "a thin horizontal ruled line beneath the figure, like a scale baseline, with a single gap in it where the fragments fall through"
+    ],
+    "accent": "one shard at the centre of the dispersal — the point of failure — carries the red wash",
+    "input_hash": "cd122f35bfd8586d",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a dissolving silhouette figure, a standing human silhouette, front-facing, arms at its sides, rendered as solid black mass, the mass fragmenting below the chest into small angular shards that drift outward and downward, growing sparser until they vanish, a thin horizontal ruled line beneath the figure, like a scale baseline, with a single gap in it where the fragments fall through, A single upright human figure centred in the frame, small against empty; from the shoulders up it is solid, but the lower body breaks into scattered fragments that thin out to nothing before either edge — the type coming apart from the measurement downward., single oxblood red accent on one shard at the centre of the dispersal — the point of failure — carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1312962601
+  },
+  "what-the-traditions-knew": {
+    "emblem": "seven circles converging on one point",
+    "composition": "seven small circles, equal weight, evenly spaced on a wide arc across the frame's upper third; from each circle a single straight line runs down to a shared centre point at the frame's exact middle; all empty paper below",
+    "symbols": [
+      "seven identical circles, drawn the same way, no connecting lines between them",
+      "seven straight lines, one from each circle's base, meeting at a single common point",
+      "the common point rendered as a small dense filled dot, heavier than any circle's stroke",
+      "faint short marks cut into each circle at the same angle, marking them as instances of one form"
+    ],
+    "accent": "the single central dot where all seven lines meet",
+    "input_hash": "1b913ff123b2f100",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, seven circles converging on one point, seven identical circles, drawn the same way, no connecting lines between them, seven straight lines, one from each circle's base, meeting at a single common point, the common point rendered as a small dense filled dot, heavier than any circle's stroke, faint short marks cut into each circle at the same angle, marking them as instances of one form, seven small circles, equal weight, evenly spaced on a $1 across the frame's upper third; from each circle a single straight line runs down to a shared centre point at the frame's exact middle; all empty paper below, single oxblood red accent on the single central dot where all seven lines meet, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1432873115
+  },
+  "safeguards": {
+    "emblem": "a hand pointing past itself",
+    "composition": "a single upright arm and hand centred in the left third of a wide frame, the forearm entering from the bottom edge, the index finger extended toward the far right where the frame is entirely empty — the pointing gesture aims at blank paper, and the emptiness it points into is the subject",
+    "symbols": [
+      "a bare forearm rising from the bottom edge, sleeveless, drawn as clean contours with a few interior lines for tendon and wrist bone",
+      "an open hand with the index finger fully extended and the other three fingers curled closed under the thumb",
+      "a thin horizontal rule running the full width of the frame behind the hand at fingertip height, like a threshold line the finger reaches past",
+      "small dense hatch-marks confined to the curled fingers, so the mass sits in the fist and the extended finger stays a clean silhouette"
+    ],
+    "accent": "a small red wash filling the space just beyond the fingertip — a short bar of red sitting in the empty right field, the thing pointed at but not touched",
+    "input_hash": "1cf7ba7ddfdd8f2d",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a hand pointing past itself, a bare forearm rising from the bottom edge, sleeveless, drawn as clean contours with a few interior lines for tendon and wrist bone, an open hand with the index finger fully extended and the other three fingers curled closed under the thumb, a thin horizontal rule running the full width of the frame behind the hand at fingertip height, like a threshold line the finger reaches past, small dense hatch-marks confined to the curled fingers, so the mass sits in the fist and the extended finger stays a clean silhouette, a single upright arm and hand centred in the left third of a square frame, the forearm entering from the bottom edge, the index finger extended toward the far right where the frame is entirely empty — the pointing gesture aims at blank paper, and the emptiness it points into is the subject, single oxblood red accent on a small red wash filling the space just beyond the fingertip — a short bar of red sitting in the empty right field, the thing pointed at but not touched, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 854555821
+  },
+  "the-label": {
+    "emblem": "A pasted label, mechanism beneath",
+    "composition": "A wide sheet with a small rectangular label pasted flat across the centre, its corners lifting very slightly; beneath and around it, the edges of a cut-away diagram show — a few lines escaping from under the paste on all sides, like a covered drawing. Most of the frame is empty paper above and below.",
+    "symbols": [
+      "a plain rectangle with softly dog-eared corners, flat and opaque, reading as a sticker or slip glued down over something",
+      "the covered diagram showing only at the margins: a broken loop and a small threshold arc emerging from under the label's left and right edges",
+      "three short pin-lines piercing the label near its top edge, as if tacked to the sheet",
+      "a single hairline crack running from one pin-hole toward the label's centre"
+    ],
+    "accent": "The pasted rectangle itself carries the red wash — the one solid element in an otherwise black-line frame.",
+    "input_hash": "926a30d1fd9b31ae",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, A pasted label, mechanism beneath, a plain rectangle with softly dog-eared corners, flat and opaque, reading as a sticker or slip glued down over something, the covered diagram showing only at the margins: a broken loop and a small threshold arc emerging from under the label's left and right edges, three short pin-lines piercing the label near its top edge, as if tacked to the sheet, a single hairline crack running from one pin-hole toward the label's centre, A $1 with a small rectangular label pasted flat across the centre, its corners lifting very slightly; beneath and around it, the edges of a cut-away diagram show — a few lines escaping from under the paste on all sides, like a covered drawing. Most of the frame is empty paper above and below., single oxblood red accent on The pasted rectangle itself carries the red wash — the one solid element in an otherwise black-line frame., centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 422265966
+  },
+  "the-costume": {
+    "emblem": "suitcase with false bottom",
+    "composition": "a single hard suitcase shown upright in three-quarter view, small, centred in the wide frame with empty paper on both sides; the near face cut away along a horizontal seam so the false floor lifts at one corner, revealing a shallow second compartment beneath the packed one",
+    "symbols": [
+      "a rectangular suitcase with squared corners, a flush handle centred on its top edge, and two small latches at the front seam",
+      "the false bottom: a thin panel raised at one corner by a fingertip-width gap, a second flat layer visible below it",
+      "the upper compartment holding neatly stacked flat rectangles — plain papers, unreadable, shown only as stacked edges",
+      "a single key tied to the handle by a short loop"
+    ],
+    "accent": "the thin edge of the false bottom panel where it lifts — the red wash follows that seam only",
+    "input_hash": "92d816062414257c",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, suitcase with false bottom, a rectangular suitcase with squared corners, a flush handle centred on its top edge, and two small latches at the front seam, the false bottom: a thin panel raised at one corner by a fingertip-width gap, a second flat layer visible below it, the upper compartment holding neatly stacked flat rectangles — plain papers, unreadable, shown only as stacked edges, a single key tied to the handle by a short loop, a single hard suitcase shown upright in three-quarter view, small, centred in the square frame with empty paper on both sides; the near face cut away along a horizontal seam so the false floor lifts at one corner, revealing a shallow second compartment beneath the packed one, single oxblood red accent on the thin edge of the false bottom panel where it lifts — the red wash follows that seam only, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 925465565
+  },
+  "the-differential": {
+    "emblem": "a balance with identical pans",
+    "composition": "A single beam balance centred in a wide frame, small, occupying the middle third; empty paper to either side; the beam perfectly level, which is the problem.",
+    "symbols": [
+      "a two-pan balance drawn as pure geometry: a triangular fulcrum, a straight beam, two cords, two shallow dishes",
+      "both dishes holding the same simple solid form — one sphere each, matched in size and weight so the beam cannot tip",
+      "beneath the fulcrum, a small plumb line hanging straight down: the one measurement that does not depend on either pan",
+      "the beam's pivot drawn as a small open circle, the exact centre of the whole figure"
+    ],
+    "accent": "the plumb line below the fulcrum carries the red wash — the single measure taken from outside the pans",
+    "input_hash": "f5df807fd117c9a3",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a balance with identical pans, a two-pan balance drawn as pure geometry: a triangular fulcrum, a straight beam, two cords, two shallow dishes, both dishes holding the same simple solid form — one sphere each, matched in size and weight so the beam cannot tip, beneath the fulcrum, a small plumb line hanging straight down: the one measurement that does not depend on either pan, the beam's pivot drawn as a small open circle, the exact centre of the whole figure, A single beam balance centred in a square frame, small, occupying the middle third; empty paper to either side; the beam perfectly level, which is the problem., single oxblood red accent on the plumb line below the fulcrum carries the red wash — the single measure taken from outside the pans, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3002757760
+  },
+  "the-machine-said-so": {
+    "emblem": "an empty oracular slot",
+    "composition": "a tall rectangular aperture centred low in a wide frame, drawn as a doorway standing alone; the emptiness above and either side is untouched paper, and the slot itself is blank void",
+    "symbols": [
+      "a tall narrow doorway with a heavy lintel, its interior filled solid black — nobody stands in it",
+      "a small stack of three identical ruled columns leaning against the doorway's base, like ledgers left where a petitioner would kneel",
+      "a thin chain of small empty squares receding from the foot of the doorway toward the frame's edge, each square open — inspection points that cannot be entered"
+    ],
+    "accent": "the solid black void inside the doorway carries the red wash",
+    "input_hash": "df2c39095f4d96c3",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, an empty oracular slot, a tall narrow doorway with a heavy lintel, its interior filled solid black — nobody stands in it, a small stack of three identical ruled columns leaning against the doorway's base, like ledgers left where a petitioner would kneel, a thin chain of small empty squares receding from the foot of the doorway toward the frame's edge, each square open — inspection points that cannot be entered, a tall rectangular aperture centred low in a square frame, drawn as a doorway standing alone; the emptiness above and either side is untouched paper, and the slot itself is blank void, single oxblood red accent on the solid black void inside the doorway carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 566224766
+  },
+  "after-the-room": {
+    "emblem": "a door standing half-open",
+    "composition": "a single tall door in the centre of a wide frame, swung ajar toward the viewer so its mass sits slightly left of centre; the frame's edges left empty, with the door's shadow-side drawn as a solid black rectangle behind the opening to give the silhouette weight; nothing else in the picture",
+    "symbols": [
+      "a plain panelled door with a visible hinge line and a simple knob, drawn edge-on so the opening reads as a narrow gap between two masses",
+      "a single threshold line running across the base of the doorway, extending a little past the doorframe on each side",
+      "a short track of small marks on the floor crossing the threshold line, as of something dragged or stepped outward — pure geometry, dashes and dots only"
+    ],
+    "accent": "the narrow gap of the half-open door: the sliver of open space between door and frame carries the red wash",
+    "input_hash": "183ed240727407ef",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a door standing half-open, a plain panelled door with a visible hinge line and a simple knob, drawn edge-on so the opening reads as a narrow gap between two masses, a single threshold line running across the base of the doorway, extending a little past the doorframe on each side, a short track of small marks on the floor crossing the threshold line, as of something dragged or stepped outward — pure geometry, dashes and dots only, a single tall door in the centre of a square frame, swung ajar toward the viewer so its mass sits slightly left of centre; the frame's edges left empty, with the door's shadow-side drawn as a solid black rectangle behind the opening to give the silhouette weight; nothing else in the picture, single oxblood red accent on the narrow gap of the half-open door: the sliver of open space between door and frame carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3026933080
+  },
+  "the-western-column": {
+    "emblem": "A barred threshold gate",
+    "composition": "A tall narrow gate stands at the exact centre of the wide frame, drawn as a single upright mass with straight sides; the empty paper occupies both flanks evenly, the gate small enough to float with wide margins on either side",
+    "symbols": [
+      "double doors drawn closed, meeting in a firm vertical seam at the centre",
+      "a horizontal bar laid across the seam, overlapping both doors at mid-height",
+      "a shallow arch of radiating short lines above the doorhead, pure geometry — equal ticks fanning from one point, no marks that read as writing",
+      "a small plain figure standing below the bar on the near side, cut off at the knees by the frame's lower edge"
+    ],
+    "accent": "the horizontal bar across the doors carries the red wash",
+    "input_hash": "d17a77630db2d94d",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, A barred threshold gate, double doors drawn closed, meeting in a firm vertical seam at the centre, a horizontal bar laid across the seam, overlapping both doors at mid-height, a shallow arch of radiating short lines above the doorhead, pure geometry — equal ticks fanning from one point, no marks that read as writing, a small plain figure standing below the bar on the near side, cut off at the knees by the frame's lower edge, A tall narrow gate stands at the exact centre of the square frame, drawn as a single upright mass with straight sides; the empty paper occupies both flanks evenly, the gate small enough to float with margins on either side, single oxblood red accent on the horizontal bar across the doors carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3125218447
+  },
+  "the-same-move": {
+    "emblem": "one weight, four pedestals",
+    "composition": "A single dense square mass hangs dead centre, seated on four narrow pedestals of differing heights standing shoulder to shoulder beneath it, so the load reads as identical while its footing visibly varies; wide empty paper left and right of the cluster, the whole group occupying the middle third of the frame.",
+    "symbols": [
+      "a solid cube, drawn as pure geometry — two faces and a top, heavy and unornamented, identical no matter where it sits",
+      "four slender supports directly under it: one tall and finished, one built of stacked blocks, one a bare pole, one barely a flat chip at floor level",
+      "a faint plumb line dropped from the cube's centre through all four pedestals, the same vertical in each case",
+      "small debris of unused blocks lying beside the shortest supports, the leftover building material"
+    ],
+    "accent": "the single plumb line running through the cube's centre carries the red wash",
+    "input_hash": "13ca182b9e86910b",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, one weight, four pedestals, a solid cube, drawn as pure geometry — two faces and a top, heavy and unornamented, identical no matter where it sits, four slender supports directly under it: one tall and finished, one built of stacked blocks, one a bare pole, one barely a flat chip at floor level, a faint plumb line dropped from the cube's centre through all four pedestals, the same vertical in each case, small debris of unused blocks lying beside the shortest supports, the leftover building material, A single dense square mass hangs dead centre, seated on four narrow pedestals of differing heights standing shoulder to shoulder beneath it, so the load reads as identical while its footing visibly varies; empty paper left and right of the cluster, the whole group occupying the middle third of the frame., single oxblood red accent on the single plumb line running through the cube's centre carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2497973552
+  },
+  "the-environment": {
+    "emblem": "a rack of pre-mounted levers",
+    "composition": "A tall rectangular frame stands slightly left of centre in the wide field, narrow and doorway-proportioned, holding five horizontal levers stacked at even intervals; the right two-thirds of the frame is empty paper, with only a single detached hand-lever lying flat in the lower right corner, apart from the rack.",
+    "symbols": [
+      "five lever arms already seated in the frame, each ending in a simple ball grip, the topmost angled as if mid-pull",
+      "the frame's uprights drawn heavier than the levers, so the structure reads as older than what it holds",
+      "the detached lever on the ground, smaller, with its grip ball missing — the one piece still to be made",
+      "small pivot pins at each lever's base, drawn as plain circles"
+    ],
+    "accent": "the grip ball of the topmost lever, the one already tilted",
+    "input_hash": "532f61b2b409dc6f",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a rack of pre-mounted levers, five lever arms already seated in the frame, each ending in a simple ball grip, the topmost angled as if mid-pull, the frame's uprights drawn heavier than the levers, so the structure reads as older than what it holds, the detached lever on the ground, smaller, with its grip ball missing — the one piece still to be made, small pivot pins at each lever's base, drawn as plain circles, A tall rectangular frame stands slightly left of centre in the $1, narrow and doorway-proportioned, holding five horizontal levers stacked at even intervals; the right two-thirds of the frame is empty paper, with only a single detached hand-lever lying flat in the lower right corner, apart from the rack., single oxblood red accent on the grip ball of the topmost lever, the one already tilted, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2471817623
+  },
+  "the-witch-and-the-debt": {
+    "emblem": "a balance sinking on emptiness",
+    "composition": "A single balance scale centred in the wide frame, small against the empty paper, the beam tipped so the empty pan hangs low; all breathing room at the margins",
+    "symbols": [
+      "a balance beam on a slender upright, pivoted off level",
+      "the lowered pan drawn empty but heavily weighted in mass — thick, solid shading beneath it, a weight shown as pure dark geometry with nothing visible inside",
+      "the raised pan holding a small plain vessel, open at the top",
+      "a fine circle drawn around the pivot, the geometry of an orbit or wheel the scale cannot escape"
+    ],
+    "accent": "the solid mass beneath the empty pan — the invisible debt — carries the red wash",
+    "input_hash": "5abe4460bad5e9f5",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a balance sinking on emptiness, a balance beam on a slender upright, pivoted off level, the lowered pan drawn empty but heavily weighted in mass — thick, solid shading beneath it, a weight shown as pure dark geometry with nothing visible inside, the raised pan holding a small plain vessel, open at the top, a fine circle drawn around the pivot, the geometry of an orbit or wheel the scale cannot escape, A single balance scale centred in the square frame, small against the empty paper, the beam tipped so the empty pan hangs low; all breathing room at the margins, single oxblood red accent on the solid mass beneath the empty pan — the invisible debt — carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3950364271
+  },
+  "the-ladder-of-light": {
+    "emblem": "a ladder whose top rung is missing",
+    "composition": "a single tall ladder centered in the frame, slightly narrow so empty paper carries the height on both sides; the rails continue a little past the highest existing rung, ending in plain space where the missing rung should be",
+    "symbols": [
+      "two plain straight rails, evenly parallel",
+      "solid lower rungs, regular and load-bearing",
+      "the space between the rail-tops left empty — the absent rung reads as a gap, not a break",
+      "a small foothold mark on the lowest rung, where the climber stands"
+    ],
+    "input_hash": "bd1e6256866963c6",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a ladder whose top rung is missing, two plain straight rails, evenly parallel, solid lower rungs, regular and load-bearing, the space between the rail-tops left empty — the absent rung reads as a gap, not a break, a small foothold mark on the lowest rung, where the climber stands, a single tall ladder centered in the frame, slightly narrow so empty paper carries the height on both sides; the rails continue a little past the highest existing rung, ending in plain space where the missing rung should be, single oxblood red accent on undefined, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3970226766
+  },
+  "the-sanctioned-trance": {
+    "emblem": "bell with clapper removed",
+    "composition": "a single handbell, small, centred in a wide frame; the bell upright and intact, the clapper lying detached on the ground beside it; generous empty paper left and right",
+    "symbols": [
+      "a bell with a plain tapered body and a looped handle, drawn solid and closed",
+      "the clapper as a bar-and-ball pulled out and lying flat beside the bell's base",
+      "a low horizon line under both, so the bell stands and the clapper rests on the same plane",
+      "a single short line inside the bell's mouth showing it hollow and empty"
+    ],
+    "accent": "the detached clapper carries the red wash",
+    "input_hash": "0c8c303727cad95c",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, bell with clapper removed, a bell with a plain tapered body and a looped handle, drawn solid and closed, the clapper as a bar-and-ball pulled out and lying flat beside the bell's base, a low horizon line under both, so the bell stands and the clapper rests on the same plane, a single short line inside the bell's mouth showing it hollow and empty, a single handbell, small, centred in a square frame; the bell upright and intact, the clapper lying detached on the ground beside it; generous empty paper left and right, single oxblood red accent on the detached clapper carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1989972688
+  },
+  "the-certified-frame": {
+    "emblem": "an empty certified frame",
+    "composition": "a single ornate frame with a wax seal pendant, centred in the frame, nothing inside it but blank paper; wide empty paper either side",
+    "symbols": [
+      "a rectangular frame with heavy corner work and a hanging ribbon, its interior empty",
+      "a round pendant seal attached to the frame's lower edge by a ribbon",
+      "small radiating marks around the seal, like the pressure of arrival",
+      "the ribbon's tail trailing in from off-frame, arriving ahead of anything"
+    ],
+    "accent": "the pendant seal carries the red wash",
+    "input_hash": "7a80f3a390bd7909",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, an empty certified frame, a rectangular frame with heavy corner work and a hanging ribbon, its interior empty, a round pendant seal attached to the frame's lower edge by a ribbon, small radiating marks around the seal, like the pressure of arrival, the ribbon's tail trailing in from off-frame, arriving ahead of anything, a single ornate frame with a wax seal pendant, centred in the frame, nothing inside it but blank paper; empty paper either side, single oxblood red accent on the pendant seal carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 206189092
+  },
+  "the-new-jerusalem": {
+    "emblem": "an unoccupied throne, radiating",
+    "composition": "a single high-backed throne centred low in the frame, small against wide empty paper; a full circle of short rays around the throne's empty seat, the circle broken on one side",
+    "symbols": [
+      "a throne with a tall straight back, seat left vacant, nothing resting on it",
+      "short straight rays arranged in a circle around the seat, each ray terminating before touching the throne",
+      "a hairline crack running from the broken side of the ray-circle out to the frame's edge",
+      "a small pedestal step at the throne's base, drawn empty"
+    ],
+    "accent": "the vacant seat of the throne carries the red wash",
+    "input_hash": "d8a20f56beee482a",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, an unoccupied throne, radiating, a throne with a tall straight back, seat left vacant, nothing resting on it, short straight rays arranged in a circle around the seat, each ray terminating before touching the throne, a hairline crack running from the broken side of the ray-circle out to the frame's edge, a small pedestal step at the throne's base, drawn empty, a single high-backed throne centred low in the frame, small against empty paper; a full circle of short rays around the throne's empty seat, the circle broken on one side, single oxblood red accent on the vacant seat of the throne carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 418175245
+  },
+  "the-empty-vessel": {
+    "emblem": "a poured-out vessel",
+    "composition": "a single tall jug or ewer seen from the side, tipped past vertical so its mouth points down and away, centred in the frame with wide empty field above and below; a thin rising pour of liquid falls from the lip toward the lower right and pools into a small closed basin that mirrors the vessel's shape",
+    "symbols": [
+      "the vessel's silhouette: rounded belly, narrow neck, wide open mouth, drawn with a single unbroken contour that thins at the lip",
+      "a trickle drawn as a narrow tapering ribbon from the lip to the pool — mass, not motion",
+      "a small shallow basin at the lower right, closed and full, the vessel's opposite",
+      "the vessel's interior rendered not hollow but dense with fine parallel hatching that stops short of the walls, so the emptiness is something poured out, not something never there"
+    ],
+    "accent": "the pooled liquid in the lower basin carries the red — the only filled mass in the frame",
+    "input_hash": "ff2b9cca8f15902d",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a poured-out vessel, the vessel's silhouette: rounded belly, narrow neck, open mouth, drawn with a single unbroken contour that thins at the lip, a trickle drawn as a narrow tapering ribbon from the lip to the pool — mass, not motion, a small shallow basin at the lower right, closed and full, the vessel's opposite, the vessel's interior rendered not hollow but dense with fine parallel hatching that stops short of the walls, so the emptiness is something poured out, not something never there, a single tall jug or ewer seen from the side, tipped past vertical so its mouth points down and away, centred in the frame with empty field above and below; a thin rising pour of liquid falls from the lip toward the lower right and pools into a small closed basin that mirrors the vessel's shape, single oxblood red accent on the pooled liquid in the lower basin carries the red — the only filled mass in the frame, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1779233567
+  },
+  "the-designed-method": {
+    "emblem": "a five-stage hourglass",
+    "composition": "A single tall hourglass centred in the left third of the frame, drawn as five stacked chambers of decreasing height; the right two-thirds empty paper, broken only by a thin horizontal line running from the base of the glass across the emptiness, ending in a small solid disc.",
+    "symbols": [
+      "an hourglass whose body is divided into five horizontal chambers by interior bars, the narrows between chambers progressively constricted",
+      "the top chamber dense with tangled, chaotic strokes; the bottom chamber empty",
+      "a thin baseline running from the base of the glass across the empty paper to a small filled circle at the far right, level with the glass's base"
+    ],
+    "accent": "the small filled disc at the end of the line — the pre-fixed reading, the only element carrying the red wash",
+    "input_hash": "d759807f87eb2796",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a five-stage hourglass, an hourglass whose body is divided into five horizontal chambers by interior bars, the narrows between chambers progressively constricted, the top chamber dense with tangled, chaotic strokes; the bottom chamber empty, a thin baseline running from the base of the glass across the empty paper to a small filled circle at the far right, level with the glass's base, A single tall hourglass centred in the left third of the frame, drawn as five stacked chambers of decreasing height; the right two-thirds empty paper, broken only by a thin horizontal line running from the base of the glass across the emptiness, ending in a small solid disc., single oxblood red accent on the small filled disc at the end of the line — the pre-fixed reading, the only element carrying the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2666578477
+  },
+  "set-and-setting": {
+    "emblem": "A doorframe standing alone",
+    "composition": "A single tall rectangular doorframe, drawn with weight, centred in the wide frame with empty paper on both sides; nothing behind or through it but paper, so the frame itself is the figure",
+    "symbols": [
+      "a tall doorframe whose opening is empty — no door, no wall, only the frame's own members",
+      "the frame's inner edge drawn double: a thin inner line inside a thick outer one, so the frame reads as having thickness",
+      "a small plain circle sitting on the sill line at the centre of the opening, the only thing inside"
+    ],
+    "accent": "the inner thin line of the frame's edge carries the red wash, tracing the whole inner rectangle",
+    "input_hash": "dd761afda88e1dfe",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, A doorframe standing alone, a tall doorframe whose opening is empty — no door, no wall, only the frame's own members, the frame's inner edge drawn double: a thin inner line inside a thick outer one, so the frame reads as having thickness, a small plain circle sitting on the sill line at the centre of the opening, the only thing inside, A single tall rectangular doorframe, drawn with weight, centred in the square frame with empty paper on both sides; nothing behind or through it but paper, so the frame itself is the figure, single oxblood red accent on the inner thin line of the frame's edge carries the red wash, tracing the whole inner rectangle, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 318086711
+  },
+  "the-container": {
+    "emblem": "A vessel holding a smaller vessel",
+    "composition": "A large open-topped jar centred in the wide frame, drawn in black ink; inside it, perfectly upright and half its height, a sealed egg-shaped flask. The space around the jar is empty paper on both sides, the silence wider than the object. No ground line — the jar floats, its shadow replaced by a thin broken circle beneath it.",
+    "symbols": [
+      "the outer jar, wide-mouthed, with two small handles at the shoulder",
+      "the inner egg-flask, stoppered, its outline unbroken",
+      "a thin broken circle on the empty paper below, the mark of where the jar sits",
+      "fine parallel hatching inside the jar wall only, suggesting thickness the inner vessel does not have"
+    ],
+    "accent": "the stopper of the inner flask carries the red wash",
+    "input_hash": "8066a607b7a1391e",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, A vessel holding a smaller vessel, the outer jar, -mouthed, with two small handles at the shoulder, the inner egg-flask, stoppered, its outline unbroken, a thin broken circle on the empty paper below, the mark of where the jar sits, fine parallel hatching inside the jar wall only, suggesting thickness the inner vessel does not have, A large open-topped jar centred in the square frame, drawn in black ink; inside it, perfectly upright and half its height, a sealed egg-shaped flask. The space around the jar is empty paper on both sides, the silence wider than the object. No ground line — the jar floats, its shadow replaced by a thin broken circle beneath it., single oxblood red accent on the stopper of the inner flask carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2493281708
+  },
+  "the-breakthrough": {
+    "emblem": "a single empty seminar chair",
+    "composition": "one folding chair, small, centred in a wide frame, facing the viewer front-on, vast empty paper on all sides — the emptiness is the crowd that is not drawn",
+    "symbols": [
+      "a plain metal folding chair, seen dead-on, its seat pad a simple horizontal rectangle",
+      "rows of faint parallel floor-lines converging behind it, cut off abruptly a short distance away",
+      "a faint rectangular boundary low on the wall behind, like a chalk line marking where a board would be — geometry only, no marks upon it",
+      "a small admission stub resting on the seat, torn at one end"
+    ],
+    "accent": "the torn admission stub on the seat carries the red wash",
+    "input_hash": "731aa70979be2def",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a single empty seminar chair, a plain metal folding chair, seen dead-on, its seat pad a simple horizontal rectangle, rows of faint parallel floor-lines converging behind it, cut off abruptly a short distance away, a faint rectangular boundary low on the wall behind, like a chalk line marking where a board would be — geometry only, no marks upon it, a small admission stub resting on the seat, torn at one end, one folding chair, small, centred in a square frame, facing the viewer front-on, vast empty paper on all sides — the emptiness is the crowd that is not drawn, single oxblood red accent on the torn admission stub on the seat carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2997638755
+  },
+  "the-machine-has-no-reading": {
+    "emblem": "a card catalogue drawer, one slot empty",
+    "composition": "a single shallow drawer seen at a slight angle from above, centred in the wide frame with clear paper on both sides; rows of cards packed tight as solid mass, one rectangular vacancy mid-grid",
+    "symbols": [
+      "a wooden drawer body with straight, sharply ruled compartment dividers",
+      "rows of thin cards pressed edge-to-edge, drawn as dense stacked lines",
+      "one compartment with no card in it — a clean empty rectangle whose edges carry a thin hairline border",
+      "the drawer's front lip low and flat so the whole grid reads as one silhouette"
+    ],
+    "accent": "the thin hairline border of the empty slot",
+    "input_hash": "c462696291a737c5",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a card catalogue drawer, one slot empty, a wooden drawer body with straight, sharply ruled compartment dividers, rows of thin cards pressed edge-to-edge, drawn as dense stacked lines, one compartment with no card in it — a clean empty rectangle whose edges carry a thin hairline border, the drawer's front lip low and flat so the whole grid reads as one silhouette, a single shallow drawer seen at a slight angle from above, centred in the square frame with clear paper on both sides; rows of cards packed tight as solid mass, one rectangular vacancy mid-grid, single oxblood red accent on the thin hairline border of the empty slot, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3549783678
+  },
+  "a-cosmos-of-persons": {
+    "emblem": "a ring of many figures",
+    "composition": "a single open ring of small standing figures filling the centre of a wide frame, evenly spaced, none larger than the others, with the geometric centre of the ring left deliberately empty; wide empty paper to both sides and above, the ring sitting low in the frame",
+    "symbols": [
+      "a circle of many small distinct figures — human, beast, bird, fish, tree, each simplified to a clear silhouette, all the same height, all facing inward",
+      "the exact geometric centre of the ring drawn as empty paper, emphasised by a thin broken circle with a gap in it — a seat with no occupant",
+      "one figure at the ring indistinguishable in size and posture from the rest, marked as the practitioner only by position at the bottom of the ring, nearest the viewer"
+    ],
+    "accent": "the broken circle at the empty centre carries the red wash — the one red element, the unoccupied seat",
+    "input_hash": "28b928dab56fa1cc",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a ring of many figures, a circle of many small distinct figures — human, beast, bird, fish, tree, each simplified to a clear silhouette, all the same height, all facing inward, the exact geometric centre of the ring drawn as empty paper, emphasised by a thin broken circle with a gap in it — a seat with no occupant, one figure at the ring indistinguishable in size and posture from the rest, marked as the practitioner only by position at the bottom of the ring, nearest the viewer, a single open ring of small standing figures filling the centre of a square frame, evenly spaced, none larger than the others, with the geometric centre of the ring left deliberately empty; empty paper to both sides and above, the ring sitting low in the frame, single oxblood red accent on the broken circle at the empty centre carries the red wash — the one red element, the unoccupied seat, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3909935498
+  },
+  "the-frame-is-a-variable": {
+    "emblem": "nested frames, innermost removed",
+    "composition": "Five or six concentric rectangles shrinking toward centre, drawn in plain ink strokes; the innermost rectangle missing, its four corners marked by short stubs, so an empty gap sits at the heart of the figure. Centred in a wide frame with equal empty ground on both sides.",
+    "symbols": [
+      "five concentric rectangles, each smaller than the last, edges slightly irregular as if hand-ruled",
+      "the innermost rectangle absent — only four short corner ticks where its corners would meet",
+      "one small solid square sitting just outside the outermost rectangle, at the lower right, as if the missing frame had been taken out and set down",
+      "a single thin line connecting that detached square back to the gap at the centre"
+    ],
+    "accent": "the detached solid square outside the stack carries the red wash",
+    "input_hash": "dfb59650ff773126",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, nested frames, innermost removed, five concentric rectangles, each smaller than the last, edges slightly irregular as if hand-ruled, the innermost rectangle absent — only four short corner ticks where its corners would meet, one small solid square sitting just outside the outermost rectangle, at the lower right, as if the missing frame had been taken out and set down, a single thin line connecting that detached square back to the gap at the centre, Five or six concentric rectangles shrinking toward centre, drawn in plain ink strokes; the innermost rectangle missing, its four corners marked by short stubs, so an empty gap sits at the heart of the figure. Centred in a square frame with equal empty ground on both sides., single oxblood red accent on the detached solid square outside the stack carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2895600165
+  },
+  "the-cosmos-that-refuses": {
+    "emblem": "a ladder with no top rung",
+    "composition": "a tall narrow ladder standing centred in the wide frame, its side rails continuing upward past the highest rung and simply stopping mid-air; the emptiness above the last rung occupies most of the upper frame and is the subject",
+    "symbols": [
+      "a ladder of many evenly spaced rungs, the two rails rising straight and unbroken",
+      "the rails terminating abruptly in open space, no platform, no finial, no crossbar at the top",
+      "the topmost rung drawn slightly heavier than the rest, marking the last claimable step",
+      "small radiating dashes around the point where the missing rung would sit, indicating absence as pure geometry"
+    ],
+    "accent": "the dashes at the absent topmost rung carry the red wash",
+    "input_hash": "2402a338d3cfb563",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a ladder with no top rung, a ladder of many evenly spaced rungs, the two rails rising straight and unbroken, the rails terminating abruptly in open space, no platform, no finial, no crossbar at the top, the topmost rung drawn slightly heavier than the rest, marking the last claimable step, small radiating dashes around the point where the missing rung would sit, indicating absence as pure geometry, a tall narrow ladder standing centred in the square frame, its side rails continuing upward past the highest rung and simply stopping mid-air; the emptiness above the last rung occupies most of the upper frame and is the subject, single oxblood red accent on the dashes at the absent topmost rung carry the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 47966089
+  },
+  "the-holy-daimon": {
+    "emblem": "Two vessels, almost touching",
+    "composition": "Two cup-like forms face each other at the horizontal centre of a wide frame, their rims angled toward one another with a narrow gap between them; all empty space is to the left and right, so the pair reads as one silhouette",
+    "symbols": [
+      "two identical stemmed vessels, mirrored, neither larger nor higher than the other",
+      "the gap between the rims held open, with nothing bridging it",
+      "each vessel's inner cavity left open — hollow, not filled",
+      "a broken circle passing behind both, interrupted where the gap falls"
+    ],
+    "accent": "the narrow gap between the two rims carries the red wash",
+    "input_hash": "6f24dc20d8294876",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, Two vessels, almost touching, two identical stemmed vessels, mirrored, neither larger nor higher than the other, the gap between the rims held open, with nothing bridging it, each vessel's inner cavity left open — hollow, not filled, a broken circle passing behind both, interrupted where the gap falls, Two cup-like forms face each other at the horizontal centre of a square frame, their rims angled toward one another with a narrow gap between them; all empty space is to the left and right, so the pair reads as one silhouette, single oxblood red accent on the narrow gap between the two rims carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2536836533
+  },
+  "the-deep-inheritance": {
+    "emblem": "a phylogenetic tree, two-layered",
+    "composition": "a single rooted tree centred low in a wide frame, its trunk rising to a first fork midway and each arm forking again into a spreading thin canopy; all empty space above and to both sides, the roots descending in compact shallow lines close beneath the trunk",
+    "symbols": [
+      "one trunk from root to midpoint, then a clean fork into two unequal branch systems — the lower, wider one dense with small forking twigs, the upper one sparser with longer unbroken limbs",
+      "the canopy's outermost twigs ending in tiny open circles, like isolated populations at the tips",
+      "a fine horizontal rule crossing the trunk at the first fork, wider than the tree, dividing the two layers without touching them"
+    ],
+    "accent": "the shallow root mass beneath the trunk carries the single red wash",
+    "input_hash": "7e2dc9dd8bd24d32",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a phylogenetic tree, two-layered, one trunk from root to midpoint, then a clean fork into two unequal branch systems — the lower, wider one dense with small forking twigs, the upper one sparser with longer unbroken limbs, the canopy's outermost twigs ending in tiny open circles, like isolated populations at the tips, a fine horizontal rule crossing the trunk at the first fork, wider than the tree, dividing the two layers without touching them, a single rooted tree centred low in a square frame, its trunk rising to a first fork midway and each arm forking again into a spreading thin canopy; all empty space above and to both sides, the roots descending in compact shallow lines close beneath the trunk, single oxblood red accent on the shallow root mass beneath the trunk carries the single red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1296778946
+  },
+  "the-holy-heretics": {
+    "emblem": "a gate with no bar",
+    "composition": "a single pointed arch, narrow and tall, centred low in a wide frame with vast empty space above it; the arch's opening is left pure paper — nothing drawn inside it — and its mass is in the two jambs and the pointed cap",
+    "symbols": [
+      "a heavy pointed arch drawn solid at its sides and crown, its interior untouched blank paper",
+      "a thin chain of small linked rings spanning the arch's opening at mid-height, snapped once in the middle, the two broken ends curling back on themselves",
+      "a scattering of fine short strokes on the outer face of each jamb, as of many small closures, hooks and hasps layered over generations",
+      "one small figure of pure geometry — a simple unadorned circle — floating in the empty paper above the arch, far from it"
+    ],
+    "accent": "the red wash sits on the two snapped ends of the chain alone; everything else is ink on paper",
+    "input_hash": "f368661a43c057b7",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a gate with no bar, a heavy pointed arch drawn solid at its sides and crown, its interior untouched blank paper, a thin chain of small linked rings spanning the arch's opening at mid-height, snapped once in the middle, the two broken ends curling back on themselves, a scattering of fine short strokes on the outer face of each jamb, as of many small closures, hooks and hasps layered over generations, one small figure of pure geometry — a simple unadorned circle — floating in the empty paper above the arch, far from it, a single pointed arch, narrow and tall, centred low in a square frame with vast empty space above it; the arch's opening is left pure paper — nothing drawn inside it — and its mass is in the two jambs and the pointed cap, single oxblood red accent on the red wash sits on the two snapped ends of the chain alone; everything else is ink on paper, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2680347507
+  },
+  "the-operative-master": {
+    "emblem": "a key fitting a lock",
+    "composition": "a single large key, upright, centred in the frame with wide empty paper on both sides; the bit of the key is drawn extended, its profile an exact cut-out of a keyhole shape shown faint beside it — the vacancy the key fits, not a door, just the empty outline floating to one side; silhouette of the key dominant, the keyhole outline thin and open",
+    "symbols": [
+      "a key with an ornate hollow bow, its bit cut into a distinct profile of notches and teeth",
+      "the matching keyhole outline drawn as an open void shape, placed so the key's bit would slide into it exactly",
+      "a thin circle enclosing both key and void, with one gap in the circumference where the key points"
+    ],
+    "accent": "the red wash fills the hollow bow of the key — the only filled area, the handle no one sees the purpose of",
+    "input_hash": "1634743a71f1656f",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a key fitting a lock, a key with an ornate hollow bow, its bit cut into a distinct profile of notches and teeth, the matching keyhole outline drawn as an open void shape, placed so the key's bit would slide into it exactly, a thin circle enclosing both key and void, with one gap in the circumference where the key points, a single large key, upright, centred in the frame with empty paper on both sides; the bit of the key is drawn extended, its profile an exact cut-out of a keyhole shape shown faint beside it — the vacancy the key fits, not a door, just the empty outline floating to one side; silhouette of the key dominant, the keyhole outline thin and open, single oxblood red accent on the red wash fills the hollow bow of the key — the only filled area, the handle no one sees the purpose of, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1566141203
+  },
+  "undreaming-wetiko": {
+    "emblem": "a spore print, radiating",
+    "composition": "A single roughly circular mass centred in the frame, slightly left of centre, with roomy empty margins all around; a few of its outermost filaments reach toward the right edge and stop short of it.",
+    "symbols": [
+      "a dense central disc, irregular at its rim like a dropped powder, not a clean circle",
+      "fine filaments running outward from the disc's edge, branching once or twice, uneven in length",
+      "one filament on the right ending in a small open ring, as if a spore paused at a threshold",
+      "the shortest filaments fading to broken dashes near the frame's edge, drawn sparser as they go"
+    ],
+    "accent": "the small open ring at the end of the rightmost filament carries the red wash",
+    "input_hash": "8a7f5fd8c8d27866",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a spore print, radiating, a dense central disc, irregular at its rim like a dropped powder, not a clean circle, fine filaments running outward from the disc's edge, branching once or twice, uneven in length, one filament on the right ending in a small open ring, as if a spore paused at a threshold, the shortest filaments fading to broken dashes near the frame's edge, drawn sparser as they go, A single roughly circular mass centred in the frame, slightly left of centre, with roomy empty margins all around; a few of its outermost filaments reach toward the right edge and stop short of it., single oxblood red accent on the small open ring at the end of the rightmost filament carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 140900179
+  },
+  "ani-mystic": {
+    "emblem": "A held empty frame",
+    "composition": "A single rectangular frame, slightly rotated and viewed corner-on, gripped at its lower edge by a hand reduced to a few contour lines; the frame's opening shows bare paper. The object sits at the centre of a wide frame with empty space falling away on both sides, more below than above.",
+    "symbols": [
+      "A rectangle drawn with a doubled border, its inner opening left completely empty",
+      "A hand holding the frame's bottom edge — three or four contour lines, fingers wrapped behind, thumb in front, no detail beyond the grip",
+      "A second smaller rectangle, drawn thin, floating apart from the held frame at a distance to one side — the frame not held",
+      "Fine hatching massed on the back of the hand only, giving it weight against the empty opening"
+    ],
+    "accent": "A thin red line tracing the inner edge of the held frame's opening — the examined boundary itself",
+    "input_hash": "915545104a71584b",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, A held empty frame, A rectangle drawn with a doubled border, its inner opening left completely empty, A hand holding the frame's bottom edge — three or four contour lines, fingers wrapped behind, thumb in front, no detail beyond the grip, A second smaller rectangle, drawn thin, floating apart from the held frame at a distance to one side — the frame not held, Fine hatching massed on the back of the hand only, giving it weight against the empty opening, A single rectangular frame, slightly rotated and viewed corner-on, gripped at its lower edge by a hand reduced to a few contour lines; the frame's opening shows bare paper. The object sits at the centre of a square frame with empty space falling away on both sides, more below than above., single oxblood red accent on A thin red line tracing the inner edge of the held frame's opening — the examined boundary itself, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 4269120676
+  },
+  "memories-dreams-reflections": {
+    "emblem": "a well with a lowered lamp",
+    "composition": "a single stone-ringed well, mouth at centre-left, its shaft dropping in cut section to a small suspended lamp near the bottom of the frame; wide empty paper above and to the right, broken only by the single line of the rope running up out of frame",
+    "symbols": [
+      "the well as cut section: a stone ring at the surface, squared blocks, the shaft walls descending straight to the base of the frame",
+      "a lamp hanging on a taut line from above the frame, small, closed-bodied, its silhouette reading as a solid vessel rather than an open flame",
+      "a knotted grip on the line just above the rim — a hand-hold drawn as two wrapped turns, the held point of the descent",
+      "faint horizontal strata cut through by the shaft, plain parallel bands, the descent passing through ordered ground"
+    ],
+    "accent": "the lamp body alone carries the red wash — a small solid mass at the lowest point of the shaft",
+    "input_hash": "3bd1f828d11075d7",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a well with a lowered lamp, the well as cut section: a stone ring at the surface, squared blocks, the shaft walls descending straight to the base of the frame, a lamp hanging on a taut line from above the frame, small, closed-bodied, its silhouette reading as a solid vessel rather than an open flame, a knotted grip on the line just above the rim — a hand-hold drawn as two wrapped turns, the held point of the descent, faint horizontal strata cut through by the shaft, plain parallel bands, the descent passing through ordered ground, a single stone-ringed well, mouth at centre-left, its shaft dropping in cut section to a small suspended lamp near the bottom of the frame; empty paper above and to the right, broken only by the single line of the rope running up out of frame, single oxblood red accent on the lamp body alone carries the red wash — a small solid mass at the lowest point of the shaft, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1954705355
+  },
+  "star-ships": {
+    "emblem": "a star-crowned hill temple",
+    "composition": "a low wide mound centred in the frame, its summit carrying a small compact structure; a single star figure floats directly above the apex in the upper empty band, with wide emptiness either side of the mound",
+    "symbols": [
+      "a mound drawn as stacked contour lines rising to a flat summit",
+      "a small ring of standing stones on the summit, closed into a circle",
+      "one eight-pointed star of straight radiating lines above the ring, joined to it by a single vertical stroke"
+    ],
+    "accent": "the vertical stroke joining the star to the ring of stones carries the red wash",
+    "input_hash": "0272bee4fc2c1255",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a star-crowned hill temple, a mound drawn as stacked contour lines rising to a flat summit, a small ring of standing stones on the summit, closed into a circle, one eight-pointed star of straight radiating lines above the ring, joined to it by a single vertical stroke, a low mound centred in the frame, its summit carrying a small compact structure; a single star figure floats directly above the apex in the upper empty band, with empty either side of the mound, single oxblood red accent on the vertical stroke joining the star to the ring of stones carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1441450962
+  },
+  "egregores": {
+    "emblem": "vessel ringed by seated figures",
+    "composition": "a single wide frame: one large standing vessel at the exact centre, small, with vast empty paper on both sides; faint paired marks of figures arranged in a circle around it, only the nearest two or three resolved, the rest fading to bare strokes toward the frame edges",
+    "symbols": [
+      "a tall narrow-footed vessel whose rim opens into a broad mouth, filled to the neck with a dense hatched mass",
+      "twelve small seated human figures in a ring around it, each leaning slightly toward the vessel, drawn as simple bent forms — the three nearest fully worked, the rest reduced to three or four strokes each",
+      "thin arcs crossing between the figures and the vessel's mouth, showing pouring inward and influence passing back out along the same lines",
+      "one figure — the farthest from the vessel, at the ring's edge — drawn standing and turned away, its connecting arc broken with a clean gap"
+    ],
+    "accent": "the dense hatched mass inside the vessel carries the red wash, and nothing else",
+    "input_hash": "d6806d72dc338048",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, vessel ringed by seated figures, a tall narrow-footed vessel whose rim opens into a broad mouth, filled to the neck with a dense hatched mass, twelve small seated human figures in a ring around it, each leaning slightly toward the vessel, drawn as simple bent forms — the three nearest fully worked, the rest reduced to three or four strokes each, thin arcs crossing between the figures and the vessel's mouth, showing pouring inward and influence passing back out along the same lines, one figure — the farthest from the vessel, at the ring's edge — drawn standing and turned away, its connecting arc broken with a clean gap, a single square frame: one large standing vessel at the exact centre, small, with vast empty paper on both sides; faint paired marks of figures arranged in a circle around it, only the nearest two or three resolved, the rest fading to bare strokes toward the frame edges, single oxblood red accent on the dense hatched mass inside the vessel carries the red wash, and nothing else, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3707671498
+  },
+  "two-esoteric-tarots": {
+    "emblem": "a single tarot card, back showing",
+    "composition": "one upright rectangle floating slightly off-centre in a wide empty frame, drawn at full figure scale so the card fills the height, its corners rounded, vast empty paper to either side, nothing drawn around it",
+    "symbols": [
+      "the card's border drawn as a double rectangle, the inner one inset, so the frame-within-a-frame is the whole object",
+      "the card's face carrying a three-by-seven grid of twenty-one empty cells, drawn as pure geometry, each cell a small square, the grid filling the face with a margin of plain black ink around it",
+      "one corner of the card slightly lifted, the lower edge breaking the rectangle's line to show a second card's edge beneath it — two decks, one visible"
+    ],
+    "accent": "the single lifted corner of the card, and the sliver of the second card beneath it, carry the red wash",
+    "input_hash": "cc89add76b863d78",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a single tarot card, back showing, the card's border drawn as a double rectangle, the inner one inset, so the frame-within-a-frame is the whole object, the card's face carrying a three-by-seven grid of twenty-one empty cells, drawn as pure geometry, each cell a small square, the grid filling the face with a margin of plain black ink around it, one corner of the card slightly lifted, the lower edge breaking the rectangle's line to show a second card's edge beneath it — two decks, one visible, one upright rectangle floating slightly off-centre in a empty frame, drawn at full figure scale so the card fills the height, its corners rounded, vast empty paper to either side, nothing drawn around it, single oxblood red accent on the single lifted corner of the card, and the sliver of the second card beneath it, carry the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2277094120
+  },
+  "ahead-of-the-story": {
+    "emblem": "an arrow returned to its sender",
+    "composition": "a single wide-sweeping arrow dominating the centre of the frame, its curved shaft bending fully back on itself so the head arrives at the notch that launched it; the arc's interior is empty paper, the whole figure reading as one closed silhouette at small size",
+    "symbols": [
+      "a long arrow whose shaft bends through a full half-circle, head meeting tail",
+      "fletching at the tail drawn as the hand's own fingers releasing it",
+      "the arrowhead drawn slightly embedded in the fletching, having struck it",
+      "a thin second line tracing the arc's inside edge, showing the path was straight before it turned"
+    ],
+    "accent": "the embedded arrowhead carries the red wash — the point of return, not the path",
+    "input_hash": "e74aead185db30d8",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, an arrow returned to its sender, a long arrow whose shaft bends through a full half-circle, head meeting tail, fletching at the tail drawn as the hand's own fingers releasing it, the arrowhead drawn slightly embedded in the fletching, having struck it, a thin second line tracing the arc's inside edge, showing the path was straight before it turned, a single -sweeping arrow dominating the centre of the frame, its curved shaft bending fully back on itself so the head arrives at the notch that launched it; the arc's interior is empty paper, the whole figure reading as one closed silhouette at small size, single oxblood red accent on the embedded arrowhead carries the red wash — the point of return, not the path, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3265035590
+  },
+  "the-lucifer-effect": {
+    "emblem": "a balance with one pan fallen",
+    "composition": "A single balance-beam object centred low in the wide frame, its post rising from the bottom edge; the beam tilts hard to one side, the fallen pan resting on the ground line at the base of the post while the empty pan hangs high at the frame's other side; large empty field above and around, ground indicated by one short horizontal stroke under the fallen pan only",
+    "symbols": [
+      "a stepped base and slender post, the whole instrument reduced to a clean triangular silhouette",
+      "the fallen pan drawn tipped on its rim, a few small fragment strokes scattered beside it where it struck",
+      "the surviving pan hanging level and intact on its short chains, empty",
+      "the beam bent very slightly at its pivot, the distortion the only mark of failure"
+    ],
+    "accent": "the red wash fills only the fallen pan, tipped on its rim on the ground",
+    "input_hash": "a5d45bebffd3b3dc",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a balance with one pan fallen, a stepped base and slender post, the whole instrument reduced to a clean triangular silhouette, the fallen pan drawn tipped on its rim, a few small fragment strokes scattered beside it where it struck, the surviving pan hanging level and intact on its short chains, empty, the beam bent very slightly at its pivot, the distortion the only mark of failure, A single balance-beam object centred low in the square frame, its post rising from the bottom edge; the beam tilts hard to one side, the fallen pan resting on the ground line at the base of the post while the empty pan hangs high at the frame's other side; large empty field above and around, ground indicated by one short horizontal stroke under the fallen pan only, single oxblood red accent on the red wash fills only the fallen pan, tipped on its rim on the ground, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3728078694
+  },
+  "eichmann-in-jerusalem": {
+    "emblem": "a desk in a glass booth",
+    "composition": "a small rectangular booth with a seated figure reduced to shoulders and head, centred in a wide frame with empty paper to either side; a narrow counter edge runs beneath it and stops short of the frame's edges",
+    "symbols": [
+      "a three-sided glass booth, its panes drawn as plain rectangles with visible corner posts, the front face open",
+      "a figure seen only from the chest up, its interior left blank — no face drawn, only the outline of head and shoulders",
+      "a stack of folders on the counter beside the figure, squared and tidy, their tabs as plain geometry",
+      "behind the figure, a row of thin vertical lines suggesting the courtroom's benches, cut away at the booth's edge so the crowd never forms"
+    ],
+    "accent": "the single topmost folder in the stack carries the red wash",
+    "input_hash": "9601603c84b729e9",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a desk in a glass booth, a three-sided glass booth, its panes drawn as plain rectangles with visible corner posts, the front face open, a figure seen only from the chest up, its interior left blank — no face drawn, only the outline of head and shoulders, a stack of folders on the counter beside the figure, squared and tidy, their tabs as plain geometry, behind the figure, a row of thin vertical lines suggesting the courtroom's benches, cut away at the booth's edge so the crowd never forms, a small rectangular booth with a seated figure reduced to shoulders and head, centred in a square frame with empty paper to either side; a narrow counter edge runs beneath it and stops short of the frame's edges, single oxblood red accent on the single topmost folder in the stack carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2337495730
+  },
+  "thought-reform": {
+    "emblem": "a scored slate, eight empty boxes",
+    "composition": "a single vertical rectangle centred in the wide frame, slightly taller than wide, with long empty margins left and right; the rectangle holds a single column of eight small square cells from top to bottom, each cell an empty outline with a firm drawn border; nothing else enters the frame",
+    "symbols": [
+      "a rectangular plate with one straight border, drawn as a solid object with visible thickness at its edges",
+      "eight identical empty square cells stacked in one unbroken column down the plate's centre, evenly spaced, none filled",
+      "a small circular seal shape stamped at the plate's lower corner, its interior worked with concentric rings and radiating straight spokes — pure geometry, no letters",
+      "a second, fainter outline of the same plate offset slightly behind the first, the trace of a copy being taken from it"
+    ],
+    "accent": "the stamped circular seal at the lower corner carries the red wash",
+    "input_hash": "c7f0c5f71a8d500c",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a scored slate, eight empty boxes, a rectangular with one straight border, drawn as a solid object with visible thickness at its edges, eight identical empty square cells stacked in one unbroken column down the 's centre, evenly spaced, none filled, a small circular seal shape stamped at the 's lower corner, its interior worked with concentric rings and radiating straight spokes — pure geometry, no letters, a second, fainter outline of the same offset slightly behind the first, the trace of a copy being taken from it, a single vertical rectangle centred in the square frame, slightly taller than, with long empty margins left and right; the rectangle holds a single column of eight small square cells from top to bottom, each cell an empty outline with a firm drawn border; nothing else enters the frame, single oxblood red accent on the stamped circular seal at the lower corner carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2013207220
+  },
+  "geosophia": {
+    "emblem": "roots beneath a stone slab",
+    "composition": "a flat rectangular slab centered low in a wide frame, floating in mostly empty paper; the mass of roots hangs below it, filling the lower third, with clear space above and to both sides so the slab reads as a horizon line first",
+    "symbols": [
+      "a smooth rectangular slab with a small round aperture at its centre",
+      "a single thick root passing down through the aperture",
+      "the root branching into many finer descending strands of unequal length, deepest at the centre"
+    ],
+    "accent": "the root's single thickest descending strand, where it first passes through the aperture",
+    "input_hash": "5310bd90aa41451b",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, roots beneath a stone slab, a smooth rectangular slab with a small round aperture at its centre, a single thick root passing down through the aperture, the root branching into many finer descending strands of unequal length, deepest at the centre, a flat rectangular slab centered low in a square frame, floating in mostly empty paper; the mass of roots hangs below it, filling the lower third, with clear space above and to both sides so the slab reads as a horizon line first, single oxblood red accent on the root's single thickest descending strand, where it first passes through the aperture, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2595820695
+  },
+  "the-anatomy-of-destructiveness": {
+    "emblem": "a marionette with severed strings",
+    "composition": "a single hanging figure centred in the wide frame, small against the empty paper; the severed strings rise a short distance above it and stop cleanly, with the empty upper third of the frame holding nothing at all",
+    "symbols": [
+      "a jointed human figure suspended from six or eight thin straight lines, each line ending abruptly in open air above",
+      "the figure's limbs slack and asymmetric, one arm hanging lower than the other, so it reads as released rather than posed",
+      "a small empty crossbar floating high above the cut ends of the strings, disconnected from them",
+      "the figure's head tilted, its face left as blank plane"
+    ],
+    "accent": "the single red wash fills the marionette's torso, the one part that was never jointed",
+    "input_hash": "f7ddd3106f59cccf",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a marionette with severed strings, a jointed human figure suspended from six or eight thin straight lines, each line ending abruptly in open air above, the figure's limbs slack and asymmetric, one arm hanging lower than the other, so it reads as released rather than posed, a small empty crossbar floating high above the cut ends of the strings, disconnected from them, the figure's head tilted, its face left as blank plane, a single hanging figure centred in the square frame, small against the empty paper; the severed strings rise a short distance above it and stop cleanly, with the empty upper third of the frame holding nothing at all, single oxblood red accent on the single red wash fills the marionette's torso, the one part that was never jointed, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3965049185
+  },
+  "the-assumed-seat": {
+    "emblem": "chair seated by its shadow",
+    "composition": "A single upright chair centred in the wide frame, small against large empty margins left and right; the chair drawn in clean outline, the floor line a single horizontal stroke beneath it, everything else bare paper",
+    "symbols": [
+      "an empty high-backed chair, front-facing, its seat vacant but its posture formal, as if standing were already settled",
+      "the cast shadow of a seated figure falling onto the chair itself, filling the seat and rising up the backrest — the occupant present only as the shadow, with no body anywhere in the frame to cast it",
+      "a small wedge-shaped object on the floor beside the chair leg, tiny against the chair — the undersized provocation — while the seated shadow looms larger than the chair",
+      "a thin unbroken floor line running edge to edge of the frame, against which chair, shadow, and wedge all sit"
+    ],
+    "accent": "the seated shadow alone carries the red wash — the chair, the wedge, and the floor line all in black ink",
+    "input_hash": "6063f06327073ffb",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, chair seated by its shadow, an empty high-backed chair, front-facing, its seat vacant but its posture formal, as if standing were already settled, the cast shadow of a seated figure falling onto the chair itself, filling the seat and rising up the backrest — the occupant present only as the shadow, with no body anywhere in the frame to cast it, a small wedge-shaped object on the floor beside the chair leg, tiny against the chair — the undersized provocation — while the seated shadow looms larger than the chair, a thin unbroken floor line running edge to edge of the frame, against which chair, shadow, and wedge all sit, A single upright chair centred in the square frame, small against large empty margins left and right; the chair drawn in clean outline, the floor line a single horizontal stroke beneath it, everything else bare paper, single oxblood red accent on the seated shadow alone carries the red wash — the chair, the wedge, and the floor line all in black ink, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1480541820
+  },
+  "picatrix": {
+    "emblem": "an open manual with a vacant chair",
+    "composition": "a single open book, wide, centred low in the frame with vast empty space above it; behind the book, floating in that emptiness, a small empty throne drawn at a distance — the seat stated, never occupied; the book's pages fan slightly toward the chair",
+    "symbols": [
+      "an open double-page book seen from above, its pages marked only with dense ruled columns of faint parallel strokes suggesting text without any readable marks",
+      "a simple high-backed chair, empty, drawn small in the upper empty field directly above the book's spine",
+      "a single thin line rising from the book's spine to the chair's seat — the route that can be worked",
+      "around the book, a sparse ring of small geometric planetary marks reduced to pure shapes: circle, crescent, cross, dot-in-circle, crescent-with-dot — pure geometry, no letters"
+    ],
+    "accent": "the red wash fills the empty chair's seat only — the seat that is stated but never held",
+    "input_hash": "274e6081d075eacb",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, an open manual with a vacant chair, an open double-page book seen from above, its pages marked only with dense ruled columns of faint parallel strokes suggesting text without any readable marks, a simple high-backed chair, empty, drawn small in the upper empty field directly above the book's spine, a single thin line rising from the book's spine to the chair's seat — the route that can be worked, around the book, a sparse ring of small geometric planetary marks reduced to pure shapes: circle, crescent, cross, dot-in-circle, crescent-with-dot — pure geometry, no letters, a single open book, centred low in the frame with vast empty space above it; behind the book, floating in that emptiness, a small empty throne drawn at a distance — the seat stated, never occupied; the book's pages fan slightly toward the chair, single oxblood red accent on the red wash fills the empty chair's seat only — the seat that is stated but never held, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 848382939
+  },
+  "the-blood-of-the-earth": {
+    "emblem": "an oil derrick over an emptying basin",
+    "composition": "a tall narrow derrick stands at the frame's centre-left, its legs tapering upward to a single point; beneath it a wide shallow basin holds a falling liquid level; the right two-thirds of the frame left bare, the derrick leaning very slightly toward the empty side",
+    "symbols": [
+      "a lattice tower of crossed struts, drawn as pure geometry, no planks or machinery — a frame that is all frame",
+      "a single thick drop descending from the tower's point toward the basin",
+      "the basin as a low open vessel with a level line partway down its wall, clearly below the rim",
+      "the ground line drawn as one short horizontal stroke under the basin, cut away on both sides"
+    ],
+    "accent": "the single falling drop carries the red wash",
+    "input_hash": "6c2b75ca7477fb83",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, an oil derrick over an emptying basin, a lattice tower of crossed struts, drawn as pure geometry, no planks or machinery — a frame that is all frame, a single thick drop descending from the tower's point toward the basin, the basin as a low open vessel with a level line partway down its wall, clearly below the rim, the ground line drawn as one short horizontal stroke under the basin, cut away on both sides, a tall narrow derrick stands at the frame's centre-left, its legs tapering upward to a single point; beneath it a shallow basin holds a falling liquid level; the right two-thirds of the frame left bare, the derrick leaning very slightly toward the empty side, single oxblood red accent on the single falling drop carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2367329988
+  },
+  "black-abbot-white-magic": {
+    "emblem": "a codex hiding a codex",
+    "composition": "A single closed book shown obliquely at centre, small against wide empty paper, its fore-edge facing the viewer; the page area around it carries only a few faint radiating rule-lines, like a diagram's construction marks, concentrated on one side and fading into blankness on the other.",
+    "symbols": [
+      "a thick closed book drawn with a strong rectangular silhouette, corner clasps as simple geometric knobs",
+      "a cutaway in the front cover revealing a smaller second book nested inside, its own clasps closed — a solid dark mass within a dark mass",
+      "a seal of pure geometry on the larger book's cover: concentric circles with radial divisions, no marks, readable as structure only",
+      "a thread running from the small book's spine off the edge of the frame, terminating in a bare eyeless knot"
+    ],
+    "accent": "the small nested book's cover alone carries the red wash, the outer book remaining black ink",
+    "input_hash": "05733124c4805864",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a codex hiding a codex, a thick closed book drawn with a strong rectangular silhouette, corner clasps as simple geometric knobs, a cutaway in the front cover revealing a smaller second book nested inside, its own clasps closed — a solid dark mass within a dark mass, a seal of pure geometry on the larger book's cover: concentric circles with radial divisions, no marks, readable as structure only, a thread running from the small book's spine off the edge of the frame, terminating in a bare eyeless knot, A single closed book shown obliquely at centre, small against empty paper, its fore-edge facing the viewer; the page area around it carries only a few faint radiating rule-lines, like a diagram's construction marks, concentrated on one side and fading into blankness on the other., single oxblood red accent on the small nested book's cover alone carries the red wash, the outer book remaining black ink, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 1855059007
+  },
+  "proclus-theology-of-plato": {
+    "emblem": "a stepped hierarchy of descending circles",
+    "composition": "a single vertical column of concentric circles, small at top and widening downward, centred in the frame with wide empty paper to left and right; the column occupies the middle third, its base circle the heaviest mass",
+    "symbols": [
+      "top circle drawn as a plain ring, hollow, the lightest element in the column",
+      "each lower circle gaining one more inner ring than the one above, so the descent accumulates structure",
+      "a thin straight vertical line passing through every circle's centre from top edge to bottom, tying the stack into one figure",
+      "the lowest circle filled solid at its core, the only solid mass in the emblem"
+    ],
+    "accent": "the hollow topmost ring alone carries the red wash",
+    "input_hash": "4fab3935d9add752",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a stepped hierarchy of descending circles, top circle drawn as a plain ring, hollow, the lightest element in the column, each lower circle gaining one more inner ring than the one above, so the descent accumulates structure, a thin straight vertical line passing through every circle's centre from top edge to bottom, tying the stack into one figure, the lowest circle filled solid at its core, the only solid mass in the emblem, a single vertical column of concentric circles, small at top and widening downward, centred in the frame with empty paper to left and right; the column occupies the middle third, its base circle the heaviest mass, single oxblood red accent on the hollow topmost ring alone carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3665917896
+  },
+  "the-chaldean-oracles": {
+    "emblem": "a flower of pure fire",
+    "composition": "a single many-petalled blossom at the exact centre of a wide frame, rendered as geometry — concentric petal rings drawn as nested arcs around a small central disc, the stem a single straight vertical line dropping away below it, all empty paper around; the silhouette reads as flower first, flame second",
+    "symbols": [
+      "a central disc ringed by radiating petal-arcs in two or three nested tiers, the innermost tier reduced to pure triangular geometry",
+      "the petals' outer tips breaking into short ascending strokes, so the flower's outline flickers into flame without ceasing to be a flower",
+      "a single straight stem-line descending from the disc, widening slightly at the bottom into a flat base like a pedestal, cosmos rather than garden"
+    ],
+    "accent": "the central disc alone carries the red wash — the seat of mind",
+    "input_hash": "a125c736c6f444ac",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a flower of pure fire, a central disc ringed by radiating petal-arcs in two or three nested tiers, the innermost tier reduced to pure triangular geometry, the petals' outer tips breaking into short ascending strokes, so the flower's outline flickers into flame without ceasing to be a flower, a single straight stem-line descending from the disc, widening slightly at the bottom into a flat base like a pedestal, cosmos rather than garden, a single many-petalled blossom at the exact centre of a square frame, rendered as geometry — concentric petal rings drawn as nested arcs around a small central disc, the stem a single straight vertical line dropping away below it, all empty paper around; the silhouette reads as flower first, flame second, single oxblood red accent on the central disc alone carries the red wash — the seat of mind, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 552260421
+  },
+  "the-orphic-hymns": {
+    "emblem": "a offering bowl with rising smoke",
+    "composition": "a shallow bowl centred low in the wide frame, one unbroken column of smoke rising from its rim to the top edge, empty paper filling both sides equally",
+    "symbols": [
+      "a shallow round bowl with a heavy foot, seen slightly from above",
+      "a single tapering column of smoke rising straight, its edges swelling and narrowing once on the way up",
+      "a small solid mass of substance at the bowl's centre, drawn as a low dome"
+    ],
+    "accent": "the dome of burning substance at the bowl's centre carries the red wash",
+    "input_hash": "4171f8f13cc91b9f",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a offering bowl with rising smoke, a shallow round bowl with a heavy foot, seen slightly from above, a single tapering column of smoke rising straight, its edges swelling and narrowing once on the way up, a small solid mass of substance at the bowl's centre, drawn as a low dome, a shallow bowl centred low in the square frame, one unbroken column of smoke rising from its rim to the top edge, empty paper filling both sides equally, single oxblood red accent on the dome of burning substance at the bowl's centre carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3735907027
+  },
+  "proclus-elements-of-theology": {
+    "emblem": "a single tapering spiral",
+    "composition": "one unbroken spiral centred in the wide frame, drawn as a single continuous strand that starts wide at the top and winds inward, each turn tighter than the last, closing on a single small solid point at the centre; it is one line throughout and one silhouette, with wide empty paper left and right",
+    "symbols": [
+      "the spiral is a single continuous strand, never a series of separate rings",
+      "the outermost turn is drawn boldest, thinning as it winds inward",
+      "the innermost end of the strand meets a single small solid filled point at the centre"
+    ],
+    "accent": "the single solid point at the centre of the spiral carries the red wash",
+    "input_hash": "8fd04ac43a9a0e05",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a single tapering spiral, the spiral is a single continuous strand, never a series of separate rings, the outermost turn is drawn boldest, thinning as it winds inward, the innermost end of the strand meets a single small solid filled point at the centre, one unbroken spiral centred in the square frame, drawn as a single continuous strand that starts at the top and winds inward, each turn tighter than the last, closing on a single small solid point at the centre; it is one line throughout and one silhouette, with empty paper left and right, single oxblood red accent on the single solid point at the centre of the spiral carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 562433219
+  },
+  "anxiety-damping": {
+    "emblem": "a single dial, needle off-centre",
+    "composition": "one circular dial centred in the wide frame, drawn small enough that the circle's width is a third of the frame's height; large empty paper left and right; the dial's face carries only geometry — no numerals, no ticks that read as writing, just a few short radial marks",
+    "symbols": [
+      "a plain circle with a thin outer rim and a slightly heavier inner rim, so it reads as an instrument face rather than a ring",
+      "a single needle pivoting from the centre, swung well past vertical toward one side, held there",
+      "a short arc inside the rim on the far side from the needle, drawn heavier than the other marks — the region the needle cannot reach",
+      "a small pivot dot at the needle's base, the only filled mass in the figure"
+    ],
+    "accent": "the needle alone carries the red wash; rim, arc, and pivot dot stay in black ink",
+    "input_hash": "e4d840472f38c17b",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a single dial, needle off-centre, a plain circle with a thin outer rim and a slightly heavier inner rim, so it reads as an instrument face rather than a ring, a single needle pivoting from the centre, swung well past vertical toward one side, held there, a short arc inside the rim on the far side from the needle, drawn heavier than the other marks — the region the needle cannot reach, a small pivot dot at the needle's base, the only filled mass in the figure, one circular dial centred in the square frame, drawn small enough that the circle's width is a third of the frame's height; large empty paper left and right; the dial's face carries only geometry — no numerals, no ticks that read as writing, just a few short radial marks, single oxblood red accent on the needle alone carries the red wash; rim, arc, and pivot dot stay in black ink, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3527035252
+  },
+  "the-owned-cosmos": {
+    "emblem": "an occupied axial throne",
+    "composition": "a single enthroned figure seated at the base of a stepped pyramid, centred in a wide frame with vast empty paper left and right; the figure small against the mass above it, the pyramid narrowing to a point near the top of the frame",
+    "symbols": [
+      "a stepped pyramid of five courses, its apex left as an open point where a disc floats directly above",
+      "a single seated figure on a block throne at the pyramid's base centre, arms folded to the knees, rendered as solid silhouette",
+      "a narrow vertical channel running through the pyramid's centre courses, connecting the floating disc above the apex down to the figure's crown",
+      "a ring of small standing figures at the outer edges of the base, drawn as sparse thin strokes, facing inward toward the throne"
+    ],
+    "accent": "the central vertical channel from disc to crown carries the red wash",
+    "input_hash": "0d0684325dffcb1d",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, an occupied axial throne, a stepped pyramid of five courses, its apex left as an open point where a disc floats directly above, a single seated figure on a block throne at the pyramid's base centre, arms folded to the knees, rendered as solid silhouette, a narrow vertical channel running through the pyramid's centre courses, connecting the floating disc above the apex down to the figure's crown, a ring of small standing figures at the outer edges of the base, drawn as sparse thin strokes, facing inward toward the throne, a single enthroned figure seated at the base of a stepped pyramid, centred in a square frame with vast empty paper left and right; the figure small against the mass above it, the pyramid narrowing to a point near the top of the frame, single oxblood red accent on the central vertical channel from disc to crown carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 2156213484
+  },
+  "quareia": {
+    "emblem": "a gated stair, fourteen treads",
+    "composition": "a narrow stair rising left-to-right across the lower third of the frame, each tread a flat bar slightly narrower than the last, with a closed gate standing on the seventh tread; the upper two-thirds of the frame empty",
+    "symbols": [
+      "fourteen rectangular treads, drawn as solid bars in stepped perspective, shrinking with height",
+      "a simple two-panel gate on the middle tread, its latch drawn as a small geometric toggle",
+      "a single footprint-shape pressed into the third tread, rendered as a plain depressed outline",
+      "the topmost tread ends in open edge with no landing — the step simply stops"
+    ],
+    "accent": "the latch on the gate carries the red wash",
+    "input_hash": "c4c96b770195c80f",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a gated stair, fourteen treads, fourteen rectangular treads, drawn as solid bars in stepped perspective, shrinking with height, a simple two-panel gate on the middle tread, its latch drawn as a small geometric toggle, a single footprint-shape pressed into the third tread, rendered as a plain depressed outline, the topmost tread ends in open edge with no landing — the step simply stops, a narrow stair rising left-to-right across the lower third of the frame, each tread a flat bar slightly narrower than the last, with a closed gate standing on the seventh tread; the upper two-thirds of the frame empty, single oxblood red accent on the latch on the gate carries the red wash, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3788292691
+  },
+  "iamblichus-on-the-mysteries": {
+    "emblem": "a libation bowl pouring itself",
+    "composition": "a wide frame, mostly empty; the bowl sits slightly left of centre, tilted, its stream arcing down into a small pool at the lower right; the empty upper right holds nothing but the arc's memory",
+    "symbols": [
+      "a shallow two-handled offering bowl, seen from the side, tilted past balance so it must be pouring",
+      "the pour itself: one unbroken arc of liquid from lip to pool",
+      "two severed sleeve-cuffs floating at the frame's far edges, cuffs open and empty, the arms withdrawn — the performers subtracted, the act remaining",
+      "the pool beneath the arc, drawn as concentric rings, the ripple without a hand"
+    ],
+    "accent": "the poured arc alone carries the red wash — one unbroken thread from lip to pool",
+    "input_hash": "5f0b95c20e0c7972",
+    "model": "glm-5.3",
+    "prompt": "an occult emblem, ink drawing on aged bone paper, loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only, a libation bowl pouring itself, a shallow two-handled offering bowl, seen from the side, tilted past balance so it must be pouring, the pour itself: one unbroken arc of liquid from lip to pool, two severed sleeve-cuffs floating at the frame's far edges, cuffs open and empty, the arms withdrawn — the performers subtracted, the act remaining, the pool beneath the arc, drawn as concentric rings, the ripple without a hand, a square frame, mostly empty; the bowl sits slightly left of centre, tilted, its stream arcing down into a small pool at the lower right; the empty upper right holds nothing but the arc's memory, single oxblood red accent on the poured arc alone carries the red wash — one unbroken thread from lip to pool, centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion",
+    "seed": 3839499052
+  }
+}

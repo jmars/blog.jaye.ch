@@ -149,6 +149,11 @@ Two guards enforce the boundary, so it does not depend on anyone remembering:
       index.html                  the home page
       404.html                    the not-found page (served by Caddy's
                                   handle_errors with a real 404 status)
+      headers/<slug>.webp         the og:image card, one per post that has a
+                                  header render (the only non-page asset
+                                  dist/ carries; see "Header art" below)
+      headers/banner/<slug>.webp  the 1024x1024 banner, copied only for
+                                  HEADERS_INLINE=0 builds (see below)
       feed.xml / sitemap.xml / robots.txt
                                   discovery files, published posts only
 
@@ -225,6 +230,28 @@ mode (and therefore a toolchain-free clone) possible.
 To update the design fork: `git -C vendor/blog-design fetch && git -C
 vendor/blog-design checkout <ref>` (or `git submodule update --remote`), then
 rebuild in full mode and commit the new submodule pin + `design/blog.css`.
+
+## Header art — the one carve-out from the one-file rule
+
+Every page is one self-contained file: the design CSS, the command line, the
+figures — all inlined. The header emblems keep that property for the reader: the
+banner a post shows in its masthead is inlined as a `data:` URI (they run 54–
+238KB, averaging 139KB), so a page with its emblem is still one file making no
+external request.
+
+The og:image **cannot** be inlined — a social-card scraper fetches the image
+server-side, where a data URI is silently dropped and the card renders with no
+image at all. So each post's card is written to `dist/headers/<slug>.webp` (the
+1200×630 crop), and the og:image points at `${BASE}/headers/<slug>.webp` — the
+one non-page asset dist/ carries.
+
+A post whose header render doesn't exist yet (a newly added post) simply builds
+without one: no `<img>`, no og:image, `twitter:card` stays `summary`.
+
+`HEADERS_INLINE=0 node tools/build.mjs` links the banner instead
+(`headers/banner/<slug>.webp`, also copied) for a deployment that would rather
+not pay that weight per page — trading away the one-file property, which is why
+it is not the default. The source PNGs never ship.
 
 ## Pages
 

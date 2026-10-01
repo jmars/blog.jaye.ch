@@ -1,0 +1,86 @@
+{
+  "version": 4,
+  "name": "alchemical-gesture",
+  "_note": "The house style for post header emblems. Two hands hybridised: the fine stippled alchemical-engraving plate (Sabogal register) and the loose high-contrast brush-pen gesture (Shinkawa register). The palette is NOT invented — it is the site's own :root tokens from design/blog.css, so a header reads as part of the design system rather than as illustration bolted on.",
+  "palette": {
+    "_source": "design/blog.css :root",
+    "paper": {
+      "hex": "#fbfaf7",
+      "role": "aged bone paper — the ground"
+    },
+    "ink": {
+      "hex": "#1b1b1d",
+      "role": "black ink — all linework and mass"
+    },
+    "accent": {
+      "hex": "#a4262c",
+      "role": "oxblood red — exactly ONE wash per image"
+    }
+  },
+  "model": {
+    "checkpoint": "sd_xl_base_1.0.safetensors",
+    "family": "sdxl",
+    "_note": "SDXL rather than a Flux/Qwen-class model: those score higher on prompt-following and realism, but for a LOCKED hand across 58 plates a model with a more consistent native style is the right base, and SDXL carries the deepest ink/engraving-lineage LoRA ecosystem if the hand ever needs training to hold."
+  },
+  "render": {
+    "steps": 30,
+    "cfg": 6.5,
+    "sampler": "dpmpp_2m",
+    "scheduler": "karras"
+  },
+  "composition": {
+    "width": 1024,
+    "height": 1024,
+    "_ratio": "1:1, chosen by measurement, not by layout arithmetic. Measured with tools/headers/ar.py at a fixed seed: a wide 1536x640 frame makes SDXL fill the width with a ROW of objects (the-container came back as 2 vessels at 2.4:1, NINE at 1.75:1, and ONE flask at 1:1; the-same-move as two colonnades at 2.4:1 and one emblem at 1:1). The ONE-EMBLEM rule below is therefore incompatible with a wide canvas. The earlier 1536x640 was picked for the 732px masthead column and 2.1x retina BEFORE any render existed, and it was quietly costing about a third of the plates their composition. The frame is square; the PAGE presents it centred at less than full width.",
+    "rules": [
+      "ONE central emblem, read as a single plate or sigil — never a scene with figures in a landscape",
+      "heavy negative space: at least 40% of the frame is untouched paper",
+      "dense stippling and cross-hatching ONLY in the core of the emblem; edges dissolve into loose strokes",
+      "the emblem must survive being viewed at 240px wide — silhouette first, detail second"
+    ],
+    "seed": "derived per slug: first 8 hex digits of sha256(slug) as int, so a slug always renders the same frame",
+    "_presentation": "displayed centred in the masthead at 480px (2.13x retina from the 1024px source). A square plate with margins is also the grimoire register itself, so the layout consequence is the aesthetic."
+  },
+  "prompt": {
+    "prefix": "an occult emblem, ink drawing on aged bone paper,",
+    "style": "loose sumi-e brush pen sketch with bold dry-brush strokes and visible speed, heavy black ink masses, sharp angular silhouette, ragged brush edges, splatter and drips, large areas of untouched paper, extreme black and white contrast, unfinished and confident, with fine stippled cross-hatching worked densely into the core of the emblem only",
+    "suffix": "centred square plate composition, one emblem alone in the frame, generous empty paper all around, no border, no frame",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion"
+  },
+  "_negative_note": "`text, letters, glyphs, runes` are banned because diffusion models render lettering as convincing nonsense — a header that appears to carry an inscription it does not have is a lie on the page. Where a post needs a real glyph (a planetary sigil, a geometric figure), it is stated in the emblem brief as a SHAPE, or composited by hand afterwards. `engraving, etching, fine even linework, technical drawing` were added after a measured failure: the engraving half of the style is the DEFAULT attractor for this subject matter, so it needs suppressing positively, not just omitting — see ab.py and the note on `order` below.",
+  "_order_note": "The gestural clause is placed FIRST and the subject text is assembled WITHOUT medium vocabulary, because a 48-word style clause sitting at position 108 of 235 was losing to the subject text around it — the model obeys the most specific, most dominant signal, and the brief's own wording ('dense engraved line', 'engraved like a plate') pulled hard toward engraving. Measured in tools/headers/ab.py: hand-first + engraving stripped turned a purely technical plate into a clearly gestural one at the same seed. The two halves are ordered so the GESTURE sets the medium and the engraving lives only in the core.",
+  "subject_vocabulary": {
+    "_note": "Per-post emblem briefs draw on this vocabulary. It is deliberately hermetic: the blog's reading series is Proclus, the Chaldean Oracles, Picatrix, Geosophia, Quareia, Set and Setting, black-abbot-white-magic. The mechanism series (runaway, safeguards, the container, egregores) uses the same hand on a diagrammatically different subject — a vessel, a loop, a threshold.",
+    "hermetic": [
+      "seal",
+      "vessel",
+      "ladder",
+      "chain",
+      "circle squared",
+      "twin pillars",
+      "serpent coiled on a rod",
+      "eye set in a triangle",
+      "planetary glyph reduced to pure geometry",
+      "flask",
+      "athanor",
+      "geometric seal with inscribed polygon"
+    ],
+    "gestural": [
+      "a single figure reduced to three strokes",
+      "a hand, open",
+      "a hunched form",
+      "a knot of lines",
+      "a torc or ring unclosed",
+      "an arrow that devours its own tail"
+    ],
+    "structural": [
+      "a vessel that holds a rising column",
+      "a loop that tightens",
+      "a membrane with a pinprick leak",
+      "a threshold with one foot over it",
+      "a stack that has begun to lean",
+      "a field of small marks obeying one drifting attractor"
+    ]
+  },
+  "_negative_note_cross": "`cross, crucifix, christian cross, religious symbol, crucifixion` were added after a MEASURED failure across the first square batch. SDXL's strongest attractor for 'occult emblem, ink on aged bone paper' is a CROSS: briefs naming a suitcase, a folding chair, a two-pan balance, a card drawer and an hourglass all came back as a crucifix. An emblem is not a devotional object, so a cross here is a WRONG STATEMENT about the post, not merely a stray. Measured with tools/headers/ab-neg.sh (append the clause, hold the positive prompt and seed fixed): 4 of the 5 plates returned the briefed object ('the-breakthrough' -> the folding chair, 'the-differential' -> a two-pan balance, 'set-and-setting' -> a threshold, 'the-designed-method' -> lost the cross). The positive prompt alone never governed this: the phrasing 'no border, no frame' and the whole negative list suppress text and ornament but name nothing that competes with a cross."
+}

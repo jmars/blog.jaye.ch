@@ -47,7 +47,7 @@
  *                                   never deploy a preview build
  */
 
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync, copyFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -59,6 +59,12 @@ const CSS = join(ROOT, 'design', 'blog.css');
 const MANIFEST = join(ROOT, 'posts.json');
 const PANDOC = process.env.PANDOC || 'pandoc';
 const PREVIEW = process.env.PREVIEW === '1';
+// The default inlines the banner into the page (a page stays the one file the
+// README promises); HEADERS_INLINE=0 links it from dist/headers/ instead, for
+// deployments that would rather not pay ~150KB of base64 per page. One switch,
+// because a half-linked page — metadata pointing at a file the build did not
+// copy — would make every social card a broken image.
+const HEADERS_INLINE = process.env.HEADERS_INLINE !== '0';
 
 /** Canonical origin. Every absolute URL the build emits (og:url, canonical,
  * feed, sitemap, robots) is derived from this one constant. */
@@ -192,6 +198,14 @@ function nav(current, navPosts) {
     // only when the reader stored a choice.
     `<button class="theme-toggle" id="theme-toggle" type="button"` +
     ` aria-label="theme: auto — click for light" title="theme: auto — click for light">auto</button>` +
+    // The command line, surfaced. The palette has always been reachable by
+    // pressing "/", but nothing on the page said so — an affordance a reader has
+    // to be told about in a hint is one they mostly never find. This button is
+    // the same control with a handle: it opens the palette, and its title names
+    // the keystroke, so the shortcut is discoverable from the thing it opens.
+    `<button class="term-toggle palette-open" id="term-toggle" type="button"` +
+    ` aria-label="the command line — press / to open it" ` +
+    `title="the command line — press / to open it">&#8250;_</button>` +
     `</span></div></nav>`
   );
 }
@@ -245,8 +259,11 @@ function revealWords(html, start = 0) {
 /** Hero header: terminal prompt line, title, tagline.
  *
  * The title and tagline are word-wrapped for the masthead reveal; the prompt
- * line reveals as a whole (its caret keeps blinking on its own). */
-function hero({ prompt, title, tagline }) {
+ * line reveals as a whole (its caret keeps blinking on its own). `header` (see
+ * buildPost) carries the post's emblem, emitted after the tagline — the masthead
+ * reads top to bottom exactly as it does without one, and a post with no emblem
+ * builds markup identical to before. */
+function hero({ prompt, title, tagline, header }) {
   const t = revealWords(title);
   const g = revealWords(tagline, t.next);
   return (
@@ -257,6 +274,9 @@ function hero({ prompt, title, tagline }) {
     `</div>` +
     `<h1>${t.html}</h1>` +
     `<div class="tagline">${g.html}</div>` +
+    (header
+      ? `<img class="header-art" src="${header.src}" alt="${esc(header.alt)}" width="1024" height="1024" decoding="async">`
+      : '') +
     `</div></header>`
   );
 }
@@ -332,7 +352,7 @@ const DARK_DECLS = (root) => {
   ${w} .note { background: #2e2120; color: #f0b6b0; }
   ${w} .warn { background: #2b2619; border-left-color: #c79a3c; color: #e8cd93; }
   ${w} .palette { background: rgba(0, 0, 0, 0.55); }
-  ${w} .sres .sr-s mark { background: rgba(232, 139, 134, 0.42); }
+  ${w} .sres .sr-s mark, ${w} .sres .sr-t mark { background: rgba(232, 139, 134, 0.42); }
 `;
 };
 
@@ -385,6 +405,37 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
   }
 }
 
+/* ---------- the masthead emblem ----------
+   Emitted by hero() when the post has a header render. width/height are on the
+   <img> itself (1024x1024, the render's true aspect), which is what reserves the
+   layout box before the image decodes — without them the masthead reflows once
+   the bytes land, on every visit. The height auto here does not undo that: the
+   attribute pair sets the box's ASPECT RATIO, auto only stops the width from
+   distorting it. The plate is square and centred, not a full-bleed strip: at
+   the old 2.4:1 canvas SDXL filled the width with a ROW of objects, measurably
+   defeating style.json's one-emblem composition (tools/headers/ar.py) — the
+   render moved to 1024x1024, so the frame here follows it. display:block keeps
+   the baseline's stray descender gap out; the margin stays well under the
+   section gap (56px): the hero's own bottom padding (48px) adds to it before
+   the border, so a hero-sized margin would open a hole between the emblem and
+   the title above it. auto side margins centre the 480px plate in .wrap's 732px
+   column; 480 against the 1024 source is 2.13x at DPR 2. */
+.header-art {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  margin: 26px auto 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+/* The 620px wrap already carries 24px side padding; width:100% under the
+   480px cap already shrinks with the column, so there is nothing to reflow —
+   this only relaxes the frame's corner radius the way the cards do. */
+@media (max-width: 620px) {
+  .header-art { border-radius: 8px; }
+}
+
 /* ---------- nav disclosure: keyboard operable, honest state ----------
    nav() emits <span class="dropdown"> (see its comment). The design package
    opens .menu on :hover alone, and .menu is display:none until then — a
@@ -415,6 +466,17 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 }
 .theme-toggle:hover { color: var(--fg); border-color: var(--dim); }
 .theme-toggle:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
+
+/* The command line's handle — the same control as /. Sized and styled like the
+   theme toggle beside it so the nav's two controls read as one pair. */
+.term-toggle {
+  font-family: var(--mono); font-size: 12px; line-height: 1.2;
+  color: var(--dim); background: none; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px;
+  letter-spacing: 0.04em;
+}
+.term-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.term-toggle:focus-visible { outline: 2px solid var(--accent2); outline-offset: 2px; }
 
 /* ---------- contents (long posts) ----------
    Built by toc() from the rendered body's own <h2 id> headings, so every link
@@ -448,6 +510,12 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 .postnav a:hover { color: var(--accent); }
 .postnav .dir { display: block; font-size: 12px; color: var(--dim); }
 .postnav .t { display: block; margin-top: 3px; }
+/* The way into the search from inside a series: a small line after the series
+   nav, not a second navigation. It is the series facet the search page already
+   carries, offered where the reader already is. */
+.series-search { margin: 14px 0 0; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.series-search a { color: var(--accent2); }
+.series-search a:hover { color: var(--accent); }
 
 /* ---------- timeline (the "what's new" page) ----------
    One row per day: the date in a fixed mono column, the day's pieces beside it.
@@ -570,6 +638,7 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
    throughout, so dark mode inherits; the one literal is the mark, whose dark
    value is declared in DARK_DECLS beside this. */
 .sform { margin: 1.5rem 0 0; }
+.sq-wrap { position: relative; }
 .srow { display: flex; align-items: center; gap: 10px; padding: 8px 12px;
   border: 1px solid var(--line); background: var(--bg2); border-radius: 3px; font-family: var(--mono); }
 .srow:focus-within { border-color: var(--accent); }
@@ -580,22 +649,41 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
   font-family: var(--mono); font-size: 12px; color: var(--dim); }
 .sfacet select { font: inherit; font-family: var(--mono); color: var(--fg); background: var(--bg2);
   border: 1px solid var(--line); border-radius: 3px; padding: 3px 6px; }
+/* The words that begin with what is being typed. It hangs under the box rather
+   than pushing the facets down, and it carries its own bound: the note at its
+   foot is where the cap is reported, so a stopped list never reads as a short
+   one. Tokens throughout, so dark mode inherits. */
+.scomp { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 30;
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 3px;
+  max-height: 15rem; overflow: auto; }
+.scomp-list { list-style: none; margin: 0; padding: 4px 0; }
+.scomp-list .sc { padding: 4px 12px; font-family: var(--mono); font-size: 13px; color: var(--dim); cursor: pointer; }
+.scomp-list .sc-on { background: rgba(138, 180, 248, 0.16); color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.scomp-cap { padding: 5px 12px; border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: 11px; color: var(--dim); }
 .sstatus { min-height: 1.2em; margin: 16px 0 4px; font-family: var(--mono); font-size: 12px; color: var(--dim); }
 .sres { list-style: none; margin: 0; padding: 0; }
 .sres .sr { padding: 14px 0; border-top: 1px solid var(--line); }
+/* The result the arrow keys are on: a rule drawn INSIDE the row's left edge —
+   a change of shape, not only of colour, and nothing shifts as the selection
+   moves — with the title taking the accent. */
+.sres .sr-on { box-shadow: inset 3px 0 0 var(--accent); }
+.sres .sr-on .sr-t { color: var(--accent); }
 .sres .sr-t { font-family: var(--mono); font-size: 15px; color: var(--accent2); }
 .sres .sr-t:hover { color: var(--accent); }
 .sres .sr-m { margin: 3px 0 7px; font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
 .sres .sr-sc { float: right; }
 .sres .sr-s { font-family: var(--serif); font-size: 15.5px; line-height: 1.5; }
-.sres .sr-s mark { background: rgba(164, 38, 44, 0.16); color: var(--accent); padding: 0 1px; border-radius: 2px; }
+.sres .sr-s mark, .sres .sr-t mark { background: rgba(164, 38, 44, 0.16); color: var(--accent); padding: 0 1px; border-radius: 2px; }
 .sres .sr-w { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 9px 0 0; padding: 0; }
 .sres .sr-w li { padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px;
   background: var(--bg2); font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
 .sres .sr-none, .sres .sr-hint { padding: 14px 0; font-family: var(--serif); color: var(--dim); }
-.sres .sr-go { font: inherit; font-family: var(--mono); font-size: 12px; color: var(--accent2);
+/* the offer button is styled where it lands as well as in the list: the
+   "did you mean" one is in the status line above the results, not in .sres */
+.sres .sr-go, .sstatus .sr-go { font: inherit; font-family: var(--mono); font-size: 12px; color: var(--accent2);
   background: none; border: 1px solid var(--line); border-radius: 3px; padding: 2px 8px; cursor: pointer; }
-.sres .sr-go:hover { color: var(--accent); border-color: var(--accent); }
+.sres .sr-go:hover, .sstatus .sr-go:hover { color: var(--accent); border-color: var(--accent); }
 .s-noscript { font-family: var(--serif); color: var(--dim); }
 @media (max-width: 560px) { .sres .sr-sc { float: none; margin-left: 8px; } }
 
@@ -719,10 +807,10 @@ function vizAssets(body) {
  * reading position. */
 const DOSE = `<div class="dose" aria-hidden="true"><span class="dose-fill"></span><span class="dose-mark"></span><span class="dose-label">Θ_eff</span></div>`;
 
-/**
- * The command line, in the site's own terminal idiom: press `/` or `:` for a
+/** The command line, in the site's own terminal idiom: press `/` or `:` for a
  * prompt that can list, search and open the blog (`ls`, `cat <slug>`,
- * `open <series>`, `home`).
+ * `open <series>`, `search <words>`), print a page's address (`url`), read about
+ * a command (`man`) and drive the theme (`theme`).
  *
  * The page list is embedded in the page, not fetched: the palette must never
  * make a request, and it is built from navPosts — the same published-only list
@@ -730,8 +818,26 @@ const DOSE = `<div class="dose" aria-hidden="true"><span class="dose-fill"></spa
  * deployable page.
  *
  * The script is deliberately small and defensive: it is now on every page, so
- * anything that is not there yet (no palette markup, no button) has to be
- * tolerated rather than throw.
+ * anything that is not there yet (no palette markup, no button, no theme
+ * control) has to be tolerated rather than throw.
+ *
+ * ONE TABLE drives the three places a command is described. CMDS holds, per
+ * command: `n` the name, `u` the usage line, `a` its aliases (comma-separated,
+ * also completing as commands of their own), `d` the one line the help index
+ * prints, `k` the kind of argument it takes — 'slug' (pages and series keys),
+ * 'page' (pages only), 'series' (keys only), 'query' (a search: NEVER completed
+ * to a page), 'mode' (the theme modes), 'command' (a command name) or '' (no
+ * argument) — and `m` the manual paragraph. `help` is generated from it, `man`
+ * reads it, and the live filter and Tab completion both take their candidates
+ * from `k`, so the three cannot drift; the examples `man` prints are in EX, and
+ * the ones that name a page or a series are read from the page's own data.
+ *
+ * The keyboard: Enter runs the line; Up/Down walk this session's history (kept
+ * in sessionStorage — per tab, and gone with it); Tab completes the word at the
+ * cursor against the commands, the slugs and the series keys, listing an
+ * ambiguous set and then cycling it, the other way on Shift+Tab; a bare number
+ * opens that line of the last listing. `/` opens the palette as a search prompt,
+ * `:` as an empty command line, with the prompt glyph saying which.
  */
 const PALETTE_JS = (data) => `(function () {
   'use strict';
@@ -742,14 +848,19 @@ const PALETTE_JS = (data) => `(function () {
   if (!box) return;
   var input = box.querySelector('input');
   var out = box.querySelector('.palette-out');
+  var glyph = box.querySelector('.ps-mode');
   var prev = null;
+  var listed = [];
+  var tab = null;
+  var HIST_KEY = 'palette-history', HIST_MAX = 50, hist = [], hi = -1, stash = '';
 
   function show(text) { out.textContent = text; }
+  function pad(s, n) { while (s.length < n) s += ' '; return s; }
+  function starts(s, w) { return !w || s.indexOf(w) === 0; }
   function seriesLabel(key) {
     for (var i = 0; i < SERIES.length; i++) if (SERIES[i].key === key) return SERIES[i].label;
     return key;
   }
-  function pad(s, n) { while (s.length < n) s += ' '; return s; }
   function pageFor(slug) {
     for (var i = 0; i < PAGES.length; i++) if (PAGES[i].slug === slug) return PAGES[i];
     return null;
@@ -772,36 +883,226 @@ const PALETTE_JS = (data) => `(function () {
     for (var i = 0; i < PAGES.length; i++) if (PAGES[i].series === key) return PAGES[i];
     return null;
   }
+  var CMDS = [
+    { n: 'ls', u: 'ls [series]', a: 'll, dir', d: 'the published posts, in nav order', k: 'series',
+      m: 'the published posts, in nav order, grouped by series.' },
+    { n: 'cat', u: 'cat <slug>', a: 'open, less, cd', d: 'open a post', k: 'slug',
+      m: 'a page by slug, or the first page of a series. a slug that matches nothing offers the nearest one.' },
+    { n: 'series', u: 'series <key>', a: '', d: 'list one series', k: 'series',
+      m: 'one series, in nav order, by its key.' },
+    { n: 'search', u: 'search <words>', a: 'find, grep, rg', d: 'search every piece', k: 'query',
+      m: 'every published piece, at the search page, for those words.' },
+    { n: 'map', u: 'map', a: 'netstat', d: 'the map', k: '',
+      m: 'the map of the whole collection.' },
+    { n: 'home', u: 'home', a: 'start-here', d: 'the front page', k: '',
+      m: 'the front page.' },
+    { n: 'url', u: 'url [slug]', a: '', d: 'a page address on the web', k: 'page',
+      m: 'the absolute address of a page, read from the canonical link of the page you are on.' },
+    { n: 'theme', u: 'theme <mode>', a: '', d: 'dark, light or auto', k: 'mode',
+      m: 'dark, light, or auto to follow the system; the control the nav button drives.' },
+    { n: 'man', u: 'man <command>', a: '', d: 'one command, in more detail', k: 'command',
+      m: 'the manual for a command: what it does, its aliases, and an example.' },
+    { n: 'help', u: 'help', a: '?', d: 'this list', k: '',
+      m: 'this list of commands, with their aliases.' }
+  ];
+  var COMMANDS = {}, allNames = [];
+  for (var ci = 0; ci < CMDS.length; ci++) {
+    CMDS[ci].names = [CMDS[ci].n].concat(CMDS[ci].a ? CMDS[ci].a.split(', ') : []);
+    for (var ni = 0; ni < CMDS[ci].names.length; ni++) {
+      var nm = CMDS[ci].names[ni];
+      if (nm && !COMMANDS[nm]) { COMMANDS[nm] = 1; allNames.push(nm); }
+    }
+  }
+  function cmdEntry(name) {
+    for (var i = 0; i < CMDS.length; i++) if (CMDS[i].names.indexOf(name) >= 0) return CMDS[i];
+    return null;
+  }
+  var firstSeries = SERIES.length ? SERIES[0].key : '';
+  var EX = {
+    ls: ('ls ' + firstSeries).trim(),
+    cat: 'cat ' + PAGES[0].slug,
+    series: ('series ' + firstSeries).trim(),
+    search: ('search ' + firstSeries).trim(),
+    url: 'url ' + PAGES[0].slug,
+    theme: 'theme dark',
+    man: 'man cat'
+  };
+  /* The slug column, from the page list itself: the four longest slugs here run
+   * past 26 characters, and a title set flush against them is one word. */
+  var SLUG_W = (function () {
+    var n = 24;
+    for (var i = 0; i < PAGES.length; i++) if (PAGES[i].slug.length > n) n = PAGES[i].slug.length;
+    return n + 2;
+  })();
+  var HELP = (function () {
+    var lines = [];
+    for (var i = 0; i < CMDS.length; i++) {
+      var c = CMDS[i], line = pad(c.u, 16) + c.d;
+      if (c.a) line = pad(line, 44) + '  (also: ' + c.a + ')';
+      lines.push(line);
+    }
+    lines.push('');
+    lines.push('options are ignored, so the command a page prints works as printed.');
+    lines.push('tab completes a word; a bare number opens that line of the last ls.');
+    return lines.join('\\n');
+  })();
   function listing(filter) {
     var lines = [], last = null, hit = 0;
+    listed = [];
     for (var i = 0; i < PAGES.length; i++) {
       var p = PAGES[i];
       if (filter && p.series !== filter) continue;
       hit++;
       if (p.series !== last) { lines.push(p.series ? seriesLabel(p.series) : 'unfiled'); last = p.series; }
-      lines.push('  ' + pad(p.slug, 26) + p.title);
+      lines.push('  ' + pad(p.slug, SLUG_W) + p.title);
+      listed.push(p.slug);
     }
     return hit ? lines.join('\\n') : 'ls: ' + filter + ': no such series';
   }
   function go(slug) { window.location.href = '/' + slug + '/'; }
   function goHome() { window.location.href = '/'; }
   function goSearch(q) { window.location.href = '/search/' + (q ? '?q=' + encodeURIComponent(q) : ''); }
+  function goMap() { window.location.href = '/map/'; }
+  /** The commands the pages themselves display, made to RUN as shown.
+   *
+   * Every page's masthead prints a command (cat <slug>.md, ls -lt, netstat -a,
+   * grep -r). Typed into this box those used to fail or mislead: the palette wanted
+   * the bare slug, not <slug>.md, and it read "-lt"/"-r" as an argument, so ls -lt
+   * answered "no such series" and grep -r searched for the literal string "-r".
+   * A command line that prints a command that does not work is worse than no command
+   * line, so the argument is normalised here instead of the prompts being changed. */
+  function normalizeArg(a) {
+    var out = [];
+    var parts = (a || '').split(/\\s+/);
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      if (!p) continue;
+      if (p.charAt(0) === '-') continue;
+      out.push(p);
+    }
+    var s = out.join(' ');
+    s = s.replace(/\\.md$/, '');
+    var quote = s.match(/^["'](.*)["']$/);
+    if (quote) s = quote[1];
+    return s;
+  }
+  function goNumber(n) {
+    if (!listed.length) return show('sh: ' + n + ': no listing on screen — run ls first');
+    var i = parseInt(n, 10);
+    if (i < 1 || i > listed.length) return show('sh: ' + n + ': the listing has ' + listed.length + ' line(s)');
+    return go(listed[i - 1]);
+  }
+  function themeCmd(m) {
+    if (m !== 'dark' && m !== 'light' && m !== 'auto') {
+      return show('theme: ' + (m || 'which mode?') + ' — try: theme dark, theme light, theme auto');
+    }
+    if (typeof window.setTheme !== 'function') return show('theme: this page carries no theme control');
+    window.setTheme(m);
+    return show('theme: ' + m);
+  }
+  function siteBase() {
+    var l = document.querySelector('link[rel="canonical"]');
+    var href = l ? l.getAttribute('href') : '';
+    var m = href ? String(href).match(/^[a-z][a-z0-9+.-]*:\\/\\/[^\\/]+/i) : null;
+    return m ? m[0] : window.location.origin;
+  }
+  function currentSlug() {
+    var m = String(window.location.pathname).match(/\\/([a-z0-9-]+)\\/?$/i);
+    return m && pageFor(m[1]) ? m[1] : '';
+  }
+  function urlLine(arg) {
+    var s = arg || currentSlug();
+    if (!s) return 'url: which page? give its slug, as in ' + EX.url;
+    var p = pageFor(s);
+    if (p) return siteBase() + '/' + p.slug + '/';
+    var near = nearSlug(s);
+    return 'url: no page "' + s + '"' + (near ? ' — did you mean ' + near.slug + '?' : '');
+  }
+  /** Levenshtein distance between two short strings, the whole matrix kept in
+   * two rows. The page list is small, so this is the honest way to answer "did
+   * you mean" without the search page's index (which this box must not fetch). */
+  function editDistance(a, b) {
+    var row = [], i, j;
+    for (j = 0; j <= b.length; j++) row[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      var next = [i];
+      for (j = 1; j <= b.length; j++) {
+        next[j] = Math.min(row[j] + 1, next[j - 1] + 1, row[j - 1] + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+      }
+      row = next;
+    }
+    return row[b.length];
+  }
+  function limit(n) { return Math.max(1, Math.floor(n / 3)); }
+  /** The nearest slug to a mistyped one, or null when nothing is near.
+   *
+   * Distance is measured against the SLUG'S OWN PREFIXES of about the typed
+   * length, not the whole slug: a reader who types a page's first word
+   * ("proculs") is one edit from the slug's opening ("proclus"), and twenty from
+   * its tail. The bound grows with the word, so a short typo has to be close. */
+  function nearSlug(q) {
+    if (!q || q.length < 3) return null;
+    var best = null, bestD = 1 / 0;
+    for (var i = 0; i < PAGES.length; i++) {
+      var s = PAGES[i].slug, d = 1 / 0;
+      var hi = Math.min(s.length, q.length + 2);
+      for (var k = Math.max(1, q.length - 2); k <= hi; k++) {
+        var t = editDistance(q, s.slice(0, k));
+        if (t < d) d = t;
+      }
+      if (d < bestD) { bestD = d; best = PAGES[i]; }
+    }
+    return bestD <= limit(q.length) ? best : null;
+  }
+  function nearName(q) {
+    if (!q || q.length < 3) return null;
+    var best = null, bestD = 1 / 0;
+    for (var i = 0; i < allNames.length; i++) {
+      var d = editDistance(q, allNames[i]);
+      if (d < bestD) { bestD = d; best = allNames[i]; }
+    }
+    return bestD <= limit(q.length) ? best : null;
+  }
+  function manPage(a) {
+    if (!a) return 'man: which command?\\n' + HELP;
+    var c = cmdEntry(a);
+    if (!c) {
+      var near = nearName(a);
+      return 'man: no manual for "' + a + '"' + (near ? ' — did you mean ' + near + '?' : '') + '\\n' + HELP;
+    }
+    return c.u + '\\n  ' + c.m + '\\n  aliases: ' + (c.a || 'none') + '\\n  example: ' + (EX[c.n] || c.u);
+  }
   function run(line) {
     var parts = line.split(/\\s+/);
     var cmd = parts[0].toLowerCase();
-    var arg = parts.slice(1).join(' ').toLowerCase();
+    var raw = parts.slice(1).join(' ').toLowerCase();
+    var arg = normalizeArg(raw);
+    if (/^[0-9]+$/.test(cmd)) return goNumber(cmd);
     if (cmd === 'help' || cmd === '?') return show(HELP);
-    if (cmd === 'ls') return show(listing(arg ? seriesKey(arg) || arg : null));
-    if (cmd === 'home' || (cmd === 'cd' && !arg)) return goHome();
+    if (cmd === 'ls' || cmd === 'll' || cmd === 'dir') return show(listing(arg ? seriesKey(arg) || arg : null));
+    if (cmd === 'home' || cmd === 'start-here' || (cmd === 'cd' && !arg)) return goHome();
+    if (cmd === 'map' || cmd === 'netstat') return goMap();
     if (cmd === 'series') return show(listing(seriesKey(arg)));
-    if (cmd === 'search' || cmd === 'grep' || cmd === 'find') return goSearch(arg);
-    if (cmd === 'cat' || cmd === 'open' || cmd === 'cd') {
+    if (cmd === 'search' || cmd === 'grep' || cmd === 'find' || cmd === 'rg') return goSearch(arg);
+    if (cmd === 'theme') return themeCmd(arg);
+    if (cmd === 'url') return show(urlLine(arg));
+    if (cmd === 'man') return show(manPage(arg));
+    if (cmd === 'cat' || cmd === 'open' || cmd === 'cd' || cmd === 'less') {
+      // the front page is not a post, so the command its own masthead prints
+      // (cat start-here.md) has to resolve to it explicitly
+      if (arg === 'start-here' || arg === 'index' || arg === '') return goHome();
       var key = arg ? seriesKey(arg) : null;
       var hit = find(arg);
       if (hit) return go(hit.slug);
       if (key) {
         var first = firstIn(key);
         return first ? go(first.slug) : show('open: ' + arg + ': nothing published yet');
+      }
+      var near = nearSlug(arg);
+      if (near) {
+        input.value = cmd + ' ' + near.slug;
+        return show(cmd + ': no page "' + arg + '" — did you mean ' + near.slug +
+          '?\\nthe line is ready: press Enter to open it.');
       }
       return show(cmd + ': ' + (arg || '') + ': no such post. try ls');
     }
@@ -814,22 +1115,216 @@ const PALETTE_JS = (data) => `(function () {
     if (line.indexOf(' ') > 0) return goSearch(line);
     return show('sh: ' + cmd + ': command not found. try help');
   }
-  var HELP = [
-    'ls [series]     the published posts, in nav order',
-    'cat <slug>      open a post        (also: open, cd)',
-    'open <series>   the first post in a series',
-    'series <key>    list one series    (' + SERIES.map(function (s) { return s.key; }).join(', ') + ')',
-    'search <words>  search every piece (also: find, grep)',
-    'home            the front page',
-    'help            this list',
-  ].join('\\n');
-
-  function open() {
+  /* What a line typed here WOULD do, shown before Enter, for the lines that are
+   * searches. The command line carries no word index and must not fetch one, so
+   * the preview is what it can honestly answer without: the pages whose TITLE or
+   * SERIES the query's words appear in. That is a real subset of the search and
+   * a small one, and the line under it says which one it is, so a title match is
+   * never read as the whole answer. Enter still opens the search over every
+   * piece, exactly as it did before. */
+  function searchLine(line) {
+    var parts = line.split(/\\s+/);
+    var cmd = parts[0].toLowerCase();
+    if (cmd === 'search' || cmd === 'grep' || cmd === 'find' || cmd === 'rg') return parts.slice(1).join(' ');
+    if (parts.length > 1 && !COMMANDS[cmd] && !pageFor(cmd)) return line;
+    return null;
+  }
+  function previewHits(q) {
+    var words = (q.toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter(
+      function (w) { return w.length >= 3; });
+    if (!words.length) return [];
+    var hits = [];
+    for (var i = 0; i < PAGES.length; i++) {
+      var p = PAGES[i];
+      var hay = p.title.toLowerCase() + ' ' + (seriesLabel(p.series) || '') + ' ' + (p.series || '') + ' ' + (p.kind || '');
+      var n = 0;
+      for (var j = 0; j < words.length; j++) if (hay.indexOf(words[j]) >= 0) n++;
+      if (n) hits.push([p, n]);
+    }
+    hits.sort(function (a, b) { return b[1] - a[1]; });
+    return hits;
+  }
+  function showSearchPreview(line) {
+    var q = searchLine(line);
+    if (q === null) return false;
+    if (!q) { show('search: type the words, then Enter searches every piece.'); return true; }
+    var hits = previewHits(q);
+    if (!hits.length) {
+      show('no page title or series matches that here — Enter searches every piece.');
+      return true;
+    }
+    var lines = ['titles and series that match' + (hits.length > 3 ? ' (3 of ' + hits.length + ')' : '') + ':'];
+    for (var i = 0; i < hits.length && i < 3; i++) {
+      var p = hits[i][0];
+      lines.push('  ' + pad(p.slug, SLUG_W) + p.title + (p.series ? ' — ' + seriesLabel(p.series) : ''));
+    }
+    lines.push('Enter searches every piece; this line only matches the titles and series above.');
+    show(lines.join('\\n'));
+    return true;
+  }
+  /** The word being completed: the text after the last space, so the completion
+   * always replaces one word and never the line. */
+  function lastWord(v) {
+    var i = v.length;
+    while (i > 0 && !/\\s/.test(v.charAt(i - 1))) i--;
+    return { start: i, text: v.slice(i) };
+  }
+  function cmdLabel(name) { var c = cmdEntry(name); return pad(name, 14) + (c ? c.d : ''); }
+  function pageLabel(s) { var p = pageFor(s); return pad(s, SLUG_W) + (p ? p.title : seriesLabel(s)); }
+  /** What a Tab here could complete to, grouped for display: the command word
+   * (commands, then pages and series), or — once a command that takes one has
+   * been typed — its argument. A search argument has no candidates at all: it is
+   * a query, and completing it to a page is exactly the wrong answer. */
+  function candidates(line) {
+    var lw = lastWord(line);
+    var head = line.slice(0, lw.start);
+    var word = lw.text;
+    var before = head.trim();
+    var groups = [], i;
+    if (!before) {
+      var cs = [], ps = [], ss = [];
+      for (i = 0; i < allNames.length; i++) if (starts(allNames[i], word)) cs.push(allNames[i]);
+      for (i = 0; i < PAGES.length; i++) if (starts(PAGES[i].slug, word)) ps.push(PAGES[i].slug);
+      for (i = 0; i < SERIES.length; i++) if (starts(SERIES[i].key, word)) ss.push(SERIES[i].key);
+      if (cs.length) groups.push({ t: 'commands', items: cs, f: cmdLabel });
+      if (ps.length || ss.length) groups.push({ t: 'pages', items: ps.concat(ss), f: pageLabel });
+      return { head: head, word: word, kind: 'command', groups: groups };
+    }
+    var entry = cmdEntry(before.split(/\\s+/)[0].toLowerCase());
+    var kind = entry ? entry.k : '';
+    if (!kind) return null;
+    if (kind === 'query') return { head: head, word: word, query: true, groups: [] };
+    var items = [], p;
+    if (kind === 'mode') items = ['auto', 'light', 'dark'];
+    else if (kind === 'command') items = allNames.slice();
+    else if (kind === 'series') items = SERIES.map(function (s) { return s.key; });
+    else if (kind === 'page') items = PAGES.map(function (x) { return x.slug; });
+    else items = SERIES.map(function (s) { return s.key; }).concat(PAGES.map(function (x) { return x.slug; }));
+    var hit = [];
+    for (i = 0; i < items.length; i++) if (starts(items[i], word)) hit.push(items[i]);
+    var f = kind === 'mode' ? function (m) { return m; } : (kind === 'command' ? cmdLabel : pageLabel);
+    var title = { mode: 'modes', command: 'commands', series: 'series' }[kind] || 'pages';
+    groups.push({ t: title, items: hit, f: f });
+    return { head: head, word: word, kind: kind, groups: groups };
+  }
+  /** The candidate groups as bounded text: the cap is stated, so a stopped list
+   * is never read as a short one. */
+  function groupLines(c, cap) {
+    var lines = [];
+    for (var g = 0; g < c.groups.length; g++) {
+      var items = c.groups[g].items;
+      lines.push(c.groups[g].t + ' (' + items.length + (items.length > cap ? ', first ' + cap : '') + '):');
+      for (var i = 0; i < items.length && i < cap; i++) lines.push('  ' + c.groups[g].f(items[i]));
+      if (items.length > cap) lines.push('  — ' + (items.length - cap) + ' more; keep typing.');
+    }
+    return lines;
+  }
+  function commonPrefix(list) {
+    var p = list[0];
+    for (var i = 1; i < list.length && p; i++) {
+      var s = list[i], j = 0;
+      while (j < p.length && j < s.length && p.charAt(j) === s.charAt(j)) j++;
+      p = p.slice(0, j);
+    }
+    return p;
+  }
+  /** Tab. A unique match completes outright; several complete to their longest
+   * common prefix and are listed; pressing Tab again cycles through them in the
+   * input, Shift+Tab the other way, as a readline prompt does. */
+  function doTab(back) {
+    // A continuation is the line EXACTLY as the last Tab left it: the word then
+    // equals a whole candidate, and recomputing the candidates from it would
+    // find that one candidate alone and stop cycling.
+    if (!tab || tab.set !== input.value) {
+      var c = candidates(input.value);
+      if (!c || !c.word) return;
+      if (c.query) return show('search takes words, not a page — there is nothing to complete.');
+      var flat = [];
+      for (var g = 0; g < c.groups.length; g++) flat = flat.concat(c.groups[g].items);
+      if (!flat.length) return show('nothing here starts with "' + c.word + '"');
+      tab = { head: c.head, list: flat, i: -1, listed: false, set: input.value, lines: groupLines(c, 12) };
+    }
+    if (!tab.listed) {
+      tab.listed = true;
+      if (tab.list.length === 1) {
+        var one = tab.list[0];
+        input.value = tab.head + one + (tab.head === '' && COMMANDS[one] ? ' ' : '');
+        tab = null;
+        return show('completed: ' + one);
+      }
+      input.value = tab.head + commonPrefix(tab.list);
+      tab.set = input.value;
+      return show(tab.lines.join('\\n'));
+    }
+    tab.i = back ? (tab.i <= 0 ? tab.list.length - 1 : tab.i - 1) : (tab.i + 1) % tab.list.length;
+    input.value = tab.head + tab.list[tab.i];
+    tab.set = input.value;
+    var lines = tab.lines.slice();
+    lines.push('tab cycles: ' + (tab.i + 1) + ' of ' + tab.list.length + '.');
+    show(lines.join('\\n'));
+  }
+  /** What the line could still become, shown as it is typed — the command word
+   * until the first space, its argument after that. Bounded and in the page
+   * order, so the list never reorders under the reader. */
+  function showCompletion(line) {
+    var c = candidates(line);
+    if (!c || c.query) return false;
+    if (!c.groups.length) { show('nothing here starts with "' + c.word + '" — try help'); return true; }
+    var lines = groupLines(c, 8);
+    if (c.kind === 'command') lines.push('tab completes the word; Enter runs the line.');
+    show(lines.join('\\n'));
+    return true;
+  }
+  function readHist() {
+    try {
+      var raw = sessionStorage.getItem(HIST_KEY);
+      var a = raw ? JSON.parse(raw) : [];
+      return a && a.length ? a.slice(-HIST_MAX) : [];
+    } catch (e) { return []; }
+  }
+  function saveHist() {
+    try { sessionStorage.setItem(HIST_KEY, JSON.stringify(hist.slice(-HIST_MAX))); } catch (e) {}
+  }
+  function remember(line) {
+    hist.push(line);
+    while (hist.length > HIST_MAX) hist.shift();
+    hi = -1;
+    stash = '';
+    saveHist();
+  }
+  function histMove(back) {
+    if (!hist.length) return false;
+    if (back) {
+      if (hi === -1) { stash = input.value; hi = hist.length; }
+      if (hi > 0) hi--;
+      input.value = hist[hi];
+      return true;
+    }
+    if (hi === -1) return false;
+    hi++;
+    if (hi >= hist.length) { hi = -1; input.value = stash; }
+    else input.value = hist[hi];
+    return true;
+  }
+  function filter() {
+    tab = null;
+    var line = input.value.trim();
+    if (!line) return show(HELP);
+    if (showSearchPreview(line)) return;
+    if (showCompletion(input.value)) return;
+    show(HELP);
+  }
+  function open(mode) {
     prev = document.activeElement;
     box.hidden = false;
-    input.value = '';
-    show(HELP);
+    box.setAttribute('data-mode', mode === 'search' ? 'search' : 'cmd');
+    if (glyph) glyph.textContent = mode === 'search' ? '/' : '$';
+    input.value = mode === 'search' ? 'search ' : '';
+    hi = -1;
+    stash = '';
+    tab = null;
     input.focus();
+    show(mode === 'search' ? 'search: type the words, then Enter searches every piece.' : HELP);
   }
   function close() {
     box.hidden = true;
@@ -848,6 +1343,7 @@ const PALETTE_JS = (data) => `(function () {
     return ['range', 'checkbox', 'radio', 'button', 'submit', 'reset', 'file', 'color'].indexOf(el.type) < 0;
   }
 
+  hist = readHist();
   document.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (!box.hidden) {
@@ -860,15 +1356,29 @@ const PALETTE_JS = (data) => `(function () {
     // shortcut would otherwise die.
     if (isTyping(e.target) && !box.contains(e.target)) return;
     e.preventDefault();
-    open();
+    open(e.key === '/' ? 'search' : 'cmd');
   });
 
+  input.addEventListener('input', filter);
+
   input.addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter') return;
-    var line = input.value.trim();
-    if (!line) return;
-    input.value = '';
-    run(line);
+    if (e.key === 'Enter') {
+      var line = input.value.trim();
+      if (!line) return;
+      input.value = '';
+      remember(line);
+      run(line);
+      return;
+    }
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      doTab(!!e.shiftKey);
+      return;
+    }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (histMove(e.key === 'ArrowUp')) filter();
+    }
   });
 
   box.addEventListener('click', function (e) {
@@ -903,10 +1413,11 @@ function paletteAssets(navPosts) {
   data.pages.push({ slug: 'map', title: 'The map', series: '', kind: 'page' });
   data.pages.push({ slug: 'search', title: 'Search', series: '', kind: 'page' });
   const html =
-    `<div class="palette" id="palette" role="dialog" aria-label="command line" hidden>` +
+    `<div class="palette" id="palette" role="dialog" aria-label="command line" ` +
+    `data-mode="cmd" hidden>` +
     `<div class="palette-box">` +
     `<div class="palette-line"><span class="ps">#</span> blog.jaye.ch ` +
-    `<span class="ps">$</span> <input type="text" aria-label="command" autocomplete="off" ` +
+    `<span class="ps ps-mode">$</span> <input type="text" aria-label="command" autocomplete="off" ` +
     `autocapitalize="off" spellcheck="false"></div>` +
     `<div class="palette-out" role="status"></div>` +
     `</div></div>`;
@@ -930,6 +1441,14 @@ function paletteAssets(navPosts) {
  * Storage is wrapped in try/catch: a reader with storage disabled gets a working
  * toggle for the session instead of a thrown error and a dead control.
  *
+ * THE CHANGE ITSELF lives in one function, `set`, and the script publishes it as
+ * window.setTheme: the button's click handler is a call to it, and the command
+ * line's `theme dark|light|auto` calls the same one. Two controls, one state —
+ * a second implementation in the palette could disagree with the toggle's own
+ * mode (the next click would then cycle from the wrong place), so there is none.
+ * A page with no toggle leaves window.setTheme undefined, which the palette
+ * reports rather than pretending.
+ *
  * NO COMMENTS in this string, and none in the markup it touches: the emitted
  * page is gated (checkWorkshop) on a comment delimiter in emitted code, so a
  * comment here — or in the control's markup — fails the build. The prose belongs
@@ -938,6 +1457,7 @@ function paletteAssets(navPosts) {
 const THEME_JS = `(function () {
   'use strict';
   var KEY = 'theme';
+  var MODES = ['auto', 'light', 'dark'];
   var NEXT = { auto: 'light', light: 'dark', dark: 'auto' };
   var root = document.documentElement;
   function read() {
@@ -970,12 +1490,15 @@ const THEME_JS = `(function () {
   document.addEventListener('DOMContentLoaded', function () {
     var btn = document.getElementById('theme-toggle');
     if (!btn) return;
-    apply(mode, btn);
-    btn.addEventListener('click', function () {
-      mode = NEXT[mode] || 'auto';
+    var set = function (m) {
+      mode = MODES.indexOf(m) < 0 ? 'auto' : m;
       apply(mode, btn);
       write(mode);
-    });
+      return mode;
+    };
+    window.setTheme = set;
+    apply(mode, btn);
+    btn.addEventListener('click', function () { set(NEXT[mode] || 'auto'); });
   });
 })();`;
 
@@ -988,7 +1511,7 @@ const THEME_JS = `(function () {
 const THEME_HEAD = `<script>${THEME_JS}</script>`;
 
 /** Full self-contained document. */
-function page({ title, description, prompt, heroTitle, tagline, body, navCurrent, type = 'article', shareTitle, noindex = false }, navPosts) {
+function page({ title, description, prompt, heroTitle, tagline, body, navCurrent, type = 'article', shareTitle, noindex = false, header }, navPosts) {
   const designCss = stripComments(readFileSync(CSS, 'utf8'));
   const viz = vizAssets(body);
   const palette = paletteAssets(navPosts);
@@ -1000,6 +1523,11 @@ function page({ title, description, prompt, heroTitle, tagline, body, navCurrent
   // it carries no canonical and no og:url.
   const url = navCurrent === '/' ? `${BASE}/` : `${BASE}${navCurrent}`;
   const share = (shareTitle || title).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  // The og image is an absolute URL to a real copied file, never a data URI:
+  // a card scraper fetches it server-side, and a data URI there is silently
+  // dropped — the card renders with no image at all rather than an error.
+  // summary_large_image is emitted only when there is something to show;
+  // an image-less card that promises a large image renders a grey box.
   const meta =
     `<title>${esc(title)}</title>\n` +
     `<meta name="description" content="${esc(description)}">\n` +
@@ -1009,7 +1537,11 @@ function page({ title, description, prompt, heroTitle, tagline, body, navCurrent
     `<meta property="og:title" content="${esc(share)}">\n` +
     `<meta property="og:description" content="${esc(description)}">\n` +
     (noindex ? `` : `<meta property="og:url" content="${url}">\n`) +
-    `<meta name="twitter:card" content="summary">\n` +
+    (header
+      ? `<meta property="og:image" content="${header.og}">\n` +
+        `<meta name="twitter:card" content="summary_large_image">\n` +
+        `<meta name="twitter:image" content="${header.og}">\n`
+      : `<meta name="twitter:card" content="summary">\n`) +
     `<meta name="twitter:title" content="${esc(share)}">\n` +
     `<meta name="twitter:description" content="${esc(description)}">`;
 
@@ -1027,7 +1559,7 @@ ${viz ? `<style>\n${viz.css}</style>\n` : ''}<style>${stripComments(PAGE_CSS)}</
 <body>
 ${DOSE}
 ${nav(navCurrent, navPosts)}
-${hero({ prompt, title: heroTitle, tagline })}
+${hero({ prompt, title: heroTitle, tagline, header })}
 ${body}
 ${footer()}
 ${viz ? viz.script : ''}${palette.html}${palette.script}</body>
@@ -1233,9 +1765,11 @@ function inlineSidenotes(body) {
   return { body: out, placed };
 }
 
-/** Series prev/next. Both neighbours come from navPosts — the published list the
- * nav is built from — so a draft is never linked, and a series end simply has an
- * empty slot. */
+/** Series prev/next, and the way into the search from where the reader is. Both
+ * neighbours come from navPosts — the published list the nav is built from — so
+ * a draft is never linked, and a series end simply has an empty slot. The
+ * "search this series" link is the same facet the search page already carries,
+ * offered at the point a reader is inside a series rather than at the box. */
 function postNav(post, navPosts) {
   if (!post.series) return '';
   const inSeries = navPosts.filter((p) => p.series === post.series);
@@ -1243,13 +1777,16 @@ function postNav(post, navPosts) {
   if (i === -1) return '';
   const prev = i > 0 ? inSeries[i - 1] : null;
   const next = i < inSeries.length - 1 ? inSeries[i + 1] : null;
-  if (!prev && !next) return '';
   const label = seriesLabel(post.series);
+  const search =
+    `<p class="series-search"><a href="/search/?q=&amp;series=${esc(post.series)}">` +
+    `search this series</a> — every piece in ${esc(label)}, by words, vectors and links</p>`;
+  if (!prev && !next) return search;
   const card = (p, dir) =>
     `<a class="${dir}" href="/${p.slug}/"><span class="dir">` +
     (dir === 'prev' ? `← previous in ${label}` : `next in ${label} →`) +
     `</span><span class="t">${titleOf(p)}</span></a>`;
-  return `<div class="postnav">${prev ? card(prev, 'prev') : '<span></span>'}${next ? card(next, 'next') : '<span></span>'}</div>`;
+  return `<div class="postnav">${prev ? card(prev, 'prev') : '<span></span>'}${next ? card(next, 'next') : '<span></span>'}</div>` + search;
 }
 
 function buildHome(manifest) {
@@ -1457,7 +1994,7 @@ function build404(navPosts) {
     type: 'website',
     noindex: true,
     description: 'No page at this address. The published pages are listed here.',
-    prompt: 'cat "$REQUEST_URI"',
+    prompt: 'ls',
     heroTitle: '404 — no such <span class="fx">page</span>',
     tagline: 'the terminal is still here: <b>press /</b> and type <b>ls</b>.',
     body,
@@ -1992,15 +2529,113 @@ function ledeOf(src) {
   return (space > LEDE_MAX * 0.6 ? cut.slice(0, space) : cut) + '…';
 }
 
+/* ---------- the automaton the words are held in ---------- */
+
+/** The sixty-four characters the automaton is written in: digits, letters, `_`
+ * and `~`. Deliberately NOT the printable range — no quote or backslash (the
+ * block is a JSON string), no `<` (the block escapes it, which would inflate
+ * the data), no `/` or `*` (the workshop gate reads a comment delimiter
+ * anywhere it reaches emitted text, and an opaque encoding is exactly where one
+ * would hide by accident). Its low thirty-two values carry five bits at a time. */
+const DAFSA_ENC = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_~';
+
+/** A number in the encoding above, five bits per character, high bit set while
+ * more follow. State ids reach the tens of thousands, so most edges cost one
+ * character and the far edges cost three or four. */
+function dafsaVarint(v) {
+  let s = '';
+  while (v >= 32) {
+    s += DAFSA_ENC[(v & 31) | 32];
+    v = Math.floor(v / 32);
+  }
+  return s + DAFSA_ENC[v];
+}
+
+/**
+ * The vocabulary as a MINIMAL ACYCLIC FINITE-STATE AUTOMATON (Daciuk et al.):
+ * a trie minimised bottom-up through a register of states, so two states with
+ * the same behaviour — the same final flag and the same labelled transitions —
+ * are one state. The words of a language share their endings, and merging them
+ * is what makes the automaton smaller than the list it holds.
+ *
+ * A final state carries NO index. It cannot: the index IS the term's row in the
+ * postings, and the client gets it by walking — transitions are kept in label
+ * order, so a depth-first walk enumerates the terms in exactly the sorted order
+ * the rows are indexed by. Storing the index instead would block the merge of
+ * every terminal leaf into one state (they would all differ), and measured, it
+ * costs 3x the states for a number the walk reproduces for free.
+ *
+ * The serialised form is three streams, because gzip is what the page is sent
+ * as and separated streams compress where interleaved records do not (94,481
+ * bytes raw this way, 226,809 interleaved):
+ *   s  one character per state: (out-degree) + 32 when the state is final, so
+ *      the flag rides in the fifth bit and no separate array is needed;
+ *   l  one character per transition, the label, in state and then label order;
+ *   t  one varint per transition: the state's own id MINUS its target's. Ids are
+ *      assigned in post-order, so a target is always an already-made state and
+ *      the difference is positive; it is small for the common case (a state's
+ *      own children were made immediately before it).
+ * The client decodes it back (tools/search/search.js) and walks the terms out.
+ */
+function dafsaOf(vocab) {
+  const root = { kids: new Map(), fin: false };
+  for (const term of vocab) {
+    let node = root;
+    for (const ch of term) {
+      let kid = node.kids.get(ch);
+      if (!kid) {
+        kid = { kids: new Map(), fin: false };
+        node.kids.set(ch, kid);
+      }
+      node = kid;
+    }
+    node.fin = true;
+  }
+  const register = new Map();
+  const states = [];
+  const canon = (node) => {
+    const next = [];
+    for (const ch of [...node.kids.keys()].sort()) next.push([ch, canon(node.kids.get(ch))]);
+    const key = (node.fin ? '1' : '0') + '|' + next.map(([ch, id]) => ch + id).join(',');
+    let id = register.get(key);
+    if (id === undefined) {
+      id = states.length;
+      states.push({ fin: node.fin, next });
+      register.set(key, id);
+    }
+    return id;
+  };
+  const rootId = canon(root); // post-order: the root is the last state made
+  let s = '';
+  let l = '';
+  let t = '';
+  for (let i = 0; i < states.length; i++) {
+    const st = states[i];
+    // The label alphabet is [a-z'-], so a state cannot have 32 transitions; the
+    // encoding would silently truncate a degree it could not hold, so it fails
+    // the build instead.
+    if (st.next.length > 30) throw new Error(`dafsa: a state has ${st.next.length} transitions`);
+    s += DAFSA_ENC[st.next.length + (st.fin ? 32 : 0)];
+    for (const [ch, to] of st.next) {
+      l += ch;
+      t += dafsaVarint(i - to);
+    }
+  }
+  return {
+    dafsa: { s, l, t },
+    stats: { states: states.length, edges: l.length, root: rootId, bytes: s.length + l.length + t.length },
+  };
+}
+
 /**
  * The whole index, derived once and emitted into the page.
  *
  * Emitted rather than fetched (the site makes no external requests and the page
- * is one file), which is why the vocabulary drops every term a single piece
- * uses: those terms are still in the VECTORS — a term seen once is projected at
- * build time like any other, so a name one piece mentions once is still
- * findable — while the word list, which is what the POSTING LISTS rest on, keeps
- * only the terms that join pieces, because a term in one piece joins nothing.
+ * is one file). The vocabulary is emitted as the AUTOMATON above rather than as
+ * the words themselves: it is the same list, walked back out in the same order,
+ * and it is the shape the client's pattern walker needs — a pattern is answered
+ * by walking the automaton, which is how a query can match the middle of a word
+ * (no posting list can answer that: the terms are keys, not text to scan).
  */
 function searchIndex(navPosts) {
   const { nodes, edges } = mapGraph(navPosts);
@@ -2046,6 +2681,7 @@ function searchIndex(navPosts) {
   }
   vocab.sort();
   const termAt = new Map(vocab.map((t, i) => [t, i]));
+  const { dafsa, stats: dafsaStats } = dafsaOf(vocab);
   const postings = vocab.map(() => []);
   const strongAt = new Map();
   for (let i = 0; i < tokens.length; i++) {
@@ -2099,7 +2735,7 @@ function searchIndex(navPosts) {
     dim: SEARCH_DIM,
     stop: [...STOPWORDS].join(' '),
     docs,
-    lex: { terms: vocab.join(' '), postings, strong },
+    lex: { postings, strong, dafsa },
     vec,
     graph: {
       post: docs.map((d) => [d.i, d.slug, d.series, d.kind, d.date]),
@@ -2126,6 +2762,10 @@ function searchIndex(navPosts) {
       works: cited.length,
       catalogued: works.length,
       citations: citationCount,
+      dafsaStates: dafsaStats.states,
+      dafsaEdges: dafsaStats.edges,
+      dafsaBytes: dafsaStats.bytes,
+      vocabBytes: vocab.join(' ').length,
     },
   };
 }
@@ -2160,6 +2800,32 @@ function buildSearch(navPosts) {
     `word and as the beginning of one, where a hit in a piece's title or a section heading counts for more ` +
     `than a hit in its body. The commonest words are left out (they are in every piece, so they name none); ` +
     `everything else is here, <b>including a name used by a single piece and only once in it</b>.</p>` +
+    `<p>The same list takes a <b>pattern</b>: put one between slashes and it is matched against the words ` +
+    `themselves rather than looked up — <code>/wetiko.*/</code>, <code>/^procl/</code>, ` +
+    `<code>/(gno|the)sis/</code>, <code>/urgy$/</code>. With nothing anchoring it, a pattern matches ` +
+    `<b>anywhere inside</b> a word, which is how a half-remembered word is found: <code>/theurg/</code> ` +
+    `reaches it wherever it sits. The syntax is <code>.</code> for any character, <code>*</code> ` +
+    `<code>+</code> and <code>?</code> for repetition, <code>[abc]</code>, <code>[a-z]</code> and ` +
+    `<code>[^abc]</code> for a set of characters, <code>|</code> to alternate between expressions, ` +
+    `<code>()</code> to group them, and <code>^</code> and <code>$</code> for the start and the end of a ` +
+    `word. A pattern that cannot be read is refused in the line above the results rather than guessed at, ` +
+    `and a pattern reaching more words than the page will match is cut off there and says so.</p>` +
+    `<p>Put a <code>~</code> in front of a word and it is matched <b>approximately</b> instead of looked up: ` +
+    `<code>~proculs</code> finds <code>proclus</code>, because one tilde allows one edit — a wrong letter, a ` +
+    `letter too many or too few, or two letters the wrong way round, which is what most typos are. ` +
+    `<code>~~proculs</code> allows two edits, and reaches several times as many words for it. A word found ` +
+    `this way is not a word you asked for, so it always ranks below a word you did type, and the reason ` +
+    `under the result says which word it was and how far away.</p>` +
+    `<p>The box also finishes words as you type them: three letters or more and the words of the list that ` +
+    `begin that way are offered beneath it, up to eight, and the list says so when it stopped there. The ` +
+    `arrow keys move through them and Enter takes the one you are on; Escape puts the list away and leaves ` +
+    `what you typed. When a query finds almost nothing and one of its words sits one edit from a word the ` +
+    `list holds, the line above the results offers that word with the misspelling left in place — the page ` +
+    `suggests, it never rewrites. The results take the same arrow keys once no list is open, Enter opens ` +
+    `the piece the selection is on, and Home and End go to the first and the last. A word the query ` +
+    `reached is marked in the result's <b>title</b> as well as in its snippet, and the order can be ` +
+    `switched from relevance to <b>newest first</b> — the mode travels in the link, so a sorted search is ` +
+    `one you can send.</p>` +
     `<p>The second is a <b>vector space</b> — ${SEARCH_DIM} dimensions per piece, built by hashing each term ` +
     `to a dimension and a sign. It is a tf-idf projection and <b>not a neural embedding</b>: there is no ` +
     `model here, and no projector either — this page recomputes your query's projection with the same hash ` +
@@ -2184,14 +2850,25 @@ function buildSearch(navPosts) {
     `<div class="hint"># ${totals.docs} pieces · ${totals.vocab} words in the list · ${totals.citations} ` +
     `citations from ${totals.works} works · three signals: the words, the vectors, the links</div>` +
     `<form class="sform" id="sf" role="search">` +
+    `<div class="sq-wrap">` +
     `<div class="srow"><span class="s-lab" aria-hidden="true">$</span>` +
-    `<input type="search" id="sq" name="q" aria-label="search the pieces" autocomplete="off" ` +
-    `autocapitalize="off" spellcheck="false" placeholder="a word, a name, a phrase">` +
+    `<input type="search" id="sq" name="q" role="combobox" aria-expanded="false" ` +
+    `aria-controls="scomp-list" aria-autocomplete="list" ` +
+    `aria-label="search the pieces" autocomplete="off" ` +
+    `autocapitalize="off" spellcheck="false" placeholder="a word, a name, a phrase, /a pattern/, ~a typo">` +
+    `</div>` +
+    `<div class="scomp" id="scomp" hidden>` +
+    `<ul class="scomp-list" id="scomp-list" role="listbox" aria-label="words that begin with it"></ul>` +
+    `<div class="scomp-cap" id="scomp-cap" hidden></div>` +
+    `</div>` +
     `</div>` +
     `<div class="sfacet"><label for="sf-series">series</label>` +
     `<select id="sf-series" name="series"><option value="">any</option>${seriesOpts}</select>` +
     `<label for="sf-kind">kind</label>` +
     `<select id="sf-kind" name="kind"><option value="">any</option>${kindOpts}</select>` +
+    `<label for="sf-sort">order</label>` +
+    `<select id="sf-sort" name="sort"><option value="">relevance</option>` +
+    `<option value="new">newest first</option></select>` +
     `</div>` +
     `</form>` +
     `<div class="sstatus" id="sstatus" role="status" aria-live="polite"></div>` +
@@ -2211,6 +2888,10 @@ function buildSearch(navPosts) {
       `${totals.postings} term-to-piece pairs, ${totals.strong} terms in titles and headings, ` +
       `${totals.links} links, ${totals.citations} citations over ${totals.works} works, ${totals.catalogued} ` +
       `catalogued; data block ${Buffer.byteLength(json)} bytes`,
+  );
+  log(
+    `search automaton: ${totals.dafsaStates} states, ${totals.dafsaEdges} transitions over ${totals.vocab} terms ` +
+      `— ${totals.dafsaBytes} bytes serialised against ${totals.vocabBytes} bytes as one string of words`,
   );
 
   return {
@@ -2774,6 +3455,22 @@ const POST_META = {
       'A close reading of Iamblichus\u2019 On the Mysteries: the counter-text to the Elements of Theology \u2014 why intellection cannot unite, what the unutterable symbols are said to do by themselves, and where a frame puts its efficacy when it takes it out of the person.',
     accent: 'On the Mysteries',
   },
+  'plotinus-collected-writings': {
+    prompt: 'cat plotinus-collected-writings.md',
+    tagline: 'a <b>reading</b>: the founder of the line \u2014 an ascent by turning inward, and a successor who refused it because nothing is performed.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of the Enneads, with notes',
+    description:
+      'A close reading of Plotinus in Thomas Taylor\u2019s translations: the Enneads read whole \u2014 the One, Intellect and Soul, the emanation and the ascent, and the route by turning inward that the tradition\u2019s next two thinkers moved out of the person.',
+    accent: 'The Enneads',
+  },
+  'porphyry-cave-of-the-nymphs': {
+    prompt: 'cat porphyry-cave-of-the-nymphs.md',
+    tagline: 'a <b>reading</b>: the ascent given a place \u2014 a cave in the Odyssey read as the cosmos, with two gates and the soul\u2019s descent drawn as geography.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of a treatise on a poem, with notes',
+    description:
+      'A close reading of Porphyry\u2019s On the Cave of the Nymphs in Thomas Taylor\u2019s translation: the cave at Ithaca read as the whole cosmos \u2014 two gates, the nymphs who preside over generation, and Odysseus as the soul that descends and returns.',
+    accent: 'On the Cave of the Nymphs',
+  },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',
     tagline: 'the <b>fit that fails</b>: getting ahead of the account \u2014 the rejection recoded as the target\u2019s symptom, the pivot to the network, and the accurate report made self-indicting.',
@@ -2829,6 +3526,28 @@ function buildPost(post, navPosts) {
     after: postNav(post, navPosts),
   });
 
+  // The masthead emblem. Only a post whose header was rendered carries one;
+  // a post without the file builds exactly as before — no <img>, no og:image —
+  // which is the honest default, not a dead branch: a newly added post will
+  // not have one yet. The og:image points at the copied 1200x630 crop (a card
+  // scraper fetches it, so the URL must be absolute); the alt text is the
+  // post's title as plain text — the same stripping the share metadata
+  // applies — because a screen reader announcing the slug is noise.
+  const headerPath = join(ROOT, 'content', 'headers', 'webp', `${post.slug}.webp`);
+  const header = existsSync(headerPath)
+    ? {
+        // Inlined by default (the README's self-containment promise); built as
+        // a plain link under HEADERS_INLINE=0, which also copies the banner —
+        // under headers/banner/, because headers/<slug>.webp is the og crop's
+        // name and its 1.9:1 aspect would stretch in this square box.
+        src: HEADERS_INLINE
+          ? `data:image/webp;base64,${readFileSync(headerPath).toString('base64')}`
+          : `${BASE}/headers/banner/${post.slug}.webp`,
+        og: `${BASE}/headers/${post.slug}.webp`,
+        alt: titleHtml.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(),
+      }
+    : undefined;
+
   return {
     title: `${titleHtml} — blog.jaye.ch`,
     shareTitle: titleHtml,
@@ -2837,6 +3556,7 @@ function buildPost(post, navPosts) {
     prompt: meta.prompt,
     heroTitle: fxTitle,
     tagline: meta.tagline,
+    header,
     body: html,
     navCurrent: `/${post.slug}/`,
   };
@@ -2989,6 +3709,30 @@ log(
       : ''),
 );
 
+/* ---------- header art: the one asset family dist/ carries ----------
+ * Every page is still one self-contained file — the banner a post shows is
+ * INLINED into it (see HEADERS_INLINE) — but the og:image cannot be: a card
+ * scraper fetches it server-side, so it must be a real file at a stable URL.
+ * That file, and nothing else here, ships by default. The 1024x1024 banner webp
+ * is copied ONLY in link mode, under headers/banner/, because the og crop owns
+ * headers/<slug>.webp and letting either name shadow the other would have the
+ * cards silently show the wrong crop. The source PNGs never ship. */
+{
+  const ogSrc = join(ROOT, 'content', 'headers', 'og');
+  const destDir = join(DIST, 'headers');
+  mkdirSync(destDir, { recursive: true });
+  const webps = readdirSync(ogSrc).filter((f) => f.endsWith('.webp'));
+  for (const f of webps) copyFileSync(join(ogSrc, f), join(destDir, f));
+  log(`copied ${webps.length} og card(s) -> dist/headers/`);
+  if (!HEADERS_INLINE) {
+    const bannerSrc = join(ROOT, 'content', 'headers', 'webp');
+    const banners = readdirSync(bannerSrc).filter((f) => f.endsWith('.webp'));
+    mkdirSync(join(destDir, 'banner'), { recursive: true });
+    for (const f of banners) copyFileSync(join(bannerSrc, f), join(destDir, 'banner', f));
+    log(`HEADERS_INLINE=0: copied ${banners.length} banner(s) -> dist/headers/banner/`);
+  }
+}
+
 /** The workshop-leak gate: a page must not tell the reader how the blog is
  * built. Two whole audits were needed to find leaks that had reached the public
  * HTML — internal filenames and paths, file sizes, extraction mechanics — and
@@ -3026,11 +3770,20 @@ function checkWorkshop(html) {
   const allowed = [
     'the build in', 'the build of', // ordinary prose, not the build process
   ];
+  // A base64 data: URI is INLINED BINARY — a reader sees an image, not text, and
+  // the payload is not something anyone reads. Its alphabet can contain anything,
+  // including a string that matches a pattern below (a header image whose base64
+  // happened to contain "615Kb" tripped the file-size rule). Scanning it is
+  // scanning noise, and the result was a build that failed or passed depending on
+  // which image was inlined. The payload is blanked first; everything readable on
+  // the page is still scanned exactly as before, so the check is not weakened —
+  // a leak cannot hide in binary, because a reader cannot read binary.
+  const scanned = html.replace(/(data:[\w.+-]+\/[\w.+-]+;base64,)[A-Za-z0-9+/=]+/g, '$1<binary>');
   const problems = [];
   for (const [re, what] of patterns) {
-    for (const m of html.matchAll(new RegExp(re, re.flags.includes('g') ? re.flags : re.flags + 'g'))) {
+    for (const m of scanned.matchAll(new RegExp(re, re.flags.includes('g') ? re.flags : re.flags + 'g'))) {
       const at = m.index;
-      const window = html.slice(Math.max(0, at - 60), at + 60).replace(/\s+/g, ' ');
+      const window = scanned.slice(Math.max(0, at - 60), at + 60).replace(/\s+/g, ' ');
       if (allowed.some((a) => window.toLowerCase().includes(a))) continue;
       problems.push(`  ${what}: ${JSON.stringify(window.trim())}`);
     }

@@ -1,0 +1,9 @@
+# tools/headers/extra_model_paths.yaml — tell ComfyUI to read weights from the
+# ZFS volume rather than the image, so checkpoints are never baked in and a new
+# model is just a file on disk. Baked at /work/extra_model_paths.yaml by run.sh.
+headers:
+    base_path: /models
+    checkpoints: checkpoints
+    vae: vae
+    loras: loras
+    embeddings: embeddings

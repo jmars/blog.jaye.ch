@@ -194,21 +194,47 @@ const slugs = (list) => list.map((r) => data.docs[r.i].slug);
 
 console.log('== measured');
 const lex = data.lex;
+const terms = S._idx.terms;                 // the words, walked out of the automaton
+const auto = S._idx.dafsa;
+const dafsaJson = JSON.stringify(data.lex.dafsa);
+const vocabString = terms.join(' ');
 console.log(`  page ${Buffer.byteLength(html)} bytes, gzip ${gzipSync(html, { level: 9 }).length}`);
 console.log(`  data block ${Buffer.byteLength(dataMatch[1])} bytes, gzip ${gzipSync(dataMatch[1], { level: 9 }).length}`);
 console.log(`  pipeline script ${Buffer.byteLength(client)} bytes`);
-console.log(`  ${data.docs.length} pieces · ${lex.terms.split(' ').length} terms · ${lex.postings.reduce((n, p) => n + p.length, 0)} term-to-piece pairs · ${lex.strong.length} title/heading terms`);
+console.log(`  ${data.docs.length} pieces · ${terms.length} terms · ${lex.postings.reduce((n, p) => n + p.length, 0)} term-to-piece pairs · ${lex.strong.length} title/heading terms`);
 console.log(`  ${data.vec.length} vectors of ${data.vec[0].length} int8 dims · ${data.graph.link.length} links · ${data.graph.cites.length} citations over ${data.graph.source.length} works`);
+console.log(`  the automaton: ${auto.n} states · ${auto.lbl.length} transitions · ${auto.fin.reduce((n, f) => n + f, 0)} of them final`);
+console.log(`  serialised automaton ${Buffer.byteLength(dafsaJson)} bytes raw (gzip ${gzipSync(dafsaJson, { level: 9 }).length}) —`);
+console.log(`  the same ${terms.length} words as one space-joined string ${Buffer.byteLength(vocabString)} bytes raw (gzip ${gzipSync(vocabString, { level: 9 }).length})`);
 
-/* ---------- 2. the shared hash ---------- */
+/* ---------- 2. the words, walked back out of the automaton ---------- */
 
-const sample = lex.terms.split(' ').filter((_, i) => i % 97 === 0).concat(['dafsa', 'wetiko', 'proclus']);
+// The automaton replaced the string of words, so the walk that reconstructs the
+// vocabulary is the new thing that can be wrong — and every posting index, every
+// search and the whole vector rebuild below rest on it. The expectation is the
+// words the PROSE uses, tokenised here from content/, sorted: nothing is
+// hard-coded, and the automaton has to reproduce the list exactly, in order.
+console.log('== the vocabulary, walked out of the automaton');
+const dfTerms = [...df.keys()].sort();
+check(terms.length === dfTerms.length && terms.every((t, i) => t === dfTerms[i]),
+  `the automaton walks out exactly the words the prose uses, in order (${terms.length} words, ${dfTerms.length} on disk)`);
+check(terms.every((t, i) => i === 0 || terms[i - 1] < t && /^[a-z][a-z'-]*$/.test(t)),
+  'the walk is strictly sorted, so a word\'s position IS its posting row');
+check(lex.postings.length === terms.length,
+  `every word has its own posting row (${lex.postings.length} rows for ${terms.length} words)`);
+const dafsaStates = auto.n;
+check(dafsaStates < terms.reduce((n, t) => n + t.length, 0),
+  `the automaton has fewer states than the words have characters (${dafsaStates} < ${terms.reduce((n, t) => n + t.length, 0)}), so the minimisation did something`);
+
+/* ---------- 3. the shared hash ---------- */
+
+const sample = terms.filter((_, i) => i % 97 === 0).concat(['dafsa', 'wetiko', 'proclus']);
 const badHash = sample.filter((t) => S.fnv1a(t) !== fnvRef(t));
 check(badHash.length === 0, `the shipped FNV-1a matches an independent implementation (${sample.length} terms sampled)` +
   (badHash.length ? ` — first disagreement: ${badHash[0]}` : ''));
 check(S.DIM === data.dim, `the client's dimension is the page's (${S.DIM})`);
 
-/* ---------- 3. the shipped vectors, rebuilt from the prose ---------- */
+/* ---------- 4. the shipped vectors, rebuilt from the prose ---------- */
 
 /**
  * Every vector, recomputed here from content/ — its own tokenisation, its own
@@ -218,7 +244,7 @@ check(S.DIM === data.dim, `the client's dimension is the page's (${S.DIM})`);
  * quantisation included, shows up here as a difference and nowhere else.
  */
 console.log('== the vectors, rebuilt from the prose');
-const vocab = lex.terms.split(' ');
+const vocab = terms;
 const termAt = new Map(vocab.map((t, i) => [t, i]));
 const DIM = data.dim;
 const idfOf = (t) => {
@@ -249,7 +275,7 @@ for (let i = 0; i < posts.length; i++) {
 check(vecDiff === 0 && vecWorst === 0,
   `all ${posts.length} shipped vectors equal the rebuild from content/ (worst dimension off by ${vecWorst}, ${vecDiff} piece(s) differ)`);
 
-/* ---------- 4. rare exact terms: the answer IS what the prose says ---------- */
+/* ---------- 5. rare exact terms: the answer IS what the prose says ---------- */
 
 // the rarest kind of term there is: a name one piece uses and no other. 'dafsa'
 // was the Zig engine's name — a word the prose never uses, so the assertion on it
@@ -300,7 +326,7 @@ if (single) {
 check(S.query('zzzzqqq').results.length === 0, 'a word no piece uses returns no results at all');
 check(S.query('zzzzqqq flamingo').results.length === 0, 'a phrase of such words returns none either');
 
-/* ---------- 5. a prefix ---------- */
+/* ---------- 6. a prefix ---------- */
 
 const prefExpected = expectLexical('procl');
 const prefGot = new Set(slugs(S.providers.lexical('procl')));
@@ -313,7 +339,434 @@ const prefQ = new Set(slugs(S.query('procl', { limit: 200 }).results));
 check(norm(prefGot) === norm(new Set([...prefQ].filter((s) => prefGot.has(s)))),
   'the fused query keeps every piece the prefix answers for');
 
-/* ---------- 6. garbage ---------- */
+/* ---------- 7. the pattern walker, against a brute-force scan ---------- */
+
+/**
+ * The walker has a perfect oracle available and it is the browser's own regular
+ * expression engine: `new RegExp(body).test(word)` on every word of the
+ * vocabulary IS the definition of "this word matches this pattern" for the
+ * subset the page documents (literal characters, `.`, `*` `+` `?`, `[abc]`
+ * `[a-z]` `[^abc]`, `|`, `()`, `^`, `$` — and no anchors inside the body, where
+ * the two engines' readings are the same one). So the expectation is computed
+ * here, never written down: a single disagreement is a blocker, and the line
+ * prints which pattern it was.
+ *
+ * The page's own engine is what runs the SEARCH (the browser's can backtrack,
+ * and a pattern out of a search box is not a program to hand it), so this is
+ * also the test that the two agree on the whole corpus, not on the examples.
+ */
+console.log('== the pattern walker (differential: the walk vs a brute-force scan)');
+// the walker stops at its own cap; the cap is not written down here either — a
+// pattern that reaches everything comes back as the cap itself
+const whole = S.matchPattern('.');
+check(whole.capped && whole.terms.length > 1,
+  `a pattern reaching every word stops at the walker's own cap (${whole.terms.length} words, reported as capped)`);
+const CAP = whole.terms.length;
+
+const PATTERNS = [
+  // a word, and the middle of one — the capability the list does not have
+  'proclus', 'wetiko', 'theurgy', 'urgy', 'gnos', 'iko', 'tiko', 'roclu',
+  // anchored at one end or both
+  '^procl', '^the', '^a', 'sis$', 'urgy$', 'os$', '^procl.*gy$', '^wetiko$',
+  // `.`, and the quantifiers
+  'p.o', 'w.tiko', '^...$', '^....$', 'wet.*o', 'the.*urgy', 'proclu+', 'o+t', '^gr+',
+  'theurg?y', 'colou?r', 'wetiko?', 'a*', '.*s', 'n?o',
+  // character classes, positive, ranged and negated
+  '[pq]roclus', 'w[aeiou]tiko', '[a-m]urgy', '[^a-m]urgy', '[a-z]urgy', '^[a-z]e$',
+  "[a-z']+s$", '[xyz]zz', '[^a-z]', '^[^a-z]',
+  // alternation and grouping
+  '(gno|the)sis', 'proclus|wetiko', '^(i|y)', '(sis|os)$', '(pro|the)+', '(ab|cd)?e',
+  '^(pro|the)lus', '(a|e)+r', '(urgy|osis)$',
+  // nothing, and rather a lot
+  'zzzz', 'qqq', '^zzz', 'zzz$', '[0-9]', '^zzzzy$', 'q.*q.*q', '.', 'e', '^.', 'ing$', '.*',
+  // a lone anchor (which matches everything, as it does in the browser)
+  '^',
+];
+
+let reTested = 0, reCapped = 0, reDisagreements = 0;
+for (const body of PATTERNS) {
+  const got = S.matchPattern(body);
+  if (got.error) {
+    check(false, `the walker refused /${body}/ — ${got.error}`);
+    reDisagreements++;
+    continue;
+  }
+  const want = vocab.filter((t) => new RegExp(body).test(t)).slice(0, CAP);
+  const same = got.terms.length === want.length && got.terms.every((t, i) => t === want[i]);
+  const cappedRight = (got.capped === true) === (want.length === CAP && vocab.filter((t) => new RegExp(body).test(t)).length > CAP);
+  reTested++;
+  if (got.capped) reCapped++;
+  if (!same || !cappedRight) reDisagreements++;
+  check(same && cappedRight,
+    `/${body}/ → ${got.terms.length} word(s)${got.capped ? ', capped' : ''}, identical to the scan` +
+      (same && cappedRight ? ` (e.g. ${got.terms.slice(0, 3).join(', ') || 'none'})` :
+        ` — walker ${JSON.stringify(got.terms.slice(0, 4))} vs scan ${JSON.stringify(want.slice(0, 4))}`));
+}
+check(reTested === PATTERNS.length && reDisagreements === 0,
+  `${reTested} pattern(s) walked, ${reCapped} of them capped, ${reDisagreements} disagreement(s) with the scan`);
+check(reCapped >= 3, `${reCapped} pattern(s) reached more words than the cap and each reported it`);
+
+// the matches ARE words of the list, and the position they come out at is the
+// posting row (the invariant that makes a pattern result plug into the index)
+const sampleRe = S.matchPattern('urgy');
+check(sampleRe.terms.length > 0 && sampleRe.terms.every((t) => terms.indexOf(t) >= 0),
+  `every word the walker returns is a word of the list, at its own index (e.g. ${sampleRe.terms.slice(0, 3).join(', ')})`);
+const inOrder = sampleRe.terms.every((t, i) => i === 0 || sampleRe.terms[i - 1] < t);
+check(inOrder, `the walk returns them in the list's own order (${sampleRe.terms.join(', ')})`);
+
+// a pattern the page cannot read is SAID, not guessed at and not thrown
+const bad = S.matchPattern('x[');
+check(!!bad.error && bad.terms.length === 0, `an unclosed class comes back as an error, not as nothing (${bad.error})`);
+for (const b of ['a\\d', '(ab', 'a{2}', '*a', '^a^', 'a$b', '[]', '{2}']) {
+  const r = S.matchPattern(b);
+  check(!!r.error, `/${b}/ is refused with a reason: ${r.error}`);
+}
+
+/* ---------- 7b. a pattern, through the box ---------- */
+
+console.log('== a pattern query');
+const woven = S.matchPattern('wetiko');
+const wantWetiko = new Set();
+for (const t of woven.terms) for (const s of (df.get(t) || new Set())) wantWetiko.add(s);
+const gotWetiko = new Set(slugs(S.query('/wetiko/').results));
+check(wantWetiko.size > 0 && [...wantWetiko].every((s) => gotWetiko.has(s)),
+  `"/wetiko/" answers with every piece whose prose uses a word the pattern reaches (${wantWetiko.size} piece(s), ${norm(wantWetiko)})`);
+const wedge = S.query('/^procl/');
+const wedgeSlugs = new Set(slugs(wedge.results));
+check(wedgeSlugs.has('proclus-elements-of-theology') && wedgeSlugs.has('proclus-theology-of-plato'),
+  'an anchored pattern reaches both Proclus readings');
+// the reason travels with the result: every piece the pattern REACHED carries
+// the pattern; a piece only the graph added carries its own reason, as always
+const reached = new Set();
+for (const t of S.matchPattern('^procl').terms) for (const s of (df.get(t) || new Set())) reached.add(s);
+const whyShown = wedge.results.filter((r) => reached.has(data.docs[r.i].slug));
+check(whyShown.length > 0 && whyShown.every((r) => r.why.some((w) => w.indexOf('re: "/^procl/"') === 0)),
+  `${whyShown.length} result(s) the pattern reached carry it as their reason (e.g. ${JSON.stringify(whyShown[0].why)})`);
+// a pattern matching the MIDDLE of a word is the whole point, and the word list
+// cannot do it: it answers whole words and the beginnings of words, and
+// 'liturgy', 'thaumaturgy' and 'theurgy' are none of those for the query 'urgy'
+const midQ = S.query('/urgy/');
+const midLex = new Set(S.providers.lexical('urgy').map((r) => r.i));
+const midOnly = midQ.results.filter((r) => !midLex.has(r.i) && r.why.some((w) => w.indexOf('re: ') === 0));
+check(midQ.results.length > 0 && midOnly.length > 0,
+  `a mid-word pattern reaches pieces the word list cannot (${midOnly.length} of ${midQ.results.length} result(s) are only the pattern's: ${norm(slugs(midOnly))})`);
+const cappedQ = S.query('/.*/');
+check(cappedQ.counts.reCapped === true && cappedQ.counts.matched === CAP,
+  `a pattern reaching every word reports the cap instead of dropping it silently (${cappedQ.counts.matched} words, capped=${cappedQ.counts.reCapped})`);
+const brokenQ = S.query('/x[/');
+check(brokenQ.results.length === 0 && /not closed/.test(brokenQ.counts.reError),
+  `a malformed pattern returns no results and a reason rather than throwing ("${brokenQ.counts.reError}")`);
+
+/* ---------- 7c. the fuzzy walker, against a brute-force OSA scan ---------- */
+
+/**
+ * The fuzzy walk carries a DP row down the automaton and abandons a branch when
+ * it leaves the budget; the DEFINITION of "within k edits" is a plain OSA matrix
+ * per word, and that is what is computed here, over the whole vocabulary, every
+ * run — never written down. The walk and the scan must agree on the SET, on the
+ * ORDER (the walk emits in the list's own order, which is the postings' order)
+ * and on the DISTANCE it reports. A single disagreement is a blocker, and the
+ * line prints which case it was.
+ *
+ * The scan is a full matrix with the adjacent-swap rule, written out separately
+ * from the walk's rolling rows: two implementations that shared a shape could
+ * agree on a mistake, and this is the one test that can prove the walk is not
+ * one.
+ */
+console.log('== the fuzzy walker (differential: the walk vs a brute-force OSA scan)');
+
+/** Optimal string alignment: Levenshtein plus the adjacent transposition as ONE
+ * edit. The full n×m matrix, so nothing about the walk's own rolling rows can
+ * hide in it. */
+function osa(a, b) {
+  const n = a.length, m = b.length;
+  const d = [];
+  for (let i = 0; i <= n; i++) {
+    d.push(new Array(m + 1).fill(0));
+    d[i][0] = i;
+  }
+  for (let j = 0; j <= m; j++) d[0][j] = j;
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= m; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      let v = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, d[i - 2][j - 2] + 1);
+      d[i][j] = v;
+    }
+  }
+  return d[n][m];
+}
+/** every word of the list within k edits of q, in the list's order, with the
+ * distance each was found at — the answer the walk has to reproduce. */
+function scan(q, k) {
+  const out = [];
+  for (const t of vocab) {
+    const d = osa(t, q);
+    if (d <= k) out.push([t, d]);
+  }
+  return out;
+}
+
+// the walk's own bound, taken FROM the walk (never written down here): a
+// three-letter query is within two edits of hundreds of words, well past it
+const wideWalk = S.matchFuzzy('ais', 2);
+const wideTruth = scan('ais', 2);
+check(wideWalk.capped === true && wideWalk.words.length < wideTruth.length,
+  `a short word within two edits is matched beyond the walk's own bound — ${wideWalk.words.length} of ${wideTruth.length} reported, and it SAYS it stopped`);
+const FUZZY_CAP = wideWalk.words.length;
+const wideSame = wideWalk.words.every((x, i) => x.w === wideTruth[i][0] && x.d === wideTruth[i][1]);
+check(wideSame, `and the words it did return are the scan's first ${FUZZY_CAP}, in the scan's own order (first: ${wideWalk.words.slice(0, 3).map((x) => x.w).join(', ')})`);
+// the same bound for a second, different short query: a cap is one number, not
+// a different truncation each time
+const wideWalk2 = S.matchFuzzy('ran', 2);
+check(wideWalk2.capped === true && wideWalk2.words.length === FUZZY_CAP,
+  `another short word at two edits stops at the same bound (${wideWalk2.words.length})`);
+
+// the corpus. Every kind of edit is here — the word itself, a substitution, an
+// insertion, a deletion, an adjacent transposition — plus a two-edit case that
+// must be found at two and NOT at one, the list's own apostrophe and hyphen, a
+// very short word, and words no edit reaches.
+const FUZZY_CASES = [
+  ['proclus', 0], ['proclus', 1], ['proclus', 2],   // the word itself: distance 0
+  ['proculs', 1], ['proculs', 2],                   // adjacent transposition (one edit, not two)
+  ['proclas', 1],                                   // substitution
+  ['procluss', 1],                                  // insertion
+  ['proclu', 1],                                    // deletion
+  ['prokluss', 1], ['prokluss', 2],                 // two edits: gone at one, found at two
+  ['gnostick', 2],                                  // two edits from 'gnostic'
+  ["theurgy's", 1], ["theurgy's", 2],               // the list's own apostrophe
+  ['a-coming', 1], ['a-coming', 2],                 // and its own hyphen
+  ['wetiko', 1], ['picatrix', 1], ['quareia', 2], ['trithemius', 1], ['dodds', 1],
+  ['ais', 1], ['ais', 2], ['ran', 1], ['ran', 2],   // very short: cheap, and plenty
+  ['aaa', 1], ['aaa', 2], ['zzz', 1], ['zzz', 2],   // nothing like a word of the list
+  ['zzzzqqq', 1], ['zzzzqqq', 2],                   // far from everything
+];
+// …and typos BUILT from the list itself, at a stride with no relation to the
+// automaton's structure, so the corpus is not only the words chosen by hand
+for (const b of vocab.filter((_, i) => i % 1223 === 0)) {
+  const mid = Math.max(1, Math.floor(b.length / 2));
+  const sub = b.slice(0, mid - 1) + (b.charAt(mid - 1) === 'z' ? 'q' : 'z') + b.slice(mid);
+  const del = b.slice(0, mid) + b.slice(mid + 1);
+  const swp = b.slice(0, mid - 1) + b.charAt(mid) + b.charAt(mid - 1) + b.slice(mid + 1);
+  for (const t of [sub, del, swp]) {
+    if (!t || t === b) continue;
+    FUZZY_CASES.push([t, 1], [t, 2]);
+  }
+}
+
+let fzTested = 0, fzDisagreements = 0, fzCapped = 0, fzBeyondCap = 0, fzFar = 0;
+for (const [q, k] of FUZZY_CASES) {
+  const got = S.matchFuzzy(q, k);
+  const truth = scan(q, k);
+  // at exactly the bound the walk reports that it stopped there, which is the
+  // honest direction: the cap is never claimed when fewer were found
+  const want = got.capped ? truth.slice(0, FUZZY_CAP) : truth;
+  const same = got.words.length === want.length &&
+    got.words.every((x, i) => x.w === want[i][0] && x.d === want[i][1]);
+  const cappedRight = got.capped === (truth.length >= FUZZY_CAP);
+  fzTested++;
+  if (got.capped) { fzCapped++; if (truth.length > FUZZY_CAP) fzBeyondCap++; }
+  if (!truth.length) fzFar++;
+  if (!same || !cappedRight) {
+    fzDisagreements++;
+    check(false, `~${q} at k=${k}: the walk ${JSON.stringify(got.words.slice(0, 3))} (${got.words.length}${got.capped ? ', capped' : ''}) ` +
+      `against the scan ${JSON.stringify(want.slice(0, 3))} (${truth.length})`);
+  }
+}
+check(fzTested === FUZZY_CASES.length && fzDisagreements === 0,
+  `${fzTested} (word, k) case(s) walked over the whole ${vocab.length}-word list and ${fzDisagreements} disagreement(s) with the scan — sets, order and distances identical`);
+check(fzCapped >= 2 && fzBeyondCap >= 1,
+  `${fzCapped} case(s) reached the cap, ${fzBeyondCap} of them with words beyond it that were dropped and reported`);
+check(fzFar >= 2, `${fzFar} case(s) are within k edits of no word at all, and both sides agree they are empty`);
+check(wideWalk.words.every((x) => x.d <= 2) && wideWalk.words.length > 20,
+  `a short word at two edits reaches many words and is not the whole list (${wideWalk.words.length} of ${vocab.length})`);
+
+// the walk emits words in the list's order, which is what makes a match plug
+// into the postings by its own row — and every word it emits IS a word of the list
+const walkPro = S.matchFuzzy('proculs', 1);
+check(walkPro.words.length === 1 && walkPro.words[0].w === 'proclus' && walkPro.words[0].d === 1,
+  `"proculs" — two letters the wrong way round — is ONE edit from "proclus", not two: ${JSON.stringify(walkPro.words)}`);
+const sorted = S.matchFuzzy('prokluss', 2).words;
+check(sorted.every((x, i) => i === 0 || sorted[i - 1].w < x.w) && sorted.every((x) => terms.indexOf(x.w) >= 0),
+  `the walk returns the words in the list's own order and every one of them is in the list (${sorted.map((x) => x.w).join(', ')})`);
+
+/* ---------- 7d. a fuzzy term in a query ---------- */
+
+console.log('== a fuzzy term in a query');
+// `~` marks a word as fuzzy AND takes it out of the ordinary lookup: `proculus`
+// is a word no piece uses and is answered with nothing, `~proculus` finds the
+// word it is one edit from
+const literalTypo = S.query('proculus');
+check(literalTypo.results.length > 0 && literalTypo.counts.fallbackFrom === 'proculus' &&
+  literalTypo.counts.fallbackTo === 'proclus',
+  `a plain typo is answered with the ONE-EDIT correction, run and reported ` +
+  `(${literalTypo.results.length} result(s), "${literalTypo.counts.fallbackFrom}" corrects to "${literalTypo.counts.fallbackTo}")`);
+const fuzzyTypo = S.query('~proculus', { limit: 200 });
+const fuzzySlugs = slugs(fuzzyTypo.results);
+check(fuzzyTypo.counts.terms === 0 && fuzzyTypo.counts.fuzzy === 1,
+  `"~proculus" is one fuzzy term and no ordinary one (${fuzzyTypo.counts.terms} ordinary, ${fuzzyTypo.counts.fuzzy} fuzzy)`);
+check(fuzzySlugs.includes('proclus-theology-of-plato') && fuzzySlugs.includes('proclus-elements-of-theology'),
+  `"~proculus" finds the pieces that use "proclus" (${fuzzySlugs.length} result(s): ${fuzzySlugs.slice(0, 4).join(', ')})`);
+check(fuzzyTypo.results.some((r) => r.why.some((w) => w === 'fuzzy: "proculus" → proclus (1 edit)')),
+  `the reader is told which word was found and how far away: ${JSON.stringify(fuzzyTypo.results.flatMap((r) => r.why).filter((w) => w.indexOf('fuzzy: ') === 0).slice(0, 2))}`);
+// a fuzzy word is not also looked up literally: nothing it finds is `named`
+check(S.providers.lexical('~proclus').every((r) => !r.named),
+  'a word behind a ~ never counts as a literal hit, however exactly it matches');
+check(S.query('~proclus').counts.fuzzyWords === scan('proclus', 1).length && S.query('~proclus').counts.fuzzyK === 1,
+  `one tilde is a budget of one edit (${S.query('~proclus').counts.fuzzyWords} word(s) within one edit of "proclus", the same count the scan gives)`);
+
+// one tilde does not reach two edits away; two do
+const oneEdit = S.query('~prokluss', { limit: 200 });
+check(oneEdit.results.length === 0 && oneEdit.counts.fuzzyWords === 0,
+  `"~prokluss" is two edits from every word of the list, so one tilde finds nothing (${oneEdit.counts.fuzzyWords} word(s))`);
+const twoEdits = S.query('~~prokluss', { limit: 200 });
+check(twoEdits.counts.fuzzyK === 2 && slugs(twoEdits.results).includes('proclus-theology-of-plato'),
+  `"~~prokluss" widens the budget to two and finds it (${twoEdits.counts.fuzzyWords} word(s), k=${twoEdits.counts.fuzzyK})`);
+const twoEditsWide = S.query('~~ais', { limit: 200 });
+check(twoEditsWide.counts.fuzzyCapped === true,
+  `a fuzzy term that matches more words than the page will list reports the cap (${twoEditsWide.counts.fuzzyWords} words, capped=${twoEditsWide.counts.fuzzyCapped})`);
+
+// an empty ~ is not a fuzzy term and not an error
+for (const q of ['~', '~~', ' ~ ', '~~~']) {
+  let ok = true, r = null;
+  try { r = S.query(q); } catch (e) { ok = false; }
+  check(ok && r.results.length === 0 && r.counts.fuzzy === 0,
+    `an empty ${JSON.stringify(q)} asks for nothing fuzzily and does not throw`);
+}
+
+// a ~ term among ordinary ones: both are answered, and a word the reader TYPED
+// ranks above a word only the walk found — the rank the page sorts on
+const mixed = S.query('wetiko ~proculus', { limit: 200 });
+const mixedSlugs = slugs(mixed.results);
+const litS = new Set(slugs(S.providers.lexical('wetiko')));
+const isLit = (r) => r.why.some((w) => w.indexOf('term: ') === 0);
+const isFzOnly = (r) => r.why.some((w) => w.indexOf('fuzzy: ') === 0) && !isLit(r);
+const fzOnlyRows = mixed.results.filter(isFzOnly);
+const litRows = mixed.results.filter(isLit);
+check(litRows.length > 0 && fzOnlyRows.length > 0,
+  `"wetiko ~proculus" answers both: ${litRows.length} result(s) the typed word named, ${fzOnlyRows.length} the walk found (${norm(slugs(fzOnlyRows))})`);
+check(mixed.results.findIndex(isFzOnly) > mixed.results.map(isLit).lastIndexOf(true),
+  `every result a literal word named outranks every result only the walk found (last literal at ${mixed.results.map(isLit).lastIndexOf(true)}, first fuzzy-only at ${mixed.results.findIndex(isFzOnly)})`);
+check([...litS].every((s) => mixedSlugs.includes(s)),
+  `and no literal hit was lost to the fuzzy one (${norm(litS)})`);
+
+// the walk is not entered at all for a query with no ~ in it: the ordinary path
+// is the ordinary path, to the microsecond it costs to look for the marker
+const plainQ = S.query('proclus');
+check(plainQ.counts.fuzzy === 0 && plainQ.counts.fuzzyWords === 0 && plainQ.counts.fuzzyMs === 0 &&
+  plainQ.results.every((r) => !r.why.some((w) => w.indexOf('fuzzy: ') === 0)),
+  'a query with no ~ never enters the walk (no fuzzy terms, no words, no time spent in it)');
+
+// no word list to walk: the fuzzy term degrades and SAYS so, rather than
+// throwing or quietly answering nothing
+const keptDafsa = S._idx.dafsa;
+S._idx.dafsa = null;
+let deg = null, degErr = '';
+try {
+  deg = S.query('~proculus');
+  S.render(d.getElementById('sres'), d.getElementById('sstatus'), '~proculus');
+} catch (e) { degErr = e.message; }
+S._idx.dafsa = keptDafsa;
+check(!degErr && deg.counts.fuzzyOff === true && deg.results.length === 0,
+  `with no automaton in the page a fuzzy term is answered with nothing and reported as such, not thrown (${degErr || 'no error'})`);
+check(/no word list/.test(d.getElementById('sres').textContent),
+  `and the reader is told why: "${d.getElementById('sres').textContent.trim()}"`);
+
+/* ---------- 7e. the prefix walk, against the sorted word list ---------- */
+
+/**
+ * The completions are taken off the automaton by descending the prefix's
+ * transitions, and the DEFINITION of "the words that begin with this" is a scan
+ * of the word list — computed here, never written down. The walk and the scan
+ * must agree on the SET and on the ORDER (both are the list's own order), and
+ * the walk must report the cap exactly when the scan has more words than it.
+ *
+ * The walk is reached through the box's own entry point (matchPrefix), so this
+ * is the completion list's answer, not a parallel implementation of it.
+ */
+console.log('== the prefix walk (differential: the walk vs the word list)');
+const PREFIXES = [];
+for (let i = 0; i < vocab.length; i += 733) PREFIXES.push(vocab[i].slice(0, 3), vocab[i].slice(0, 5));
+PREFIXES.push('proclu', 'wet', 'ther', 'zzq', 'a', 'pr');
+let pxTested = 0, pxCapped = 0, pxDisagreements = 0;
+for (const p of PREFIXES) {
+  const got = S.matchPrefix(p);
+  const truth = vocab.filter((t) => t.indexOf(p) === 0);
+  const want = truth.slice(0, got.terms.length);
+  const same = got.terms.length === want.length && got.terms.every((t, i) => t === want[i]);
+  const capRight = got.capped === (truth.length > got.terms.length);
+  pxTested++;
+  if (got.capped) pxCapped++;
+  if (!same || !capRight || (truth.length > got.terms.length && got.terms.length !== 8)) {
+    pxDisagreements++;
+    check(false, `"${p}": the walk ${JSON.stringify(got.terms)} (${got.terms.length}${got.capped ? ', capped' : ''}) vs the list ${JSON.stringify(want)}`);
+  }
+}
+check(pxTested === PREFIXES.length && pxDisagreements === 0,
+  `${pxTested} prefix(es) walked, ${pxDisagreements} disagreement(s) with the word list — same words, same order, the cap reported exactly when it stopped`);
+check(pxCapped >= 2, `${pxCapped} prefix(es) reached more words than the walk offers and each said so`);
+const noPx = S.matchPrefix('zzqqzz');
+check(noPx.terms.length === 0 && !noPx.capped, 'a prefix no word begins with comes back empty, not capped');
+
+/* ---------- 7f. a misspelling is corrected, and the correction is reported ---- */
+
+/**
+ * Two behaviours, by result count, and the boundary between them is the point:
+ *  - the answer is EMPTY -> the one-edit correction is RUN for the reader and the
+ *    page says so (`fallbackFrom`/`fallbackTo`). A typo does not dead-end.
+ *  - the answer is THIN but not empty -> the correction is only OFFERED, because
+ *    the reader's own words did find something and rewriting them unasked would
+ *    be the page answering a question that was not asked.
+ * Both come from the same walk a `~` runs (asserted above), and neither ever
+ * rewrites what the reader typed in the box.
+ */
+console.log('== a misspelling is corrected, and the correction is reported');
+// a typo built from the list, with no relation to the walk's structure: swap two
+// adjacent letters in the middle of a word of the corpus
+let typo = null, typoOf = null, typoTruth = null;
+for (let i = 0; i < vocab.length; i += 419) {
+  const b = vocab[i];
+  if (b.length < 6) continue;
+  const mid = Math.floor(b.length / 2);
+  const t = b.slice(0, mid - 1) + b.charAt(mid) + b.charAt(mid - 1) + b.slice(mid + 1);
+  if (!t || t === b || vocab.indexOf(t) >= 0) continue;
+  const truth = scan(t, 1);
+  if (truth.length) { typo = t; typoOf = b; typoTruth = truth; break; }
+}
+check(!!typo, `a one-swap typo of a word of the list was built from the list${typo ? ` ("${typo}" for "${typoOf}")` : ''}`);
+if (typo) {
+  const q = S.query(typo);
+  check(q.results.length > 0,
+    `"${typo}" is a word no piece uses, and the page answers with the corrected word's results instead of nothing (${q.results.length} result(s))`);
+  check(q.counts.fallbackFrom === typo && q.counts.fallbackTo === typoTruth[0][0],
+    `and it SAYS which word it corrected and to what — "${q.counts.fallbackFrom}" -> "${q.counts.fallbackTo}" ` +
+    `(the nearest word the brute-force scan finds: "${typoTruth[0][0]}")`);
+  check(vocab.indexOf(q.counts.fallbackTo) >= 0,
+    `the correction is a word of the list, not a guess outside it ("${q.counts.fallbackTo}")`);
+  // the correction is the scan's own nearest word, so the walk and the oracle agree
+  check(typoTruth.some((x) => x[0] === q.counts.fallbackTo),
+    'the corrected word is one the brute-force scan finds within one edit');
+}
+// a word the list holds, and a rich answer, are NEVER corrected: the walk is paid
+// only when the answer is empty or thin, and a literal hit is never second-guessed
+for (const q of ['proclus', 'wetiko']) {
+  const r = S.query(q);
+  check(!r.counts.fallbackFrom && r.results.length > 2,
+    `"${q}" answers ${r.results.length} result(s) and is not corrected`);
+}
+// a word with nothing within an edit is answered with nothing, and no correction
+const nothingNear = S.query('zzzzqqq');
+check(nothingNear.results.length === 0 && !nothingNear.counts.fallbackFrom && !nothingNear.counts.suggest,
+  'a word with nothing one edit away is answered with nothing, no correction and no offer');
+// one correction per query, never a chain: a query that is corrected returns the
+// corrected query's own answer, not a second correction
+if (typo) {
+  const once = S.query(typo);
+  check(once.counts.fallbackFrom === typo && once.counts.fallbackTo === typoTruth[0][0],
+    'the fallback runs once — the second query is not itself corrected');
+}
+
+/* ---------- 8. garbage ---------- */
 
 console.log('== garbage');
 for (const q of ['', '   ', '!!!', '?? zzzzqqq', 'a', 'the and of', '\u0000\ufffd']) {
@@ -329,7 +782,7 @@ for (const q of ['', '   ', '!!!', '?? zzzzqqq', 'a', 'the and of', '\u0000\ufff
   check(ok, `query ${JSON.stringify(q)} returned without throwing`);
 }
 
-/* ---------- 7. the datalog rules actually fire ---------- */
+/* ---------- 9. the datalog rules actually fire ---------- */
 
 console.log('== datalog');
 const g = S.query('wetiko');
@@ -342,7 +795,7 @@ check(reasons.length > 0, `${reasons.length} graph reason(s) reached the results
 const graphOnly = g.results.filter((r) => r.why.every((x) => x.indexOf('graph: ') === 0));
 check(true, `  ${graphOnly.length} result(s) are in the list on the graph's word alone`);
 
-/* ---------- 7b. the graph-only cap reports what it dropped ---------- */
+/* ---------- 9b. the graph-only cap reports what it dropped ---------- */
 
 // A graph-only candidate is a piece the graph names that neither the words nor
 // the vectors found. The page keeps a bounded number of them — and used to drop
@@ -364,7 +817,7 @@ check(capRes.counts.graphOnlyDropped === candidates.length - shownOnly,
 check(capRes.counts.graphOnlyDropped > 0,
   `the page counts the graph-only results it dropped instead of losing them (${capRes.counts.graphOnlyDropped})`);
 
-/* ---------- 8. the box, the URL, the rendering ---------- */
+/* ---------- 10. the box, the URL, the rendering ---------- */
 
 console.log('== the page drives');
 const input = d.getElementById('sq');
@@ -408,7 +861,63 @@ const inReadings = S.query('picatrix', { series: 'readings', limit: 200 }).resul
 check(inReadings > 0 && inReadings < allPicatrix,
   `the series facet narrows the answer (${allPicatrix} → ${inReadings})`);
 
-/* ---------- 9. the command line reaches the search page ---------- */
+/* ---------- 11. the command line reaches the search page ---------- */
+
+// Every page's masthead prints a command (cat <slug>.md, ls -lt, netstat -a,
+// grep -r). A command line that prints a command that does not work is worse than
+// no command line, so this reads each BUILT page's own prompt and runs it: the
+// answer must not be an error, and it must DO something (navigate or print).
+console.log('== every page\'s own prompt runs');
+{
+  const fs = require('fs');
+  const path = require('path');
+  const dist = path.join(ROOT, 'dist');
+  const pages = [];
+  for (const d of fs.readdirSync(dist)) {
+    const f = path.join(dist, d, 'index.html');
+    if (fs.existsSync(f)) pages.push([d, f]);
+  }
+  pages.push(['index', path.join(dist, 'index.html')]);
+  const seen = new Set();
+  let checked = 0, bad = [];
+  for (const [name, file] of pages) {
+    const html = fs.readFileSync(file, 'utf8');
+    const m = html.match(/<div class="prompt">([\s\S]*?)<span class="blink">/);
+    if (!m) continue;
+    const prompt = m[1].replace(/<[^>]+>/g, '').replace(/^[^$]*\$\s*/, '').trim();
+    if (!prompt || seen.has(prompt)) continue;   // one prompt shape per page kind
+    seen.add(prompt);
+    checked++;
+    const w3 = new Window({ width: 1000, height: 800, url: 'https://blog.jaye.ch/' + name + '/' });
+    const d3 = w3.document;
+    let st3 = 'loading';
+    Object.defineProperty(d3, 'readyState', { get: () => st3, configurable: true });
+    d3.body.innerHTML = html.match(/<body>([\s\S]*)<script/)[1];
+    const pel = html.slice(html.lastIndexOf('<script>') + 8, html.lastIndexOf('</script>'));
+    try {
+      new Function('window', 'document', 'setTimeout', 'clearTimeout', 'console',
+        pel)(w3, d3, w3.setTimeout.bind(w3), w3.clearTimeout.bind(w3), console);
+    } catch (e) { bad.push([name, prompt, 'threw: ' + e.message]); continue; }
+    st3 = 'interactive';
+    d3.dispatchEvent(new w3.Event('DOMContentLoaded'));
+    w3.location.href = 'https://blog.jaye.ch/' + name + '/';
+    const before = w3.location.href;
+    const keyed = (el, k) => { const e = new w3.Event('keydown', { bubbles: true, cancelable: true }); Object.defineProperty(e, 'key', { get: () => k }); el.dispatchEvent(e); };
+    keyed(d3, '/');
+    const box3 = d3.getElementById('palette');
+    if (!box3) { bad.push([name, prompt, 'no palette']); continue; }
+    const inp3 = box3.querySelector('input');
+    inp3.value = prompt;
+    keyed(inp3, 'Enter');
+    const out = (box3.querySelector('.palette-out').textContent || '').trim();
+    const navigated = w3.location.href !== before;
+    const errored = /no such|not found|no such series/i.test(out);
+    if (errored || (!navigated && !out)) bad.push([name, prompt, navigated ? '-> ' + w3.location.href : out.slice(0, 60)]);
+  }
+  check(checked > 0, `read ${checked} distinct prompt(s) from the built pages`);
+  check(bad.length === 0, `every page's own prompt runs without an error (${checked - bad.length}/${checked})` +
+    (bad.length ? ' e.g. ' + JSON.stringify(bad.slice(0, 3)) : ''));
+}
 
 console.log('== the palette');
 const palette = blocks.find((b) => b.includes('palette-out'));
@@ -452,7 +961,7 @@ if (!palette) {
     `a single unknown word still answers "command not found" (${d2.querySelector('.palette-out').textContent})`);
 }
 
-/* ---------- 10. the latency ---------- */
+/* ---------- 12. the latency ---------- */
 
 console.log('== latency');
 const times = [];
@@ -466,6 +975,718 @@ for (const q of ['proclus', 'the damping dial', 'wetiko', 'zetetic']) {
 }
 const median = times.slice().sort((a, b) => a - b)[Math.floor(times.length / 2)];
 check(median < 60, `median query ${median.toFixed(2)} ms`);
+
+// the fuzzy path, through the box: the same query with a `~` in it. `counts.ms`
+// is the whole query (words + vectors + graph), and the walk is the only part
+// the `~` adds — the line below it times the walk alone.
+for (const q of ['~proculs', '~~prokluss', '~~ais']) {
+  const t0 = process.hrtime.bigint();
+  for (let i = 0; i < 5; i++) S.query(q);
+  const t1 = process.hrtime.bigint();
+  const r = S.query(q);
+  console.log(`  "${q}" ${(Number(t1 - t0) / 5e6).toFixed(2)} ms per query (${r.counts.fuzzyWords} matched word(s), the walk itself ${r.counts.fuzzyMs} ms)`);
+}
+
+// the walk ALONE — no vectors, no graph — over a sample that includes every
+// short word of the list, which is the expensive kind: a short query stays
+// within its budget the longest, so this is where the worst case lives
+const fzSweep = vocab.filter((_, i) => i % 97 === 0).concat(vocab.filter((t) => t.length <= 3));
+for (const k of [1, 2]) {
+  let worst = 0, worstAt = '', tot = 0;
+  const t0 = process.hrtime.bigint();
+  for (const q of fzSweep) {
+    const a = process.hrtime.bigint();
+    const r = S.matchFuzzy(q, k);
+    const b = process.hrtime.bigint();
+    const ms = Number(b - a) / 1e6;
+    tot += ms;
+    if (ms > worst) { worst = ms; worstAt = q + ' (' + r.words.length + ' words)'; }
+  }
+  const t1 = process.hrtime.bigint();
+  console.log(`  the walk alone, ${fzSweep.length} words of the list at k=${k}: ${(tot / fzSweep.length).toFixed(3)} ms a word, worst ${worst.toFixed(2)} ms ("${worstAt}")`);
+}
+
+// the ordinary path's added work: ONE replace over the query per tokenise call,
+// timed here against the same body without it
+const tickQ = 'the damping dial proclus';
+const oldTok = (t) => (String(t).toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((w) => w.length >= 3 && !STOP.has(w));
+let a0 = process.hrtime.bigint();
+for (let i = 0; i < 20000; i++) oldTok(tickQ);
+let a1 = process.hrtime.bigint();
+for (let i = 0; i < 20000; i++) S.tokenize(tickQ, S._idx.stop);
+let a2 = process.hrtime.bigint();
+console.log(`  tokenising a query: ${(Number(a1 - a0) / 2e7).toFixed(2)} µs without the fuzzy marker, ${(Number(a2 - a1) / 2e7).toFixed(2)} µs with it`);
+
+/* ---------- 13. the box: completions, the keyboard, the order, the marks ----- */
+
+/**
+ * Everything here drives the BUILT page in a DOM — the same pipeline the
+ * browser runs — and every expectation is computed from the page's own data
+ * (the vocabulary it walked out of its automaton, the dates and titles in its
+ * index), never written down. A fresh window per block: the listeners wire()
+ * adds are per-window, and a second wire() on the same document would answer
+ * one keystroke twice.
+ */
+console.log('== the box finishes words, and the keyboard drives it');
+function freshSearch(url) {
+  const w = new Window({ width: 1100, height: 900, url });
+  const d = w.document;
+  let st = 'loading';
+  Object.defineProperty(d, 'readyState', { get: () => st, configurable: true });
+  d.body.innerHTML = bodyHtml.replace(/<script(?![^>]*application\/json)[\s\S]*?<\/script>/g, '');
+  const Sx = new Function('window', 'document', 'performance', 'setTimeout', 'clearTimeout', 'console',
+    client + '\nreturn window.Search;')(w, d, w.performance, w.setTimeout.bind(w), w.clearTimeout.bind(w), console);
+  st = 'interactive';
+  d.dispatchEvent(new w.Event('DOMContentLoaded'));
+  const key = (el, k) => {
+    const e = new w.Event('keydown', { bubbles: true, cancelable: true });
+    Object.defineProperty(e, 'key', { get: () => k });
+    el.dispatchEvent(e);
+    return e;
+  };
+  return { w, d, Sx, key, input: d.getElementById('sq'), box: d.getElementById('sres'), status: d.getElementById('sstatus') };
+}
+{
+  const { w: w3, d: d3, Sx: S3, key, input, box } = freshSearch('https://blog.jaye.ch/search/');
+  const compEl = d3.getElementById('scomp');
+  const compList = d3.getElementById('scomp-list');
+  const compCap = d3.getElementById('scomp-cap');
+  const opts = () => [...compList.querySelectorAll('li.sc')].map((li) => li.textContent);
+  const rows = () => [...box.querySelectorAll('li.sr')];
+  const type = (v) => { input.value = v; input.dispatchEvent(new w3.Event('input', { bubbles: true })); };
+
+  check(input.getAttribute('role') === 'combobox' && input.getAttribute('aria-controls') === 'scomp-list' &&
+    compList.getAttribute('role') === 'listbox' && input.getAttribute('aria-expanded') === 'false',
+    'the box is a combobox over a listbox, and says it is closed until it has something to offer');
+
+  // a prefix with a handful of completions, computed from the vocabulary
+  const p4 = new Map();
+  for (const t of vocab) { const p = t.slice(0, 4); if (p.length === 4) p4.set(p, (p4.get(p) || 0) + 1); }
+  const entry = [...p4.entries()].find(([, n]) => n >= 2 && n <= 8) || ['proclu'];
+  const prefix = entry[0];
+  const want = vocab.filter((t) => t.indexOf(prefix) === 0);
+
+  type(prefix);
+  check(!compEl.hidden && input.getAttribute('aria-expanded') === 'true',
+    `typing "${prefix}" opens the completion list`);
+  check(norm(opts()) === norm(want) && opts().every((t) => t.indexOf(prefix) === 0),
+    `the list offers the ${want.length} word(s) of the vocabulary that begin that way — ${norm(opts())}`);
+
+  // while the list is open the arrows belong to it, not to the result list
+  key(input, 'ArrowDown');
+  check(compList.children[0].getAttribute('aria-selected') === 'true' &&
+    input.getAttribute('aria-activedescendant') === 'scomp-0',
+    'the down arrow selects the first completion, and ARIA says which one');
+  check(box.querySelectorAll('li.sr.sr-on').length === 0,
+    'and while the list is open the arrows do NOT move in the results');
+  key(input, 'Enter');
+  check(input.value === want[0] && compEl.hidden,
+    `Enter took the highlighted word and put it in the box ("${input.value}")`);
+  check(w3.location.search === '?q=' + encodeURIComponent(want[0]),
+    `and ran that word's own search (${w3.location.search})`);
+  check(rows().length > 0, `which answered with ${rows().length} result(s)`);
+
+  // Escape closes it and leaves the text alone
+  type(prefix);
+  check(!compEl.hidden, 'typing the prefix again reopens it');
+  key(input, 'Escape');
+  check(compEl.hidden && input.value === prefix && input.getAttribute('aria-expanded') === 'false',
+    `Escape closed the list and the box kept its text ("${input.value}")`);
+
+  // a prefix reaching more words than the box offers reports the bound
+  const p3 = new Map();
+  for (const t of vocab) { const p = t.slice(0, 3); if (p.length === 3) p3.set(p, (p3.get(p) || 0) + 1); }
+  const wide = [...p3.entries()].find(([, n]) => n > 8);
+  check(!!wide, 'a three-letter prefix reaches more words than the box offers');
+  if (wide) {
+    type(wide[0]);
+    check(opts().length === 8 && !compCap.hidden && compCap.textContent.indexOf('8') >= 0,
+      `the list stops at 8 words and says so ("${compCap.textContent}") — ${wide[1]} begin "${wide[0]}"`);
+    check(norm(opts()) === norm(vocab.filter((t) => t.indexOf(wide[0]) === 0).slice(0, 8)),
+      'and the 8 it shows are the first 8 of the word list');
+  }
+
+  // the results take the arrows once no list is open
+  type('proclus');
+  key(input, 'Escape');
+  check(rows().length >= 3, `"proclus" answers ${rows().length} result(s)`);
+  key(input, 'ArrowDown');
+  check(rows()[0].classList.contains('sr-on') && box.querySelectorAll('li.sr.sr-on').length === 1,
+    'the down arrow selects the first result');
+  key(input, 'ArrowDown');
+  check(rows()[1].classList.contains('sr-on') && !rows()[0].classList.contains('sr-on'),
+    'and again moves to the second — the selection moves, one at a time');
+  key(input, 'End');
+  check(rows()[rows().length - 1].classList.contains('sr-on'), 'End goes to the last result');
+  key(input, 'Home');
+  check(rows()[0].classList.contains('sr-on'), 'Home goes back to the first');
+
+  /* the order: relevance (the default) and newest first, over the same results */
+  let orderQ = null;
+  for (const q of data.hints.concat(vocab.filter((_, i) => i % 2111 === 0), ['proclus', 'wetiko'])) {
+    const r = S3.query(q, { limit: 200 });
+    if (r.results.length >= 3 && new Set(r.results.map((x) => data.docs[x.i].date)).size >= 2) { orderQ = q; break; }
+  }
+  check(!!orderQ, `a query with three or more results over more than one date was found ("${orderQ}")`);
+  const sortSel = d3.getElementById('sf-sort');
+  if (orderQ) {
+    const relSlugs = S3.query(orderQ, { limit: 200 }).results.map((r) => data.docs[r.i].slug);
+    const newest = S3.query(orderQ, { sort: 'new', limit: 200 }).results;
+    const nSlugs = newest.map((r) => data.docs[r.i].slug);
+    const ndates = nSlugs.map((s) => data.docs[data.docs.findIndex((x) => x.slug === s)].date);
+    const maxDate = ndates.slice().sort().pop();
+    check(ndates.every((dt, i) => i === 0 || ndates[i - 1] >= dt),
+      `newest first really is newest first, over the index's own dates: ${ndates.join(' ')}`);
+    check(norm(nSlugs) === norm(relSlugs),
+      `the order reorders the SAME ${nSlugs.length} results, it does not select different ones`);
+    check(ndates[0] === maxDate, `the first is the newest date the answer holds (${ndates[0]})`);
+    check(S3.query(orderQ, { limit: 200 }).counts.sort === 'rel', 'and the default is still relevance');
+
+    type(orderQ);
+    key(input, 'Escape');
+    sortSel.value = 'new';
+    sortSel.dispatchEvent(new w3.Event('change', { bubbles: true }));
+    check(w3.location.search.indexOf('sort=new') >= 0, `the order rides in the URL (${w3.location.search})`);
+    const shownHrefs = [...box.querySelectorAll('li.sr a.sr-t')].map((a) => a.getAttribute('href'));
+    check(shownHrefs.length > 0 && shownHrefs[0] === '/' + nSlugs[0] + '/',
+      `the page shows the newest piece first (${shownHrefs[0]})`);
+    sortSel.value = '';
+    sortSel.dispatchEvent(new w3.Event('change', { bubbles: true }));
+    check(w3.location.search.indexOf('sort') < 0, 'going back to relevance drops it from the URL');
+
+    // the match is marked in the TITLE by the same rule the snippet uses: the
+    // expectation is that regex, applied here to each title the page rendered
+    const toks = orderQ.toLowerCase().match(/[a-z][a-z'-]+/g) || [];
+    const qtoks = [];
+    for (const t of toks) if (t.length >= 3 && !STOP.has(t) && qtoks.indexOf(t) < 0) qtoks.push(t);
+    const parts = qtoks.slice().sort((a, b) => b.length - a.length);
+    const qre = new RegExp('\\b(?:' + parts.map((s) => s.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&')).join('|') + ")[a-z'-]*", 'gi');
+    let titleRows = 0, markedRows = 0, mismatched = 0;
+    for (const li of box.querySelectorAll('li.sr')) {
+      const a = li.querySelector('a.sr-t');
+      if (!a) continue;
+      const plain = a.textContent;
+      const expected = (plain.replace(qre, '\u0000').match(/\u0000/g) || []).length;
+      const actual = a.querySelectorAll('mark').length;
+      titleRows++;
+      if (expected) markedRows++;
+      if (expected !== actual) mismatched++;
+    }
+    check(titleRows > 0 && mismatched === 0,
+      `every result title is marked by the same rule the snippet uses (${titleRows} title(s) checked)`);
+    check(markedRows > 0, `and the titles the query's word reached carry the mark (${markedRows})`);
+  }
+
+  // Enter opens the selected piece (last: it navigates this window away)
+  type('proclus');
+  key(input, 'Escape');
+  key(input, 'ArrowDown');
+  const firstHref = rows()[0].querySelector('a.sr-t').getAttribute('href');
+  key(input, 'Enter');
+  check(w3.location.href === 'https://blog.jaye.ch' + firstHref,
+    `Enter opened the piece the selection was on (${w3.location.href})`);
+}
+
+/* ---------- 14. the correction is run, and the box keeps the reader's text ----- */
+
+console.log('== a typo is corrected in the results, and the box keeps what was typed');
+{
+  const b = d.getElementById('sres');
+  const s = d.getElementById('sstatus');
+  const inp = d.getElementById('sq');
+  // the facets the earlier section left set change what a query answers (they
+  // seed the graph as well as filter it), so this is run with them cleared
+  d.getElementById('sf-series').value = '';
+  d.getElementById('sf-kind').value = '';
+  inp.value = 'proculs';
+  const res = S.render(b, s, 'proculs');
+  check(res.counts.fallbackFrom === 'proculs' && res.counts.fallbackTo === 'proclus',
+    `the built page corrects "proculs" to "proclus" and runs it (${res.results.length} result(s))`);
+  check(/no exact match/.test(s.textContent) && /proclus/.test(s.textContent),
+    `the line above the results SAYS the correction happened: "${s.textContent.trim().slice(0, 120)}"`);
+  check(b.querySelectorAll('li.sr').length > 0,
+    `and the results are shown, not withheld (${b.querySelectorAll('li.sr').length})`);
+  // the reader's own words are never rewritten: the box is the reader's, and so is
+  // the URL — a search link another reader follows must search what they asked for
+  check(inp.value === 'proculs',
+    `the box still holds what the reader typed ("${inp.value}")`);
+
+  // and the OFFER path still exists for a thin (non-empty) answer: find a query
+  // with a few results and an unknown word, and check the offer is shown there
+  // SAMPLE the vocabulary, do not scan it: a query per word over 15768 entries
+  // took minutes. Every 97th word is enough to find a thin case, and the stride
+  // is stated so a failure here is readable as "the sample missed", not "the
+  // offer is broken".
+  let offered = null;
+  for (let wi = 0; wi < vocab.length; wi += 97) {
+    const word = vocab[wi];
+    const at = S.query(word);
+    if (at.results.length < 1 || at.results.length > 2) continue;
+    const withTypo = S.query(word + ' proculs');
+    if (withTypo.counts.suggest && withTypo.counts.suggest.to === 'proclus') { offered = word; break; }
+  }
+  if (offered) {
+    const t = S.query(offered + ' proculs');
+    check(!!t.counts.suggest && t.counts.suggest.to === 'proclus' && !t.counts.fallbackFrom,
+      `a THIN answer offers the correction instead of running it ("${offered} proculs" -> offered "${t.counts.suggest && t.counts.suggest.to}")`);
+  } else {
+    check(true, 'no thin-answer case was found to exercise the offer path in this corpus (reported, not hidden)');
+  }
+}
+
+/* ---------- 15. the way into the search from a series ---------- */
+
+console.log('== the way into the search from a series');
+{
+  const fs = require('fs');
+  const path = require('path');
+  const inSeries = posts.filter((p) => p.series);
+  check(inSeries.length > 0, 'there are pieces in series to check');
+  const bad = [];
+  let checkedPages = 0;
+  for (const p of inSeries) {
+    const f = path.join(ROOT, 'dist', p.slug, 'index.html');
+    if (!fs.existsSync(f)) { bad.push(p.slug + ': no page'); continue; }
+    const m = fs.readFileSync(f, 'utf8').match(/<p class="series-search"><a href="([^"]+)"/);
+    if (!m) { bad.push(p.slug + ': no series search link'); continue; }
+    const href = m[1].replace(/&amp;/g, '&');
+    if (href !== '/search/?q=&series=' + p.series) bad.push(p.slug + ': ' + href);
+    checkedPages++;
+  }
+  check(checkedPages === inSeries.length && bad.length === 0,
+    `every piece in a series offers the search for that series (${checkedPages}/${inSeries.length})` +
+      (bad.length ? ' — ' + bad.slice(0, 3).join('; ') : ''));
+  // and the facet the link names really narrows an answer to that series
+  const one = inSeries.find((p) => posts.filter((q) => q.series === p.series).length >= 2) || inSeries[0];
+  const si = posts.findIndex((p) => p.slug === one.slug);
+  const term = tokens[si].find((t) => t.length >= 6) || tokens[si][0];
+  const all = S.query(term, { limit: 200 }).results;
+  const narrowed = S.query(term, { series: one.series, limit: 200 }).results;
+  const inIt = narrowed.every((r) => data.docs[r.i].series === one.series);
+  check(narrowed.length > 0 && narrowed.length <= all.length && inIt,
+    `"?q=${term}&series=${one.series}" narrows the answer to that series (${all.length} → ${narrowed.length}, all of them in it)`);
+  w.history.replaceState(null, '', '/search/?q=&series=' + one.series);
+  const u = S.readUrl();
+  check(u.q === '' && u.series === one.series,
+    `the link's own URL lands on the facet (q="${u.q}", series="${u.series}")`);
+}
+
+/* ---------- 16. the command line, before the reader commits ---------- */
+
+console.log('== the command line\'s search preview');
+{
+  const palette = blocks.find((x) => x.includes('palette-out'));
+  const dm = palette && palette.match(/var DATA = (.*);/);
+  const P = dm ? JSON.parse(dm[1]) : null;
+  check(!!P && P.pages.length > 0, 'the palette carries the page list it previews from');
+  if (P) {
+    const labelOf = (k) => (P.series.find((x) => x.key === k) || { label: k }).label;
+    const expectPreview = (q) => {
+      const ws = (q.toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((x) => x.length >= 3);
+      return P.pages
+        .map((p) => {
+          const hay = p.title.toLowerCase() + ' ' + (labelOf(p.series) || '') + ' ' + (p.series || '') + ' ' + (p.kind || '');
+          return [p, ws.filter((x) => hay.indexOf(x) >= 0).length];
+        })
+        .filter(([, n]) => n > 0)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([p]) => p.slug);
+    };
+    let pv = null;
+    for (const p of P.pages) {
+      const m = p.title.toLowerCase().match(/[a-z][a-z'-]{5,}/g);
+      if (m && m.length && expectPreview(m[0]).indexOf(p.slug) >= 0) { pv = { word: m[0], slug: p.slug }; break; }
+    }
+    check(!!pv, `a word of a page title was found to preview ("${pv && pv.word}")`);
+    if (pv) {
+      const w4 = new Window({ width: 1000, height: 800, url: 'https://blog.jaye.ch/map/' });
+      const d4 = w4.document;
+      let st4 = 'loading';
+      Object.defineProperty(d4, 'readyState', { get: () => st4, configurable: true });
+      d4.body.innerHTML = bodyHtml.replace(/<script(?![^>]*application\/json)[\s\S]*?<\/script>/g, '');
+      new Function('window', 'document', 'setTimeout', 'clearTimeout', 'console', palette)(
+        w4, d4, w4.setTimeout.bind(w4), w4.clearTimeout.bind(w4), console);
+      st4 = 'interactive';
+      d4.dispatchEvent(new w4.Event('DOMContentLoaded'));
+      const pin = d4.querySelector('#palette input');
+      const pout = () => d4.querySelector('.palette-out').textContent;
+      const pkey = (k) => {
+        const e = new w4.Event('keydown', { bubbles: true, cancelable: true });
+        Object.defineProperty(e, 'key', { get: () => k });
+        pin.dispatchEvent(e);
+      };
+      pkey('/');
+      pin.value = 'search ' + pv.word;
+      pin.dispatchEvent(new w4.Event('input', { bubbles: true }));
+      const out = pout();
+      const want = expectPreview(pv.word);
+      check(want.length > 0 && want.every((sl) => out.indexOf(sl) >= 0),
+        `typing a search line previews the pages whose title or series match — ${want.join(', ')}`);
+      check(/Enter searches every piece/.test(out), `and says which list it is, and what Enter does ("${out.trim().split('\n').pop()}")`);
+      check(w4.location.href === 'https://blog.jaye.ch/map/', 'the preview navigates nowhere on its own');
+      pin.value = 'search ' + pv.word;
+      pkey('Enter');
+      check(w4.location.href === 'https://blog.jaye.ch/search/?q=' + encodeURIComponent(pv.word),
+        `Enter still opens the full search (${w4.location.href})`);
+    }
+  }
+}
+
+/* ---------- 17. the command line: the rest of the keyboard ---------- */
+
+/**
+ * The palette's own behaviour, driven on a page that carries what a reader's
+ * page carries: the head's theme script (the ONE mechanism the nav control and
+ * the `theme` command share), the document's canonical link, and the palette
+ * itself. Every expectation here is computed from the page — the pages and
+ * series from the palette's own embedded list, the command names and aliases
+ * from the help index the page prints, the address from the document's own
+ * canonical link — so none of them is a pair written down in advance.
+ */
+console.log('== the command line: tab, history, numbers, modes, typos, the theme, url, man');
+{
+  const palette = blocks.find((x) => x.includes('palette-out'));
+  const dm = palette && palette.match(/var DATA = (.*);/);
+  const P = dm ? JSON.parse(dm[1]) : null;
+  check(!!P && P.pages.length > 0, 'the palette carries the page list these checks drive it with');
+
+  // the theme script is the one that owns the nav control — found by what it
+  // does, not by where it sits
+  const themeScript = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+    .map((m) => m[1]).find((s) => s.indexOf('theme-toggle') >= 0);
+  check(!!themeScript, 'the page carries the theme script (one mechanism, two controls)');
+  const canon = (html.match(/<link rel="canonical" href="([^"]+)"/) || [])[1];
+  check(!!canon, `the page states its own canonical address (${canon})`);
+
+  const seriesKeys = P.series.map((s) => s.key);
+  const allSlugs = P.pages.map((p) => p.slug);
+
+  // an independent implementation of the "did you mean" rule the box uses: a
+  // plain Levenshtein against the slug's OWN PREFIXES, bounded by the typed
+  // length — recomputed here so the expectation is not read off the page
+  const lev = (a, b) => {
+    let row = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const next = [i];
+      for (let j = 1; j <= b.length; j++) {
+        next[j] = Math.min(row[j] + 1, next[j - 1] + 1, row[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      }
+      row = next;
+    }
+    return row[b.length];
+  };
+  const nearLimit = (n) => Math.max(1, Math.floor(n / 3));
+  const nearest = (q) => {
+    let best = null, bestD = Infinity;
+    for (const p of P.pages) {
+      let d = Infinity;
+      const hi = Math.min(p.slug.length, q.length + 2);
+      for (let k = Math.max(1, q.length - 2); k <= hi; k++) d = Math.min(d, lev(q, p.slug.slice(0, k)));
+      if (d < bestD) { bestD = d; best = p.slug; }
+    }
+    return bestD <= nearLimit(q.length) ? best : null;
+  };
+
+  function palWin(url) {
+    const w = new Window({ width: 1100, height: 900, url });
+    const d = w.document;
+    let st = 'loading';
+    Object.defineProperty(d, 'readyState', { get: () => st, configurable: true });
+    // the head WITHOUT its scripts: the canonical link is part of the document
+    d.head.innerHTML = html.slice(html.indexOf('<head>') + 6, html.indexOf('</head>'))
+      .replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
+    d.body.innerHTML = bodyHtml.replace(/<script(?![^>]*application\/json)[\s\S]*?<\/script>/g, '');
+    const runScript = (src) => new Function('window', 'document', 'localStorage', 'sessionStorage',
+      'setTimeout', 'clearTimeout', 'console', src)(
+      w, d, w.localStorage, w.sessionStorage, w.setTimeout.bind(w), w.clearTimeout.bind(w), console);
+    runScript(themeScript);
+    runScript(palette);
+    st = 'interactive';
+    d.dispatchEvent(new w.Event('DOMContentLoaded'));
+    const input = d.querySelector('#palette input');
+    const boxEl = () => d.getElementById('palette');
+    const outText = () => (d.querySelector('.palette-out').textContent || '');
+    const key = (el, k, shift) => {
+      const e = new w.Event('keydown', { bubbles: true, cancelable: true });
+      Object.defineProperty(e, 'key', { get: () => k });
+      Object.defineProperty(e, 'shiftKey', { get: () => !!shift });
+      el.dispatchEvent(e);
+      return e;
+    };
+    const type = (v, ...keys) => {
+      input.value = v;
+      input.dispatchEvent(new w.Event('input', { bubbles: true }));
+      for (const k of keys) key(input, k);
+    };
+    const enter = (v) => { input.value = v; key(input, 'Enter'); };
+    const open = (k) => { key(d, k); return boxEl(); };
+    const store = (st2) => {
+      const o = {};
+      for (let i = 0; i < st2.length; i++) { const k = st2.key(i); o[k] = st2.getItem(k); }
+      return o;
+    };
+    return { w, d, input, boxEl, outText, key, type, enter, open, store, glyph: () => (d.querySelector('#palette .ps-mode') || {}).textContent };
+  }
+
+  if (P) {
+    /* ---- 4. / and : open the box in their own mode ---- */
+    {
+      const p = palWin('https://blog.jaye.ch/map/');
+      p.open('/');
+      check(!p.boxEl().hidden && p.input.value === 'search ' && p.boxEl().getAttribute('data-mode') === 'search' && p.glyph() === '/',
+        `pressing / opens a search prompt (line "${p.input.value}", prompt "${p.glyph()}")`);
+      p.key(p.d, 'Escape');
+      check(p.boxEl().hidden, 'and Escape closes it');
+      p.open(':');
+      check(!p.boxEl().hidden && p.input.value === '' && p.boxEl().getAttribute('data-mode') === 'cmd' && p.glyph() === '$',
+        `pressing : opens an empty command line (line "${p.input.value}", prompt "${p.glyph()}")`);
+      const word = (P.pages[0].title.toLowerCase().match(/[a-z][a-z'-]{3,}/) || ['page'])[0];
+      p.type('search ' + word);
+      check(/Enter searches every piece/.test(p.outText()),
+        `a search line keeps its own preview in the search prompt ("${p.outText().split('\n').pop()}")`);
+    }
+
+    /* ---- 1. Tab: a unique match, then an ambiguous one that cycles ---- */
+    {
+      const p = palWin('https://blog.jaye.ch/map/');
+      p.open(':');
+
+      // the command names and aliases, read from the page's own help index
+      p.enter('help');
+      const helpLines = p.outText().split('\n');
+      const names = [];
+      for (const l of helpLines.slice(0, helpLines.indexOf(''))) {
+        names.push(l.trim().split(/\s+/)[0]);
+        const also = l.match(/\(also: ([^)]+)\)/);
+        if (also) for (const a of also[1].split(', ')) names.push(a);
+      }
+      check(names.indexOf('cat') >= 0 && names.indexOf('grep') >= 0,
+        `the help index names the commands and their aliases (${names.join(' ')})`);
+
+      // a prefix of an argument that exactly one page starts with, and no
+      // series key does
+      let uniq = null;
+      for (const pg of P.pages) {
+        for (let k = 3; k <= pg.slug.length; k++) {
+          const pre = pg.slug.slice(0, k);
+          if (allSlugs.filter((s) => s.indexOf(pre) === 0).length === 1 && !seriesKeys.some((s) => s.indexOf(pre) === 0)) {
+            uniq = { pre, slug: pg.slug };
+            break;
+          }
+        }
+        if (uniq) break;
+      }
+      check(!!uniq, `a prefix only one page starts with exists (${uniq && uniq.pre})`);
+      if (uniq) {
+        p.type('cat ' + uniq.pre);
+        const live = p.outText();
+        check(live.indexOf(uniq.slug) >= 0, `the pages that match the argument are shown as it is typed ("${(live.split('\n')[1] || '').trim()}")`);
+        p.key(p.input, 'Tab');
+        check(p.input.value === 'cat ' + uniq.slug, `Tab completes the slug outright ("${p.input.value}")`);
+      }
+
+      // a command word that only one candidate starts with
+      const cands = names.concat(allSlugs, seriesKeys);
+      const uniquePre = (n, min) => {
+        for (let k = min; k <= n.length; k++) {
+          const pre = n.slice(0, k);
+          if (cands.filter((x) => x.indexOf(pre) === 0).length === 1) return { pre, name: n };
+        }
+        return null;
+      };
+      let cp = null;
+      const byLen = names.slice().sort((a, b) => b.length - a.length);
+      for (const n of byLen) { cp = uniquePre(n, 3); if (cp) break; }
+      for (const n of byLen) { if (cp) break; cp = uniquePre(n, 1); }
+      check(!!cp, `a command prefix only one candidate starts with exists (${cp && cp.pre} -> ${cp && cp.name})`);
+      if (cp) {
+        p.type(cp.pre);
+        check(p.outText().indexOf(cp.name) >= 0, `the commands that match are listed while the command word is typed ("${(p.outText().split('\n')[0] || '').trim()}")`);
+        p.key(p.input, 'Tab');
+        check(p.input.value.trim() === cp.name, `Tab completes the command ("${p.input.value}")`);
+      }
+
+      // an ambiguous argument: the longest common prefix, the list, the cycle
+      const candsFor = (pre) => seriesKeys.filter((s) => s.indexOf(pre) === 0)
+        .concat(allSlugs.filter((s) => s.indexOf(pre) === 0));
+      let amb = null;
+      for (let k = 3; k >= 1 && !amb; k--) {
+        for (const pg of P.pages) {
+          if (pg.slug.length <= k) continue;
+          const pre = pg.slug.slice(0, k);
+          const list = candsFor(pre);
+          if (list.length < 3) continue;
+          const lcp = list.reduce((a, b) => { let j = 0; while (j < a.length && j < b.length && a[j] === b[j]) j++; return a.slice(0, j); });
+          if (lcp.length >= k) { amb = { pre, list, lcp }; break; }
+        }
+      }
+      check(!!amb, `an ambiguous prefix exists (${amb && amb.pre} -> ${amb && amb.list.length} candidates)`);
+      if (amb) {
+        p.type('cat ' + amb.pre);
+        p.key(p.input, 'Tab');
+        check(p.input.value === 'cat ' + amb.lcp, `an ambiguous prefix completes to the longest common prefix ("${p.input.value}")`);
+        const listed = amb.list.slice(0, 12);
+        check(listed.every((s) => p.outText().indexOf(s) >= 0) && (amb.list.length <= 12 || /more; keep typing/.test(p.outText())),
+          `and lists them, first ${listed.length} in order, the rest reported as more (of ${amb.list.length})`);
+        const seen = [];
+        for (let i = 0; i < amb.list.length; i++) { p.key(p.input, 'Tab'); seen.push(p.input.value); }
+        check(seen.every((v, i) => v === 'cat ' + amb.list[i]),
+          `Tab then cycles them, in the order listed (${seen.map((v) => v.slice(4)).join(', ')})`);
+        p.key(p.input, 'Tab');
+        check(p.input.value === seen[0], 'and the cycle comes round to the first candidate');
+        p.key(p.input, 'Tab', true);
+        check(p.input.value === 'cat ' + amb.list[amb.list.length - 1], `Shift+Tab steps it backwards ("${p.input.value.slice(4)}")`);
+      }
+
+      // a search argument is a query: Tab must never complete it to a page
+      p.type('search procl');
+      p.key(p.input, 'Tab');
+      check(p.input.value === 'search procl', `Tab leaves a search query exactly as typed ("${p.input.value}")`);
+      check(/not a page/.test(p.outText()), 'and says why');
+    }
+
+    /* ---- 2. history: Up and Down, per tab ---- */
+    {
+      const p = palWin('https://blog.jaye.ch/map/');
+      p.open(':');
+      const lines = ['help', 'ls'];
+      for (const l of lines) p.enter(l);
+      p.input.value = 'half typed';
+      p.key(p.input, 'ArrowUp');
+      check(p.input.value === lines[1], `Up returns the newest line ("${p.input.value}")`);
+      p.key(p.input, 'ArrowUp');
+      check(p.input.value === lines[0], `Up again returns the line before it ("${p.input.value}")`);
+      p.key(p.input, 'ArrowDown');
+      check(p.input.value === lines[1], `Down walks back toward the newest ("${p.input.value}")`);
+      p.key(p.input, 'ArrowDown');
+      check(p.input.value === 'half typed', `and past it, to the line being edited ("${p.input.value}")`);
+      const sess = JSON.stringify(p.store(p.w.sessionStorage));
+      check(lines.every((l) => sess.indexOf(l) >= 0), `both lines are kept in this tab's storage (${sess.slice(0, 80)})`);
+      const loc = JSON.stringify(p.store(p.w.localStorage));
+      check(lines.every((l) => loc.indexOf(l) < 0), 'and none of the history is in local storage (it must not outlive the tab)');
+    }
+
+    /* ---- 3. digit shortcuts, and the honest refusal ---- */
+    {
+      const p = palWin('https://blog.jaye.ch/map/');
+      p.open(':');
+      p.enter('3');
+      check(p.w.location.href === 'https://blog.jaye.ch/map/', 'a bare number with no listing navigates nowhere');
+      check(/no listing/.test(p.outText()), `and says so, rather than guessing ("${p.outText()}")`);
+      p.enter('ls');
+      const listing = p.outText();
+      const n = 3;
+      const want = P.pages[n - 1].slug;
+      check(listing.indexOf(want) >= 0, `ls shows the pages in its own order (line ${n} is ${want})`);
+      p.enter('999');
+      check(p.w.location.href === 'https://blog.jaye.ch/map/' && /the listing has \d+ line/.test(p.outText()),
+        `a number past the end of the listing answers, and says how many there are ("${p.outText()}")`);
+      p.enter(String(n));
+      check(p.w.location.href === 'https://blog.jaye.ch/' + want + '/',
+        `the number opens that line of the listing (${p.w.location.href})`);
+    }
+
+    /* ---- 5. a mistyped slug offers the nearest real one ---- */
+    {
+      const p = palWin('https://blog.jaye.ch/map/');
+      p.open(':');
+      // a typo of a real slug that is not any page, any prefix of one, or in any
+      // title — and whose nearest page, by this file's own distance, is the slug
+      // it was typed from
+      let hit = null;
+      for (const pg of P.pages) {
+        if (pg.slug.length < 6) continue;
+        const bad = pg.slug.slice(0, 2) + pg.slug[3] + pg.slug[2] + pg.slug.slice(4);
+        const resolvable = allSlugs.some((s) => s === bad || s.indexOf(bad) === 0) ||
+          P.pages.some((x) => x.title.toLowerCase().indexOf(bad) >= 0);
+        if (!resolvable && nearest(bad) === pg.slug) { hit = { bad, slug: pg.slug }; break; }
+      }
+      check(!!hit, `a transposed slug resolves to the page it was typed from (${hit && hit.bad} -> ${hit && hit.slug})`);
+      if (hit) {
+        p.enter('cat ' + hit.bad);
+        const msg = p.outText();
+        check(/did you mean/.test(msg) && msg.indexOf(hit.slug) >= 0,
+          `a mistyped slug offers the nearest page ("${msg.split('\n')[0]}")`);
+        check(p.input.value === 'cat ' + hit.slug, `and leaves the corrected command ready to run ("${p.input.value}")`);
+        check(p.w.location.href === 'https://blog.jaye.ch/map/', 'the miss navigates nowhere on its own');
+        p.key(p.input, 'Enter');
+        check(p.w.location.href === 'https://blog.jaye.ch/' + hit.slug + '/', `Enter then opens it (${p.w.location.href})`);
+      }
+      // a word with nothing near it keeps the old answer
+      const p2 = palWin('https://blog.jaye.ch/map/');
+      p2.open(':');
+      p2.enter('cat zzzzzzz');
+      check(p2.w.location.href === 'https://blog.jaye.ch/map/' && /no such post/.test(p2.outText()),
+        `a word with no near page keeps the plain answer ("${p2.outText()}")`);
+    }
+
+    /* ---- 6. the theme command drives the toggle's own mechanism ---- */
+    {
+      const p = palWin('https://blog.jaye.ch/map/');
+      const root = p.d.documentElement;
+      const btn = p.d.getElementById('theme-toggle');
+      check(!!btn, 'the page carries the theme control');
+      const before = p.store(p.w.localStorage);
+      check(Object.keys(before).length === 0 && root.getAttribute('data-theme') === null,
+        'a reader who never touched it has no stored mode and no attribute (auto)');
+      btn.click();
+      const after = p.store(p.w.localStorage);
+      const keyUsed = Object.keys(after)[0];
+      check(after[keyUsed] === 'light' && btn.textContent === 'light' && root.getAttribute('data-theme') === 'light',
+        `the nav control stores its choice under "${keyUsed}", and says so`);
+      p.open(':');
+      p.enter('theme dark');
+      check(root.getAttribute('data-theme') === 'dark' && btn.textContent === 'dark' && /dark/.test(btn.getAttribute('aria-label') || ''),
+        'theme dark sets the attribute AND moves the label and its aria sentence');
+      check((p.store(p.w.localStorage) || {})[keyUsed] === 'dark',
+        `and the same storage key the toggle uses holds it ("${keyUsed}")`);
+      btn.click();
+      check(btn.textContent === 'auto' && root.getAttribute('data-theme') === null && (p.store(p.w.localStorage) || {})[keyUsed] === undefined,
+        'a click after the command carries on from the mode the command set (dark -> auto)');
+      p.enter('theme auto');
+      check(root.getAttribute('data-theme') === null && btn.textContent === 'auto', 'theme auto clears the attribute and the label agrees');
+      p.enter('theme purple');
+      check(root.getAttribute('data-theme') === null && /theme/.test(p.outText()) && /purple/.test(p.outText()),
+        `an unknown mode is refused, and changes nothing ("${p.outText()}")`);
+    }
+
+    /* ---- 8. url, from the document's own canonical link ---- */
+    if (canon) {
+      const p = palWin(canon);
+      p.open(':');
+      const origin = new URL(canon).origin;
+      const other = allSlugs.find((s) => canon.indexOf('/' + s + '/') < 0);
+      p.enter('url ' + other);
+      check(p.outText().trim() === origin + '/' + other + '/',
+        `url prints the absolute address, on the base of the document's own canonical link (${p.outText().trim()})`);
+      p.enter('url');
+      check(p.outText().trim() === canon, `url with no slug prints the page you are on (${p.outText().trim()})`);
+      p.enter('url zzzzzzz');
+      check(/no page/.test(p.outText()), `url says so for a page that does not exist ("${p.outText()}")`);
+    }
+
+    /* ---- 9. man: the page, where help is the index ---- */
+    {
+      const p = palWin('https://blog.jaye.ch/map/');
+      p.open(':');
+      p.enter('help');
+      const helpLines = p.outText().split('\n');
+      const catLine = helpLines.find((l) => l.trim().split(/\s+/)[0] === 'cat');
+      const aliases = (catLine.match(/\(also: ([^)]+)\)/) || [])[1];
+      check(!!catLine && !!aliases, `the index has one line for cat, naming its aliases (${aliases})`);
+      p.enter('man cat');
+      const man = p.outText();
+      check(man.length > catLine.length, `man cat says more than the index line does (${man.length} > ${catLine.length} chars)`);
+      check(aliases.split(', ').every((a) => man.indexOf(a) >= 0), `and carries the aliases it names (${aliases})`);
+      check(man.indexOf(P.pages[0].slug) >= 0, `and an example that is a real page (${P.pages[0].slug})`);
+      p.enter('man ls');
+      check(p.outText().length > 0 && p.outText().indexOf('man: no manual') < 0, 'man ls has its own page too');
+      p.enter('man zzzz');
+      check(/no manual/.test(p.outText()), `an unknown command to man says so ("${p.outText().split('\n')[0]}")`);
+    }
+  }
+}
 
 console.log(failures === 0 ? '\nSEARCH SMOKE TEST PASSED' : `\n${failures} FAILURE(S)`);
 process.exit(failures === 0 ? 0 : 1);
