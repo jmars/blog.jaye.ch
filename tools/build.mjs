@@ -1865,18 +1865,18 @@ function buildMap(navPosts) {
     body:
       `<section><div class="wrap">` +
       `<div class="hint"># ${nodes.length} pieces · ${edges.length} links between different pairs of them — one link per pair, however often a piece names another</div>` +
-      `<div class="prose">${prose}${table}${worksProse}</div>` +
       `<div class="viz" data-viz="map">\n` +
       `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the blog as a ` +
       `ring: every piece is a point, a piece that is a close reading is a square, and a curve joins two ` +
       `pieces when one of them links to the other. Inside the ring sit the works named by two or more pieces, ` +
-      `a mark each, joined to the pieces that cite them. The tables above give the same links and the same ` +
+      `a mark each, joined to the pieces that cite them. The tables below give the same links and the same ` +
       `works as counts.</p></noscript>\n` +
       `  <p class="viz-caption">Schematic — a map of the links between the pieces and of the works that join ` +
       `them, not a measurement of anything else. A position on the ring is a layout; the number of links is a ` +
       `count of links.</p>\n` +
       `</div>\n` +
       `<script type="application/json" id="viz-data-map">${json}</script>` +
+      `<div class="prose">${prose}${table}${worksProse}</div>` +
       `</div></section>`,
     navCurrent: '/map/',
   };
@@ -2183,7 +2183,6 @@ function buildSearch(navPosts) {
     `<section><div class="wrap">` +
     `<div class="hint"># ${totals.docs} pieces · ${totals.vocab} words in the list · ${totals.citations} ` +
     `citations from ${totals.works} works · three signals: the words, the vectors, the links</div>` +
-    `<div class="prose">${prose}</div>` +
     `<form class="sform" id="sf" role="search">` +
     `<div class="srow"><span class="s-lab" aria-hidden="true">$</span>` +
     `<input type="search" id="sq" name="q" aria-label="search the pieces" autocomplete="off" ` +
@@ -2202,6 +2201,7 @@ function buildSearch(navPosts) {
     `pipeline that reads it are in this page, and without a script they are only text. Every piece is ` +
     `reachable from <a href="/timeline/">what's new</a>, <a href="/map/">the map</a> and the command line ` +
     `(press <b>/</b>).</p></noscript>` +
+    `<div class="prose">${prose}</div>` +
     `<script type="application/json" id="search-data">${json}</script>` +
     `<script>\n${client}\n</script>` +
     `</div></section>`;
