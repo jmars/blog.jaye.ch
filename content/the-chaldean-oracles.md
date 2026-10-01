@@ -13,13 +13,13 @@ quotes a text written **after** the frame it describes was already running. This
 *Status.* This post reads **one** source: Ruth Majercik's edition of *The Chaldean Oracles* (Brill, 1989),
 which gives each fragment in Greek followed by an English rendering, with an Introduction and a Commentary.
 Every quotation below is Majercik's own English, checked character for character against a complete digital
-text of the edition and cited by **her fragment number**, the numbering she prints. The source is a scan of a
-printed book, and its text is damaged in places. Its typographic quotation marks are rendered here as straight
-ASCII, its curly apostrophes and dashes are normalised, and a quotation's opening capital is normalised to its
-position in the sentence. Individual letters the scanning software misread — *In* printed as *Tn*, *via
-negativa* as *va negativa*, *creation* as *cree* — are restored to the reading the printed edition requires,
-as are the accents its French quotation of Hadot loses, and footnote markers the scan has dropped into the
-middle of a sentence are removed. Nothing else is silently changed. Its Greek is not quoted at all, because
+text of the edition and cited by **her fragment number**, the numbering she prints. That digital text is damaged
+in places. Its typographic quotation marks are rendered here as straight ASCII, its curly apostrophes and dashes
+are normalised, and a quotation's opening capital is normalised to its position in the sentence. Individual
+letters the digital text misreads — *In* printed as *Tn*, *via negativa* as *va negativa*, *creation* as *cree*
+— are restored to the reading the printed edition requires, as are the accents its French quotation of Hadot
+loses, and footnote markers the digital text has dropped into the middle of a sentence are removed. Nothing else
+is silently changed. Its Greek is not quoted at all, because
 the digital text of it is not reliable enough to reproduce a word of it honestly. Elisions are marked with a
 bare ellipsis. The reading of the material through this blog's model is an **inference**, offered as one.
 **The text's cosmology is not endorsed** — nothing here claims the Father, Hecate, the Iynges or the fire
@@ -85,7 +85,7 @@ anonymity of the Oracles."[^auth] Any account that begins from a confident attri
 edition.
 
 The popular picture of the son is worth one line: Majercik reports that Marinus has Proclus using "certain Iynxes"
-to end a drought in Attica, then adds that "Julian fils, as well, was known as a prodigious rain-maker; see Suda,
+to end a drought in Attica, then adds that "Julian fils, as well, was known as a prodigious rainmaker; see Suda,
 s.v."[^rain] That is all she gives — a reputation in a Byzantine lexicon, not an adventure. It is worth noticing how
 much of the standard account is not there.
 
@@ -121,7 +121,7 @@ are also a unit, "a triadic-monad or three-in-one deity."[^triad] The work is ha
 > "For the Father perfected all things and handed them over to the Second Intellect, which you—the entire human
 > race—call the First Intellect."[^f7]
 
-Beside him sits a Dyad, "for the Monad is extensible which generates duality."[^f8]
+Beside him sits a Dyad, "for the Monad is extensible which generates duality."[^f12]
 
 **Hecate.** The feminine power is the text's great figure, and Majercik keeps her ambiguous on purpose: Power may be
 a median between the first two gods, or conflated with Hecate as the World Soul, "on the borders between the
@@ -291,7 +291,7 @@ level below it, and still hand no one the road.
 **And the honest limit, in the body.** The person does appear — just not in the text. He appears in the **story the
 tradition tells about the text**: the Julian who received the verses; the Julian called *the Theurgist*, who wrote on
 *theourgia* and *telestika* as well as the oracles; the Chaldean who, in fr. 194's own words, spoke of the
-seven-rayed god "in a divine frenzy"; and the rain-maker the Suda remembers.[^julian] That belongs to the reception
+seven-rayed god "in a divine frenzy"; and the rainmaker the Suda remembers.[^julian] That belongs to the reception
 history, not to the fragments — and the difference between those two is the difference this series keeps having to
 draw. The text has no seat; the tradition built one around a man; and the second fact is not evidence about the
 first.
@@ -314,14 +314,14 @@ sentence that will interest this blog most:
 **The apophatic move is here, and earlier, and in a theurgic register.** [The cosmos that
 refuses](/the-cosmos-that-refuses/) assembled the *via negativa* as a family — Pseudo-Dionysius' *Mystical Theology*,
 the Upanishadic *neti neti*, Nāgārjuna's tetralemma, the Tao that cannot be spoken — and this blog's Christian
-instance of it is sixth-century. Fr. 1 is second- or third-century, and it says the same structural thing: the
+instance of it is sixth-century. Fr. 1 is late second-century, and it says the same structural thing: the
 highest term cannot be grasped, and the attempt to grasp it is what prevents the apprehension. That is not an
 obstacle to be overcome. It is the method.
 
 What the blog must not do is claim a lineage it cannot show. Majercik identifies the Plotinian analogue, not a
 transmission; and the transmission she does report here runs the other way — Iamblichus' theory of prayer, on which
 Proclus depends, "may ultimately go back to Chaldean doctrine."[^prayer] So: the same move appears in a theurgic
-text of the second or third century, four hundred years before its most famous Christian statement, and the
+text of the late second century, four hundred years before its most famous Christian statement, and the
 Neoplatonists carried it forward while developing the *via negativa* themselves. Whether anything passes from one to
 the other is a question the edition does not settle, and this post does not either.
 
@@ -331,16 +331,17 @@ the other is a question the edition does not settle, and this post does not eith
 
 **[The cosmos that refuses](/the-cosmos-that-refuses/) described the apophatic refusal as a frame with no endpoint —
 a fourth arrangement, set beside the seat and the vacancy, whose safety came from the fact that the highest term is
-*not named*. That is one instance of the refusal, not its definition. The Chaldean Oracles show the same move
-performed on an endpoint that is named, in a cosmos whose every level is populated and tabulated.** The refusal is
-not the withholding of a name. It is a **technique**, and a technique can be applied to a named term as readily as
-to an unnamed one.
+*not named* — and it named the refusal, correctly, a **technique** rather than an absence. The Chaldean Oracles show
+the same technique performed on an endpoint that is named, in a cosmos whose every level is populated and
+tabulated.** So this extends that post's definition rather than overturning it: the refusal is broader than the
+withholding of a name, and the technique works on a named term as readily as on an unnamed one.
 
 The consequence lands on the seat. [The owned cosmos](/the-owned-cosmos/) ended on a three-part test — does the
-frame name the endpoint, is it checkable by someone who does not benefit, does it leave a seat — and its table
-implied that naming the endpoint and having a seat travel together. The Oracles name the endpoint and leave no seat,
-and the reason is not the naming but the **stationing**: the marker is not mediation and not the naming of the
-endpoint, but **a person occupying the endpoint as the route.** Neither half is a demolition: [the owned
+frame name the endpoint, is it checkable by someone who does not benefit, does it leave a seat — and the four-frame
+table in [the cosmos that refuses](/the-cosmos-that-refuses/) §6 ran the two together, giving the owned cosmos alone
+both a **named** endpoint and a seat. The Oracles name the endpoint and leave no seat, and the reason is not the
+naming but the **stationing**: the marker is not mediation and not the naming of the endpoint, but **a person
+occupying the endpoint as the route.** Neither half is a demolition: [the owned
 cosmos](/the-owned-cosmos/) §6 already said everyone is mediated, and that the operative distinction is open against
 closed. The Oracles are the earliest text in this series that shows what **open** looks like at full scale — an
 endpoint named, every level staffed, no one holding the road.
@@ -360,9 +361,10 @@ Oracles the blog's readers are most likely to have met are, on the editor's acco
 of this text.
 
 **It is a text of ritual practice, and not of ethics.** Majercik's Introduction, fragment texts and Commentary
-contain **no occurrence of the word "safeguard"**, and none of "physician", "therapy", "therapist", "medical" or any
-form of clinical referral. There is no exit from the practice and no instrument outside it. That absence is a search
-result and is scoped as one.
+contain **no occurrence of the word "safeguard"**, and none of "physician", "therapy", "therapist" or any form of
+clinical referral, with a single exception: the Commentary on fr. 129 speaks once of a "medical sense", to reject a
+reading that would treat the saved body as a medical matter. There is no exit from the practice and no instrument
+outside it. That absence is a search result and is scoped as one.
 
 What the material **does** carry is a set of operational cautions about order, readiness and the vessel — more than
 [the holy daimon](/the-holy-daimon/) carried, and a different kind of thing from [Quareia](/quareia/)'s clinical
@@ -484,7 +486,7 @@ forgery hypothesis; "the true authorship of the Oracles must remain in doubt"; "
 cannot be absolutely ruled out"; and Des Places' preference "to protect the anonymity of the Oracles."
 
 [^rain]: Introduction, on the Iynx and its use: Marinus has Proclus using "certain Iynxes" to end a drought in Attica,
-and "Julian fils, as well, was known as a prodigious rain-maker; see Suda, s.v." The edition gives no more than this,
+and "Julian fils, as well, was known as a prodigious rainmaker; see Suda, s.v." The edition gives no more than this,
 and this post imports nothing beyond it.
 
 [^rite]: Introduction: the Chaldean system "included a complex ascent ritual involving purifications, trance,
@@ -508,7 +510,7 @@ theology and to the practices alike; the English in the body is this post's, not
 the intelligibles, it connects the Father and Intellect."
 [^f5]: Fr. 5, which the edition closes with the words "says the oracle."
 [^f7]: Fr. 7.
-[^f8]: Fr. 12: "for the Monad is extensible which generates duality," of the Dyad beside the Monad.
+[^f12]: Fr. 12: "for the Monad is extensible which generates duality," of the Dyad beside the Monad.
 [^triad]: Introduction, on the theology: the Father, Power and Intellect "regarded triadically"; "the Supreme God, in
 fine, understood as a triadic-monad or three-in-one deity."
 [^hec]: Introduction, on the Third God: Power "situated as a median figure between the First and Second Gods" or
@@ -538,13 +540,13 @@ with the Pauline triad of Faith, Hope, Charity), but as cosmic entities involved
 of the Universe"; the allocation of Faith, Truth and Love to the Material, Ethereal and Empyrean Teletarchs; the
 fourth, "fire-bearing Hope" (fr. 47); and the judgement that "in the extant fragments, Eros, as both the first issue
 from the Father (fr. 42) and the 'bond' of all things (fr. 39), is clearly the chief virtue."
-[^f39]: Frr. 39–40; the purpose clause and the closing verse are continuous in the fragment as printed.
+[^f39]: Fr. 39; the purpose clause and the closing verse are continuous in the fragment as printed.
 [^f49]: Fr. 49.
-[^flower]: Commentary on fr. 1: the "flower of mind" as "that most discreet, fiery organ or faculty (the highest power
+[^flower]: Commentary on fr. 1: the "flower of mind" as "that discreet, fiery organ or faculty (the highest power
 of the soul and akin to the fiery essence of the First God) which permits apprehension and/or union with the Highest
 God," with the principle "like by like"; and, in the Introduction, fr. 1 as an instance of the contemplative aspect,
 the perception achieved "via the 'flower/flame of mind'."
-[^alke]: Commentary on fr. 2 (with cross-references at frr. 32, 49, 82, 117–119): on *alkē* as the fiery strength of
+[^alke]: Commentary on fr. 1 (with cross-references at frr. 32, 49, 82, 117–119): on *alkē* as the fiery strength of
 the soul and the theurgic power that "binds" the soul to God; and on the "glaive"/"sword" rendering, of which the
 edition says "this translation, in both instances, obscures the real sense of this important Chaldean term."
 [^owned]: [The owned cosmos](/the-owned-cosmos/): the three clauses of the frame, the seat, and the structural danger
@@ -591,9 +593,10 @@ translations and attempts at interpretation."
 [^f148]: Fr. 148, continuing fr. 147.
 [^f135]: Fr. 135.
 [^f136]: Fr. 136.
-[^safe]: Commentary on fr. 136: "For in terms of both contemplative vision and telestic art, it is this which makes the
-ascent safe and sure for us—progress in an orderly fashion"; and, on the verse quoted, "as whenever, in a disorderly
-and incorrect fashion, we make the ascent to the most holy of the visions or works."
+[^safe]: Proclus' context for fr. 136, printed with the fragment (Proclus, *In Parm.*, 990, 27-37): "For in terms of
+both contemplative vision and telestic art, it is this which makes the ascent safe and sure for us—progress in an
+orderly fashion"; and, on the verse quoted, "as whenever, in a disorderly and incorrect fashion, we make the ascent
+to the most holy of the visions or works."
 [^f134]: Fr. 134.
 [^f211]: Fr. 211, one of the Doubtful Fragments; the edition's note identifies the "recipient" (*docheus*) as one of
 the two officiants of the rite.
