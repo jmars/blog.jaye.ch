@@ -533,7 +533,8 @@
       "navLabel": "the blood of the earth",
       "kind": "reading",
       "summary": "A close reading of Greer's The Blood of the Earth — magic and peak oil, a collapse with no holder, and the industrial frame that cannot imagine its own end.",
-      "published": false,
+      "date": "2026-10-01",
+      "published": true,
       "series": "readings"
     },
     {
@@ -542,7 +543,8 @@
       "navLabel": "the picatrix",
       "kind": "reading",
       "summary": "A close reading of the Picatrix — the operable cosmology at source: a world where everything corresponds, and a grimoire that states the seat without ever arguing for it.",
-      "published": false,
+      "date": "2026-10-01",
+      "published": true,
       "series": "readings"
     },
     {
