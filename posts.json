@@ -3,8 +3,8 @@
     "file": "meditation-harm-summary.md"
   },
   "featured": [
-    "the-operative-master",
-    "ahead-of-the-story"
+    "the-deep-inheritance",
+    "the-cosmos-that-refuses"
   ],
   "posts": [
     {
@@ -526,6 +526,33 @@
       "date": "2026-10-01",
       "published": true,
       "series": "implications"
+    },
+    {
+      "slug": "the-blood-of-the-earth",
+      "file": "the-blood-of-the-earth.md",
+      "navLabel": "the blood of the earth",
+      "kind": "reading",
+      "summary": "A close reading of Greer's The Blood of the Earth — magic and peak oil, a collapse with no holder, and the industrial frame that cannot imagine its own end.",
+      "published": false,
+      "series": "readings"
+    },
+    {
+      "slug": "picatrix",
+      "file": "picatrix.md",
+      "navLabel": "the picatrix",
+      "kind": "reading",
+      "summary": "A close reading of the Picatrix — the operable cosmology at source: a world where everything corresponds, and a grimoire that states the seat without ever arguing for it.",
+      "published": false,
+      "series": "readings"
+    },
+    {
+      "slug": "the-chaldean-oracles",
+      "file": "the-chaldean-oracles.md",
+      "navLabel": "the chaldean oracles",
+      "kind": "reading",
+      "summary": "A close reading of the Chaldean Oracles — the theurgic root of the whole Western lineage: fire, the flower of mind, and a seat that is a cosmos rather than a person.",
+      "published": false,
+      "series": "readings"
     }
   ]
 }

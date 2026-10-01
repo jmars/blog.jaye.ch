@@ -1162,7 +1162,7 @@ function buildHome(manifest) {
   const featureBlock = featPosts.length
     ? `<section><div class="wrap">` +
       (featPosts.length > 1
-        ? `<div class="hint"># one operation, described from both ends</div>`
+        ? `<div class="hint"># the oldest question in the record, and the most careful answer to it</div>`
         : '') +
       `<div class="feature-grid">` +
       featPosts
@@ -1803,6 +1803,30 @@ const POST_META = {
     description:
       'A close reading of Frater Acher\u2019s Black Abbot White Magic: Johannes Trithemius, the angelic mind, and a text the tradition could never decide was angel magic or cryptography \u2014 the hidden frame the corpus\u2019s owns readings keep circling.',
     accent: 'Black Abbot, White Magic',
+  },
+  'the-blood-of-the-earth': {
+    prompt: 'cat the-blood-of-the-earth.md',
+    tagline: 'a <b>reading</b>: magic and peak oil \u2014 a collapse with no holder, and a frame that cannot imagine its own end.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of John Michael Greer\u2019s The Blood of the Earth: the industrial frame that can only imagine more of the same, a material collapse with no one standing on the far side of it, and what magic is asked to do about a crisis it cannot overturn.',
+    accent: 'The Blood of the Earth',
+  },
+  'picatrix': {
+    prompt: 'cat picatrix.md',
+    tagline: 'a <b>reading</b>: the operable cosmology at source \u2014 a world where everything corresponds, and a grimoire that states the seat without ever arguing for it.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
+    description:
+      'A close reading of the Picatrix: the astrological-magic manual the blog has cited six times and never read \u2014 a frame that is entirely operable, and a seat that is simply assumed rather than claimed.',
+    accent: 'Picatrix',
+  },
+  'the-chaldean-oracles': {
+    prompt: 'cat the-chaldean-oracles.md',
+    tagline: 'a <b>reading</b>: the theurgic root \u2014 fire, the flower of mind, and a cosmos that supplies the ascent rather than a person who mediates it.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of a text, with notes',
+    description:
+      'A close reading of the Chaldean Oracles, in Majercik\u2019s text and translation: the theurgic root of the Western lineage, read whole \u2014 the fire, the flower of mind, Hecate, and the ascent the framework runs on.',
+    accent: 'The Chaldean Oracles',
   },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',
