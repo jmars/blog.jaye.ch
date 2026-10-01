@@ -1,0 +1,1476 @@
+{
+  "sources": [
+    {
+      "id": "ani-mystic",
+      "title": "Ani.Mystic: Encounters with a Living Cosmos",
+      "short": "Ani.Mystic",
+      "author": "Gordon White",
+      "kind": "book",
+      "match": "Ani\\.Mystic"
+    },
+    {
+      "id": "star-ships",
+      "title": "Star.Ships: A Prehistory of the Spirits",
+      "short": "Star.Ships",
+      "author": "Gordon White",
+      "kind": "book",
+      "match": "Star\\.Ships"
+    },
+    {
+      "id": "egregores",
+      "title": "Egregores: The Occult Entities That Watch Over Human Destiny",
+      "short": "Egregores",
+      "author": "Mark Stavish",
+      "kind": "book",
+      "match": "Egregores: The Occult Entities|Stavish"
+    },
+    {
+      "id": "thought-reform",
+      "title": "Thought Reform and the Psychology of Totalism",
+      "short": "Thought Reform",
+      "author": "Robert Jay Lifton",
+      "kind": "book",
+      "match": "Thought Reform and the Psychology of Totalism"
+    },
+    {
+      "id": "holy-daimon",
+      "title": "Holy Daimon",
+      "short": "Holy Daimon",
+      "author": "Frater Acher",
+      "kind": "book",
+      "match": "\\*Holy Daimon\\*"
+    },
+    {
+      "id": "holy-heretics",
+      "title": "Holy Heretics",
+      "short": "Holy Heretics",
+      "author": "Frater Acher",
+      "kind": "book",
+      "match": "Holy Heretics"
+    },
+    {
+      "id": "undreaming-wetiko",
+      "title": "Undreaming Wetiko",
+      "short": "Undreaming Wetiko",
+      "author": "Paul Levy",
+      "kind": "book",
+      "match": "Undreaming Wetiko"
+    },
+    {
+      "id": "memories-dreams-reflections",
+      "title": "Memories, Dreams, Reflections",
+      "short": "Memories, Dreams…",
+      "author": "C. G. Jung",
+      "kind": "book",
+      "match": "Memories, Dreams, Reflections"
+    },
+    {
+      "id": "two-esoteric-tarots",
+      "title": "Two Esoteric Tarots",
+      "short": "Two Esoteric Tarots",
+      "author": "Peter Mark Adams & Christophe Poncet",
+      "kind": "book",
+      "match": "Two Esoteric Tarots,|Peter Mark Adams"
+    },
+    {
+      "id": "the-lucifer-effect",
+      "title": "The Lucifer Effect: Understanding How Good People Turn Evil",
+      "short": "The Lucifer Effect",
+      "author": "Philip Zimbardo",
+      "kind": "book",
+      "match": "The Lucifer Effect"
+    },
+    {
+      "id": "eichmann-in-jerusalem",
+      "title": "Eichmann in Jerusalem: A Report on the Banality of Evil",
+      "short": "Eichmann in Jerusalem",
+      "author": "Hannah Arendt",
+      "kind": "book",
+      "match": "Eichmann in Jerusalem"
+    },
+    {
+      "id": "the-anatomy-of-destructiveness",
+      "title": "The Anatomy of Human Destructiveness",
+      "short": "The Anatomy of…",
+      "author": "Erich Fromm",
+      "kind": "book",
+      "match": "The Anatomy of Human Destructiveness|Fromm"
+    },
+    {
+      "id": "geosophia",
+      "title": "Geosophia: The Argo of Magic",
+      "short": "Geosophia",
+      "author": "Jake Stratton-Kent",
+      "kind": "book",
+      "match": "Geosophia: The Argo of Magic"
+    },
+    {
+      "id": "quareia",
+      "title": "Quareia (Apprentice, Initiate and Adept course texts)",
+      "short": "Quareia",
+      "author": "Josephine McCarthy",
+      "kind": "book",
+      "match": "Josephine McCarthy|McCarthy, J\\.|\\*Quareia\\*"
+    },
+    {
+      "id": "black-abbot-white-magic",
+      "title": "Black Abbot · White Magic: Johannes Trithemius and the Angelic Mind",
+      "short": "Black Abbot White Mag.",
+      "author": "Frater Acher",
+      "kind": "book",
+      "match": "Black Abbot"
+    },
+    {
+      "id": "the-blood-of-the-earth",
+      "title": "The Blood of the Earth: An Essay on Magic and Peak Oil",
+      "short": "The Blood of the Earth",
+      "author": "John Michael Greer",
+      "kind": "book",
+      "match": "The Blood of the Earth"
+    },
+    {
+      "id": "picatrix",
+      "title": "Picatrix: The Occult Classic of Astrological Magic",
+      "short": "Picatrix",
+      "author": "trans. John Michael Greer & Christopher Warnock",
+      "kind": "book",
+      "match": "Picatrix"
+    },
+    {
+      "id": "the-chaldean-oracles",
+      "title": "The Chaldean Oracles: Text, Translation and Commentary",
+      "short": "The Chaldean Oracles",
+      "author": "Ruth Majercik",
+      "kind": "book",
+      "match": "The Chaldean Oracles: Text, Translation|Majercik.s edition|Majercik.s translation"
+    },
+    {
+      "id": "the-orphic-hymns",
+      "title": "The Orphic Hymns",
+      "short": "The Orphic Hymns",
+      "author": "Apostolos N. Athanassakis & Benjamin M. Wolkow",
+      "kind": "book",
+      "match": "The Orphic Hymns"
+    },
+    {
+      "id": "proclus-theology-of-plato",
+      "title": "Théologie platonicienne",
+      "short": "Théologie platonicienne",
+      "author": "Proclus (ed. Saffrey & Westerink)",
+      "kind": "book",
+      "match": "Th[ée]ologie platonicienne"
+    },
+    {
+      "id": "proclus-elements-of-theology",
+      "title": "Elements of Theology",
+      "short": "Elements of Theology",
+      "author": "Proclus (ed. & trans. E. R. Dodds)",
+      "kind": "book",
+      "match": "Elements of Theology|Dodds. translation|Dodds, Introduction"
+    },
+    {
+      "id": "the-authoritarian-dynamic",
+      "title": "The Authoritarian Dynamic",
+      "short": "Authoritarian Dynamic",
+      "author": "Karen Stenner",
+      "kind": "book",
+      "match": "The Authoritarian Dynamic"
+    },
+    {
+      "id": "the-authoritarian-personality",
+      "title": "The Authoritarian Personality",
+      "short": "Authoritarian Personal.",
+      "author": "Adorno, Frenkel-Brunswik, Levinson & Sanford",
+      "kind": "book",
+      "match": "The Authoritarian Personality"
+    },
+    {
+      "id": "right-wing-authoritarianism",
+      "title": "Right-Wing Authoritarianism",
+      "short": "Right-Wing Authorit.",
+      "author": "Bob Altemeyer",
+      "kind": "book",
+      "match": "Right-Wing Authoritarianism"
+    },
+    {
+      "id": "the-authoritarian-specter",
+      "title": "The Authoritarian Specter",
+      "short": "Authoritarian Specter",
+      "author": "Bob Altemeyer",
+      "kind": "book",
+      "match": "The Authoritarian Specter"
+    },
+    {
+      "id": "coercive-persuasion",
+      "title": "Coercive Persuasion",
+      "short": "Coercive Persuasion",
+      "author": "Edgar H. Schein",
+      "kind": "book",
+      "match": "Coercive Persuasion: A Socio-psychological|Schein, E\\. H\\."
+    },
+    {
+      "id": "terror-love-brainwashing",
+      "title": "Terror, Love and Brainwashing: Attachment in Cults and Totalitarian Systems",
+      "short": "Terror, Love, Brainwash.",
+      "author": "Alexandra Stein",
+      "kind": "book",
+      "match": "Terror, Love and Brainwashing"
+    },
+    {
+      "id": "cults-in-our-midst",
+      "title": "Cults in Our Midst",
+      "short": "Cults in Our Midst",
+      "author": "Margaret Thaler Singer",
+      "kind": "book",
+      "match": "Cults in Our Midst"
+    },
+    {
+      "id": "toward-a-psychology-of-awakening",
+      "title": "Toward a Psychology of Awakening",
+      "short": "Toward a Psychology…",
+      "author": "John Welwood",
+      "kind": "book",
+      "match": "Toward a Psychology of Awakening"
+    },
+    {
+      "id": "cutting-through-spiritual-materialism",
+      "title": "Cutting Through Spiritual Materialism",
+      "short": "Cutting Through…",
+      "author": "Chögyam Trungpa",
+      "kind": "book",
+      "match": "Cutting Through Spiritual Materialism"
+    },
+    {
+      "id": "the-listening-society",
+      "title": "The Listening Society",
+      "short": "The Listening Society",
+      "author": "Hanzi Freinacht",
+      "kind": "book",
+      "match": "The Listening Society"
+    },
+    {
+      "id": "the-tao-of-physics",
+      "title": "The Tao of Physics",
+      "short": "The Tao of Physics",
+      "author": "Fritjof Capra",
+      "kind": "book",
+      "match": "The Tao of Physics"
+    },
+    {
+      "id": "the-dancing-wu-li-masters",
+      "title": "The Dancing Wu Li Masters",
+      "short": "Dancing Wu Li Masters",
+      "author": "Gary Zukav",
+      "kind": "book",
+      "match": "The Dancing Wu Li Masters"
+    },
+    {
+      "id": "quantum-gods",
+      "title": "Quantum Gods",
+      "short": "Quantum Gods",
+      "author": "Victor J. Stenger",
+      "kind": "book",
+      "match": "Quantum Gods"
+    },
+    {
+      "id": "perspectives-on-the-new-age",
+      "title": "Perspectives on the New Age",
+      "short": "Perspectives on New Age",
+      "author": "James R. Lewis & J. Gordon Melton (eds)",
+      "kind": "book",
+      "match": "Perspectives on the New Age"
+    },
+    {
+      "id": "the-cult-at-the-end-of-the-world",
+      "title": "The Cult at the End of the World",
+      "short": "Cult at World's End",
+      "author": "David E. Kaplan & Andrew Marshall",
+      "kind": "book",
+      "match": "The Cult at the End of the World"
+    },
+    {
+      "id": "destroying-the-world-to-save-it",
+      "title": "Destroying the World to Save It: Aum Shinrikyo, Apocalyptic Violence, and the New Global Terrorism",
+      "short": "Destroying the World…",
+      "author": "Robert Jay Lifton",
+      "kind": "book",
+      "match": "Destroying the World to Save It: Aum|Lifton, R\\. J\\. \\(1999\\)"
+    },
+    {
+      "id": "the-future-of-immortality",
+      "title": "The Future of Immortality and Other Essays for a Nuclear Age",
+      "short": "Future of Immortality",
+      "author": "Robert Jay Lifton",
+      "kind": "book",
+      "match": "The Future of Immortality"
+    },
+    {
+      "id": "the-three-pillars-of-zen",
+      "title": "The Three Pillars of Zen",
+      "short": "The Three Pillars of Zen",
+      "author": "Philip Kapleau",
+      "kind": "book",
+      "match": "The Three Pillars of Zen"
+    },
+    {
+      "id": "move-an-american-religion",
+      "title": "MOVE: An American Religion",
+      "short": "MOVE",
+      "author": "R. K. Evans",
+      "kind": "book",
+      "match": "MOVE: An American Religion"
+    },
+    {
+      "id": "new-world-a-coming",
+      "title": "New World A-Coming: Black Religion and Racial Identity during the Great Migration",
+      "short": "New World A-Coming",
+      "author": "Judith Weisenfeld",
+      "kind": "book",
+      "match": "New World A-Coming"
+    },
+    {
+      "id": "recovery-from-cults",
+      "title": "Recovery from Cults",
+      "short": "Recovery from Cults",
+      "author": "Michael D. Langone (ed.)",
+      "kind": "book",
+      "match": "Recovery from Cults"
+    },
+    {
+      "id": "trauma-sensitive-mindfulness",
+      "title": "Trauma-Sensitive Mindfulness: Practices for Safe and Transformative Healing",
+      "short": "Trauma-Sensitive…",
+      "author": "David A. Treleaven",
+      "kind": "book",
+      "match": "Trauma-Sensitive Mindfulness"
+    },
+    {
+      "id": "spiritual-emergency",
+      "title": "Spiritual Emergency: When Personal Transformation Becomes a Crisis",
+      "short": "Spiritual Emergency",
+      "author": "Christina & Stanislav Grof",
+      "kind": "book",
+      "match": "\\*Spiritual Emergency: When Personal Transformation|Grof, C\\., & Grof, S\\."
+    },
+    {
+      "id": "studies-in-machiavellianism",
+      "title": "Studies in Machiavellianism",
+      "short": "Studies in Machiavell.",
+      "author": "Richard Christie & Florence L. Geis",
+      "kind": "book",
+      "match": "Studies in Machiavellianism"
+    },
+    {
+      "id": "epistemic-injustice",
+      "title": "Epistemic Injustice: Power and the Ethics of Knowing",
+      "short": "Epistemic Injustice",
+      "author": "Miranda Fricker",
+      "kind": "book",
+      "match": "Epistemic Injustice"
+    },
+    {
+      "id": "a-typology-of-domestic-violence",
+      "title": "A Typology of Domestic Violence",
+      "short": "A Typology of Domestic…",
+      "author": "Michael P. Johnson",
+      "kind": "book",
+      "match": "A Typology of Domestic Violence"
+    },
+    {
+      "id": "strategic-ambiguities",
+      "title": "Strategic Ambiguities: Essays on Communication, Organization, and Identity",
+      "short": "Strategic Ambiguities",
+      "author": "Eric M. Eisenberg",
+      "kind": "book",
+      "match": "Strategic Ambiguities"
+    },
+    {
+      "id": "the-presentation-of-self-in-everyday-life",
+      "title": "The Presentation of Self in Everyday Life",
+      "short": "Presentation of Self",
+      "author": "Erving Goffman",
+      "kind": "book",
+      "match": "The Presentation of Self in Everyday Life"
+    },
+    {
+      "id": "relations-in-public",
+      "title": "Relations in Public: Microstudies of the Public Order",
+      "short": "Relations in Public",
+      "author": "Erving Goffman",
+      "kind": "book",
+      "match": "Relations in Public"
+    },
+    {
+      "id": "the-crowd",
+      "title": "The Crowd: A Study of the Popular Mind",
+      "short": "The Crowd",
+      "author": "Gustave Le Bon",
+      "kind": "book",
+      "match": "The Crowd: A Study of the Popular Mind"
+    },
+    {
+      "id": "the-elementary-forms-of-the-religious-life",
+      "title": "The Elementary Forms of the Religious Life",
+      "short": "Elementary Forms",
+      "author": "Émile Durkheim",
+      "kind": "book",
+      "match": "The Elementary Forms of the Religious Life"
+    },
+    {
+      "id": "initiation-et-realisation-spirituelle",
+      "title": "Initiation et réalisation spirituelle",
+      "short": "Init. & réalisation",
+      "author": "René Guénon",
+      "kind": "book",
+      "match": "Initiation et r[ée]alisation spirituelle"
+    },
+    {
+      "id": "le-grand-arcane",
+      "title": "Le Grand Arcane, ou l'Occultisme dévoilé",
+      "short": "Le Grand Arcane",
+      "author": "Éliphas Lévi",
+      "kind": "book",
+      "match": "Le Grand Arcane"
+    },
+    {
+      "id": "conjectures-and-refutations",
+      "title": "Conjectures and Refutations: The Growth of Scientific Knowledge",
+      "short": "Conjectures & Refut.",
+      "author": "Karl Popper",
+      "kind": "book",
+      "match": "Conjectures and Refutations"
+    },
+    {
+      "id": "the-golden-dawn",
+      "title": "The Golden Dawn (Regardie ed.)",
+      "short": "The Golden Dawn",
+      "author": "Israel Regardie (ed.)",
+      "kind": "book",
+      "match": "Regardie"
+    },
+    {
+      "id": "morals-and-dogma",
+      "title": "Morals and Dogma of the Ancient and Accepted Scottish Rite of Freemasonry",
+      "short": "Morals and Dogma",
+      "author": "Albert Pike",
+      "kind": "book",
+      "match": "Morals and Dogma"
+    },
+    {
+      "id": "liber-aleph",
+      "title": "Liber Aleph vel CXI: The Book of Wisdom or Folly",
+      "short": "Liber Aleph",
+      "author": "Aleister Crowley",
+      "kind": "book",
+      "match": "Liber Aleph"
+    },
+    {
+      "id": "the-confessions-of-aleister-crowley",
+      "title": "The Confessions of Aleister Crowley: An Autohagiography",
+      "short": "The Confessions of…",
+      "author": "Aleister Crowley",
+      "kind": "book",
+      "match": "The Confessions of Aleister Crowley"
+    },
+    {
+      "id": "the-practical-psychic-self-defense-handbook",
+      "title": "The Practical Psychic Self-Defense Handbook: A Survival Guide",
+      "short": "Psychic Self-Defense",
+      "author": "Robert Bruce",
+      "kind": "book",
+      "match": "The Practical Psychic Self-Defense Handbook"
+    },
+    {
+      "id": "the-passion-of-the-western-mind",
+      "title": "The Passion of the Western Mind",
+      "short": "The Passion of the…",
+      "author": "Richard Tarnas",
+      "kind": "book",
+      "match": "The Passion of the Western Mind"
+    },
+    {
+      "id": "magic-and-mystery-in-tibet",
+      "title": "Magic and Mystery in Tibet",
+      "short": "Magic & Mystery in Tibet",
+      "author": "Alexandra David-Néel",
+      "kind": "book",
+      "match": "Magic and Mystery in Tibet"
+    },
+    {
+      "id": "initiations-and-initiates-in-tibet",
+      "title": "Initiations and Initiates in Tibet",
+      "short": "Initiations in Tibet",
+      "author": "Alexandra David-Néel",
+      "kind": "book",
+      "match": "Initiations and Initiates in Tibet"
+    },
+    {
+      "id": "the-secret-oral-teachings",
+      "title": "The Secret Oral Teachings in Tibetan Buddhist Sects",
+      "short": "Secret Oral Teachings",
+      "author": "Alexandra David-Néel",
+      "kind": "book",
+      "match": "The Secret Oral Teachings in Tibetan"
+    },
+    {
+      "id": "the-tarot",
+      "title": "The Tarot",
+      "short": "The Tarot (Sadhu)",
+      "author": "Mouni Sadhu",
+      "kind": "book",
+      "match": "Mouni Sadhu"
+    },
+    {
+      "id": "the-origins-of-the-worlds-mythologies",
+      "title": "The Origins of the World's Mythologies",
+      "short": "The Origins of the…",
+      "author": "E. J. Michael Witzel",
+      "kind": "book",
+      "match": "The Origins of the World.s Mythologies"
+    },
+    {
+      "id": "the-diaspora-of-brazilian-religions",
+      "title": "The Diaspora of Brazilian Religions",
+      "short": "Brazilian Religions",
+      "author": "Cristina Rocha & Manuel A. Vásquez (eds)",
+      "kind": "book",
+      "match": "The Diaspora of Brazilian Religions"
+    },
+    {
+      "id": "the-expanding-world-ayahuasca-diaspora",
+      "title": "The Expanding World Ayahuasca Diaspora",
+      "short": "Ayahuasca Diaspora",
+      "author": "Beatriz Caiuby Labate & Clancy Cavnar (eds)",
+      "kind": "book",
+      "match": "The Expanding World Ayahuasca Diaspora"
+    },
+    {
+      "id": "puppetmasters",
+      "title": "Puppetmasters",
+      "short": "Puppetmasters",
+      "author": "Philip Willan",
+      "kind": "book",
+      "match": "Puppetmasters"
+    },
+    {
+      "id": "the-veritable-key-of-solomon",
+      "title": "The Veritable Key of Solomon",
+      "short": "Veritable Key of Solomon",
+      "author": "Stephen Skinner & David Rankine",
+      "kind": "book",
+      "match": "Veritable Key of Solomon"
+    },
+    {
+      "id": "dark-night-of-the-soul",
+      "title": "Dark Night of the Soul",
+      "short": "Dark Night of the Soul",
+      "author": "John of the Cross",
+      "kind": "primary-text",
+      "match": "Dark Night of the Soul"
+    },
+    {
+      "id": "die-geistliche-buecher",
+      "title": "Die geistliche Bücher und Schrifften (Ascent of Mount Carmel)",
+      "short": "Die geistliche Bücher",
+      "author": "John of the Cross",
+      "kind": "primary-text",
+      "match": "Die geistliche B[üu]cher|Ascent of Mount Carmel"
+    },
+    {
+      "id": "spiritual-exercises",
+      "title": "Spiritual Exercises",
+      "short": "Spiritual Exercises",
+      "author": "Ignatius of Loyola",
+      "kind": "primary-text",
+      "match": "Spiritual Exercises"
+    },
+    {
+      "id": "visuddhimagga",
+      "title": "Visuddhimagga",
+      "short": "Visuddhimagga",
+      "author": "Buddhaghosa",
+      "kind": "primary-text",
+      "match": "Visuddhimagga"
+    },
+    {
+      "id": "yoga-sutras",
+      "title": "Yoga Sūtras",
+      "short": "Yoga Sūtras",
+      "author": "Patañjali",
+      "kind": "primary-text",
+      "match": "Yoga S[ūu]tras"
+    },
+    {
+      "id": "lamrim-chenmo",
+      "title": "Lamrim Chenmo",
+      "short": "Lamrim Chenmo",
+      "author": "Tsongkhapa",
+      "kind": "primary-text",
+      "match": "Lamrim Chenmo"
+    },
+    {
+      "id": "kalamma-sutta",
+      "title": "Kālāma Sutta (AN 3.65)",
+      "short": "Kālāma Sutta",
+      "author": "Pali canon",
+      "kind": "primary-text",
+      "match": "K[āa]l[āa]ma Sutta"
+    },
+    {
+      "id": "upaddha-sutta",
+      "title": "Upaḍḍha Sutta (SN 45.2)",
+      "short": "Upaḍḍha Sutta",
+      "author": "Pali canon",
+      "kind": "primary-text",
+      "match": "Upa[dḍ][dḍ]ha Sutta"
+    },
+    {
+      "id": "mahaparinibbana-sutta",
+      "title": "Mahāparinibbāna Sutta (DN 16)",
+      "short": "Mahāparinibbāna Sutta",
+      "author": "Pali canon",
+      "kind": "primary-text",
+      "match": "Mah[āa]parinibb[āa]na Sutta"
+    },
+    {
+      "id": "ganakamoggallana-sutta",
+      "title": "Gaṇakamoggallāna Sutta (MN 107)",
+      "short": "Gaṇakamoggallāna Sutta",
+      "author": "Pali canon",
+      "kind": "primary-text",
+      "match": "Ga[nṇ]akamoggall[āa]na Sutta"
+    },
+    {
+      "id": "susimgyol",
+      "title": "Susimgyŏl, chinsim chikkyŏl",
+      "short": "Susimgyŏl",
+      "author": "Chinul",
+      "kind": "primary-text",
+      "match": "Susimgy[ŏo]l"
+    },
+    {
+      "id": "sancai-tuhui",
+      "title": "Sancai Tuhui (三才圖會)",
+      "short": "Sancai Tuhui",
+      "author": "Wang Qi & Wang Siyi",
+      "kind": "primary-text",
+      "match": "Sancai Tuhui|三才圖會"
+    },
+    {
+      "id": "syriac-theological-manuscript",
+      "title": "Syriac Theological Manuscript (Codex Vaticanus Syriacus 162)",
+      "short": "Syriac Manuscript",
+      "author": "anonymous",
+      "kind": "primary-text",
+      "match": "Syriac Theological Manuscript"
+    },
+    {
+      "id": "thor-bu-phyag-chen",
+      "title": "Thor bu Phyag chen rnal 'byor bzhi bshad (Four Yogas of Mahāmudrā)",
+      "short": "Four Yogas of Mahāmudrā",
+      "author": "Tshamdrak Monastery",
+      "kind": "primary-text",
+      "match": "Thor bu Phyag chen"
+    },
+    {
+      "id": "agricola",
+      "title": "Agricola",
+      "short": "Agricola",
+      "author": "Tacitus",
+      "kind": "primary-text",
+      "match": "Agricola"
+    },
+    {
+      "id": "moralia",
+      "title": "How to Tell a Flatterer from a Friend (in the Moralia)",
+      "short": "Moralia",
+      "author": "Plutarch",
+      "kind": "primary-text",
+      "match": "Moralia|Flatterer from a Friend"
+    },
+    {
+      "id": "de-vita-libri-tres",
+      "title": "Three Books on Life (De vita libri tres)",
+      "short": "Three Books on Life",
+      "author": "Marsilio Ficino",
+      "kind": "primary-text",
+      "match": "De vita libri tres|Three Books on Life"
+    },
+    {
+      "id": "papyri-graecae-magicae",
+      "title": "The Greek Magical Papyri in Translation (Papyri Graecae Magicae)",
+      "short": "Greek Magical Papyri",
+      "author": "Hans Dieter Betz (ed.)",
+      "kind": "primary-text",
+      "match": "Papyri Graecae Magicae|The Greek Magical Papyri in Translation"
+    },
+    {
+      "id": "arbatel",
+      "title": "Arbatel",
+      "short": "Arbatel",
+      "author": "anonymous",
+      "kind": "primary-text",
+      "match": "Arbatel"
+    },
+    {
+      "id": "theologia-germanica",
+      "title": "Theologia Germanica",
+      "short": "Theologia Germanica",
+      "author": "anonymous",
+      "kind": "primary-text",
+      "match": "Theologia Germanica"
+    },
+    {
+      "id": "the-secret-of-secrets",
+      "title": "The Secret of Secrets",
+      "short": "The Secret of Secrets",
+      "author": "anonymous",
+      "kind": "primary-text",
+      "match": "The Secret of Secrets"
+    },
+    {
+      "id": "steganographia",
+      "title": "Steganographia",
+      "short": "Steganographia",
+      "author": "Johannes Trithemius",
+      "kind": "primary-text",
+      "match": "Steganographia"
+    },
+    {
+      "id": "antipalus-maleficiorum",
+      "title": "Antipalus maleficiorum",
+      "short": "Antipalus maleficiorum",
+      "author": "Johannes Trithemius",
+      "kind": "primary-text",
+      "match": "Antipalus maleficiorum"
+    },
+    {
+      "id": "discoverie-of-witchcraft",
+      "title": "Discoverie of Witchcraft",
+      "short": "Discoverie of Witchcraft",
+      "author": "Reginald Scot",
+      "kind": "primary-text",
+      "match": "Discoverie of Witchcraft"
+    },
+    {
+      "id": "the-tablet-of-truth",
+      "title": "The Tablet of Truth",
+      "short": "The Tablet of Truth",
+      "author": "Libanius Gallus & Pelagius Eremita",
+      "kind": "primary-text",
+      "match": "The Tablet of Truth"
+    },
+    {
+      "id": "two-books",
+      "title": "Two Books · Of the knowledge and name of one's good angel",
+      "short": "Two Books",
+      "author": "Pelagius Eremita",
+      "kind": "primary-text",
+      "match": "Two Books"
+    },
+    {
+      "id": "weishaupt-two-letters",
+      "title": "Two Letters from Adam Weishaupt, Founder of the Order of the Illuminati (1776)",
+      "short": "Weishaupt's Two Letters",
+      "author": "Adam Weishaupt",
+      "kind": "primary-text",
+      "match": "Two Letters from Adam Weishaupt"
+    },
+    {
+      "id": "feliciano-2023",
+      "title": "An Application of the Coercive Control Framework to Cults",
+      "short": "Coercive Control & Cults",
+      "author": "Feliciano, S. E.",
+      "kind": "paper",
+      "match": "An Application of the Coercive Control Framework"
+    },
+    {
+      "id": "leistner-2016",
+      "title": "Entre a Magia e o Pensamento Secular: Reflexões Sobre a Cultura Política Brasileira",
+      "short": "Magia & Pens. Secular",
+      "author": "Leistner, R.",
+      "kind": "paper",
+      "match": "Entre a Magia e o Pensamento Secular"
+    },
+    {
+      "id": "predko-2021",
+      "title": "Religious Epidemics on the Territory of Ukraine",
+      "short": "Religious Epidemics",
+      "author": "Predko, O. & Predko, D.",
+      "kind": "paper",
+      "match": "Religious Epidemics on the Territory of Ukraine"
+    },
+    {
+      "id": "scholem-arendt-exchange",
+      "title": "Eichmann in Jerusalem: An Exchange of Letters between Gershom Scholem and Hannah Arendt",
+      "short": "Arendt-Scholem Exchange",
+      "author": "Arendt, H. & Scholem, G.",
+      "kind": "paper",
+      "match": "An Exchange of Letters between Gershom Scholem"
+    },
+    {
+      "id": "the-sun-also-rises",
+      "title": "The Sun Also Rises",
+      "short": "The Sun Also Rises",
+      "author": "Ernest Hemingway",
+      "kind": "book",
+      "match": "The Sun Also Rises"
+    },
+    {
+      "id": "gulshan-i-raz",
+      "title": "Gulshan-i Raz",
+      "short": "Gulshan-i Raz",
+      "author": "Mahmud Shabistari",
+      "kind": "primary-text",
+      "match": "Gulshan-i Raz"
+    },
+    {
+      "id": "septem-defensiones",
+      "title": "Septem defensiones",
+      "short": "Septem defensiones",
+      "author": "Paracelsus",
+      "kind": "primary-text",
+      "match": "Septem defensiones"
+    },
+    {
+      "id": "timaeus",
+      "title": "Timaeus",
+      "short": "Timaeus",
+      "author": "Plato",
+      "kind": "primary-text",
+      "match": "\\*Timaeus\\*"
+    },
+    {
+      "id": "de-mysteriis",
+      "title": "De mysteriis",
+      "short": "De mysteriis",
+      "author": "Iamblichus",
+      "kind": "primary-text",
+      "match": "De mysteriis"
+    },
+    {
+      "id": "lindahl-vce-2017",
+      "title": "The Varieties of Contemplative Experience: A Mixed-Methods Study of Meditation-Related Challenges in Western Buddhists",
+      "short": "Contemplative Experience",
+      "author": "Lindahl, J. R., et al.",
+      "kind": "paper",
+      "match": "The Varieties of Contemplative Experience"
+    },
+    {
+      "id": "britton-adverse-effects-2021",
+      "title": "Defining and Measuring Meditation-Related Adverse Effects in Mindfulness-Based Programs",
+      "short": "Meditation Adverse Eff.",
+      "author": "Britton, W. B., et al.",
+      "kind": "paper",
+      "match": "Defining and Measuring Meditation-Related"
+    },
+    {
+      "id": "pons-dpdr-2026",
+      "title": "A cross-sectional survey on depersonalization/derealization and meditation-induced alterations of the self",
+      "short": "Pons et al. 2026",
+      "author": "Pons, E., et al.",
+      "kind": "paper",
+      "match": "A cross-sectional survey on depersonalization"
+    },
+    {
+      "id": "pauly-meditation-2021",
+      "title": "Prevalence, predictors and types of unpleasant and adverse effects of meditation in regular meditators",
+      "short": "Pauly et al. 2021",
+      "author": "Pauly, L., et al.",
+      "kind": "paper",
+      "match": "Prevalence, predictors and types of unpleasant|Pauly, L"
+    },
+    {
+      "id": "sierra-2002",
+      "title": "Reduced skin-conductance responses to unpleasant pictures in depersonalization disorder",
+      "short": "Sierra et al. 2002",
+      "author": "Sierra, M., Senior, C., Dalton, J., et al.",
+      "kind": "paper",
+      "match": "Reduced skin-conductance responses"
+    },
+    {
+      "id": "sierra-2011",
+      "title": "Depersonalization: A selective impairment of self-awareness",
+      "short": "Depersonalization 2011",
+      "author": "Sierra, M., et al.",
+      "kind": "paper",
+      "match": "Depersonalization: A selective impairment"
+    },
+    {
+      "id": "leavitt-1999",
+      "title": "Dissociative Experiences Scale Taxon and Measurement of Dissociative Pathology",
+      "short": "DES-Taxon 1999",
+      "author": "Leavitt, F.",
+      "kind": "paper",
+      "match": "Dissociative Experiences Scale Taxon"
+    },
+    {
+      "id": "teacher-matters-2025",
+      "title": "The Teacher Matters: The Role and Impact of Meditation Teachers",
+      "short": "The Teacher Matters",
+      "author": "contemporarybuddhism (2025; no author named in the notes)",
+      "kind": "paper",
+      "match": "The Teacher Matters"
+    },
+    {
+      "id": "tepper-2000",
+      "title": "Consequences of Abusive Supervision",
+      "short": "Abusive Supervision",
+      "author": "Tepper, B. J.",
+      "kind": "paper",
+      "match": "Consequences of Abusive Supervision"
+    },
+    {
+      "id": "bjorkqvist-1992",
+      "title": "Do girls manipulate and boys fight? Developmental trends in regard to direct and indirect aggression",
+      "short": "Do girls manipulate…",
+      "author": "Björkqvist, K., et al.",
+      "kind": "paper",
+      "match": "Do girls manipulate and boys fight"
+    },
+    {
+      "id": "biddle-2019",
+      "title": "Navigating the 'Danger Zone': Tone Policing and the Bounding of Civility in the Practice of Student Voice",
+      "short": "Tone Policing",
+      "author": "Biddle, C. & Hufnagel, E.",
+      "kind": "paper",
+      "match": "Tone Policing and the Bounding of Civility"
+    },
+    {
+      "id": "sweet-2019",
+      "title": "The Sociology of Gaslighting",
+      "short": "Sociology of Gaslighting",
+      "author": "Sweet, P. L.",
+      "kind": "paper",
+      "match": "The Sociology of Gaslighting"
+    },
+    {
+      "id": "bateson-1956",
+      "title": "Toward a Theory of Schizophrenia",
+      "short": "Theory of Schizophrenia",
+      "author": "Bateson, G., et al.",
+      "kind": "paper",
+      "match": "Toward a Theory of Schizophrenia"
+    },
+    {
+      "id": "crick-1995",
+      "title": "Relational aggression, gender, and social-psychological adjustment",
+      "short": "Relational Aggression",
+      "author": "Crick, N. R. & Grotpeter, J. K.",
+      "kind": "paper",
+      "match": "Relational aggression, gender, and social-psychological"
+    },
+    {
+      "id": "eisenberg-1984",
+      "title": "Ambiguity as strategy in organizational communication",
+      "short": "Ambiguity as Strategy",
+      "author": "Eisenberg, E. M.",
+      "kind": "paper",
+      "match": "Ambiguity as strategy in organizational communication"
+    },
+    {
+      "id": "ashforth-1994",
+      "title": "Petty Tyranny in Organizations",
+      "short": "Petty Tyranny",
+      "author": "Ashforth, B. E.",
+      "kind": "paper",
+      "match": "Petty Tyranny in Organizations"
+    },
+    {
+      "id": "bailey-2018",
+      "title": "On Anger, Silence, and Epistemic Injustice",
+      "short": "On Anger, Silence…",
+      "author": "Bailey, A.",
+      "kind": "paper",
+      "match": "On Anger, Silence, and Epistemic Injustice"
+    },
+    {
+      "id": "paulhus-williams-2002",
+      "title": "The Dark Triad of personality: Narcissism, Machiavellianism, and psychopathy",
+      "short": "The Dark Triad",
+      "author": "Paulhus, D. L. & Williams, K. M.",
+      "kind": "paper",
+      "match": "The Dark Triad of personality"
+    },
+    {
+      "id": "brewer-abell-2017",
+      "title": "Machiavellianism, Relationship Satisfaction, and Romantic Relationship Quality",
+      "short": "Machiavellianism & Rels",
+      "author": "Brewer, G. & Abell, L.",
+      "kind": "paper",
+      "match": "Machiavellianism, Relationship Satisfaction"
+    },
+    {
+      "id": "le-texier-2019",
+      "title": "Debunking the Stanford Prison Experiment",
+      "short": "Debunking the SPE",
+      "author": "Le Texier, T.",
+      "kind": "paper",
+      "match": "Debunking the Stanford Prison Experiment"
+    },
+    {
+      "id": "haslam-reicher-2007",
+      "title": "Beyond the banality of evil: Three dynamics of an interactionist social psychology of tyranny",
+      "short": "Beyond Banality of Evil",
+      "author": "Haslam, S. A. & Reicher, S. D.",
+      "kind": "paper",
+      "match": "Beyond the banality of evil"
+    },
+    {
+      "id": "lifton-eight-criteria-1991",
+      "title": "Eight criteria for thought reform in cults",
+      "short": "Eight Criteria (Cultic)",
+      "author": "Lifton, R. J.",
+      "kind": "paper",
+      "match": "Eight criteria for thought reform"
+    },
+    {
+      "id": "anthony-robbins-1992",
+      "title": "Law, social science and the 'brainwashing' exception to the First Amendment",
+      "short": "Brainwashing Exception",
+      "author": "Anthony, D. & Robbins, T.",
+      "kind": "paper",
+      "match": "Law, social science and the .brainwashing. exception"
+    },
+    {
+      "id": "curtis-1993",
+      "title": "Factors related to susceptibility and recruitment by cults",
+      "short": "Susceptibility & Recruit",
+      "author": "Curtis, J. M. & Curtis, M. J.",
+      "kind": "paper",
+      "match": "Factors related to susceptibility and recruitment"
+    },
+    {
+      "id": "lofland-stark-1965",
+      "title": "Becoming a World-Saver: A Theory of Conversion to a Deviant Perspective",
+      "short": "Becoming a World-Saver",
+      "author": "Lofland, J. & Stark, R.",
+      "kind": "paper",
+      "match": "Becoming a World-Saver"
+    },
+    {
+      "id": "hadding-2023",
+      "title": "Being in-between; exploring former cult members' experiences of an acculturation process",
+      "short": "Being In-Between",
+      "author": "Hadding, C., et al.",
+      "kind": "paper",
+      "match": "Being in-between[:;] exploring former cult members"
+    },
+    {
+      "id": "langone-martin-1993",
+      "title": "Deprogramming, Exit Counseling, and Ethics: Clarifying the Confusion",
+      "short": "Deprogramming & Exit",
+      "author": "Langone, M. D. & Martin, P.",
+      "kind": "paper",
+      "match": "Deprogramming, Exit Counseling, and Ethics"
+    },
+    {
+      "id": "bjorkmark-2022",
+      "title": "'Living Between Two Different Worlds': Experiences of Leaving a High-Cost Religious Group",
+      "short": "Living Between Worlds",
+      "author": "Björkmark, M., et al.",
+      "kind": "paper",
+      "match": "Living Between Two Different Worlds"
+    },
+    {
+      "id": "ransom-2022",
+      "title": "Grieving the Living: The Social Death of Former Jehovah's Witnesses",
+      "short": "Grieving the Living",
+      "author": "Ransom, H. J., et al.",
+      "kind": "paper",
+      "match": "Grieving the Living: The Social Death"
+    },
+    {
+      "id": "duckitt-sibley-2009",
+      "title": "A dual-process motivational model of ideology, politics, and prejudice",
+      "short": "Dual-Process Model",
+      "author": "Duckitt, J. & Sibley, C. G.",
+      "kind": "paper",
+      "match": "A dual-process motivational model"
+    },
+    {
+      "id": "dunwoody-funke-2016",
+      "title": "The Aggression-Submission-Conventionalism Scale",
+      "short": "ASC Scale",
+      "author": "Dunwoody, P. T. & Funke, F.",
+      "kind": "paper",
+      "match": "Aggression-Submission-Conventionalism"
+    },
+    {
+      "id": "conway-2018",
+      "title": "Finding the Loch Ness Monster: Left-Wing Authoritarianism in the United States",
+      "short": "Finding the Loch Ness",
+      "author": "Conway, L. G. III, et al.",
+      "kind": "paper",
+      "match": "Finding the Loch Ness Monster"
+    },
+    {
+      "id": "young-2012",
+      "title": "The use of the 'Brainwashing' Theory by the Anti-cult Movement in the United States of America, pre-1996",
+      "short": "Brainwashing by the ACM",
+      "author": "Young, E. A.",
+      "kind": "paper",
+      "match": "use of the .Brainwashing. Theory by the Anti-cult"
+    },
+    {
+      "id": "simmel-1906",
+      "title": "The Sociology of Secrecy and of Secret Societies",
+      "short": "The Sociology of Secrecy",
+      "author": "Simmel, G.",
+      "kind": "paper",
+      "match": "The Sociology of Secrecy and of Secret Societies"
+    },
+    {
+      "id": "djankov-2010",
+      "title": "Disclosure by Politicians",
+      "short": "Disclosure by Polits.",
+      "author": "Djankov, S., et al.",
+      "kind": "paper",
+      "match": "Disclosure by Politicians"
+    },
+    {
+      "id": "citron-pasquale-2014",
+      "title": "The Scored Society: Due Process for Automated Predictions",
+      "short": "The Scored Society",
+      "author": "Citron, D. K. & Pasquale, F.",
+      "kind": "paper",
+      "match": "The Scored Society"
+    },
+    {
+      "id": "citron-2008",
+      "title": "Technological Due Process",
+      "short": "Technological Due Proc.",
+      "author": "Citron, D. K.",
+      "kind": "paper",
+      "match": "Technological Due Process"
+    },
+    {
+      "id": "carney-2019",
+      "title": "Robo-debt illegality: The seven veils of failed guarantees of the rule of law?",
+      "short": "Robo-debt Illegality",
+      "author": "Carney, T.",
+      "kind": "paper",
+      "match": "Robo-debt illegality"
+    },
+    {
+      "id": "moreira-almeida-2008",
+      "title": "Comparison of Brazilian spiritist mediumship and dissociative identity disorder",
+      "short": "Brazilian Mediumship/DID",
+      "author": "Moreira-Almeida, A., et al.",
+      "kind": "paper",
+      "match": "Comparison of Brazilian spiritist mediumship"
+    },
+    {
+      "id": "alminhana-2016",
+      "title": "Experiências Religiosas/Espirituais: dissociação saudável ou patológica?",
+      "short": "Dissociação Saudável?",
+      "author": "Alminhana, L. O. & Menezes Jr., A.",
+      "kind": "paper",
+      "match": "dissocia[çc][ãa]o saud[áa]vel ou patol[óo]gica"
+    },
+    {
+      "id": "guerriero-2018",
+      "title": "New Religions in Brazil – A Game Between Relativism and Fundamentalism",
+      "short": "New Religions in Brazil",
+      "author": "Guerriero, S.",
+      "kind": "paper",
+      "match": "New Religions in Brazil"
+    },
+    {
+      "id": "jabert-facchinetti-2011",
+      "title": "A experiência da loucura segundo o espiritismo",
+      "short": "A Experiência da Loucura",
+      "author": "Jabert, A. & Facchinetti, C.",
+      "kind": "paper",
+      "match": "A experi[êe]ncia da loucura segundo o espiritismo"
+    },
+    {
+      "id": "spiegel-2011",
+      "title": "Dissociative disorders in DSM-5",
+      "short": "Dissoc. Disorders DSM-5",
+      "author": "Spiegel, D., et al.",
+      "kind": "paper",
+      "match": "Dissociative disorders in DSM-5"
+    },
+    {
+      "id": "lukoff-1998",
+      "title": "From spiritual emergency to spiritual problem: The transpersonal roots of the new DSM-IV category",
+      "short": "From Spiritual Emergency",
+      "author": "Lukoff, D., Lu, F. & Turner, R.",
+      "kind": "paper",
+      "match": "From spiritual emergency to spiritual problem"
+    },
+    {
+      "id": "gershman-2022",
+      "title": "Witchcraft beliefs around the world: An exploratory analysis",
+      "short": "Witchcraft Beliefs",
+      "author": "Gershman, B.",
+      "kind": "paper",
+      "match": "Witchcraft beliefs around the world"
+    },
+    {
+      "id": "verter-2003",
+      "title": "Spiritual Capital: Theorizing Religion with Bourdieu against Bourdieu",
+      "short": "Spiritual Capital",
+      "author": "Verter, B.",
+      "kind": "paper",
+      "match": "Spiritual Capital: Theorizing Religion"
+    },
+    {
+      "id": "puttick-1995",
+      "title": "Sexuality, Gender and the Abuse of Power in the Master–Disciple Relationship: The Case of the Rajneesh Movement",
+      "short": "Gender & Abuse of Power",
+      "author": "Puttick, E.",
+      "kind": "paper",
+      "match": "Sexuality, Gender and the Abuse of Power"
+    },
+    {
+      "id": "camargo-scorsolini-2018",
+      "title": "A feitura do santo: percursos desenvolvimentais de médiuns em iniciação no Candomblé",
+      "short": "A feitura do santo",
+      "author": "Camargo, A. F. G. de & Scorsolini-Comin, F.",
+      "kind": "paper",
+      "match": "A feitura do santo"
+    },
+    {
+      "id": "evans-2023-extended",
+      "title": "Extended difficulties following the use of psychedelic drugs: A mixed methods study",
+      "short": "Extended Difficulties",
+      "author": "Evans, J., et al.",
+      "kind": "paper",
+      "match": "Extended difficulties following the use of psychedelic"
+    },
+    {
+      "id": "simonsson-2023",
+      "title": "Prevalence and associations of challenging, difficult or distressing experiences using classic psychedelics",
+      "short": "Challenging Experiences",
+      "author": "Simonsson, O., et al.",
+      "kind": "paper",
+      "match": "Prevalence and associations of challenging, difficult"
+    },
+    {
+      "id": "gashi-2021",
+      "title": "Making 'bad trips' good: How users of psychedelics narratively transform challenging trips into valuable experiences",
+      "short": "Making 'Bad Trips' Good",
+      "author": "Gashi, L., Sandberg, S. & Pedersen, W.",
+      "kind": "paper",
+      "match": "Making .bad trips. good"
+    },
+    {
+      "id": "griffiths-2008",
+      "title": "Mystical-type experiences occasioned by psilocybin mediate the attribution of personal meaning and spiritual significance 14 months later",
+      "short": "Mystical-Type Exper.",
+      "author": "Griffiths, R. R., et al.",
+      "kind": "paper",
+      "match": "Mystical-type experiences occasioned by psilocybin"
+    },
+    {
+      "id": "ellis-2011-autoethnography",
+      "title": "Autoethnography: An Overview",
+      "short": "Autoethnography",
+      "author": "Ellis, C., Adams, T. E. & Bochner, A. P.",
+      "kind": "paper",
+      "match": "Autoethnography: An Overview"
+    },
+    {
+      "id": "johansson-2005",
+      "title": "Failure to Detect Mismatches Between Intention and Outcome in a Simple Decision Task",
+      "short": "Choice Blindness",
+      "author": "Johansson, P., et al.",
+      "kind": "paper",
+      "match": "Failure to Detect Mismatches Between Intention"
+    },
+    {
+      "id": "freyd-1997",
+      "title": "Violations of power, adaptive blindness, and betrayal trauma theory",
+      "short": "Violations of Power",
+      "author": "Freyd, J. J.",
+      "kind": "paper",
+      "match": "Violations of power, adaptive blindness"
+    },
+    {
+      "id": "watt-2014",
+      "title": "Santo Daime in Ireland: A 'Work' in Process",
+      "short": "Santo Daime in Ireland",
+      "author": "Watt, G.",
+      "kind": "paper",
+      "match": "Santo Daime in Ireland"
+    },
+    {
+      "id": "butler-1970",
+      "title": "The Egregore of a School",
+      "short": "The Egregore of a School",
+      "author": "W. E. Butler",
+      "kind": "paper",
+      "match": "The Egregore of a School"
+    },
+    {
+      "id": "reeds-1998",
+      "title": "Solved: The Ciphers in Book III of Trithemius's Steganographia",
+      "short": "Trithemius's Ciphers",
+      "author": "Reeds, J.",
+      "kind": "paper",
+      "match": "Solved: The Ciphers in Book III"
+    },
+    {
+      "id": "valiukh-2026",
+      "title": "The Doctrinal and Ritual Features of the 'White Brotherhood'",
+      "short": "White Brotherhood Doctr.",
+      "author": "Valiukh, D.",
+      "kind": "paper",
+      "match": "Doctrinal and Ritual Features"
+    },
+    {
+      "id": "boots-2026",
+      "title": "Conflicts of Meaning: Ritual, Conversion, and Cult Formation in the Great White Brotherhood",
+      "short": "Conflicts of Meaning",
+      "author": "Boots, N.",
+      "kind": "paper",
+      "match": "Conflicts of Meaning"
+    },
+    {
+      "id": "bansal-mittal-2016",
+      "title": "Osho Dynamic Meditation's Effect on Serum Cortisol Level",
+      "short": "Osho Meditation/Cortisol",
+      "author": "Bansal, A. & Mittal, A.",
+      "kind": "paper",
+      "match": "Osho Dynamic Meditation.s Effect on Serum Cortisol"
+    },
+    {
+      "id": "glass-1977",
+      "title": "Psychiatric disturbances associated with Erhard Seminars Training: I. A report of cases",
+      "short": "Psychiatric Dist. & est",
+      "author": "Glass, L. L., et al.",
+      "kind": "paper",
+      "match": "Psychiatric disturbances associated with Erhard"
+    },
+    {
+      "id": "melchior-sharot-2010",
+      "title": "Landmark in Israel: Recruitment and Maintenance of Clients in a Human Potential Organization",
+      "short": "Landmark in Israel",
+      "author": "Melchior, S. & Sharot, S.",
+      "kind": "paper",
+      "match": "Landmark in Israel"
+    },
+    {
+      "id": "paglia-2003",
+      "title": "Cults and Cosmic Consciousness: Religious Vision in the American 1960s",
+      "short": "Cults & Cosmic Consc.",
+      "author": "Paglia, C.",
+      "kind": "paper",
+      "match": "Cults and Cosmic Consciousness"
+    },
+    {
+      "id": "goetic-common-sense",
+      "title": "Goêtic Common Sense: An Interlude for the Inveterate Chthonic Sorcerer",
+      "short": "Goêtic Common Sense",
+      "author": "Frater Acher",
+      "kind": "book",
+      "match": "Go[êe]tic Common Sense"
+    },
+    {
+      "id": "the-red-book",
+      "title": "The Red Book: Liber Novus",
+      "short": "The Red Book",
+      "author": "C. G. Jung",
+      "kind": "book",
+      "match": "The Red Book"
+    },
+    {
+      "id": "the-jew-as-pariah",
+      "title": "The Jew as Pariah",
+      "short": "The Jew as Pariah",
+      "author": "Hannah Arendt",
+      "kind": "book",
+      "match": "The Jew as Pariah"
+    },
+    {
+      "id": "crystallizing-public-opinion",
+      "title": "Crystallizing Public Opinion",
+      "short": "Crystallizing Public Op.",
+      "author": "Edward L. Bernays",
+      "kind": "book",
+      "match": "Crystallizing Public Opinion"
+    },
+    {
+      "id": "propaganda",
+      "title": "Propaganda",
+      "short": "Propaganda",
+      "author": "Edward L. Bernays",
+      "kind": "book",
+      "match": "\\*Propaganda\\*"
+    },
+    {
+      "id": "public-opinion",
+      "title": "Public Opinion",
+      "short": "Public Opinion",
+      "author": "Walter Lippmann",
+      "kind": "book",
+      "match": "Lippmann"
+    },
+    {
+      "id": "the-vision-and-the-voice",
+      "title": "The Vision and the Voice (Liber 418)",
+      "short": "Vision & the Voice",
+      "author": "Aleister Crowley",
+      "kind": "book",
+      "match": "The Vision and the Voice|Liber 418"
+    },
+    {
+      "id": "the-authoritarians",
+      "title": "The Authoritarians",
+      "short": "The Authoritarians",
+      "author": "Bob Altemeyer",
+      "kind": "book",
+      "match": "The Authoritarians"
+    },
+    {
+      "id": "cratylus",
+      "title": "Cratylus",
+      "short": "Cratylus",
+      "author": "Plato",
+      "kind": "primary-text",
+      "match": "the \\*Cratylus\\*"
+    },
+    {
+      "id": "phaedo",
+      "title": "Phaedo",
+      "short": "Phaedo",
+      "author": "Plato",
+      "kind": "primary-text",
+      "match": "the \\*Phaedo\\*"
+    },
+    {
+      "id": "in-parmenidem",
+      "title": "In Parmenidem (Commentary on Plato's Parmenides)",
+      "short": "In Parmenidem",
+      "author": "Proclus",
+      "kind": "primary-text",
+      "match": "Proclus, \\*In Parm\\."
+    },
+    {
+      "id": "blair-2005",
+      "title": "Responding to the emotions of others: dissociating forms of empathy through the study of typical and psychiatric populations",
+      "short": "Empathy & Psychopathy",
+      "author": "Blair, R. J. R.",
+      "kind": "paper",
+      "match": "Responding to the emotions of others"
+    },
+    {
+      "id": "mclean-2007",
+      "title": "Psychotherapy with a Narcissistic Patient Using Kohut's Self Psychology Model",
+      "short": "Kohut's Self Psychology",
+      "author": "McLean, J.",
+      "kind": "paper",
+      "match": "Psychotherapy with a Narcissistic Patient"
+    },
+    {
+      "id": "fisher-1990",
+      "title": "Evaluating a Large Group Awareness Training: A Longitudinal Study of Psychosocial Effects",
+      "short": "Evaluating a Large Group",
+      "author": "Fisher, J. D., et al.",
+      "kind": "paper",
+      "match": "Evaluating a Large Group Awareness Training"
+    }
+  ]
+}

@@ -1465,6 +1465,123 @@ function buildTimeline(navPosts) {
   };
 }
 
+/* ---------- the catalogue of cited works, and the citations ---------- */
+
+/** The curated list of published works the pieces cite — one entry per work,
+ * with the rule that recognises it in a piece's notes. Read, never rebuilt. */
+function catalogue() {
+  const file = join(ROOT, 'tools', 'catalogue.json');
+  if (!existsSync(file)) return [];
+  return JSON.parse(readFileSync(file, 'utf8')).sources || [];
+}
+
+/** One piece's footnote DEFINITIONS, each joined into a single string.
+ *
+ * A definition is a line beginning `[^key]:` plus every following line up to a
+ * blank line or the next definition. Joining them is required, not tidiness: a
+ * title wraps across two lines in these files (`*The Authoritarian\nPersonality*`),
+ * and a matcher working line by line silently loses seven of the works. */
+function footnoteDefs(src) {
+  const out = [];
+  let cur = null;
+  for (const line of src.split('\n')) {
+    const m = /^[ \t]*\[\^[^\]]+\]:/.exec(line);
+    if (m) {
+      if (cur !== null) out.push(cur);
+      cur = line.slice(m[0].length);
+      continue;
+    }
+    if (cur === null) continue;
+    if (!line.trim()) {
+      out.push(cur);
+      cur = null;
+      continue;
+    }
+    cur += ' ' + line.trim();
+  }
+  if (cur !== null) out.push(cur);
+  return out.map((d) => d.replace(/\s+/g, ' ').trim());
+}
+
+/** Which pieces cite which works — the citation edges, derived from the notes.
+ *
+ * An edge exists when a work's match rule tests true against one of a piece's
+ * footnote definitions, so an edge is only ever read out of the text. A work
+ * cited by TWO OR MORE pieces is the one that matters to the map: it is the
+ * work, not the piece, that joins two pieces to each other. The rest are named
+ * by a single piece each — a name inside that piece, not a connection between
+ * two — and are counted, never drawn. */
+function sourceGraph(navPosts, nodes) {
+  const works = catalogue();
+  const at = new Map(nodes.map((n, i) => [n.slug, i]));
+  const matchers = works.map((s) => {
+    try {
+      return new RegExp(s.match, 'i');
+    } catch {
+      return null;
+    }
+  });
+  const citing = works.map(() => []);
+  const hits = nodes.map(() => []);
+  let citations = 0;
+  for (const p of navPosts) {
+    const i = at.get(p.slug);
+    const file = join(ROOT, 'content', p.file);
+    if (i == null || !p.file || !existsSync(file)) continue;
+    const defs = footnoteDefs(readFileSync(file, 'utf8'));
+    for (let k = 0; k < works.length; k++) {
+      const re = matchers[k];
+      if (!re) continue;
+      // one citation per piece and work however many notes name it: the figure
+      // draws a connection, not a mention count
+      for (const d of defs) {
+        if (re.test(d)) {
+          citing[k].push(i);
+          hits[i].push(k);
+          citations++;
+          break;
+        }
+      }
+    }
+  }
+  // the works that join pieces, the largest first, then by name so two builds
+  // of the same text draw the same figure
+  const order = [];
+  let single = 0;
+  let uncited = 0;
+  for (let k = 0; k < works.length; k++) {
+    if (citing[k].length >= 2) order.push(k);
+    else if (citing[k].length === 1) single++;
+    else uncited++;
+  }
+  order.sort((a, b) => citing[b].length - citing[a].length || works[a].short.localeCompare(works[b].short));
+  const seenAt = new Map(order.map((k, i) => [k, i]));
+  const drawn = nodes.map(() => []);
+  const alone = nodes.map(() => 0);
+  for (let i = 0; i < nodes.length; i++) {
+    for (const k of hits[i]) {
+      if (seenAt.has(k)) drawn[i].push(seenAt.get(k));
+      else alone[i]++;
+    }
+  }
+  const kinds = {};
+  for (const w of works) kinds[w.kind] = (kinds[w.kind] || 0) + 1;
+  return {
+    drawn: order.map((k) => ({
+      id: works[k].id,
+      short: works[k].short,
+      title: works[k].title,
+      kind: works[k].kind,
+      author: works[k].author,
+      count: citing[k].length,
+      nodes: citing[k],
+    })),
+    perNode: drawn,
+    alone,
+    totals: { works: works.length, citations, single, uncited, kinds },
+  };
+}
+
 /* ---------- the map: the links the pieces make to one another ---------- */
 
 /** The blog's own cross-references, read out of the prose.
@@ -1554,6 +1671,56 @@ function buildMap(navPosts) {
       .join('') +
     `</tbody></table></div>`;
 
+  // The works the pieces cite, and the pieces that cite them. The edges are
+  // derived at build time from the notes themselves (sourceGraph); this is
+  // where they become page content and figure data.
+  const src = sourceGraph(navPosts, nodes);
+  const t = src.totals;
+  const hasWorks = t.works > 0;
+  const kindLabel = (k) => (k === 'primary-text' ? 'primary text' : k);
+  const kindCounts = (kinds) =>
+    ['book', 'paper', 'primary-text']
+      .filter((k) => kinds[k])
+      .map((k) => `${kinds[k]} ${kindLabel(k)}${kinds[k] === 1 ? '' : 's'}`)
+      .join(', ');
+
+  // The most-cited works, read from the derivation: the table the figure's own
+  // marks are ranked by, so the two cannot disagree about what is a hub.
+  const top = src.drawn.slice(0, 10);
+  const worksTable = !hasWorks
+    ? ''
+    : `<div class="mapt"><table>` +
+    `<caption>The works the most pieces cite — the largest of the ${src.drawn.length} the figure draws ` +
+    `inside the ring, counted from the pieces' own footnotes.</caption>` +
+    `<thead><tr><th scope="col">work</th><th scope="col">kind</th><th scope="col">pieces citing it</th>` +
+    `</tr></thead><tbody>` +
+    top
+      .map(
+        (s) =>
+          `<tr><th scope="row">${esc(s.title)}</th><td>${esc(kindLabel(s.kind))}</td>` +
+          `<td>${s.count}</td></tr>`,
+      )
+      .join('') +
+    `</tbody></table></div>`;
+
+  const worksProse = !hasWorks
+    ? ''
+    : `<p>Most of the work a piece rests on is not other pieces: it is books, scholarly papers and primary ` +
+    `texts — the ${t.works} published works the pieces cite. That catalogue is curated by hand, but every ` +
+    `citation in it is measured: a work is counted when the piece's own footnote names it, matched against ` +
+    `the notes as written and never against a resemblance between a piece and a book. The notes hold ` +
+    `${t.citations} such citations. Journalism, case law, statutes, government reports and websites were ` +
+    `deliberately left out — the notes name them, but they are not the works this catalogue is scoped to, ` +
+    `and a catalogue that mixed them would count a news report as a source.</p>` +
+    `<p>${src.drawn.length} of those works are named by two or more pieces, and they are the ones drawn in the ` +
+    `figure: a mark inside the ring, joined to each piece that cites it, because it is the work — not the ` +
+    `piece — that connects pieces to one another. The other ${t.single} are cited by a single piece each: ` +
+    `they add a name to that piece and no connection between two, so they are counted here and left out of ` +
+    `the figure. ${kindCounts(t.kinds)}.` +
+    (t.uncited === 0 ? ` Every work in it is named by at least one piece.` : '') +
+    `</p>` +
+    worksTable;
+
   const prose =
     `<p>Every piece on the blog is a point on this ring and every link one piece makes to another is a curve ` +
     `across it: ${nodes.length} pieces, and ${edges.length} links between different pairs of them. That ` +
@@ -1573,12 +1740,31 @@ function buildMap(navPosts) {
 
   // the figure's data, handed to the widget the way the palette gets its list:
   // in the page body, as JSON, with `<` escaped so nothing in it can close the
-  // script element early
-  const json = JSON.stringify({
+  // script element early. The works ride here too: only the ones that connect
+  // pieces (two or more citations), the drawn works each piece names, and a
+  // count of the rest — enough for the readout without shipping the whole list.
+  const data = {
     nodes: nodes.map((n) => ({ slug: n.slug, title: n.title, series: n.series, book: n.book })),
     groups: groups.map((g) => ({ key: g.key, label: g.label, nodes: g.nodes })),
     edges: edges.map(([a, b]) => [at.get(a), at.get(b)]),
-  }).replaceAll('<', '\\u003c');
+  };
+  if (hasWorks) {
+    data.sources = src.drawn.map((s) => ({
+      id: s.id,
+      short: s.short,
+      // the short name is the catalogue's own canvas-sized form and 12 of them
+      // are clipped ('The Anatomy of…'); the readout and the page's table name
+      // the work in full, because a clipped name is one a reader cannot look up
+      title: s.title,
+      kind: s.kind,
+      author: s.author,
+      count: s.count,
+      nodes: s.nodes,
+    }));
+    data.cites = src.perNode;
+    data.alone = src.alone;
+  }
+  const json = JSON.stringify(data).replaceAll('<', '\\u003c');
 
   return {
     title: 'The map — blog.jaye.ch',
@@ -1587,7 +1773,9 @@ function buildMap(navPosts) {
     description:
       `Every piece on the blog as a point on a ring, and every link between them as a curve — ` +
       `${edges.length} links between different pairs of ${nodes.length} pieces, derived from the links the ` +
-      `pieces themselves make.`,
+      `pieces themselves make` +
+      (hasWorks ? `, with the ${src.drawn.length} cited works that join two or more pieces drawn inside it` : '') +
+      `.`,
     prompt: 'netstat -a',
     heroTitle: `The <span class="fx">map</span>`,
     tagline:
@@ -1596,13 +1784,16 @@ function buildMap(navPosts) {
     body:
       `<section><div class="wrap">` +
       `<div class="hint"># ${nodes.length} pieces · ${edges.length} links between different pairs of them — one link per pair, however often a piece names another</div>` +
-      `<div class="prose">${prose}${table}</div>` +
+      `<div class="prose">${prose}${table}${worksProse}</div>` +
       `<div class="viz" data-viz="map">\n` +
       `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the blog as a ` +
       `ring: every piece is a point, a piece that is a close reading is a square, and a curve joins two ` +
-      `pieces when one of them links to the other. The table above gives the same links as counts.</p></noscript>\n` +
-      `  <p class="viz-caption">Schematic — a map of the links between the pieces, not a measurement of ` +
-      `anything else. A position on the ring is a layout; the number of links is a count of links.</p>\n` +
+      `pieces when one of them links to the other. Inside the ring sit the works named by two or more pieces, ` +
+      `a mark each, joined to the pieces that cite them. The tables above give the same links and the same ` +
+      `works as counts.</p></noscript>\n` +
+      `  <p class="viz-caption">Schematic — a map of the links between the pieces and of the works that join ` +
+      `them, not a measurement of anything else. A position on the ring is a layout; the number of links is a ` +
+      `count of links.</p>\n` +
       `</div>\n` +
       `<script type="application/json" id="viz-data-map">${json}</script>` +
       `</div></section>`,

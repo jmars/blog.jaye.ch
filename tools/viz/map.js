@@ -18,6 +18,17 @@
  * make (read out of the prose at render time, never inferred from a resemblance
  * between a piece and a book), and the counts are counts of those links — but
  * the ring's geometry means nothing.
+ *
+ * INSIDE THE RING SIT THE WORKS the pieces cite, on a second and smaller ring.
+ * Only the works cited by two or more pieces are drawn, because those are the
+ * ones that connect: a book three pieces cite is a book visibly joining three
+ * pieces, and a work cited by one piece alone adds a name inside that piece and
+ * no connection to anything. Each is a small mark joined by a faint edge to every
+ * piece that cites it; the mark's SHAPE carries the work's KIND (a filled diamond
+ * for a book, a hollow one for a paper, a hollow triangle for a primary text),
+ * which is what a reader comparing them is comparing. The layer
+ * is a toggle, and the readout reports it whichever way it is set — a filter
+ * that is not reported is a figure that can be misread.
  */
 VIZ.registerViz('map', (function () {
   'use strict';
@@ -28,7 +39,43 @@ VIZ.registerViz('map', (function () {
   var HEIGHT = 580; // canvas height; the ring is fitted to the width
   var GAP_UNITS = 3; // ring slots between two series groups
   var HUB_LABELS = 5; // named on the canvas; the rest are named in the readout
+  var WORK_LABELS = 4; // the works named on the canvas, the largest first
   var HIT = 14; // pointer distance, in px, that counts as being on a point
+
+  // The works' ring: how far inside the pieces' ring it sits, and how many
+  // pieces a work must join to be drawn at all (the build only sends the ones
+  // that join two or more — this is the widget's own guard, not the rule).
+  var WORK_RING = 0.5;
+  var WORK_MIN = 2;
+
+  // A work's glyph says "work" whatever its colour: a diamond, filled for a book
+  // and hollow for a paper, and a hollow TRIANGLE for a primary text. Drawn
+  // bigger the more pieces cite it, so the hubs read as hubs.
+  //
+  // THE KINDS ARE SEPARATED BY FORM, NOT BY HUE: filled vs hollow, and three
+  // sides vs four. Two hollow diamonds differing only in colour teach a
+  // colourblind reader nothing, and a mark drawn INSIDE a small diamond does not
+  // survive the size — at the smallest of these (6 px, a work two pieces cite)
+  // a centre dot merges with the outline and the glyph reads as a FILLED
+  // diamond, which is the book. Only the silhouette does, so that is what
+  // carries the kind. The legend draws each swatch exactly as the figure draws
+  // it.
+  var WORK = {
+    book: { token: 'accent', fill: true, shape: 'diamond' },
+    paper: { token: 'accent2', fill: false, shape: 'diamond' },
+    'primary-text': { token: 'dim', fill: false, shape: 'triangle' },
+  };
+  var WORK_FALLBACK = { token: 'dim', fill: false, shape: 'diamond' };
+  var WORK_ALPHA = 0.3; // a work's edge on its own
+
+  // The works layer, cycled by one button. Every state is named, and the
+  // readout repeats the name, so the label can never be read as saying
+  // something the figure is not showing.
+  var WORK_LAYERS = [
+    { label: 'works shown', say: 'every work that joins two or more pieces', books: false },
+    { label: 'books only', say: 'only the works that are books', books: true },
+    { label: 'works hidden', say: 'none of the works', books: false },
+  ];
 
   // Series colours. The site has four colour tokens, not five, so the two reds
   // are separated by alpha and the books take the strong one — and a book is a
@@ -57,6 +104,28 @@ VIZ.registerViz('map', (function () {
 
   function spec(series) {
     return COLOUR[series] || COLOUR_FALLBACK;
+  }
+
+  function wkSpec(kind) {
+    return WORK[kind] || WORK_FALLBACK;
+  }
+
+  /** One work's glyph as a path in `c`: a diamond of half-size `r`, or a
+   * triangle standing in the same box. The canvas and the legend both call this,
+   * so the key cannot drift from the figure. */
+  function workPath(c, x, y, r, shape) {
+    c.beginPath();
+    if (shape === 'triangle') {
+      c.moveTo(x, y - r);
+      c.lineTo(x + r, y + r * 0.8);
+      c.lineTo(x - r, y + r * 0.8);
+    } else {
+      c.moveTo(x, y - r);
+      c.lineTo(x + r, y);
+      c.lineTo(x, y + r);
+      c.lineTo(x - r, y);
+    }
+    c.closePath();
   }
 
   /** The graph the build serialised into the page, or null. */
@@ -93,6 +162,22 @@ VIZ.registerViz('map', (function () {
         if (e && e.length === 2 && nodes[e[0]] && nodes[e[1]]) links.push({ f: e[0], t: e[1] });
       }
     }
+    // The works that join pieces, as the build derived them: largest first,
+    // each with the pieces that cite it. The list is used AS SENT — every entry
+    // is kept, so the indices the build put in `cites` still address it — and
+    // only its own guards decide what gets drawn.
+    var srcs = G && G.sources ? G.sources : [];
+    var works = [];
+    var citedBy = []; // piece index -> the works it cites, as indices into `works`
+    var alone = G && G.alone ? G.alone : []; // the works that name this piece and no other
+    for (i = 0; i < srcs.length; i++) {
+      var sw = srcs[i] || {};
+      var join = [];
+      if (sw.nodes) for (var wq = 0; wq < sw.nodes.length; wq++) if (nodes[sw.nodes[wq]]) join.push(sw.nodes[wq]);
+      works.push({ id: sw.id, short: sw.short || sw.id || '', title: sw.title || sw.short || sw.id || '',
+        kind: sw.kind || '', author: sw.author || '', count: join.length, nodes: join });
+    }
+    for (i = 0; i < nodes.length; i++) citedBy.push((G && G.cites && G.cites[i]) || []);
     // out-links and in-links per node: what the readout reports and what the
     // highlight draws
     var outs = [];
@@ -152,10 +237,33 @@ VIZ.registerViz('map', (function () {
           text: groups[gl].label + (key === 'readings' ? ' (books)' : ''),
         });
       }
+      // the works' own key, only while the layer is drawn: what the glyph is,
+      // and what its colour means
+      if (shownWorks()) {
+        items.push({ plain: true, text: 'works the pieces cite:' });
+        items.push({ work: 'book', text: 'book' });
+        items.push({ work: 'paper', text: 'paper' });
+        items.push({ work: 'primary-text', text: 'primary text' });
+      }
       for (var gi = 0; gi < items.length; gi++) {
-        items[gi].w = meas.measureText(items[gi].text).width + 20;
+        // a heading carries no swatch, so it needs the gap the swatch would
+        // have taken or the next mark lands on top of its last letter
+        items[gi].w = meas.measureText(items[gi].text).width + (items[gi].plain ? 34 : 20);
       }
       return items;
+    }
+
+    /** The works the layer keeps: every one, or the books alone. */
+    function shows(wi) {
+      if (workLayer === 2) return false;
+      if (workLayer === 1 && works[wi].kind !== 'book') return false;
+      return works[wi].count >= WORK_MIN && works[wi].nodes.length > 0;
+    }
+
+    function shownWorks() {
+      var n = 0;
+      for (var j = 0; j < works.length; j++) if (shows(j)) n++;
+      return n;
     }
 
     /** How many rows the legend needs at this width (it wraps). */
@@ -216,7 +324,9 @@ VIZ.registerViz('map', (function () {
     }
 
     var filter = 0;
-    var sel = null;
+    var sel = null; // the piece the reader is on, or null
+    var selW = null; // the work the reader is on, or null — never both
+    var workLayer = 0; // WORK_LAYERS index: which works the figure draws
 
     // a detached 2-D context, only to measure text the way the canvas will
     var meas = document.createElement('canvas').getContext('2d');
@@ -267,24 +377,103 @@ VIZ.registerViz('map', (function () {
     }
 
     function say() {
-      if (sel == null) {
+      // a work of the figure: which pieces name it
+      if (selW != null && works[selW]) {
+        var wk = works[selW];
+        var named = [];
+        for (var q = 0; q < wk.nodes.length; q++) named.push(nodes[wk.nodes[q]].title);
         return [
+          VIZ.bold(wk.title, true), ' — ', kindName(wk.kind), wk.author ? ' by ' + wk.author : '',
+          '. Named in the notes of ', VIZ.bold(pieces(wk.count)), ': ', named.join('; '),
+          '. It is drawn here because more than one piece cites it: a work named by a single piece adds ' +
+          'a name inside that piece and no connection between two. Move onto one of those pieces, or press ' +
+          'an arrow key, to read it.',
+        ];
+      }
+      if (sel == null) {
+        var layer = WORK_LAYERS[workLayer];
+        var parts = [
           FILTERS[filter].say + ' — ', VIZ.bold(shown() + ' links between different pairs'),
           ' of the ', VIZ.bold(pieces(nodes.length)),
           '. ', VIZ.bold(books + ' of them books'),
-          ', drawn as squares. An edge is a link one piece makes to another, and nothing more: ',
-          'point at a piece, or tab to the figure and step with the arrow keys, to see the pieces it ' +
-          'points at; Enter or a click opens it.',
+          ', drawn as squares. ',
         ];
+        // a bold part has to be its own element of the list: string-concatenated
+        // into a neighbour it would arrive as "[object Object]"
+        if (shownWorks() > 0) {
+          parts.push(
+            'Inside the ring sit the works that join pieces: ',
+            VIZ.bold(shownWorks() + ' of the ' + works.length),
+            ' drawn inside it — ' + layer.say + ', each joined to the pieces that cite it. ',
+          );
+        } else if (works.length) {
+          parts.push(
+            'The works the pieces cite are not drawn: ' + layer.say +
+            '. The button beside the figure brings them back. ',
+          );
+        }
+        parts.push(
+          'An edge is a link one piece makes to another, and nothing more: point at a piece or at one of ' +
+          'the works, or tab to the figure and step with the arrow keys, to read it; Enter or a click on a ' +
+          'piece opens it.',
+        );
+        return parts;
       }
       var n = nodes[sel];
-      return [
+      var cites = citedBy[sel] || [];
+      var uncited = alone[sel] || 0;
+      var np = [
         VIZ.bold(n.title, true), ' — ', seriesLabel(n.series), n.book ? ', a book' : '',
         '. It points at ', VIZ.bold(pieces(outs[sel].length)),
         ', and is pointed at by ', VIZ.bold(pieces(ins[sel].length)),
         '. Drawn here under this filter: ', VIZ.bold(String(kept(sel))), ' of its links. ',
-        'Enter or a click opens the piece; on a touch screen, tap it and then tap it again.',
       ];
+      if (works.length) {
+        np.push((cites.length + uncited) + (cites.length + uncited === 1 ? ' work is cited' : ' works are cited') +
+          ' in its notes');
+        citedLine(np, cites, uncited);
+        np.push('. ');
+      }
+      np.push('Enter or a click opens the piece; on a touch screen, tap it and then tap it again.');
+      return np;
+    }
+
+    /** What the works a piece cites are: the ones the CURRENT LAYER draws, named,
+     * the ones it does not, named as hidden by it, and a count of those that name
+     * this piece alone. Appended to `parts` — a bold run has to stay its own
+     * element there.
+     *
+     * The split by shows() is the point: every work in `cites` joins this piece
+     * to another (the build sends only works cited twice or more), so a cite the
+     * figure is not drawing is one the LAYER is withholding — and a readout that
+     * claimed a drawn mark under "books only" would name one that is not there. */
+    function citedLine(parts, cites, uncited) {
+      var drawn = [];
+      var hidden = [];
+      for (var j = 0; j < cites.length; j++) {
+        var cw = works[cites[j]];
+        if (cw && cw.title) (shows(cites[j]) ? drawn : hidden).push(cw.title);
+      }
+      var named = drawn.length + hidden.length;
+      if (drawn.length) {
+        parts.push(': ', VIZ.bold(String(drawn.length)), ' drawn here because another piece cites ' +
+          (drawn.length === 1 ? 'it' : 'them') + ' too — ' + drawn.join(', '));
+      }
+      if (hidden.length) {
+        parts.push(drawn.length ? ', and ' : ': ', VIZ.bold(String(hidden.length)),
+          ' hidden by the layer (' + WORK_LAYERS[workLayer].label + ') — ' + hidden.join(', '));
+      }
+      if (uncited) {
+        parts.push(named ? ', and ' : ': ', VIZ.bold(String(uncited)), ' named by this piece alone');
+      }
+    }
+
+    /** A work's kind, as the prose that names it. */
+    function kindName(kind) {
+      if (kind === 'primary-text') return 'a primary text';
+      if (kind === 'book') return 'a book';
+      if (kind === 'paper') return 'a paper or pamphlet';
+      return 'a published work';
     }
 
     function paint() {
@@ -324,6 +513,44 @@ VIZ.registerViz('map', (function () {
       return layout(w);
     }
 
+    /** Where the works sit: on a ring inside the pieces', each placed near the
+     * pieces that cite it.
+     *
+     * The order is by the mean direction of a work's citing pieces (a circular
+     * mean, so a work cited on both sides of the ring does not land in the
+     * middle of it) and the ring is closed in that order, evenly spaced — so
+     * neighbouring works are ones the same region of the blog cites, and the
+     * edges between the two rings stay short and followable. One definition:
+     * the drawing and the hit test both take their positions from here, so a
+     * work cannot be drawn somewhere the pointer does not find it. */
+    function workRing(g) {
+      var list = [];
+      var j;
+      var q;
+      for (j = 0; j < works.length; j++) {
+        var sx = 0;
+        var sy = 0;
+        for (q = 0; q < works[j].nodes.length; q++) {
+          sx += Math.cos(angle[works[j].nodes[q]]);
+          sy += Math.sin(angle[works[j].nodes[q]]);
+        }
+        list.push({ i: j, a: Math.atan2(sy, sx) });
+      }
+      list.sort(function (p1, p2) { return p1.a - p2.a || p1.i - p2.i; });
+      var rr = g.r * WORK_RING;
+      var pos = [];
+      for (j = 0; j < list.length; j++) {
+        var a = -Math.PI / 2 + ((j + 0.5) / Math.max(1, list.length)) * Math.PI * 2;
+        pos[list[j].i] = { x: g.cx + rr * Math.cos(a), y: g.cy + rr * Math.sin(a), a: a };
+      }
+      return { r: rr, pos: pos };
+    }
+
+    /** The works' ring is drawn only while something is on it. */
+    function ringOn() {
+      return shownWorks() > 0;
+    }
+
     function draw() {
       var f = VIZ.frame(canvas, {
         height: heightFor(cssWidth()),
@@ -337,8 +564,14 @@ VIZ.registerViz('map', (function () {
           ' are books and drawn as squares. A curve joins two pieces when one of them links to the other, ' +
           'one curve per pair — a piece that links to another five times still makes one line: ' +
           links.length + ' links between different pairs of them are drawn. The position of a piece on the ' +
-          'ring is a layout; the number of links is a count. Point at a piece, or move with the arrow keys, ' +
-          'to read the pieces it points at; Enter or a click opens it.',
+          'ring is a layout; the number of links is a count. ' +
+          (works.length
+            ? 'Inside the ring sit the ' + works.length + ' works that two or more pieces cite, drawn under ' +
+              WORK_LAYERS[workLayer].say + ', each joined to every piece that cites it: a ' +
+              'book cited by three pieces is a book visibly joining three pieces. '
+            : '') +
+          'Point at a piece, or at one of the works, or move with the arrow keys, to read it; Enter or a ' +
+          'click on a piece opens it.',
       });
       var c = f.ctx;
       var W = f.w;
@@ -414,6 +647,42 @@ VIZ.registerViz('map', (function () {
         c.restore();
       }
 
+      // the works: an inner ring of small marks, each joined to the pieces that
+      // cite it. Drawn between the curves and the pieces, so the pieces stay
+      // readable on top of their own work's edges.
+      var wr = ringOn() ? workRing(g) : null;
+      if (wr) {
+        // the ring the works sit on, dimmer than the pieces' own
+        c.save();
+        c.globalAlpha = 0.55;
+        c.strokeStyle = VIZ.token('line');
+        c.lineWidth = 1;
+        c.beginPath();
+        c.arc(cx, cy, wr.r, 0, Math.PI * 2);
+        c.stroke();
+        c.restore();
+        for (i2 = 0; i2 < works.length; i2++) {
+          if (!shows(i2)) continue;
+          var wp = wr.pos[i2];
+          var wk2 = works[i2];
+          var wsp = wkSpec(wk2.kind);
+          for (var wi = 0; wi < wk2.nodes.length; wi++) {
+            var to = wk2.nodes[wi];
+            var hotEdge = selW === i2 || sel === to;
+            c.save();
+            c.globalAlpha = hotEdge ? 0.85 : (sel != null || selW != null) ? DIM_ALPHA
+              : WORK_ALPHA * (0.5 + 0.5 * (wk2.count / Math.max(2, works[0].count)));
+            c.strokeStyle = VIZ.token(wsp.token);
+            c.lineWidth = hotEdge ? 1.4 : 0.8;
+            c.beginPath();
+            c.moveTo(wp.x, wp.y);
+            c.lineTo(px[to], py[to]);
+            c.stroke();
+            c.restore();
+          }
+        }
+      }
+
       // the pieces
       for (i2 = 0; i2 < nodes.length; i2++) {
         var n = nodes[i2];
@@ -442,6 +711,44 @@ VIZ.registerViz('map', (function () {
           c.stroke();
         }
         c.restore();
+      }
+
+      // the works, on top of their own edges: a filled diamond for a book, a
+      // hollow one for a paper, a hollow triangle for a primary text, growing
+      // with the number of pieces that cite it — so the work that joins four pieces is visibly the larger
+      // mark, and the reader can tell a hub from a leaf without the readout
+      if (wr) {
+        for (i2 = 0; i2 < works.length; i2++) {
+          if (!shows(i2)) continue;
+          var wd = wr.pos[i2];
+          var wm = works[i2];
+          var wmk = wkSpec(wm.kind);
+          var ws = 3.2 + Math.min(2, (wm.count - WORK_MIN) * 1.1);
+          var wsel = selW === i2;
+          c.save();
+          c.globalAlpha = 1;
+          workPath(c, wd.x, wd.y, ws, wmk.shape);
+          if (wmk.fill) {
+            c.fillStyle = VIZ.token(wmk.token);
+            c.fill();
+          } else {
+            // hollow: the canvas colour first, so an edge behind it does not
+            // read as fill
+            c.fillStyle = VIZ.token('bg');
+            c.fill();
+            c.strokeStyle = VIZ.token(wmk.token);
+            c.lineWidth = 1.6;
+            c.stroke();
+          }
+          if (wsel) {
+            c.strokeStyle = VIZ.token('fg');
+            c.lineWidth = 1.2;
+            c.beginPath();
+            c.arc(wd.x, wd.y, ws + 4, 0, Math.PI * 2);
+            c.stroke();
+          }
+          c.restore();
+        }
       }
 
       /* labels — as few as possible. A ring of every title would run off the
@@ -557,6 +864,36 @@ VIZ.registerViz('map', (function () {
         }, k === sel);
       }
 
+      // then the works: the largest hubs first (the figures the page's own
+      // table ranks), and whatever the reader is on. Named on the canvas for the
+      // same reason as the pieces — a figure of unnamed marks is not readable —
+      // and dropped, not stunted, when the room on the work's own side of the
+      // inner ring will not take the name.
+      if (wr) {
+        var wNamed = [];
+        var wHowMany = W >= 620 ? WORK_LABELS : W >= 480 ? 2 : 1;
+        for (i2 = 0; i2 < works.length && wNamed.length < wHowMany; i2++) {
+          if (shows(i2) && i2 !== selW) wNamed.push(i2);
+        }
+        if (selW != null && shows(selW)) wNamed.push(selW);
+        for (i2 = 0; i2 < wNamed.length; i2++) {
+          var kw = wNamed[i2];
+          var wpos = wr.pos[kw];
+          var wux = Math.cos(wpos.a);
+          var wuy = Math.sin(wpos.a);
+          var wAlign = wux >= 0 ? 'left' : 'right';
+          var wRoom = wAlign === 'left' ? W - (wpos.x + 13) - 8 : wpos.x - 13 - 8;
+          var wNeeds = meas.measureText(works[kw].short).width;
+          var wShown = fit(works[kw].short, Math.min(LIMIT, wRoom));
+          if (kw !== selW && wRoom < wNeeds && meas.measureText(wShown).width < 50) continue;
+          place(wShown, wpos.x + wux * 13 + (wAlign === 'left' ? 2 : -2), wpos.y + wuy * 13, {
+            align: wAlign,
+            color: kw === selW ? VIZ.token('fg') : VIZ.token('dim'),
+            font: kw === selW ? ARC_FONT : LABEL_FONT,
+          }, kw === selW);
+        }
+      }
+
       drawLegend(f);
 
       // the labels are painted last, so no curve or point can strike through one
@@ -585,9 +922,23 @@ VIZ.registerViz('map', (function () {
         }
         var sp = spec(it.series);
         f.ctx.save();
-        f.ctx.globalAlpha = sp.alpha;
-        f.ctx.fillStyle = VIZ.token(sp.token);
-        if (it.book) f.ctx.fillRect(x, y - 4, 8, 8);
+        f.ctx.globalAlpha = it.plain ? 1 : sp.alpha;
+        f.ctx.fillStyle = VIZ.token(it.plain ? 'dim' : sp.token);
+        if (it.plain) {
+          // a heading, not a swatch: the works' own scale starts here
+        } else if (it.work != null) {
+          var wmk2 = wkSpec(it.work);
+          var wrad = 4.5;
+          workPath(f.ctx, x + 4, y, wrad, wmk2.shape);
+          if (wmk2.fill) f.ctx.fill();
+          else {
+            f.ctx.fillStyle = VIZ.token('bg');
+            f.ctx.fill();
+            f.ctx.strokeStyle = VIZ.token(wmk2.token);
+            f.ctx.lineWidth = 1.6;
+            f.ctx.stroke();
+          }
+        } else if (it.book) f.ctx.fillRect(x, y - 4, 8, 8);
         else {
           f.ctx.beginPath();
           f.ctx.arc(x + 4, y, 4, 0, Math.PI * 2);
@@ -601,11 +952,24 @@ VIZ.registerViz('map', (function () {
 
     /* ------------------------------------------------------------ interaction */
 
-    function setSel(i) {
-      if (i === sel) return;
-      sel = i;
+    /** The piece or the work the reader is on — never both, and never a redraw
+     * that changes nothing. */
+    function choose(piece, work) {
+      var p = piece == null ? null : piece;
+      var q = work == null ? null : work;
+      if (p === sel && q === selW) return;
+      sel = p;
+      selW = q;
       draw();
       paint();
+    }
+
+    function setSel(i) {
+      choose(i, null);
+    }
+
+    function clearSel() {
+      choose(null, null);
     }
 
     function pointAt(ev) {
@@ -622,6 +986,26 @@ VIZ.registerViz('map', (function () {
         my = (ev.clientY - rect.top) * (canvas.clientHeight / rect.height);
       }
       var g = ring(cssWidth());
+      // the works first: their ring is well inside the pieces', so a pointer
+      // near one of them is on it and not on a piece, and the two are never in
+      // doubt about which was meant. Only the DRAWN works are hit — a work the
+      // filter hid must not answer the pointer.
+      if (ringOn()) {
+        var wr2 = workRing(g);
+        var bestW = null;
+        var bestWD = HIT * HIT;
+        for (var i5 = 0; i5 < works.length; i5++) {
+          if (!shows(i5) || !wr2.pos[i5]) continue;
+          var wx = wr2.pos[i5].x - mx;
+          var wy = wr2.pos[i5].y - my;
+          var wd = wx * wx + wy * wy;
+          if (wd < bestWD) {
+            bestWD = wd;
+            bestW = i5;
+          }
+        }
+        if (bestW != null) return { work: bestW };
+      }
       var best = null;
       var bestD = HIT * HIT;
       for (var i4 = 0; i4 < nodes.length; i4++) {
@@ -633,21 +1017,27 @@ VIZ.registerViz('map', (function () {
           best = i4;
         }
       }
-      return best;
+      return best == null ? null : { piece: best };
     }
 
     bag.on(canvas, 'mousemove', function (ev) {
-      setSel(pointAt(ev));
+      var hit = pointAt(ev);
+      if (!hit) clearSel();
+      else if (hit.work != null) choose(null, hit.work);
+      else setSel(hit.piece);
     });
     bag.on(canvas, 'mouseleave', function () {
-      setSel(null);
+      clearSel();
     });
     // A finger has no hover, so a TAP selects: the readout is the only place a
     // phone can read a piece's own links, and a tap that navigated would never
     // reach it. A second tap on the piece the last one selected opens it — the
     // gesture a touch reader tries when the first tap visibly changed nothing.
     // A mouse is untouched by either: hovering still selects, a click still
-    // opens. The readout and the canvas description both say what a tap does.
+    // opens. A work is a mark with no page of its own, so a tap on one selects
+    // it and nothing else — the readout names the pieces that cite it, and those
+    // are what opens. The readout and the canvas description both say what a tap
+    // does.
     var tapSel = null; // the piece the last tap selected
     var tapClick = false; // the click a tap generates is not a navigation
     // A tap's synthetic click is the only thing that clears the flag, and a tap
@@ -660,14 +1050,19 @@ VIZ.registerViz('map', (function () {
     bag.on(canvas, 'pointerup', function (ev) {
       if (!nodes.length || ev.pointerType === 'mouse') return;
       var hit = pointAt(ev);
-      if (hit == null) return;
+      if (!hit) return;
       tapClick = true; // swallow the click this tap is about to produce
-      if (tapSel === hit) {
-        window.location.href = '/' + nodes[hit].slug + '/';
+      if (hit.work != null) {
+        tapSel = null;
+        choose(null, hit.work);
         return;
       }
-      tapSel = hit;
-      setSel(hit);
+      if (tapSel === hit.piece) {
+        window.location.href = '/' + nodes[hit.piece].slug + '/';
+        return;
+      }
+      tapSel = hit.piece;
+      setSel(hit.piece);
     });
     bag.on(canvas, 'click', function (ev) {
       if (tapClick) {
@@ -677,15 +1072,20 @@ VIZ.registerViz('map', (function () {
         return;
       }
       var hit = pointAt(ev);
-      if (hit == null) return;
-      window.location.href = '/' + nodes[hit].slug + '/';
+      if (!hit) return;
+      if (hit.work != null) {
+        // a work has no page: selecting it is all a click can do
+        choose(null, hit.work);
+        return;
+      }
+      window.location.href = '/' + nodes[hit.piece].slug + '/';
     });
 
     // keyboard: the canvas is focusable and the arrow keys step a piece at a
     // time, so the same information is reachable without a pointer
     canvas.setAttribute('tabindex', '0');
     bag.on(canvas, 'focus', function () {
-      if (sel == null && nodes.length) setSel(0);
+      if (sel == null && selW == null && nodes.length) setSel(0);
     });
     bag.on(canvas, 'keydown', function (ev) {
       if (!nodes.length) return;
@@ -715,27 +1115,56 @@ VIZ.registerViz('map', (function () {
         controls.appendChild(b);
       })(fi);
     }
+    // The works layer, cycled by one button: the readout reports which of the
+    // three states is on, so the label and the figure can never disagree.
+    var layerBtn = VIZ.button(WORK_LAYERS[workLayer].label, function () {
+      workLayer = (workLayer + 1) % WORK_LAYERS.length;
+      if (workLayer === 2) clearSel();
+      else if (selW != null && !shows(selW)) selW = null;
+      paintButtons();
+      draw();
+      paint();
+      VIZ.saveState(ctx);
+    });
+    if (works.length) controls.appendChild(layerBtn);
     var btns = controls.querySelectorAll('button');
 
     function paintButtons() {
       for (var j3 = 0; j3 < btns.length; j3++) {
+        var b3 = btns[j3];
+        if (b3 === layerBtn) {
+          // the label names what IS drawn, and the pressed state says the layer
+          // is on at all
+          b3.textContent = WORK_LAYERS[workLayer].label;
+          var onLayer = workLayer !== WORK_LAYERS.length - 1;
+          b3.style.borderColor = onLayer ? VIZ.token('accent') : '';
+          b3.style.color = onLayer ? VIZ.token('accent') : '';
+          b3.setAttribute('aria-pressed', onLayer ? 'true' : 'false');
+          continue;
+        }
+        // the link filters come first on the bar; the works button is last
         var on = j3 === filter;
-        btns[j3].style.borderColor = on ? VIZ.token('accent') : '';
-        btns[j3].style.color = on ? VIZ.token('accent') : '';
-        btns[j3].setAttribute('aria-pressed', on ? 'true' : 'false');
+        b3.style.borderColor = on ? VIZ.token('accent') : '';
+        b3.style.color = on ? VIZ.token('accent') : '';
+        b3.setAttribute('aria-pressed', on ? 'true' : 'false');
       }
     }
 
     // linkable frame: #viz=map&f=1&s=12
     VIZ.share(ctx, {
       get: function () {
-        return { f: filter, s: sel == null ? -1 : sel };
+        return { f: filter, s: sel == null ? -1 : sel, w: selW == null ? -1 : selW, k: workLayer };
       },
       set: function (st) {
         if (typeof st.f === 'number' && st.f >= 0 && st.f < FILTERS.length) filter = Math.round(st.f);
+        if (typeof st.k === 'number' && st.k >= 0 && st.k < WORK_LAYERS.length) workLayer = Math.round(st.k);
         if (typeof st.s === 'number') {
           sel = st.s < 0 || st.s >= nodes.length ? null : Math.round(st.s);
         }
+        if (typeof st.w === 'number') {
+          selW = st.w < 0 || st.w >= works.length ? null : Math.round(st.w);
+        }
+        if (sel != null && selW != null) selW = null;
         paintButtons();
         draw();
         paint();
