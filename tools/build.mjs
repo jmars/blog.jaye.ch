@@ -1719,6 +1719,14 @@ function buildMap(navPosts) {
     `the figure. ${kindCounts(t.kinds)}.` +
     (t.uncited === 0 ? ` Every work in it is named by at least one piece.` : '') +
     `</p>` +
+    `<p>The shape is worth reading honestly. Most of what any one piece stands on is its alone — ${t.single} ` +
+    `of ${t.works} works are cited by a single piece — and a shared source is not an agreement: it is one ` +
+    `reader returning to the same book from more than one place. What the inner ring shows is not a body ` +
+    `of literature that agrees with itself, and it is not evidence for anything. It is the record of a ` +
+    `method: take a question to the material that bears on it, whether that material is a clinical survey, ` +
+    `a canon text, a grimoire or a study of authoritarianism, and use the same few books to carry the ` +
+    `question across domains that do not normally cite one another. Where a work sits on the inner ring, ` +
+    `that is what has happened to it.</p>` +
     worksTable;
 
   const prose =
