@@ -182,6 +182,7 @@ function nav(current, navPosts) {
     here('/', 'home') +
     here('/timeline/', "what's new") +
     here('/map/', 'the map') +
+    here('/search/', 'search') +
     SERIES.map(dropdown).join('') +
     // The reader-facing theme control. Its visible word IS the current mode
     // (auto → light → dark → auto), so the state is never carried by colour
@@ -331,6 +332,7 @@ const DARK_DECLS = (root) => {
   ${w} .note { background: #2e2120; color: #f0b6b0; }
   ${w} .warn { background: #2b2619; border-left-color: #c79a3c; color: #e8cd93; }
   ${w} .palette { background: rgba(0, 0, 0, 0.55); }
+  ${w} .sres .sr-s mark { background: rgba(232, 139, 134, 0.42); }
 `;
 };
 
@@ -560,6 +562,43 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
   background: none; border: none; padding: 0; cursor: pointer; }
 .palette-open:hover { color: var(--accent); }
 
+/* ---------- search ----------
+   The box and its results. The index and the pipeline are in the page
+   (buildSearch); this is the chrome that shows what they returned: a line per
+   result — the piece, its series, kind and date and the score it fused to, the
+   snippet with the query's own words marked, and the reasons as badges. Tokens
+   throughout, so dark mode inherits; the one literal is the mark, whose dark
+   value is declared in DARK_DECLS beside this. */
+.sform { margin: 1.5rem 0 0; }
+.srow { display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  border: 1px solid var(--line); background: var(--bg2); border-radius: 3px; font-family: var(--mono); }
+.srow:focus-within { border-color: var(--accent); }
+.srow .s-lab { color: var(--accent); font-size: 13px; }
+.srow input[type="search"] { flex: 1; min-width: 0; border: 0; background: none; color: var(--fg); font: inherit; }
+.srow input[type="search"]:focus { outline: none; }
+.sfacet { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 10px;
+  font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.sfacet select { font: inherit; font-family: var(--mono); color: var(--fg); background: var(--bg2);
+  border: 1px solid var(--line); border-radius: 3px; padding: 3px 6px; }
+.sstatus { min-height: 1.2em; margin: 16px 0 4px; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.sres { list-style: none; margin: 0; padding: 0; }
+.sres .sr { padding: 14px 0; border-top: 1px solid var(--line); }
+.sres .sr-t { font-family: var(--mono); font-size: 15px; color: var(--accent2); }
+.sres .sr-t:hover { color: var(--accent); }
+.sres .sr-m { margin: 3px 0 7px; font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+.sres .sr-sc { float: right; }
+.sres .sr-s { font-family: var(--serif); font-size: 15.5px; line-height: 1.5; }
+.sres .sr-s mark { background: rgba(164, 38, 44, 0.16); color: var(--accent); padding: 0 1px; border-radius: 2px; }
+.sres .sr-w { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 9px 0 0; padding: 0; }
+.sres .sr-w li { padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--bg2); font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+.sres .sr-none, .sres .sr-hint { padding: 14px 0; font-family: var(--serif); color: var(--dim); }
+.sres .sr-go { font: inherit; font-family: var(--mono); font-size: 12px; color: var(--accent2);
+  background: none; border: 1px solid var(--line); border-radius: 3px; padding: 2px 8px; cursor: pointer; }
+.sres .sr-go:hover { color: var(--accent); border-color: var(--accent); }
+.s-noscript { font-family: var(--serif); color: var(--dim); }
+@media (max-width: 560px) { .sres .sr-sc { float: none; margin-left: 8px; } }
+
 /* ---------- footnote sidenotes (wide viewports only) ----------
    buildPost() copies each footnote inline, right after its reference, as
    .sidenote (aria-hidden: assistive tech keeps hearing the note once, in the
@@ -746,6 +785,7 @@ const PALETTE_JS = (data) => `(function () {
   }
   function go(slug) { window.location.href = '/' + slug + '/'; }
   function goHome() { window.location.href = '/'; }
+  function goSearch(q) { window.location.href = '/search/' + (q ? '?q=' + encodeURIComponent(q) : ''); }
   function run(line) {
     var parts = line.split(/\\s+/);
     var cmd = parts[0].toLowerCase();
@@ -754,6 +794,7 @@ const PALETTE_JS = (data) => `(function () {
     if (cmd === 'ls') return show(listing(arg ? seriesKey(arg) || arg : null));
     if (cmd === 'home' || (cmd === 'cd' && !arg)) return goHome();
     if (cmd === 'series') return show(listing(seriesKey(arg)));
+    if (cmd === 'search' || cmd === 'grep' || cmd === 'find') return goSearch(arg);
     if (cmd === 'cat' || cmd === 'open' || cmd === 'cd') {
       var key = arg ? seriesKey(arg) : null;
       var hit = find(arg);
@@ -766,6 +807,11 @@ const PALETTE_JS = (data) => `(function () {
     }
     var bare = find(cmd);
     if (bare) return go(bare.slug);
+    // A line the command line does not know, and that is more than one word, is
+    // a search: 'search' is the command, and anything else multi-word falls
+    // through to the search page rather than dying on 'command not found'. A
+    // single unknown word keeps the old answer — it may be a typo of a slug.
+    if (line.indexOf(' ') > 0) return goSearch(line);
     return show('sh: ' + cmd + ': command not found. try help');
   }
   var HELP = [
@@ -773,6 +819,7 @@ const PALETTE_JS = (data) => `(function () {
     'cat <slug>      open a post        (also: open, cd)',
     'open <series>   the first post in a series',
     'series <key>    list one series    (' + SERIES.map(function (s) { return s.key; }).join(', ') + ')',
+    'search <words>  search every piece (also: find, grep)',
     'home            the front page',
     'help            this list',
   ].join('\\n');
@@ -854,6 +901,7 @@ function paletteAssets(navPosts) {
   // group for them.
   data.pages.push({ slug: 'timeline', title: "What's new", series: '', kind: 'page' });
   data.pages.push({ slug: 'map', title: 'The map', series: '', kind: 'page' });
+  data.pages.push({ slug: 'search', title: 'Search', series: '', kind: 'page' });
   const html =
     `<div class="palette" id="palette" role="dialog" aria-label="command line" hidden>` +
     `<div class="palette-box">` +
@@ -1395,10 +1443,11 @@ function build404(navPosts) {
     `<div class="hint"># the path you asked for is not one of the pages</div>` +
     `<div class="prose">` +
     `<p>Every address on this site is one of the pages below — the summary, ` +
-    `<a href="/timeline/">what's new</a>, <a href="/map/">the map</a>, or a post in one of its ${NUM_WORD[seriesCount] || seriesCount} series. ` +
+    `<a href="/timeline/">what's new</a>, <a href="/map/">the map</a>, ` +
+    `<a href="/search/">the search</a>, or a post in one of its ${NUM_WORD[seriesCount] || seriesCount} series. ` +
     `There is no other content, and nothing was ` +
     `deleted to hide it.</p>` +
-    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li>${links}</ul>` +
+    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li><li><a href="/search/">The search — every piece, by words, vectors and links</a></li>${links}</ul>` +
     `<p>If you followed a link from somewhere else, the link is stale; the pieces ` +
     `above are current.</p>` +
     `</div></div></section>`;
@@ -1506,12 +1555,16 @@ function footnoteDefs(src) {
 /** Which pieces cite which works — the citation edges, derived from the notes.
  *
  * An edge exists when a work's match rule tests true against one of a piece's
- * footnote definitions, so an edge is only ever read out of the text. A work
- * cited by TWO OR MORE pieces is the one that matters to the map: it is the
- * work, not the piece, that joins two pieces to each other. The rest are named
- * by a single piece each — a name inside that piece, not a connection between
- * two — and are counted, never drawn. */
-function sourceGraph(navPosts, nodes) {
+ * footnote definitions, so an edge is only ever read out of the text.
+ *
+ * CACHED, and the cache is the point: the map and the search page rest on the
+ * SAME derivation, and two copies of it could disagree about what the pieces
+ * cite. `citing[k]` is the list of piece indices that cite work k, `hits[i]` the
+ * works piece i names — the raw edges, before either page decides what to draw
+ * or query with them. */
+let citationCache = null;
+function citations(navPosts, nodes) {
+  if (citationCache && citationCache.posts === navPosts) return citationCache.c;
   const works = catalogue();
   const at = new Map(nodes.map((n, i) => [n.slug, i]));
   const matchers = works.map((s) => {
@@ -1544,6 +1597,19 @@ function sourceGraph(navPosts, nodes) {
       }
     }
   }
+  const c = { works, citing, hits, citations };
+  citationCache = { posts: navPosts, c };
+  return c;
+}
+
+/** The map's own view of the citation graph.
+ *
+ * A work cited by TWO OR MORE pieces is the one that matters to the map: it is
+ * the work, not the piece, that joins two pieces to each other. The rest are
+ * named by a single piece each — a name inside that piece, not a connection
+ * between two — and are counted, never drawn. */
+function sourceGraph(navPosts, nodes) {
+  const { works, citing, hits, citations: citationCount } = citations(navPosts, nodes);
   // the works that join pieces, the largest first, then by name so two builds
   // of the same text draw the same figure
   const order = [];
@@ -1578,7 +1644,7 @@ function sourceGraph(navPosts, nodes) {
     })),
     perNode: drawn,
     alone,
-    totals: { works: works.length, citations, single, uncited, kinds },
+    totals: { works: works.length, citations: citationCount, single, uncited, kinds },
   };
 }
 
@@ -1591,8 +1657,13 @@ function sourceGraph(navPosts, nodes) {
  * de-duplicated per pair, because a piece that points at the same piece five
  * times still makes one link. Edges are READ, never inferred: a resemblance
  * between a piece and a book it never links to is not a citation, and this page
- * does not draw a guess as though it were one. */
+ * does not draw a guess as though it were one.
+ *
+ * CACHED, for the same reason as the citation edges: the map draws it and the
+ * search page queries it, and one derivation cannot disagree with itself. */
+let mapGraphCache = null;
 function mapGraph(navPosts) {
+  if (mapGraphCache && mapGraphCache.posts === navPosts) return mapGraphCache.g;
   const nodes = navPosts.map((p) => ({
     slug: p.slug,
     title: titleOf(p),
@@ -1616,7 +1687,9 @@ function mapGraph(navPosts) {
       edges.push([p.slug, to]);
     }
   }
-  return { nodes, edges };
+  const g = { nodes, edges };
+  mapGraphCache = { posts: navPosts, g };
+  return g;
 }
 
 /** The map — every piece on a ring, every link between them a curve.
@@ -1809,6 +1882,355 @@ function buildMap(navPosts) {
   };
 }
 
+/* ---------- the search page: the words, the vectors, the links ---------- */
+
+/** 32-bit FNV-1a over a term's UTF-16 code units.
+ *
+ * tools/search/search.js holds THIS FUNCTION VERBATIM. The shipped vectors and
+ * the query's own projection have to agree on the dimension and the sign of
+ * every term, and no projector is shipped to make them: the client recomputes
+ * the projection from this hash alone, so a change here without a matching
+ * change there would silently return unrelated pieces. The smoke test asserts
+ * the agreement (tools/search-smoke.mjs), not merely the syntax. */
+function fnv1a(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return h >>> 0;
+}
+
+/** The vector space's width. 160 dimensions is small enough that the page stays
+ * a page and wide enough that two unrelated pieces rarely collide; the count is
+ * a choice, and the hash's modulus is where it is enforced. */
+const SEARCH_DIM = 160;
+
+/** Words a search ignores. ONE list: it is shipped in the page's own data, so a
+ * query is tokenised by the rule the index was built with — two lists that could
+ * drift would put the query off its own index. */
+const STOPWORDS = new Set(
+  (
+    'a an and are as at be been but by can could did do does for from had has have he her him his how ' +
+    'if in into is it its just like may might more most no not of on one only or other our out over own ' +
+    'said same she should so some such than that the their them then there these they this those to too ' +
+    'two under up very was we were what when where which while who why will with without would you your'
+  ).split(' '),
+);
+
+const SEARCH_WORD = /[a-z][a-z'-]+/g;
+
+/** The index's token rule: lowercased, three or more characters, stopwords
+ * dropped — and NOT de-duplicated, because the vectors weight a term by how
+ * often the piece uses it. The client's rule is the same one minus the repeats. */
+function searchTerms(text) {
+  const out = [];
+  for (const w of String(text).toLowerCase().match(SEARCH_WORD) || []) {
+    if (w.length >= 3 && !STOPWORDS.has(w)) out.push(w);
+  }
+  return out;
+}
+
+/** A piece's text with the markup taken off: the link targets, the emphasis,
+ * the heading marks and the footnote markers all go. Used for the index and for
+ * the snippets, so the two read the same words.
+ *
+ * Every mark is replaced by a SPACE, never deleted: deleting `*` in
+ * `**word**'s` welds two words into one that is in no piece's prose
+ * ("word's" stays one token by luck, "right-wing*authoritarianism*" does not),
+ * and an index of words the pieces do not contain is worse than an index that
+ * misses a compound. */
+function mdText(src) {
+  return String(src)
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/^\s{0,3}#{1,6}\s+/gm, '')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[\^[^\]]+\]/g, ' ')
+    .replace(/^[ \t]*>[ \t]?/gm, '')
+    .replace(/[*_`|]/g, ' ')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** A piece's headings, the title's own subordinates. A hit in one of these
+ * weighs more than a hit in the body (the client's lexical provider), and they
+ * are the first thing a snippet is drawn from. */
+function headingsOf(src) {
+  const out = [];
+  for (const m of String(src).matchAll(/^\s{0,3}(#{2,3})\s+(.+)$/gm)) {
+    const text = mdText(m[2]);
+    if (text && !out.includes(text)) out.push(text);
+  }
+  return out.slice(0, 12);
+}
+
+/** The characters of a piece's own opening a snippet may draw on. */
+const LEDE_MAX = 420;
+
+/** A piece's opening passage: the prose after its Status line, with the notes
+ * left out. The full text of fifty-eight pieces is not in the page, so snippets
+ * come from here, from the headings and from the summary — the page says so, and
+ * the smoke test measures which pieces a query reaches rather than where in them
+ * a word sits. */
+function ledeOf(src) {
+  const keep = [];
+  for (const line of String(src).split('\n')) {
+    if (/^\s{0,3}#{1,6}\s/.test(line)) continue;
+    if (/^\s*\[\^/.test(line)) continue;
+    if (/^\s*\|/.test(line)) continue;
+    if (/^\s*>/.test(line)) continue;
+    keep.push(line);
+  }
+  const text = mdText(keep.join('\n'));
+  const at = text.indexOf('Status.');
+  const body = (at >= 0 ? text.slice(at + 7) : text).trim();
+  if (body.length <= LEDE_MAX) return body;
+  const cut = body.slice(0, LEDE_MAX);
+  const space = cut.lastIndexOf(' ');
+  return (space > LEDE_MAX * 0.6 ? cut.slice(0, space) : cut) + '…';
+}
+
+/**
+ * The whole index, derived once and emitted into the page.
+ *
+ * Emitted rather than fetched (the site makes no external requests and the page
+ * is one file), which is why the vocabulary drops every term a single piece
+ * uses: those terms are still in the VECTORS — a term seen once is projected at
+ * build time like any other, so a name one piece mentions once is still
+ * findable — while the word list, which is what the POSTING LISTS rest on, keeps
+ * only the terms that join pieces, because a term in one piece joins nothing.
+ */
+function searchIndex(navPosts) {
+  const { nodes, edges } = mapGraph(navPosts);
+  const { works, citing, citations: citationCount } = citations(navPosts, nodes);
+  const at = new Map(nodes.map((n, i) => [n.slug, i]));
+  const docs = [];
+  const tokens = [];
+  for (let i = 0; i < navPosts.length; i++) {
+    const p = navPosts[i];
+    const file = join(ROOT, 'content', p.file);
+    const src = p.file && existsSync(file) ? readFileSync(file, 'utf8') : '';
+    const heads = headingsOf(src);
+    const title = titleOf(p);
+    tokens.push(searchTerms(mdText(src)));
+    docs.push({
+      i,
+      slug: p.slug,
+      title,
+      series: p.series || '',
+      kind: p.kind || '',
+      date: p.date || '',
+      summary: p.summary || '',
+      heads,
+      lede: ledeOf(src),
+    });
+  }
+  // document frequency over the pieces, then the vocabulary: EVERY term the
+  // prose uses (three or more characters, stopwords aside), a term seen in one
+  // piece included — a name a single piece mentions once is exactly the kind of
+  // rare word a search is asked for, and a word list that dropped it would
+  // answer "nothing" to the one query it should answer. The earlier idea of
+  // keeping only the terms two or more pieces use is measurably wrong here: it
+  // saved about a fifth of the index and lost the rarest fifth of the words.
+  const df = new Map();
+  for (const toks of tokens) {
+    for (const t of new Set(toks)) df.set(t, (df.get(t) || 0) + 1);
+  }
+  let singleton = 0;
+  const vocab = [];
+  for (const [t, c] of df) {
+    vocab.push(t);
+    if (c === 1) singleton++;
+  }
+  vocab.sort();
+  const termAt = new Map(vocab.map((t, i) => [t, i]));
+  const postings = vocab.map(() => []);
+  const strongAt = new Map();
+  for (let i = 0; i < tokens.length; i++) {
+    for (const t of new Set(tokens[i])) {
+      const ti = termAt.get(t);
+      if (ti !== undefined) postings[ti].push(i);
+    }
+    for (const t of new Set(searchTerms(docs[i].title + ' ' + docs[i].heads.join(' ')))) {
+      if (!termAt.has(t)) continue;
+      if (!strongAt.has(t)) strongAt.set(t, []);
+      strongAt.get(t).push(i);
+    }
+  }
+  const strong = [...strongAt.entries()]
+    .map(([t, list]) => [termAt.get(t), ...list])
+    .sort((a, b) => a[0] - b[0]);
+  // the document frequency a QUERY word will see: the posting list's length,
+  // which is the document frequency itself — the vectors and the query's
+  // weights therefore rest on one number, and the client reads it the same way
+  const idf = (t) => {
+    const ti = termAt.get(t);
+    return Math.log(1 + docs.length / Math.max(1, ti === undefined ? 1 : postings[ti].length));
+  };
+  const vec = tokens.map((toks) => {
+    const tf = new Map();
+    for (const t of toks) tf.set(t, (tf.get(t) || 0) + 1);
+    const v = new Float64Array(SEARCH_DIM);
+    for (const [t, c] of tf) {
+      const h = fnv1a(t);
+      v[h % SEARCH_DIM] += (((h >>> 31) & 1) ? -1 : 1) * (1 + Math.log(c)) * idf(t);
+    }
+    let norm = 0;
+    for (let d = 0; d < SEARCH_DIM; d++) norm += v[d] * v[d];
+    norm = Math.sqrt(norm) || 1;
+    const out = new Array(SEARCH_DIM);
+    for (let d = 0; d < SEARCH_DIM; d++) {
+      out[d] = Math.max(-127, Math.min(127, Math.round((v[d] / norm) * 127)));
+    }
+    return out;
+  });
+  // the fact tables the datalog rules read: the pieces, the links between them,
+  // the works each piece cites, and the works themselves
+  const cited = [];
+  const cites = [];
+  for (let k = 0; k < works.length; k++) {
+    if (!citing[k].length) continue;
+    cited.push([works[k].id, works[k].short, works[k].kind]);
+    for (const i of citing[k]) cites.push([i, works[k].id]);
+  }
+  const data = {
+    dim: SEARCH_DIM,
+    stop: [...STOPWORDS].join(' '),
+    docs,
+    lex: { terms: vocab.join(' '), postings, strong },
+    vec,
+    graph: {
+      post: docs.map((d) => [d.i, d.slug, d.series, d.kind, d.date]),
+      link: edges
+        .map(([a, b]) => [at.get(a), at.get(b)])
+        .filter(([a, b]) => a !== undefined && b !== undefined),
+      cites,
+      source: cited,
+    },
+    // the terms the empty box offers: they have to BE in the vocabulary, or the
+    // page would offer a search it cannot answer
+    hints: SEARCH_HINTS.filter((h) => termAt.has(h)),
+  };
+  return {
+    data,
+    totals: {
+      docs: docs.length,
+      vocab: vocab.length,
+      singleton,
+      postings: postings.reduce((n, p) => n + p.length, 0),
+      strong: strong.length,
+      links: data.graph.link.length,
+      cites: cites.length,
+      works: cited.length,
+      catalogued: works.length,
+      citations: citationCount,
+    },
+  };
+}
+
+/** Words the empty search box offers, each one checked against the vocabulary
+ * before it is offered. */
+const SEARCH_HINTS = ['proclus', 'wetiko', 'picatrix', 'theurgy'];
+
+/** The search page — a real page, written to dist and listed in the sitemap.
+ *
+ * Modelled on buildMap: the page carries its own index in a JSON block (with
+ * `<` escaped so nothing in it can close the script element early) and the
+ * pipeline in an inlined script, so the search runs in the reader's browser and
+ * nothing is requested from anywhere. */
+function buildSearch(navPosts) {
+  const { data, totals } = searchIndex(navPosts);
+  const json = JSON.stringify(data).replaceAll('<', '\\u003c');
+  const client = stripJsComments(readFileSync(join(ROOT, 'tools', 'search', 'search.js'), 'utf8'));
+  const seriesOf = [];
+  for (const d of data.docs) if (d.series && !seriesOf.includes(d.series)) seriesOf.push(d.series);
+  const kindsOf = [];
+  for (const d of data.docs) if (d.kind && !kindsOf.includes(d.kind)) kindsOf.push(d.kind);
+  kindsOf.sort();
+  const option = (v, label) => `<option value="${esc(v)}">${esc(label)}</option>`;
+  const seriesOpts = seriesOf.map((s) => option(s, seriesLabel(s) || s)).join('');
+  const kindOpts = kindsOf.map((k) => option(k, k)).join('');
+
+  const prose =
+    `<p>This page searches all ${totals.docs} published pieces at once and tells you <i>which of three ` +
+    `signals</i> put each result in front of you. The first is the <b>words</b>: the terms the pieces ` +
+    `actually use, three characters and longer, each with the pieces it occurs in — looked up as a whole ` +
+    `word and as the beginning of one, where a hit in a piece's title or a section heading counts for more ` +
+    `than a hit in its body. The commonest words are left out (they are in every piece, so they name none); ` +
+    `everything else is here, <b>including a name used by a single piece and only once in it</b>.</p>` +
+    `<p>The second is a <b>vector space</b> — ${SEARCH_DIM} dimensions per piece, built by hashing each term ` +
+    `to a dimension and a sign. It is a tf-idf projection and <b>not a neural embedding</b>: there is no ` +
+    `model here, and no projector either — this page recomputes your query's projection with the same hash ` +
+    `and takes the cosine. That is how a piece that argues in different words still surfaces. Only words the ` +
+    `pieces really use are projected, because a word none of them uses would land in dimensions the pieces' ` +
+    `own terms have already filled and would answer with noise; a query of such words returns nothing, and ` +
+    `the page says so rather than padding the list.</p>` +
+    `<p>The third is the blog's <b>own graph</b>. Every piece is a node, every link one piece makes to ` +
+    `another is an edge, and the ${totals.works} works the pieces cite — the books, papers and primary texts ` +
+    `named in their notes — join pieces that never mention each other. Those facts are read by a small ` +
+    `<b>datalog</b> evaluator running in this page, with its rules declared as data: the reasons under each ` +
+    `result are the rules that fired, and a result can be here on the strength of the graph alone. The ` +
+    `expansion is capped (the strongest few hits seed it and the derived facts are bounded), so an unusual ` +
+    `query cannot make the page wait.</p>` +
+    `<p>Nothing is fetched and nothing is sent anywhere: the index is in this page and the search runs in ` +
+    `your browser. Snippets come from each piece's own headings, summary and opening passage, so a piece ` +
+    `matched deep inside shows its opening rather than the matched line. Scores are relative to the query ` +
+    `and are not a judgement of the piece.</p>`;
+
+  const body =
+    `<section><div class="wrap">` +
+    `<div class="hint"># ${totals.docs} pieces · ${totals.vocab} words in the list · ${totals.citations} ` +
+    `citations from ${totals.works} works · three signals: the words, the vectors, the links</div>` +
+    `<div class="prose">${prose}</div>` +
+    `<form class="sform" id="sf" role="search">` +
+    `<div class="srow"><span class="s-lab" aria-hidden="true">$</span>` +
+    `<input type="search" id="sq" name="q" aria-label="search the pieces" autocomplete="off" ` +
+    `autocapitalize="off" spellcheck="false" placeholder="a word, a name, a phrase">` +
+    `</div>` +
+    `<div class="sfacet"><label for="sf-series">series</label>` +
+    `<select id="sf-series" name="series"><option value="">any</option>${seriesOpts}</select>` +
+    `<label for="sf-kind">kind</label>` +
+    `<select id="sf-kind" name="kind"><option value="">any</option>${kindOpts}</select>` +
+    `</div>` +
+    `</form>` +
+    `<div class="sstatus" id="sstatus" role="status" aria-live="polite"></div>` +
+    `<ol class="sres" id="sres"><li class="sr-none">Type a word — the pieces are searched by their words, ` +
+    `their vectors and their links.</li></ol>` +
+    `<noscript><p class="s-noscript">JavaScript is off, so the search does not run: the whole index and the ` +
+    `pipeline that reads it are in this page, and without a script they are only text. Every piece is ` +
+    `reachable from <a href="/timeline/">what's new</a>, <a href="/map/">the map</a> and the command line ` +
+    `(press <b>/</b>).</p></noscript>` +
+    `<script type="application/json" id="search-data">${json}</script>` +
+    `<script>\n${client}\n</script>` +
+    `</div></section>`;
+
+  log(
+    `search index: ${totals.docs} pieces, ${totals.vocab} terms (${totals.singleton} of them in exactly one piece), ` +
+      `${totals.postings} term-to-piece pairs, ${totals.strong} terms in titles and headings, ` +
+      `${totals.links} links, ${totals.citations} citations over ${totals.works} works, ${totals.catalogued} ` +
+      `catalogued; data block ${Buffer.byteLength(json)} bytes`,
+  );
+
+  return {
+    title: 'Search — blog.jaye.ch',
+    shareTitle: 'Search — blog.jaye.ch',
+    type: 'website',
+    description:
+      `Search all ${totals.docs} pieces of blog.jaye.ch by three signals at once — a word index, a tf-idf ` +
+      `vector space, and a datalog query over the blog's own citation graph — with the reason each result ` +
+      `matched.`,
+    prompt: 'grep -r',
+    heroTitle: 'The <span class="fx">search</span>',
+    tagline:
+      `every published piece, by <b>three signals</b> at once — the words, the vectors, and the links between ` +
+      `them.`,
+    body,
+    navCurrent: '/search/',
+  };
+}
+
 /* ---------- discovery files: feed, sitemap, robots ---------- */
 
 /** The published posts, in manifest order. Every generated file uses this list
@@ -1864,6 +2286,7 @@ function sitemapXml(posts) {
     { loc: BASE + '/', lastmod: null },
     { loc: `${BASE}/timeline/`, lastmod: posts.map((p) => p.date).sort().pop() || null },
     { loc: `${BASE}/map/`, lastmod: posts.map((p) => p.date).sort().pop() || null },
+    { loc: `${BASE}/search/`, lastmod: posts.map((p) => p.date).sort().pop() || null },
     ...posts.map((p) => ({ loc: `${BASE}/${p.slug}/`, lastmod: p.date })),
   ]
     .map(
@@ -2292,7 +2715,7 @@ const POST_META = {
     tagline: 'a <b>reading</b>: the abbot and the angelic mind \u2014 Trithemius read whole, and the Steganographia held in plain sight.',
     hint: '<a href="/">\u2190 home</a> \u00b7 a reading of one book, with notes',
     description:
-      'A close reading of Frater Acher\u2019s Black Abbot White Magic: Johannes Trithemius, the angelic mind, and a text the tradition could never decide was angel magic or cryptography \u2014 the hidden frame the corpus\u2019s owns readings keep circling.',
+      'A close reading of Frater Acher\u2019s Black Abbot White Magic: Johannes Trithemius, the angelic mind, and a text the tradition could never decide was angel magic or cryptography \u2014 the hidden frame the blog\u2019s own readings keep circling.',
     accent: 'Black Abbot, White Magic',
   },
   'the-blood-of-the-earth': {
@@ -2342,6 +2765,14 @@ const POST_META = {
     description:
       'A close reading of Proclus\u2019 Elements of Theology: the same frame as a deduction \u2014 propositions from a first principle to the soul\u2019s ascent, with the theurgy stripped out, and what a claim does when nothing in the system performs it.',
     accent: 'The Elements of Theology',
+  },
+  'iamblichus-on-the-mysteries': {
+    prompt: 'cat iamblichus-on-the-mysteries.md',
+    tagline: 'a <b>reading</b>: the answer to the last book \u2014 not thought but the acts unite, and the efficacy is put in the rite, outside whoever performs it.',
+    hint: '<a href="/">\u2190 home</a> \u00b7 a reading of a reply, with notes',
+    description:
+      'A close reading of Iamblichus\u2019 On the Mysteries: the counter-text to the Elements of Theology \u2014 why intellection cannot unite, what the unutterable symbols are said to do by themselves, and where a frame puts its efficacy when it takes it out of the person.',
+    accent: 'On the Mysteries',
   },
   'ahead-of-the-story': {
     prompt: 'cat ahead-of-the-story.md',
@@ -2544,6 +2975,7 @@ written.push({
   html: writePage('timeline/index.html', buildTimeline(navPosts), navPosts),
 });
 written.push({ rel: 'map/index.html', html: writePage('map/index.html', buildMap(navPosts), navPosts) });
+written.push({ rel: 'search/index.html', html: writePage('search/index.html', buildSearch(navPosts), navPosts) });
 
 const writtenFiles = [];
 const writeDiscovery = (rel, text) => { writeFile(rel, text); writtenFiles.push({ rel, text }); };
@@ -2585,7 +3017,7 @@ function checkWorkshop(html) {
     [/\b\d[\d,]{3,}\s+characters\b/, 'character count'],
     [/\bno newline\b|\bwhitespace[- ]collaps|\bjumbled page order\b|\bwatermark-delimited\b|\bthe scan\b|\bthe extract\b/i, 'extraction mechanics'],
     // authoring references
-    [/\bthe brief\b|\bthe reading list\b|\bthe manifest\b|\bthe plumbing\b|\bthe build\b(?!\s+in\b)/i, 'authoring reference'],
+    [/\bthe brief\b|\bthe reading list\b|\bthe manifest\b|\bthe plumbing\b|\bthe build\b(?!\s+in\b)|\bthe corpus\b/i, 'authoring reference'],
     // a comment delimiter that reached emitted code
     [/\/\*\s*[-=]*\s*[a-z]/i, 'source comment in emitted code'],
     [/^\s*\/\/\s/m, 'source comment in emitted code'],

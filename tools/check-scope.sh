@@ -78,7 +78,12 @@ expected="$(node -e '
   const f = [m.home.file, ...m.posts.map((p) => p.file)];
   process.stdout.write(f.map((x) => "content/" + x).join("\n") + "\n");
 ')"
-actual="$(find content -type f 2>/dev/null)"
+# Posts are content/<file> at the TOP level — the manifest names them. A
+# SUBDIRECTORY of content/ holds assets a page references rather than posts
+# (content/headers/ holds the generated post headers), so its files are not
+# shape violations. Excluded here rather than listed, so a new asset directory
+# does not need this guard edited again.
+actual="$(find content -type f -not -path 'content/*/*' 2>/dev/null)"
 # order-independent set difference (no reliance on collation)
 unexpected="$(printf '%s\n' "$actual" | grep -vxF -f <(printf '%s\n' "$expected") || true)"
 missing="$(printf '%s\n' "$expected" | grep -vxF -f <(printf '%s\n' "$actual") || true)"

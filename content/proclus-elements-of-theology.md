@@ -412,7 +412,8 @@ the shortest form, in §3 of the Introduction, quoting Iamblichus against the ra
 > understanding ; and by the power of the unutterable symbols which are intelligible only to the
 > gods."
 
-— Iamblichus, *De mysteriis* I. 11, quoted in Dodds' Introduction §3.[^i3] Read beside the
+— Iamblichus, *De mysteriis* II.11, as the modern critical edition prints it, quoted in Dodds' Introduction
+§3.[^i3] Read beside the
 *Elements* it is an argument against it: the theoretical philosopher — the man whose method is
 *theoria*, demonstration, reason — does **not** attain union by thought, and what attains it is
 an act "beyond all understanding", performed correctly, on unutterable symbols. That is the
@@ -625,8 +626,13 @@ sentence about theurgy's absence and the sentence that Proclus "in fact believed
 theurgy when he wrote it" are both from the same paragraph; the suggestion about the book's
 rationalist character is from the paragraph that follows.
 [^i3]: Dodds, Introduction §3 — his chapter on Proclus and his predecessors, pp. xx–xxi. The
-Iamblichus quotation is given by Dodds with its source, *De mysteriis* I. 11; the Plotinus
-passage is Dodds' own characterisation in the same section.
+Iamblichus quotation is given by Dodds with its source as *De mysteriis* **I. 11** (which is how
+Dodds cites it); the modern critical edition of the work prints the same passage at **II.11** — its
+running head there reads II.11, and its note 88 gives the cross-reference `II.11.96-97`. The
+edition is not consistent with itself at this point: a later note, in Book IX, cites the identical
+lines as **I.11.96-97**. The address therefore follows the running head and note 88, and both the
+edition's internal disagreement and Dodds' citation of I. 11 are recorded as the divergences they
+are rather than settled. The Plotinus passage is Dodds' own characterisation in the same section.
 [^t1]: Thomas Taylor's translation, Proposition I, enunciation and proof.
 [^t3]: Taylor's translation, Proposition III.
 [^t5]: Taylor's translation, Proposition V.

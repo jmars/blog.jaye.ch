@@ -586,6 +586,16 @@
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
+    },
+    {
+      "slug": "iamblichus-on-the-mysteries",
+      "file": "iamblichus-on-the-mysteries.md",
+      "navLabel": "iamblichus, on the mysteries",
+      "kind": "reading",
+      "summary": "A close reading of Iamblichus\u2019 On the Mysteries \u2014 the answer to the last book: not thought but the acts themselves unite, and the efficacy is placed in the rite, outside anyone who performs it.",
+      "date": "2026-10-01",
+      "published": true,
+      "series": "readings"
     }
   ]
 }
