@@ -35,7 +35,12 @@ import { TEXTS } from './shelf.mjs';
 
 const args = process.argv.slice(2);
 const write = args.includes('--write');
-const slug = args.find((a) => !a.startsWith('--')) || 'porphyry-on-the-cave-of-the-nymphs-taylor-1917';
+const fromIx = args.indexOf('--from');
+const fromArg = fromIx >= 0 ? args[fromIx + 1] : null;
+// the slug is the first argument that is neither a flag nor the --from value
+const slug =
+  args.find((a, i) => !a.startsWith('--') && i !== fromIx + 1) ||
+  'porphyry-on-the-cave-of-the-nymphs-taylor-1917';
 
 const entry = TEXTS.find((t) => t.slug === slug);
 if (!entry) throw new Error(`merge: no such text on the shelf: ${slug}`);
@@ -57,10 +62,9 @@ const rules = rawFile.edits; // the committed rules, verbatim, in order
 const toEngine = (list) => list.map((r) => ({ find: r.find, repl: r.replace ?? r.repl, action: r.action }));
 
 /* ---------- the findings ---------- */
-const findingsFile = args.includes('--from')
-  ? args[args.indexOf('--from') + 1]
-  : join(process.cwd(), 'tools', 'library', 'edits', `${slug}.fullread.json`);
-const findings = JSON.parse(readFileSync(findingsFile, 'utf8')).findings || [];
+const findingsFile = fromArg || join(process.cwd(), 'tools', 'library', 'edits', `${slug}.fullread.json`);
+const findingsRaw = JSON.parse(readFileSync(findingsFile, 'utf8'));
+const findings = findingsRaw.findings || findingsRaw.proposals || [];
 
 const DAMAGE = new Set('^_~*/£>\\|#™±»«}{&');
 const hasBracket = (s) => s.includes('[') || s.includes(']');

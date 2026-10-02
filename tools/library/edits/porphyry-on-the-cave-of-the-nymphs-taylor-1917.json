@@ -59,6 +59,18 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": "Qypnf every virtue",
+      "replace": "in an accurate knowledge of every virtue",
+      "class": "reading",
+      "note": "the print reads \"...intellectual prudence, and in an accurate knowledge of every virtue\" (scan, printed page 41); the token carries a lost span, not a word. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "diuine",
+      "replace": "divine",
+      "class": "reading",
+      "note": "the 1917 print reads \"more divine\" (scan, printed page 54): the transcription's archaic-looking \"diuine\" is a scanner slip (u for v), not the print's spelling. (decided by the transcription's own context.)"
+    },
+    {
       "find": "Cloth, Svo. is. net. Post free is. 2d. Wrappers. 6d. net. Post free jd.",
       "replace": "Cloth, 8vo. 1s. net. Post free 1s. 2d. Wrappers. 6d. net. Post free 7d.",
       "class": "reading",
