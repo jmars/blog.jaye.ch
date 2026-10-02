@@ -83,23 +83,43 @@ function opening(body) {
 
 const SYSTEM = `You write emblem briefs for hand-drawn headers on an essay blog.
 
-An emblem is ONE object: a plate, a sigil, a vessel, a diagram, a single reduced figure. Not a scene, not an illustration of the argument, not a stock icon. Think of the frontispiece of an old book of philosophy — a single symbol, densely worked at its centre, floating in a lot of empty paper.
+An emblem is ONE PHYSICAL OBJECT, drawn as a recognisable thing. The test is: at
+240px wide, can a stranger name what it is? A vessel, a key, a ladder, a chair, a
+tree, a book, a door, a bell, a hand, a figure, a mask, a pair of scales, a crown,
+a bridge, a well. It must have BODY — solid masses and a strong silhouette.
 
-The blog argues in two registers. The "readings" series is hermetic and esoteric (Proclus, the Chaldean Oracles, Picatrix, Geosophia). The "mechanism" series is analytic — collapse, damping, containment, runaway feedback, group capture. Both use the same visual language: the hermetic one through real symbolic vocabulary, the mechanism one through structures and diagrams (a vessel, a loop, a threshold, a stack that leans).
+BANNED SUBJECTS, because they render as a grey tangle of strokes rather than as a
+thing: concentric rings, spirals, convergence points, radiating rays, starbursts,
+grids, meshes, networks of fine lines, mandalas, rosettes, graphs, charts, RINGS,
+hoops, loops, bands and orbits (a ring is the worst offender: it always renders
+as a tangle), and any
+"diagram" whose form is defined by thin structural lines. If the post's idea wants
+one of these, TRANSLATE it into a solid object that carries the same meaning. Not
+"collapse" but "a stack that has begun to lean". Not "convergence" but "funnel".
+Not "orbital rings" but "a millstone". Not "a balance drawn as pure geometry" but
+"a heavy pair of scales, its beam a solid bar and its pans shallow bowls".
+
+The blog argues in two registers. The "readings" series is hermetic and esoteric
+(Proclus, the Chaldean Oracles, Picatrix, Geosophia). The "mechanism" series is
+analytic — collapse, damping, containment, runaway feedback, group capture. Both
+use the same visual language: real symbolic objects for the first, real structural
+objects (a vessel, a loop, a threshold, a leaning stack) for the second.
 
 Rules:
 - Never propose text, letters, runes, inscriptions or readable symbols. Diffusion models render lettering as convincing nonsense, and a header that seems to carry an inscription it does not have is a lie on the page. If a glyph matters, describe it as pure GEOMETRY.
 - Never name a colour, tone, or background. The palette is FIXED elsewhere and is not yours to choose: bone paper, black ink, and exactly one oxblood red accent. An invented colour ("slate", "instrument white", "deep blue", a hex code) fights the house style, so describe only FORM. For "accent" say which single element carries the red, not what shade it is.
 - Never name a MEDIUM or technique. Not "engraved", "etched", "linework", "lithograph", "like a plate". The medium is FIXED elsewhere and is not yours to choose; your words steer the drawing hand out of the style. Describe only the FORM of the object — its shape, edges, mass, and what is drawn around it.
 - No gradients, no lighting, no atmosphere. Lines and masses only.
+- MASS OVER LINE. Say how the object is BUILT of solid black shapes, not how it is outlined. A thing described as thin lines comes back as a scribble.
+- The object must be named as something concrete and drawable. If you cannot picture a woodcut of it, it is the wrong emblem.
 - Reach for the concrete object, not the abstraction. Not "isolation" but "a single figure with the crowd's lines cut away".
 - The image must read at 240px wide. Silhouette first, detail second.
 
 Return ONLY a JSON object:
 {
   "emblem": "the object, in five words or fewer",
-  "composition": "how it sits in a wide frame and where the empty space is — form only, no colour",
-  "symbols": ["2-4 specific things to draw, concretely"],
+  "composition": "how it sits in the frame and where the empty space is — form only, no colour",
+  "symbols": ["2-4 specific things to draw, concretely, describing MASS and SHAPE"],
   "accent": "the one element that carries the red wash"
 }`;
 
@@ -197,7 +217,9 @@ async function generate(post, body) {
  * gestural ink the style is named for.
  */
 function compose(brief) {
-  const { prefix, style: hand, suffix, singular } = style.prompt;
+  const { prefix, style: handStyle, suffix, singular } = style.prompt;
+  // Mutable: the token budget may trim the hand, and must never trim the subject.
+  let hand = handStyle;
   // The briefs legitimately reach for "engraved line" and "like a plate" to
   // describe FORM, but that vocabulary is also a medium instruction that pulls
   // the whole image toward engraving. Strip it here so the style block above
@@ -212,27 +234,82 @@ function compose(brief) {
     [/\bwide horizontal vignette\b/gi, ''],
     [/\bwide\s+frame\b/gi, 'square frame'],
     [/\bwide\s+empt(?:y|iness)\b/gi, 'empty'],
-    [/\bwide\s+(?:arc|sheet|field|plate|band|sweep)\b/gi, '$1'],
+    [/\bwide\s+(arc|sheet|field|plate|band|sweep)\b/gi, '$1'],
     [/\bwide\b/gi, ''],
+  ];
+  // ICON SUPPRESSION. A centred, isolated, symmetrical object on an empty field
+  // IS an icon, and the briefs were written for a wide banner where "centred in
+  // the frame" merely meant "not at the edge" — under a square it reads as
+  // heraldry. 20 of 59 briefs carry that phrasing, so it is rewritten here
+  // rather than paid for with 59 frontier calls. The form is kept; only the
+  // placement claim is replaced.
+  const PLACEMENT = [
+    [/\b(?:at|in|of)\s+the\s+(?:exact\s+)?(?:centre|center)\s+of\s+(?:the\s+|a\s+)?(?:wide\s+|square\s+)?(?:frame|field)\b/gi,
+     'cropped by the frame edge'],
+    [/\boccupies\s+the\s+centre-left\s+of\s+(?:the\s+)?(?:wide\s+|square\s+)?(?:frame|field)\b/gi,
+     'sits off-centre'],
+    [/\b(?:centred|centered)\s*(?:slightly\s+)?(?:left|right|low|high)?\s*(?:of|in)?\s*(?:the|a)?\s*(?:wide\s+|square\s+)?(?:frame|field)\b/gi,
+     'off-centre, running off the frame edge'],
+    [/\b(?:centred|centered)\s+(slightly\s+)?(left|right|low|high)\b/gi, 'off-centre'],
+    [/\bdead\s+centre\b/gi, 'off-centre'],
+    [/\b(?:floating|sits|sitting|stands?|standing)\s+at\s+the\s+(?:exact\s+)?(?:centre|center)\b/gi, 'off-centre'],
+    [/\bcentred\b/gi, 'off-centre'],
+    [/\bcentered\b/gi, 'off-centre'],
   ];
   const clean = (s) => {
     let t = String(s ?? '').replace(MEDIUM, '');
     for (const [re, to] of WIDE) t = t.replace(re, to);
+    for (const [re, to] of PLACEMENT) t = t.replace(re, to);
     return t.replace(/\s{2,}/g, ' ').replace(/\s+([,.;])/g, '$1').trim();
   };
   const subject = [brief.emblem, ...(brief.symbols || [])].map(clean).filter(Boolean).join(', ');
-  return [
-    prefix,
-    hand,                                  // the hand sets the medium, first
-    subject,
-    clean(brief.composition),
-    `single oxblood red accent on ${brief.accent}`,
-    suffix,
-  ]
-    .filter(Boolean)
-    .join(', ')
-    .replace(/,\s*,/g, ',')
-    .replace(/\s{2,}/g, ' ');
+  // OBJECT ANCHOR. The gestural clause describes a PROCESS and never says the
+  // drawing DEPICTS anything, so a plate whose subject is an abstract noun
+  // ("a gate with no bar") can render as a pure ink mass with no object in it.
+  const anchor = brief.emblem ? `a drawing of ${clean(brief.emblem)}: ` : '';
+  const accent = clean(brief.accent).split(/\s+/).slice(0, 8).join(' ');
+  // TOKEN BUDGET. SDXL reads 2 CLIP chunks of 77 tokens and SILENTLY DROPS the
+  // rest; the composed prompts averaged ~303 tokens, so the subject and
+  // composition sat past the cut and the model rendered only the hand.
+  //
+  // WHAT IS DROPPED, IN WHAT ORDER, IS THE WHOLE POINT — and getting it wrong
+  // made the images WORSE, measurably. A first version dropped the composition,
+  // then the accent, then the SYMBOLS, which are the concrete visual description
+  // of the object; the model then had a four-word subject and forty words of
+  // brush technique, and every plate came back as abstract ink (QC: "no named
+  // object is clearly depicted in any cell"). The style is what may be trimmed,
+  // never the subject: drop the accent, then the composition, then trim the HAND,
+  // and only as a last resort the symbols beyond the first.
+  const BUDGET = 148;                       // ~2x77, with headroom
+  const tok = (s) => (String(s).split(/\s+/).length * 1.35);
+  const joint = (a) => a.filter(Boolean).join(', ');
+  let comp = clean(brief.composition);
+  let accl = `one oxblood red accent on ${accent}`;
+  const build = (subj) => joint([prefix, anchor + subj, hand, comp, accl, suffix]);
+  let out = build(subject);
+  // ORDER OF SACRIFICE — measured, twice. The accent goes LAST, not first: it is
+  // only ~8 words, and dropping it turned the whole batch MONOCHROME (measured
+  // with tools/headers/red.py: 58 of 59 plates had ~0% red pixels) when the house
+  // style promises exactly one oxblood wash. The style is what gets trimmed.
+  if (tok(out) > BUDGET) { comp = ''; out = build(subject); }
+  if (tok(out) > BUDGET) {
+    // trim the HAND, not the object: keep its first clause, which names the medium.
+    const handTrim = hand.split(', ').slice(0, 3).join(', ');
+    const saved = hand; hand = handTrim;
+    out = build(subject);
+    if (tok(out) > BUDGET) {
+      const syms = (brief.symbols || []).map(clean).filter(Boolean);
+      out = build([clean(brief.emblem), ...syms.slice(0, 1)].filter(Boolean).join(', '));
+    }
+    hand = saved;
+  }
+  if (tok(out) > BUDGET) { accl = ''; out = build(subject); }
+  out = out.replace(/,\s*,/g, ',').replace(/\s{2,}/g, ' ');
+  if (tok(out) > BUDGET) {
+    out = out.split(' ').slice(0, Math.floor(BUDGET / 1.35)).join(' ')
+             .replace(/[,;:\s]+$/, '');
+  }
+  return out;
 }
 
 async function main() {

@@ -10,8 +10,8 @@ Runs INSIDE the container (it needs Pillow, which the host does not have):
 
     NO_GPU=1 tools/headers/gpu.sh python3 /work/tools/headers/postprocess.py
 
-Reads  content/headers/<slug>.png       (1024x1024, straight from ComfyUI)
-Writes content/headers/webp/<slug>.webp  (1024x1024, what the page inlines)
+Reads  content/headers/<slug>.png       (1536x640, straight from ComfyUI)
+Writes content/headers/webp/<slug>.webp  (1536x640, what the page inlines)
 Writes content/headers/og/<slug>.webp    (1200x630, what og:image points at)
 
 The render is SQUARE (see style.json composition._ratio — measured, not chosen
@@ -49,39 +49,46 @@ FEATHER = 90
 
 
 def to_card(im, target=TARGET, feather=FEATHER):
-    """Set the square plate centred on a target-shaped field.
+    """Fit a header render to the 1.91:1 social-card field.
 
-    The sides are filled by extending the plate's own outermost columns rather
-    than by a flat colour, so the paper grain continues. A flat fill reads as a
-    mat; a continuation reads as more paper. The seam is feathered so there is no
-    hard stripe where the extension begins.
+    The card is WIDER than it is tall and the render is wider still (2.4:1), so
+    the only honest operation is a centre crop of the surplus width — a slight
+    one, 1536 -> 1219 on a 640-tall source, which a gestural asymmetric frame
+    survives without losing its subject. The earlier branch here upscaled the
+    render to a SQUARE and extended the sides, which was right for the square
+    canvas and squashes a wide one; that is the branch that produced a
+    distorted card the moment the canvas went back to 2.4:1.
+
+    If a future canvas is instead TALLER than the target, the sides are filled
+    by extending the image's own outermost columns (feathered) rather than by a
+    flat colour: a flat fill reads as a mat, a continuation reads as more paper.
     """
     tw, th = target
-    side = min(th, im.size[1])
-    sq = im.resize((side, side), Image.LANCZOS)
-    left = (tw - side) // 2
+    sw, sh = im.size
+    if sw / sh >= tw / th:
+        # too wide: centre-crop the surplus width
+        w = round(sh * tw / th)
+        left = (sw - w) // 2
+        return im.crop((left, 0, left + w, sh)).resize(target, Image.LANCZOS)
 
+    # too tall: scale to the target height and extend the sides from own columns
+    sq = im.resize((round(sw * th / sh), th), Image.LANCZOS)
+    side = sq.size[0]
+    left = (tw - side) // 2
     canvas = Image.new("RGB", (tw, th))
     canvas.paste(sq, (left, 0))
-    # extend the outer columns outward
-    canvas.paste(sq.crop((0, 0, 1, side)).resize((left, side), Image.NEAREST), (0, 0))
-    canvas.paste(sq.crop((side - 1, 0, side, side)).resize((tw - left - side, side),
-                                                           Image.NEAREST), (left + side, 0))
-
-    # feather the seam: blend a blurred copy back in over the outer band
+    canvas.paste(sq.crop((0, 0, 1, th)).resize((left, th), Image.NEAREST), (0, 0))
+    canvas.paste(sq.crop((side - 1, 0, side, th)).resize((tw - left - side, th),
+                                                        Image.NEAREST), (left + side, 0))
     blurred = canvas.filter(ImageFilter.GaussianBlur(14))
     mask = Image.new("L", (tw, th), 0)
     px = mask.load()
     for i in range(feather):
         t = int(255 * (i / feather))          # 0 at the seam lip -> 255 outward
-        x0 = left - 1 - i
-        x1 = left + side + i
-        if 0 <= x0 < tw:
-            for y in range(th):
-                px[x0, y] = t
-        if 0 <= x1 < tw:
-            for y in range(th):
-                px[x1, y] = t
+        for x in (left - 1 - i, left + side + i):
+            if 0 <= x < tw:
+                for y in range(th):
+                    px[x, y] = t
     return Image.composite(canvas, blurred, mask)
 
 
