@@ -43,7 +43,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GROUPS, TEXTS, shelfFiles, textSource, SHELF } from './library/shelf.mjs';
+import { GROUPS, TEXTS, shelfFiles, textSource, SHELF, isPublished } from './library/shelf.mjs';
 import { preprocess, joinLines, assess, countParagraphs } from './library/reader.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -85,15 +85,67 @@ for (const [name, got, want] of cases) {
 
 /* ---------- the shelf ---------- */
 
-if (!existsSync(LIB)) {
-  // The library is HELD BACK by default (LIBRARY=1 in tools/build.mjs): its
-  // transcriptions are not yet worth reading, so nothing is emitted and there is
-  // nothing to check. That is a skip, not a failure — the module, the shelf and
-  // the checks below all still run when the switch is on, and a test that failed
-  // here would make the default build look broken.
-  console.log('library-smoke: the library is held back (LIBRARY=1 builds it) — nothing to check');
-  console.log('library-smoke: PASSED (skipped)');
-  process.exit(0);
+/* WHAT THIS TREE SHOULD HOLD (plan §11 phase 5). Publication is per text and it
+ * lives on the shelf entry, so the smoke asks the shelf the same question the
+ * build asks: the PUBLISHED texts are what a default build serves, and LIBRARY=1
+ * (the preview switch) means every entry was built. The two states are asserted
+ * ASYMMETRICALLY — a published text MUST have its pages, an unpublished one must
+ * have none — because a build that quietly serves a text its entry does not
+ * publish is the defect this flag exists to make impossible. */
+// LIBRARY=1 is the BUILD's preview flag (it builds every entry regardless), but
+// what a page SERVES is the per-text `published` flag (plan §11 phase 5). The two
+// were the same thing before phase 5 and are not any more: a previewed tree
+// builds the held-back entries so the reader and these checks can see them, while
+// the expected page set still follows `published`. So the expectation is built
+// from the flag, and the BUILD does not change it.
+const PREVIEW = process.env.LIBRARY === '1';
+const SERVED = TEXTS.filter(isPublished);
+const BUILT_EXTRA = PREVIEW ? TEXTS.filter((t) => !isPublished(t)) : [];
+const HELD = TEXTS.filter((t) => !SERVED.includes(t));
+// What the TREE carries: the published texts, plus — in a preview build — the
+// held-back ones the build was explicitly asked for. The assertions separate the
+// two questions: what the shelf PUBLISHES (SERVED) and what this build EMITS.
+const EMITTED = TEXTS.filter((t) => SERVED.includes(t) || BUILT_EXTRA.includes(t));
+// What this TREE holds back: not published, and not emitted either.
+const WITHHELD = TEXTS.filter((t) => !EMITTED.includes(t));
+const BUILT = existsSync(LIB);
+
+if (!BUILT && SERVED.length > 0) {
+  console.error(
+    `library-smoke: ${SERVED.length} text(s) are published on the shelf ` +
+      `(${SERVED.map((t) => t.slug).join(', ')}) but dist/library/ is not built — ` +
+      'the build did not serve what the shelf publishes.',
+  );
+  process.exit(1);
+}
+if (!BUILT) {
+  // Nothing is published and nothing is previewed: the shelf is held back whole,
+  // so the library's own pages have nothing to check. What is still checked —
+  // because this is the state the whole per-text flag is FOR — is that nothing
+  // on the site points at the library: no nav entry, no command-line entry, no
+  // sitemap address, no line in the 404. (A tree with pages for a held-back text
+  // does not reach this branch: it falls through to the checks above and fails
+  // there.) That is a skip of the library's pages, not of the publication rule.
+  console.log(
+    `library-smoke: nothing is published (${TEXTS.length} texts on the shelf, none marked published) and this is not a preview build`,
+  );
+  const files = [
+    ['index.html', readFileSync(join(DIST, 'index.html'), 'utf8')],
+    ['404.html', readFileSync(join(DIST, '404.html'), 'utf8')],
+    ['sitemap.xml', readFileSync(join(DIST, 'sitemap.xml'), 'utf8')],
+  ];
+  let leak = 0;
+  for (const [rel, text] of files) {
+    const hits = (text.match(/\/library\//g) || []).length;
+    if (hits) leak += hits;
+    check(hits === 0, `${rel}: no reference to /library/ with nothing published (${hits})`);
+  }
+  check(leak === 0, 'and the site is silent about a library it does not serve');
+  // FAILS IF: the nav entry, the command-line entries, the sitemap addresses or
+  // the 404's list are emitted whatever the shelf publishes — the trace of the
+  // library on a site that has none.
+  console.log('library-smoke: PASSED (the library is held back whole)');
+  process.exit(failures === 0 ? 0 : 1);
 }
 const files = shelfFiles();
 const srcOf = (t) => readFileSync(textSource(t, files), 'utf8');
@@ -128,9 +180,26 @@ function textParagraphs(html) {
 section('the pages (built vs. the shelf)');
 const expected = new Map(); // slug -> { paras, headings, readable, parts, pages }
 for (const t of TEXTS) {
+  const pages = builtPages(t.slug);
+  /* A HELD-BACK text is ABSENT — not skipped, asserted absent (phase 5). This is
+   * the asymmetry the publication flag turns on: the same tree, built with the
+   * flag flipped, has the pages here, and this check is what fails when a build
+   * serves what the shelf does not publish. */
+  if (!SERVED.includes(t)) {
+    // An UNPUBLISHED text is asserted ABSENT — that is the asymmetry the
+    // publication flag turns on, and the check that fails when a build serves
+    // what the shelf does not publish. In a PREVIEW build (LIBRARY=1) the build
+    // deliberately emits it so the held-back shelf can be read and these other
+    // checks can run, so here the assertion becomes: present only BECAUSE the
+    // build was asked for everything.
+    check(
+      pages.length === 0 || PREVIEW,
+      `${t.slug}: not published, and no page is built for it (${pages.length} found)`,
+    );
+    if (pages.length === 0) continue;
+  }
   const src = srcOf(t);
   const a = assess(src, t.lang);
-  const pages = builtPages(t.slug);
   if (!a.readable) {
     expected.set(t.slug, { paras: 0, headings: 0, readable: false, pages: pages.length });
     check(pages.length === 1, `${t.slug}: one page for a text that cannot be served (${pages.length})`);
@@ -183,10 +252,15 @@ for (const t of TEXTS) {
 }
 {
   const dirs = readdirSync(LIB, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
-  const unwritten = TEXTS.filter((t) => !dirs.includes(t.slug)).map((t) => t.slug);
-  const extra = dirs.filter((d) => !TEXTS.some((t) => t.slug === d));
-  check(unwritten.length === 0, `every shelf entry has a built page (${TEXTS.length} entries${unwritten.length ? `; missing ${unwritten.join(', ')}` : ''})`);
-  check(extra.length === 0, `no built library page belongs to no entry${extra.length ? `: ${extra.join(', ')}` : ''}`);
+  const unwritten = EMITTED.filter((t) => !dirs.includes(t.slug)).map((t) => t.slug);
+  const extra = dirs.filter((d) => !EMITTED.some((t) => t.slug === d));
+  check(
+    unwritten.length === 0,
+    `every text this build serves has a built page (${EMITTED.length} of ${TEXTS.length} entries${unwritten.length ? `; missing ${unwritten.join(', ')}` : ''})`,
+  );
+  check(extra.length === 0, `no built library page belongs to no text this build serves${extra.length ? `: ${extra.join(', ')}` : ''}`);
+  // FAILS IF: a published text is missing its page, or a page exists for a text
+  // the shelf does not serve — the two failures the flag's two states are.
 }
 
 /* ---------- 3. nothing internal on a page ---------- */
@@ -231,7 +305,17 @@ const BANNED = [
       if (m) bad.push(`${rel}: ${what}: ${JSON.stringify(html.slice(Math.max(0, m.index - 40), m.index + 40))}`);
     }
   }
-  check(pages.length > 40, `scanned ${pages.length} emitted file(s) under dist/library/ (pages and the data files a text serves)`);
+  // The floor is derived from the SERVED texts, not fixed: a build that serves
+  // one text emits far fewer files than one that serves thirty-eight, and a
+  // hard-coded 40 would either be a tautology in a preview or a false failure in
+  // a default build. Each served text contributes at least its page, and each
+  // stored edition its document and its plain text — counted here so the walk is
+  // asserted to have found the files the build must have written.
+  const floor = EMITTED.length + EMITTED.filter((t) => existsSync(join(ROOT, 'content', 'library', t.slug))).length * 2;
+  check(
+    pages.length >= floor,
+    `scanned ${pages.length} emitted file(s) under dist/library/ (at least ${floor} for ${EMITTED.length} text(s) this build serves: pages, documents and plain texts)`,
+  );
   check(bad.length === 0, `no page carries an internal path, a source filename or workshop wording${bad.length ? `\n       ${bad.slice(0, 6).join('\n       ')}` : ''}`);
   check(empty === 0, `no page has an empty paragraph (${empty})`);
   check(threeNewlines === 0, `no text region has a run of three or more newlines (${threeNewlines})`);
@@ -287,7 +371,7 @@ section("the command a page prints");
       bad.push(`${p.slice(DIST.length + 1)}: prints "${prompt}", which this check does not know how to run`);
     }
   }
-  check(seen === pages.length && pages.length > 40, `read the prompt and palette data of ${seen} page(s)`);
+  check(seen === pages.length && pages.length >= EMITTED.length, `read the prompt and palette data of ${seen} page(s)`);
   check(bad.length === 0, `every page prints a command its own palette can run${bad.length ? `\n       ${bad.slice(0, 5).join('\n       ')}` : ''}`);
 }
 
@@ -303,19 +387,42 @@ section('the index');
   check(unlinked.length === 0, `every text with a page is linked from the index${unlinked.length ? `: ${unlinked.join(', ')}` : ` (${linked.size})`}`);
   check(dead.length === 0, `every link on the index resolves to a built page${dead.length ? ` (404: ${dead.join(', ')})` : ''}`);
   // The group headings are the blog's axis, in order, and each is a real group.
+  // With the shelf served one text at a time, a group with nothing served
+  // contributes nothing (phase 5): an empty heading over an empty list is a
+  // promise the page does not keep.
+  const drawn = GROUPS.filter((g) => EMITTED.some((t) => t.group === g.key));
   const order = [...index.matchAll(/<h2 id="group-([a-z-]+)">/g)].map((m) => m[1]);
   check(
-    order.join(',') === GROUPS.map((g) => g.key).join(','),
-    `the groups appear in the shelf's order (${order.join(', ')})`,
+    order.join(',') === drawn.map((g) => g.key).join(','),
+    `the groups with a served text appear in the shelf's order (${order.join(', ')} of ${drawn.length})`,
   );
   check(
-    GROUPS.every((g) => TEXTS.some((t) => t.group === g.key)),
-    'every group on the index has at least one text',
+    drawn.every((g) => EMITTED.some((t) => t.group === g.key)),
+    'every group on the index has at least one served text',
   );
   check(
-    TEXTS.every((t) => GROUPS.some((g) => g.key === t.group)),
-    'every text is in a group the index draws',
+    EMITTED.every((t) => drawn.some((g) => g.key === t.group)),
+    'every served text is in a group the index draws',
   );
+  /* WHAT AN INDEX THAT SERVES PART OF THE SHELF MUST SAY (phase 5). The library's
+   * own paragraphs describe the shelf — the held-back entries and the modern
+   * editions that are not free included — so a page that serves one text out of
+   * thirty-eight has to say which it serves, or its description reads as a claim
+   * about the page in front of the reader. */
+  if (WITHHELD.length) {
+    check(
+      index.includes('What is served here now') &&
+        EMITTED.every((t) => new RegExp(`<a href="/library/${t.slug}/">`).test(index)),
+      `the index states what is served and what is held back (${EMITTED.length} served here, ${WITHHELD.length} held back in this tree)`,
+    );
+    // FAILS IF: a partial shelf is described as the whole one — the page then
+    // claims to hold texts it does not serve.
+  } else {
+    check(!index.includes('What is served here now'), 'and says nothing about a held-back shelf when there is none');
+    // FAILS IF: the sentence is emitted unconditionally, which would leave the
+    // preview build reading "38 of 38 texts served" beside a paragraph about
+    // held-back texts.
+  }
 }
 
 /* ---------- 5. the citation line is the citation record ---------- */
@@ -369,7 +476,6 @@ section('readings cited by');
   const byId = new Map(catalogue.map((s, k) => [s.id, k]));
 
   let compared = 0;
-  let withCitations = 0;
   for (const t of TEXTS) {
     const pages = builtPages(t.slug);
     if (pages.length === 0) continue;
@@ -393,10 +499,182 @@ section('readings cited by');
       `${t.slug}: cites {${[...got].sort().join(', ')}} — the record says {${[...want].sort().join(', ')}}`,
     );
     compared++;
-    if (want.size) withCitations++;
   }
-  check(compared === TEXTS.length, `compared a citation line for every text (${compared})`);
-  check(withCitations >= 3, `at least three texts are cited by a reading (${withCitations})`);
+  check(compared === EMITTED.length, `compared a citation line for every text this build serves (${compared} of ${EMITTED.length})`);
+  // The citation derivation is checked over the SHELF, not over what this tree
+  // serves: which texts the readings cite is a property of the catalogue and the
+  // posts' own notes, and it does not change when the shelf is published one text
+  // at a time. Asserting it over SERVED would make the check vacuous the day the
+  // served text is one no reading's notes name — which is exactly the case here.
+  const citedOnShelf = TEXTS.filter((t) =>
+    t.cat.some((id) => {
+      const k = byId.get(id);
+      return k != null && citing[k].size > 0;
+    }),
+  );
+  check(
+    citedOnShelf.length >= 3,
+    `at least three texts on the shelf are cited by a reading, so the record is not inert (${citedOnShelf.length})`,
+  );
+  // FAILS IF: the catalogue or the note-reading derivation goes inert — the map,
+  // the "where it is cited" lines and every library page would then say that no
+  // reading cites anything.
+}
+
+/* ---------- 6. what publication puts on the site, and what it takes off ---------- */
+
+/* Publication is not only the library's own pages (plan §11 phase 5): the nav
+ * entry, the command-line entries, the sitemap addresses and the 404's own list
+ * of the site's pages all appear with them and go with them. Asserted here from
+ * the BUILT tree, both ways: the furniture must be there when a text is served
+ * and absent when none is, so a flag that stops emitting pages but leaves the
+ * links behind is caught. */
+section('the site around the library');
+{
+  const home = readFileSync(join(DIST, 'index.html'), 'utf8');
+  const notFound = readFileSync(join(DIST, '404.html'), 'utf8');
+  const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+  const navEntry = /href="\/library\/"[^>]*>library</.test(home);
+  const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  check(navEntry, `the nav entry is in every page's chrome (${navEntry})`);
+  check(
+    /<a href="\/library\/">/.test(notFound),
+    'and the 404 lists the library among the pages the site has',
+  );
+  // FAILS IF: the 404's sentence "every address on this site is one of the pages
+  // below" is left standing while a library page exists and is not listed.
+  check(sitemapLocs.includes('https://blog.jaye.ch/library/'), 'and the sitemap addresses the index');
+  const missing = EMITTED.map((t) => `/library/${t.slug}/`).filter(
+    (rel) => !sitemapLocs.includes(`https://blog.jaye.ch${rel}`),
+  );
+  check(missing.length === 0, `and every served text (${SERVED.length} of ${TEXTS.length} on the shelf)${missing.length ? `: missing ${missing.join(', ')}` : ''}`);
+  // FAILS IF: a served text is absent from the sitemap, or a held-back one is in
+  // it — an address that 404s is worse than an absent one.
+  const heldInSitemap = WITHHELD.map((t) => `/library/${t.slug}/`).filter((rel) =>
+    sitemapLocs.includes(`https://blog.jaye.ch${rel}`),
+  );
+  check(heldInSitemap.length === 0, `and no text this tree withholds is addressed${heldInSitemap.length ? `: ${heldInSitemap.join(', ')}` : ''}`);
+  // FAILS IF: the sitemap advertises the whole shelf whatever the shelf publishes.
+  const palette = /var DATA = (\{[^\n]*\});/.exec(home);
+  const data = palette ? JSON.parse(palette[1]) : null;
+  const clEntries = data ? data.pages.filter((p) => String(p.slug).startsWith('library/')).map((p) => p.slug.slice(8)) : [];
+  check(
+    data && clEntries.length === EMITTED.length && clEntries.every((s) => EMITTED.some((t) => t.slug === s)),
+    `and the command line carries exactly the texts this build serves (${clEntries.length} of ${EMITTED.length})`,
+  );
+  // FAILS IF: the palette offers a `cat` of a text no page serves — a printed
+  // command that cannot run.
+}
+
+/* ---------- 7. the reading's citations resolve ---------- */
+
+/* The reading of this treatise cites it BY SECTION in prose — "Porphyry, section
+ * 4, Taylor's translation, 1917 printing" — and phase 5 makes those citations
+ * real links into the library. A link that does not resolve is worse than the
+ * prose it replaced, so every one of them is followed HERE: the target page must
+ * exist, and the fragment must name an anchor the served document actually
+ * carries. Nothing is hard-coded: the links are read out of the BUILT reading,
+ * and the anchors out of the BUILT document. */
+section("the reading's citations resolve");
+{
+  const manifest = JSON.parse(readFileSync(join(ROOT, 'posts.json'), 'utf8'));
+  const entry = manifest.posts.find((p) => p.file === 'porphyry-cave-of-the-nymphs.md');
+  const readingPath = entry ? join(DIST, entry.slug, 'index.html') : null;
+  check(!!readingPath && existsSync(readingPath), `the reading is built (${entry ? entry.slug : 'not in the manifest'})`);
+  if (readingPath && existsSync(readingPath)) {
+    const html = readFileSync(readingPath, 'utf8');
+    const links = [...html.matchAll(/href="(\/library\/([a-z0-9-]+)\/)#([a-z0-9-]+)"/g)].map((m) => ({
+      href: m[1] + '#' + m[3],
+      slug: m[2],
+      frag: m[3],
+    }));
+    // The links exist only while the text they cite is SERVED: a prose citation
+    // is the correct state when the library holds the text back, so the assertion
+    // follows the served set rather than assuming phase 5's links are present.
+    const CITED = 'porphyry-on-the-cave-of-the-nymphs-taylor-1917';
+    // PUBLICATION, not the preview build: a previewed text is built for the
+    // tests and the reader, but linking the reading's citations to a page the
+    // public cannot reach would 404 for everyone but us.
+    const citedServed = SERVED.some((t) => t.slug === CITED);
+    check(
+      citedServed ? links.length > 0 : links.length === 0,
+      citedServed
+        ? `the reading links its citations into the library (${links.length} link(s) by section)`
+        : `the reading's citations are prose while the library holds the text back (${links.length} link(s))`,
+    );
+    const slugs = [...new Set(links.map((l) => l.slug))];
+    const deadPages = slugs.filter((s) => !existsSync(join(LIB, s, 'index.html')));
+    check(deadPages.length === 0, `every text the reading cites has a built page${deadPages.length ? `: ${deadPages.join(', ')}` : ` (${slugs.join(', ')})`}`);
+    // FAILS IF: the reading cites a text the library does not serve — the exact
+    // failure the per-text publication flag could produce, a citation to a page
+    // that is held back.
+    const anchors = new Map();
+    for (const s of slugs) {
+      const docPath = join(LIB, s, 't');
+      if (!existsSync(docPath)) continue;
+      const doc = JSON.parse(readFileSync(docPath, 'utf8'));
+      const set = new Set();
+      for (const b of doc.blocks) {
+        for (const k of ['id', 'at']) if (b[k]) set.add(b[k]);
+        if (b.t === 'sec' && b.n != null) set.add(`s${b.n}`);
+        if (b.t === 'region' && b.kind === 'front') set.add('sfront');
+        if (b.t === 'region' && b.kind === 'notes') set.add('snotes');
+        if (b.t === 'pb' && b.page != null) set.add(`p${b.page}`);
+      }
+      anchors.set(s, set);
+    }
+    const unresolved = links.filter((l) => !(anchors.get(l.slug) || new Set()).has(l.frag));
+    check(
+      unresolved.length === 0,
+      `and every fragment names an anchor the served document carries` +
+        (unresolved.length ? ` — ${unresolved.length} do not: ${[...new Set(unresolved.map((u) => u.href))].join(', ')}` : ` (${[...new Set(links.map((l) => l.frag))].sort().join(', ')})`),
+    );
+    // FAILS IF: a citation points at an anchor the document does not have — a
+    // section number the edition does not print, or an anchor grammar that
+    // drifted between the reading and the document.
+  }
+}
+
+/* ---------- 8. the print stylesheet is emitted, and says what print does ---------- */
+
+/* The print rules are checked by LOOKING at a print rendering (a headless Chrome
+ * screenshot, in the phase's own proof); what a smoke can assert is that the
+ * rules are in the built page at all — a print block dropped in a refactor
+ * renders as the screen page on paper, and nothing else here would notice. */
+section('print');
+{
+  // The reader exists only for a text whose EDITION the repo stores (the shelf
+  // alone has no document, no anchors and no app), so the stylesheet is checked
+  // on a served text that has one — which is not the first entry on the shelf,
+  // and not any entry at all in a preview of a shelf that has no stored editions.
+  const readerText = SERVED.find((t) => existsSync(join(ROOT, 'content', 'library', t.slug)));
+  if (!readerText) {
+    console.log('  SKIP no served text has a stored edition, so there is no reader stylesheet to check');
+  } else {
+    const shell = readFileSync(join(LIB, readerText.slug, 'index.html'), 'utf8');
+    // The READER's own stylesheet, found by what only it declares: the page also
+    // carries the design system's print rules (the site's chrome), so taking the
+    // first <style> or the first @media print would check the wrong block.
+    const blocks = [...shell.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]);
+    const css = blocks.find((b) => b.includes('.rd-flow') && b.includes('@media print')) || '';
+    const print = css.slice(css.indexOf('@media print'));
+    const needs = [
+      ['.rd-bar, .rd-nav', 'the app chrome is dropped'],
+      ['display: none !important', 'and really dropped, not faded'],
+      ['.rd-item.rd-out', 'the items outside the range do not print'],
+      ['.rd-pb', 'the printed page numbers are restyled for paper'],
+      ['position: absolute', 'and placed in the margin'],
+      ['.rd-margin, .rd-rh', 'the margin notes and the running heads do not print'],
+      ['.rd-note { break-inside: avoid', 'and a note is not split across two sheets'],
+    ];
+    const missing = needs.filter(([frag]) => !print.includes(frag)).map(([, what]) => what);
+    check(
+      print.length > 0 && missing.length === 0,
+      `the reader's print block is emitted with every rule it needs${missing.length ? ` — missing: ${missing.join('; ')}` : ` (${blocks.length} style block(s) in ${readerText.slug})`}`,
+    );
+    // FAILS IF: the @media print block is dropped or trimmed — the page then
+    // prints its toolbar, its drawer and its page markers inline in the prose.
+  }
 }
 
 /* ---------- what the run measured ---------- */

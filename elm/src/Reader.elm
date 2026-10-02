@@ -24,6 +24,7 @@ import Json.Decode as D
 import Json.Encode as E
 import Reader.Document as Doc exposing (Block(..), Correction, Doc, Entry, Flow(..), Inline(..))
 import Reader.Store as Store exposing (Bookmark, Stored)
+import Set exposing (Set)
 
 
 {- ---------- ports: the page is the outside world ---------- -}
@@ -106,6 +107,10 @@ type alias Model =
     , posIx : Int
     , open : Maybe Int
     , cite : Bool
+    -- The passage the open citation panel is ABOUT (plan §11 phase 5). The panel
+    -- is an overlay, so a reader who scrolls to another passage with it open does
+    -- not thereby change the citation they asked for; frozen when the panel opens.
+    , citeIx : Int
     , showRules : Bool
     , range : Maybe ( Int, Int )
     , scale : Int
@@ -147,6 +152,7 @@ init flags =
             , posIx = 0
             , open = Nothing
             , cite = False
+            , citeIx = 0
             , showRules = False
             , range = Nothing
             , scale = stored.scale
@@ -314,7 +320,9 @@ update msg m =
                 open =
                     not m.cite
             in
-            ( { m | cite = open }
+            -- opening freezes the passage the citation is about; closing leaves it
+            -- where it was, so re-opening on the same passage is stable
+            ( { m | cite = open, citeIx = (if open then m.posIx else m.citeIx) }
             , if open then
                 focusOn "rd-cite"
 
@@ -846,7 +854,21 @@ tocIds m =
 
 currentPage : Model -> Maybe Int
 currentPage m =
-    List.take (m.posIx + 1) m.entries
+    pageAt m m.posIx
+
+
+currentSection : Model -> Maybe String
+currentSection m =
+    sectionAt m m.posIx
+
+
+{-| The printed page and the division at ANY entry, not only at the reader's
+position: the citation panel asks the same question about the passage it froze
+when it opened, and deriving it from the position would make the citation follow
+the scroll instead of the passage. -}
+pageAt : Model -> Int -> Maybe Int
+pageAt m ix =
+    List.take (ix + 1) m.entries
         |> List.reverse
         |> List.filterMap
             (\e ->
@@ -860,9 +882,9 @@ currentPage m =
         |> List.head
 
 
-currentSection : Model -> Maybe String
-currentSection m =
-    List.take (m.posIx + 1) m.entries
+sectionAt : Model -> Int -> Maybe String
+sectionAt m ix =
+    List.take (ix + 1) m.entries
         |> List.reverse
         |> List.filterMap
             (\e ->
@@ -994,7 +1016,7 @@ view m =
                             ]
                         , popover m
                         , citePanel m
-                        , rulesPanel m
+                        , rulesPanel m doc
                         , statusLine m
                         ]
         ]
@@ -1338,6 +1360,9 @@ regionLabel kind =
 flow : Model -> Doc -> Html Msg
 flow m doc =
     let
+        printed =
+            notesInPrint m
+
         step : ( Int, Entry ) -> ( Maybe Int, List (Html Msg) ) -> ( Maybe Int, List (Html Msg) )
         step ( ix, e ) ( curPg, acc ) =
             let
@@ -1352,12 +1377,28 @@ flow m doc =
                 inRange =
                     case m.range of
                         Just ( a, b ) ->
-                            case pg of
-                                Just p ->
+                            case ( e.item, pg ) of
+                                -- A note is kept when its REFERENCE is kept: the
+                                -- notes print as endnotes, at the back, so a
+                                -- range that holds a passage holds the note that
+                                -- passage refers to — and printing pages 15–20
+                                -- without them would be printing the text with
+                                -- its annotations stripped out.
+                                ( FNote n, _ ) ->
+                                    Set.member n.n printed
+
+                                ( _, Just p ) ->
                                     p >= a && p <= b
 
-                                Nothing ->
-                                    True
+                                ( _, Nothing ) ->
+                                    -- MEASURED before this: every entry with no
+                                    -- printed number was kept, so a range print
+                                    -- carried the volume's front matter — the
+                                    -- library stamp and the title pages — whatever
+                                    -- range was asked for. A passage with no number
+                                    -- cannot be shown to be inside a numbered range,
+                                    -- so it is not printed as one.
+                                    False
 
                         Nothing ->
                             True
@@ -1366,6 +1407,75 @@ flow m doc =
     in
     div [ class "rd-flow" ]
         (List.reverse (Tuple.second (List.foldl step ( Nothing, [] ) (List.indexedMap Tuple.pair m.entries))))
+
+
+{-| The notes a print carries: with no range, every note (the endnotes are the
+book's own); with a range, the notes whose references stand on a page inside it,
+plus any note definition whose own page is inside it — the second half of the
+rule keeps a note that spans the range (note 6 spans printed pages 43–44) printed
+wherever it is asked for, so the change can only ADD notes to a print, never take
+one away. -}
+notesInPrint : Model -> Set Int
+notesInPrint m =
+    case m.range of
+        Nothing ->
+            Set.fromList (Dict.keys m.notes)
+
+        Just ( a, b ) ->
+            m.entries
+                |> List.foldl
+                    (\e ( pg, set ) ->
+                        let
+                            pg1 =
+                                case e.item of
+                                    FPage (Just p) _ _ _ ->
+                                        Just p
+
+                                    _ ->
+                                        pg
+
+                            inside =
+                                case pg1 of
+                                    Just p ->
+                                        p >= a && p <= b
+
+                                    Nothing ->
+                                        False
+                        in
+                        case e.item of
+                            FNote n ->
+                                ( pg1
+                                , if inside then
+                                    Set.insert n.n set
+
+                                  else
+                                    set
+                                )
+
+                            FPara pr ->
+                                ( pg1
+                                , if inside then
+                                    List.foldl
+                                        (\i s ->
+                                            case i of
+                                                IRef n _ _ ->
+                                                    Set.insert n s
+
+                                                _ ->
+                                                    s
+                                        )
+                                        set
+                                        pr.parts
+
+                                  else
+                                    set
+                                )
+
+                            _ ->
+                                ( pg1, set )
+                    )
+                    ( Nothing, Set.empty )
+                |> Tuple.second
 
 
 itemView : Model -> Doc -> Int -> Entry -> Bool -> Html Msg
@@ -1444,8 +1554,13 @@ itemView m doc ix e inRange =
                 ]
                 [ span [ class "rd-note-n" ] [ text (String.fromInt n.n) ]
                 , div ([ class "rd-note-body" ] ++ langAttr)
-                    [ text (txt (String.join " " n.texts)) ]
-                , linkTo ("r" ++ String.fromInt n.n) ("back to the reference (" ++ String.fromInt n.n ++ ")")
+                    (damageSpans doc m (txt (String.join " " n.texts)))
+                -- The way back is its OWN grid row, in the text column. MEASURED
+                -- in a print rendering: as a bare third child it was placed in the
+                -- note-number column, which is 2rem wide, so the link wrapped one
+                -- word per line ("back / to / the / reference / (8)") in the
+                -- printed notes.
+                , div [ class "rd-note-back" ] [ linkTo ("r" ++ String.fromInt n.n) ("back to the reference (" ++ String.fromInt n.n ++ ")") ]
                 ]
 
         FPara pr ->
@@ -1481,17 +1596,17 @@ inlineView m doc i =
     in
     case i of
         IText s ->
-            span [] (highlight m (txt s))
+            span [] (damageSpans doc m (txt s))
 
         IVerse s ->
             span [ class "rd-verse" ]
                 (List.indexedMap
                     (\k line ->
                         if k == 0 then
-                            span [] (highlight m (txt line))
+                            span [] (damageSpans doc m (txt line))
 
                         else
-                            span [] (br [] [] :: highlight m (txt line))
+                            span [] (br [] [] :: damageSpans doc m (txt line))
                     )
                     (String.split "\n" s)
                 )
@@ -1516,7 +1631,8 @@ inlineView m doc i =
                     Just t ->
                         span [ class "rd-margin", attribute "aria-hidden" "true" ]
                             [ span [ class "rd-margin-n" ] [ text (String.fromInt n) ]
-                            , text (" " ++ txt t)
+                            , text " "
+                            , span [] (damageSpans doc m (txt t))
                             ]
 
                     Nothing ->
@@ -1585,6 +1701,74 @@ pageMark pg how pid raw =
 
         ( Just p, Nothing ) ->
             span [ class "rd-pb", attribute "data-page" (String.fromInt p) ] [ text (String.fromInt p) ]
+
+
+{-| THE READING VIEW'S RENDERING OF THE DAMAGE THAT IS LEFT (plan §7(d)).
+
+The base policy substitutes a reading where one is recorded and otherwise leaves
+the transcription's own characters. Leaving them is only honest if the reader can
+SEE that they are damage rather than a typo by the author, so every character of
+the document's damage set that survives into the reading view is marked, and the
+repairs panel names the words they belong to. The transcription view is not
+marked: it is the verbatim text, and everything in it is the transcription's.
+
+A document built before the policy carries no damage set, and then nothing is
+marked — the reading view shows what it always showed, and no claim is made.
+-}
+damageSpans : Doc -> Model -> String -> List (Html Msg)
+damageSpans doc m s =
+    if m.view /= Reading || String.isEmpty doc.damage then
+        highlight m s
+
+    else
+        List.concatMap
+            (\( isDam, chunk ) ->
+                if isDam then
+                    [ mark
+                        [ class "rd-damage"
+                        , title "damage in the transcription here — no reading is recorded for this word"
+                        ]
+                        [ text chunk ]
+                    ]
+
+                else
+                    highlight m chunk
+            )
+            (damagePieces doc.damage s)
+
+
+{-| Split a string into runs that ARE a damage character and runs that are not,
+in order. -}
+damagePieces : String -> String -> List ( Bool, String )
+damagePieces damage s =
+    let
+        isDam c =
+            String.contains (String.fromChar c) damage
+
+        step c ( acc, prevDam, buf ) =
+            let
+                d =
+                    isDam c
+            in
+            if buf == "" then
+                ( acc, d, String.fromChar c )
+
+            else if d == prevDam then
+                ( acc, d, buf ++ String.fromChar c )
+
+            else
+                ( ( prevDam, buf ) :: acc, d, String.fromChar c )
+
+        ( done, tailDam, tailBuf ) =
+            String.foldl step ( [], False, "" ) s
+    in
+    List.reverse
+        (if tailBuf == "" then
+            done
+
+         else
+            ( tailDam, tailBuf ) :: done
+        )
 
 
 {-| Every occurrence of the query, marked; the reading view's own text is the
@@ -1692,6 +1876,21 @@ popover m =
                 ]
 
 
+{-| Cite this passage (plan §11 phase 5). Two citations, in the order a citation
+is written:
+
+  - THE PASSAGE the reader is at, with the passage's own anchor as the deep link.
+    The anchor is the section (`#s4`), or the paragraph inside it where the
+    document materialises one (`#s4-3`) — whichever the entry the reader is
+    looking at carries, because that is the thing a link can land on.
+  - THE PRINTED PAGE the passage stands on, with the page anchor (`#p15`) — the
+    citation scholarship actually writes, and the one the page numbers were read
+    from.
+
+The edition's own line is built from the flags the page was handed (the
+document's edition metadata, `citationFields` in tools/build.mjs) and never from
+a string in this module: an app that hard-codes an imprint is an app that lies
+about a different edition the first time the shelf gains one. -}
 citePanel : Model -> Html Msg
 citePanel m =
     if not m.cite then
@@ -1699,11 +1898,66 @@ citePanel m =
 
     else
         let
+            ix =
+                -- the passage the panel is ABOUT: the position when it was opened,
+                -- not wherever the reader has scrolled since
+                m.citeIx
+
             pg =
-                currentPage m
+                pageAt m ix
+
+            anchor =
+                passageAnchor m ix
+
+            head =
+                citationHead m.citation
+
+            tail =
+                citationTail m.citation
+
+            passageBlock =
+                if String.isEmpty anchor then
+                    text ""
+
+                else
+                    let
+                        clause =
+                            passageClause m ix anchor
+                    in
+                    div []
+                        [ p [ class "rd-cite-line", attribute "data-cite" "passage" ]
+                            [ text head
+                            , em [] [ text m.citation.title ]
+                            , text (tail ++ clause)
+                            ]
+                        , p []
+                            [ a [ class "rd-cite-url", attribute "data-cite" "passage-url", href (m.base ++ "#" ++ anchor) ]
+                                [ text (m.base ++ "#" ++ anchor) ]
+                            ]
+                        , p [ class "rd-dim" ]
+                            [ text
+                                ("That address is the passage's own anchor, and it is what the line above is read from"
+                                    ++ (if String.isEmpty clause then
+                                            " — this passage stands before the volume's first numbered division and before any printed page number, so the citation names the edition alone"
+
+                                        else
+                                            ""
+                                       )
+                                    ++ ". Inside a division the anchor is the division's (or, where the document materialises one, the paragraph's); at a note it is the note's."
+                                )
+                            ]
+                        ]
         in
         aside [ id "rd-cite", class "rd-cite", attribute "tabindex" "-1", attribute "aria-label" "Cite this passage" ]
-            [ h3 [] [ text "Cite this passage" ]
+            [ div [ class "rd-cite-head" ]
+                [ h3 [] [ text "Cite this passage" ]
+                , button
+                    [ type_ "button", class "rd-btn", Ev.onClick CiteToggle, attribute "aria-label" "Close the citation panel" ]
+                    [ text "✕" ]
+                ]
+            , passageBlock
+            , p [ class "rd-dim" ]
+                [ text "The printed page this passage stands on — the number a citation by page needs:" ]
             , if pg == Nothing then
                 p [] [ text "Turn to a printed page first — the citation names one, and this passage is in the front matter, which has no printed number." ]
 
@@ -1714,16 +1968,16 @@ citePanel m =
                 in
                 div []
                     [ p [ class "rd-cite-line", attribute "data-cite" "line" ]
-                        [ text (m.citation.author ++ ", ")
+                        [ text head
                         , em [] [ text m.citation.title ]
-                        , text (", trans. " ++ m.citation.translator ++ " (" ++ m.citation.place ++ ": " ++ m.citation.publisher ++ ", " ++ m.citation.year ++ "), p. " ++ String.fromInt n)
+                        , text (tail ++ ", p. " ++ String.fromInt n)
                         ]
                     , p []
-                        [ a [ class "rd-cite-url", href (m.base ++ "#p" ++ String.fromInt n) ]
+                        [ a [ class "rd-cite-url", attribute "data-cite" "page-url", href (m.base ++ "#p" ++ String.fromInt n) ]
                             [ text (m.base ++ "#p" ++ String.fromInt n) ]
                         ]
                     , p [ class "rd-dim" ]
-                        [ text ("That page number was read from the volume's own running heads, not from a count; the section here is " ++ String.fromInt (sectionNumber m) ++ ".")
+                        [ text ("That page number was read from the volume's own running heads, not from a count; the section here is " ++ String.fromInt (sectionNumberAt m ix) ++ ".")
                         ]
                     ]
             , div [ class "rd-print" ]
@@ -1751,9 +2005,9 @@ citePanel m =
             ]
 
 
-sectionNumber : Model -> Int
-sectionNumber m =
-    case currentSection m of
+sectionNumberAt : Model -> Int -> Int
+sectionNumberAt m ix =
+    case sectionAt m ix of
         Just sid ->
             String.dropLeft 1 sid |> String.toInt |> Maybe.withDefault 0
 
@@ -1761,8 +2015,100 @@ sectionNumber m =
             0
 
 
-rulesPanel : Model -> Html Msg
-rulesPanel m =
+{-| The anchors of a citation line, in three parts so the title can stay an <em>
+in the middle of them: the edition's own metadata is what the page handed over,
+and these functions are the only place that spells the line. -}
+citationHead : Citation -> String
+citationHead c =
+    c.author ++ ", "
+
+
+citationTail : Citation -> String
+citationTail c =
+    ", trans. " ++ c.translator ++ " (" ++ c.place ++ ": " ++ c.publisher ++ ", " ++ c.year ++ ")"
+
+
+{-| The division clause, when the reader is inside one: a section is the stable
+citation unit of this book (what the reading itself cites by), and `0` means the
+front matter, which the volume prints no division number for. -}
+sectionClause : Model -> Int -> String
+sectionClause m ix =
+    if sectionNumberAt m ix > 0 then
+        ", §" ++ String.fromInt (sectionNumberAt m ix)
+
+    else
+        ""
+
+
+pageClause : Model -> Int -> String
+pageClause m ix =
+    case pageAt m ix of
+        Just p ->
+            ", p. " ++ String.fromInt p
+
+        Nothing ->
+            ""
+
+
+{-| The number an anchor carries: "s4-3" is 4, "p15" is 15, "n5" is 5, and a
+region anchor ("sfront", "snotes") carries none — which is why the clause below
+can say "the front matter" rather than inventing a division number for it. -}
+anchorNumber : String -> Int
+anchorNumber anchor =
+    anchor
+        |> String.dropLeft 1
+        |> String.split "-"
+        |> List.head
+        |> Maybe.withDefault ""
+        |> String.toInt
+        |> Maybe.withDefault 0
+
+
+{-| What a passage's own anchor adds to the citation line. It is read off the
+ANCHOR, not off the scroll position: a note's anchor is a note and not the
+division the notes region happens to sit in, a page's is a page, and a division's
+is the division — while the printed page, where the passage has one, is stated
+beside it. -}
+passageClause : Model -> Int -> String -> String
+passageClause m ix anchor =
+    case String.left 1 anchor of
+        "s" ->
+            if anchorNumber anchor > 0 then
+                ", §" ++ String.fromInt (anchorNumber anchor) ++ pageClause m ix
+
+            else
+                pageClause m ix
+
+        "p" ->
+            sectionClause m ix ++ pageClause m ix
+
+        "n" ->
+            ", note " ++ String.fromInt (anchorNumber anchor)
+
+        "r" ->
+            ", note " ++ String.fromInt (anchorNumber anchor)
+
+        _ ->
+            ""
+
+
+{-| The passage the reader is at, as an anchor: the nearest anchor at or before
+the current entry. A running head, an unnumbered page marker and a refused one
+carry no anchor of their own, and the passage they stand in is the one that does
+— so the rule is "the last anchor at or before here", never "the last anchor
+anywhere", which would cite a passage further down the page. -}
+passageAnchor : Model -> Int -> String
+passageAnchor m ix =
+    m.entries
+        |> List.take (max 0 (ix + 1))
+        |> List.reverse
+        |> List.filterMap (\e -> nonEmpty (entryAnchor e))
+        |> List.head
+        |> Maybe.withDefault ""
+
+
+rulesPanel : Model -> Doc -> Html Msg
+rulesPanel m doc =
     if not m.showRules then
         text ""
 
@@ -1770,11 +2116,14 @@ rulesPanel m =
         let
             rules =
                 docRules m
+
+            left =
+                doc.leftWords
         in
         aside [ class "rd-diff", attribute "aria-label" "The repairs, as rules" ]
             [ h3 [] [ text "The repairs, as rules" ]
             , p [ class "rd-dim" ]
-                [ text "The transcription is served exactly as it stands. These rules are the repairs the reading applies on top of it, and this list is the difference between the two views: nothing here is written into the text. The number beside each rule is how many times it fires in this text — counted when the document was built, in the order the rules are applied, so a rule cannot claim a repair it does not make." ]
+                [ text "The transcription is served exactly as it stands. The policy is: a recorded reading is substituted where one is recorded, and where none is the transcription's own characters stay — damage and all, marked in the reading view. These rules are the readings; nothing here is written into the text. The number beside each rule is how many times it fires in this text — counted when the document was built, in the order the rules are applied, so a rule cannot claim a repair it does not make." ]
             , if List.isEmpty rules then
                 p [] [ text "No repairs are recorded for this text." ]
 
@@ -1792,16 +2141,32 @@ rulesPanel m =
                     , tbody []
                         (List.map
                             (\r ->
-                                tr []
+                                tr [ class (if r.find == r.repl then "rd-left" else "") ]
                                     [ td [] [ span [ class "rd-cls" ] [ text r.cls ] ]
                                     , td [] [ code [] [ text r.find ] ]
-                                    , td [] [ code [] [ text r.repl ] ]
+                                    , td []
+                                        [ if r.find == r.repl then
+                                            em [] [ text "no reading recorded — left" ]
+
+                                          else
+                                            code [] [ text r.repl ]
+                                        ]
                                     , td [ class "rd-hits" ] [ text (String.fromInt r.hits) ]
                                     , td [ class "rd-why" ] [ text r.note ]
                                     ]
                             )
                             rules
                         )
+                    ]
+            , if List.isEmpty left then
+                text ""
+
+              else
+                div [ class "rd-left-list" ]
+                    [ p [ class "rd-left-h" ] [ strong [] [ text ("Damaged words left visible (" ++ String.fromInt (List.length left) ++ ")") ] ]
+                    , p [ class "rd-dim" ]
+                        [ text "No reading is recorded for these words, so the reading view shows the transcription's own characters and marks the damage. They are counted here rather than repaired by a guess." ]
+                    , ul [] (List.map (\w -> li [] [ code [ class "rd-damage-word" ] [ text w ] ]) left)
                     ]
             ]
 

@@ -95,6 +95,13 @@ import {
   sectionTitle,
   titleDamage,
   loadEdits,
+  loadBasePolicy,
+  checkReadingPolicy,
+  isPureDeletion,
+  EDIT_CLASSES,
+  wordDamaged,
+  applyEditsCounted,
+  damageCensus,
   serialiseDoc,
   plainText,
   anchorLists,
@@ -120,6 +127,8 @@ const DIST = join(ROOT, 'dist');
 const SLUG = 'porphyry-on-the-cave-of-the-nymphs-taylor-1917';
 const ENTRY = TEXTS.find((t) => t.slug === SLUG);
 const strip = (s) => s.replace(/\s+/g, '');
+/** The served document's own text at a damaged find: the raw block text that carries it. */
+const rawTextAt = (find) => (doc.blocks.find((b) => typeof b.x === 'string' && b.x.includes(find)) || {}).x || '';
 
 let failures = 0;
 let skipped = 0;
@@ -262,26 +271,41 @@ section('the rules are the file\'s, every one of them fires, and a dead rule fai
     Array.isArray(file.edits) && file.edits.length === edits.length && edits.length > 0,
     `the rules file loads and carries ${edits.length} rule(s)`,
   );
+  // THE FILE'S SHAPE, under the base policy: every rule has a find, a class and a
+  // note, and is EITHER a reading (a `replace`) OR a recorded leave (action
+  // "leave" and no replace). A rule with neither, or with both, is not reviewable.
+  const wellFormed = (e) =>
+    typeof e.find === 'string' &&
+    e.find !== '' &&
+    typeof e.class === 'string' &&
+    typeof e.note === 'string' &&
+    e.note !== '' &&
+    (e.action === 'leave'
+      ? e.replace === undefined
+      : typeof e.replace === 'string' && e.replace !== '');
   check(
-    file.edits.every((e) => ['find', 'replace', 'class', 'note'].every((k) => typeof e[k] === 'string' && e[k] !== '')),
-    'every rule in the file has a find, a replace, a class and a note — a rule without a note is not reviewable',
+    file.edits.every(wellFormed),
+    `every rule in the file is a reading or a recorded leave, with a find, a class and a note ` +
+      `(${file.edits.filter((e) => e.action === 'leave').length} leave(s))`,
   );
   // the file's shape is the PLAN's ({find, replace, class}), the document's is the
   // app's contract ({find, repl, cls}); the mapping is checked here so the two
   // cannot drift apart silently
   check(
-    edits.every((c, i) => c.find === file.edits[i].find && c.repl === file.edits[i].replace && c.cls === file.edits[i].class && c.note === file.edits[i].note),
+    edits.every((c, i) => c.find === file.edits[i].find && c.cls === file.edits[i].class && c.note === file.edits[i].note && c.repl === (file.edits[i].action === 'leave' ? file.edits[i].find : file.edits[i].replace)),
     'the document\'s rules are the file\'s rules, in the file\'s order, field for field',
   );
-  const ORDER = ['opener', 'digit', 'ocr'];
+  const ORDER = EDIT_CLASSES;
   const ranks = edits.map((c) => ORDER.indexOf(c.cls));
   check(
     ranks.every((r) => r >= 0) && ranks.every((r, i) => i === 0 || r >= ranks[i - 1]),
     `the classes are grouped in the pipeline's order (${ORDER.join(' → ')}): ${[...new Set(edits.map((c) => c.cls))].join(', ')}`,
   );
+  // a reading must change the text; a LEAVE spends no bytes and is allowed to
+  // stand as its own find (that is what "left" means)
   check(
-    edits.every((c) => c.find !== c.repl),
-    'no rule replaces a text with itself',
+    edits.every((c) => c.find !== c.repl || c.action === 'leave'),
+    'no reading rule replaces a text with itself',
   );
   check(new Set(edits.map((c) => c.find)).size === edits.length, 'no two rules share a find');
 
@@ -302,7 +326,7 @@ section('the rules are the file\'s, every one of them fires, and a dead rule fai
       const parts = text.split(r.find);
       if (parts.length > 1) {
         myHits[i] += parts.length - 1;
-        text = parts.join(r.repl);
+        if (r.action !== 'leave') text = parts.join(r.repl);
       }
     });
   }
@@ -344,7 +368,7 @@ section('the rules are the file\'s, every one of them fires, and a dead rule fai
   const withDead = {
     ...doc,
     blocks: doc.blocks,
-    corrections: [...doc.corrections, { find: 'nothing-in-this-text-matches-this', repl: 'x', cls: 'ocr', note: 'a fixture, added deliberately' }],
+    corrections: [...doc.corrections, { find: 'nothing-in-this-text-matches-this', repl: 'x', cls: 'reading', note: 'a fixture, added deliberately' }],
   };
   let fired = null;
   try {
@@ -356,6 +380,139 @@ section('the rules are the file\'s, every one of them fires, and a dead rule fai
   check(
     typeof fired === 'string' && fired.includes('unreviewed machinery') && fired.includes('nothing-in-this-text-matches-this'),
     `a rule that matches nothing FAILS the gate and is named: ${fired.split('\n')[0].slice(0, 120)}`,
+  );
+}
+
+/* ---------- 2b2. THE POLICY, AND THE THREE WORDS THE REVIEW CALLED BLOCKERs ---------- */
+
+section('the policy: substitute-when-recorded, leave otherwise, never delete');
+{
+  const base = loadBasePolicy();
+  const edits = loadEdits(SLUG).edits;
+  const meta = doc.correctionsMeta;
+
+  /* (1) THE THREE BLOCKER CASES, AGAINST THE PARALLEL'S OWN WORDS. Each asserted
+     against a sentence READ FROM the parallel edition on the shelf, not against a
+     string copied out of my own rules file: if the parallel's file changes or the
+     passage moves, the substring fails and the case is reopened. FAILS IF any of
+     the three readings regresses to the deleted-marker form the review measured. */
+  const parFile = 'Porphyry-Taylor-Select-Works-1823.txt';
+  const parPath = join(SHELF, parFile);
+  const haveParallel = existsSync(parPath);
+  if (!haveParallel) {
+    skip(`the parallel (${parFile}) is not on the shelf — the three BLOCKER assertions cannot be computed`);
+  } else {
+    const par = readFileSync(parPath, 'utf8');
+    const flattened = par.replace(/\s+/g, ' ');
+    const BLOCKERS = [
+      {
+        find: '_put',
+        repl: 'but',
+        parallel: 'one of which affords a passage to souls ascending to the heavens, but the other to souls descending to the',
+        why: 'the print has "but", not "put" — a different English sentence',
+      },
+      {
+        find: '\\he',
+        repl: 'the',
+        parallel: 'it is requisite to sit at the foot of the olive, and consult with Minerva',
+        why: 'the print has "the olive", not "he olive"',
+      },
+      {
+        find: 'cavern*',
+        repl: 'caverns',
+        parallel: 'because caverns are dark, stony, and humid',
+        why: 'the print has the plural "caverns"; the singular changes the number',
+      },
+    ];
+    for (const b of BLOCKERS) {
+      const rule = edits.find((e) => e.find === b.find);
+      // the parallel's own sentence, with its OCR damage normalised so the words,
+      // not its line breaks, are what is being asserted
+      const sentence = b.parallel.replace(/[^\w'\s]/g, '').replace(/\s+/g, ' ').trim();
+      const found = flattened.replace(/[^\w'\s]/g, '').replace(/\s+/g, ' ').includes(sentence);
+      // the reading view's own text at that word
+      const shown = applyEditsCounted(b.find, {});
+      const view = edits.reduce((t, e) => (e.action === 'leave' ? t : t.split(e.find).join(e.repl)), rawTextAt(b.find) || '');
+      check(
+        !!rule && rule.repl === b.repl && rule.action !== 'leave' && found,
+        `${JSON.stringify(b.find)} -> ${JSON.stringify(b.repl)}: the parallel reads "${b.parallel.slice(0, 44)}..." ` +
+          `and the rule records the reading — ${b.why}`,
+      );
+      check(
+        (view || '').length === 0 || !view.includes(b.find),
+        `and the reading view does not show ${JSON.stringify(b.find)} (the marker does not survive as a word)`,
+      );
+      void shown;
+    }
+  }
+
+  /* (2) THE POLICY IS A POLICY, NOT A LIST OF DELETIONS. checkReadingPolicy walks
+     every rule and FAILS on one that resolves a damage character standing INSIDE a
+     word by deletion alone. The live rule set passes; the review's own 87 defective
+     shapes are used as the asymmetry, so the test is shown to be able to fail. */
+  let policyError = null;
+  try {
+    checkReadingPolicy(edits, SLUG, base);
+  } catch (e) {
+    policyError = e.message;
+  }
+  check(policyError === null, `the live rule set records a reading for every word it resolves: ${policyError ? policyError.split('\n')[0] : 'no rule deletes a marker inside a word'}`);
+  const DELETING = [
+    { find: 'the_jMowers', repl: 'thejMowers', cls: 'reading', note: 'a fixture: the review\'s measured glue' },
+    { find: 'pver^wajters', repl: 'pverwajters', cls: 'reading', note: 'a fixture: the review\'s measured glue' },
+    { find: 'v^ry', repl: 'vry', cls: 'reading', note: 'a fixture: the review\'s measured non-word' },
+  ];
+  let caught = null;
+  try {
+    checkReadingPolicy(DELETING, SLUG, base);
+    caught = 'accepted (the policy test is a no-op)';
+  } catch (e) {
+    caught = e.message;
+  }
+  check(
+    typeof caught === 'string' && caught.includes('without recording a reading') && caught.includes('the_jMowers'),
+    `a pure deletion inside a word FAILS the policy test and is named: ${caught.split('\n')[0].slice(0, 110)}`,
+  );
+  check(
+    isPureDeletion('the_jMowers', 'thejMowers') &&
+      !isPureDeletion('the_jMowers', 'the powers') &&
+      // the SCOPE, stated rather than hidden: a marker at a word's EDGE whose
+      // removal IS the printed word is a pure deletion too, and the policy test
+      // does not touch it — `_the` -> `the` is in the live rule set and passes.
+      isPureDeletion('_the', 'the'),
+    'and "pure deletion" means exactly that: the marker dropped, nothing supplied (including at a word\'s edge, where it is allowed)',
+  );
+  // a LEAVE is not a deletion: it records the decision and spends no bytes
+  const leave = edits.filter((e) => e.action === 'leave');
+  check(
+    leave.length > 0 && leave.every((e) => e.find === e.repl && e.note.length > 0),
+    `${leave.length} rule(s) record that a reading is NOT determinable ("leave") and change nothing ` +
+      `(${leave.map((e) => JSON.stringify(e.find)).join(', ')})`,
+  );
+
+  /* (3) THE COUNTS, RECOMPUTED HERE from the served body text: how many readings
+     the reading view applies, and how many damaged words it leaves visible. FAILS
+     IF the document's report and a re-derivation disagree. */
+  const body = doc.blocks
+    .filter((b) => (b.t === 'p' || b.t === 'verse') && b.at && /^s\d/.test(b.at))
+    .map((b) => b.x.replace(/\n/g, ' '))
+    .join(' ');
+  const view = applyEditsCounted(body, doc.corrections.map((c) => ({ find: c.find, repl: c.repl, action: c.action })));
+  const leftWords = damageCensus(view, []).words;
+  check(
+    meta.readings.recorded === edits.filter((e) => e.cls === 'reading').length &&
+      meta.readings.applied === meta.readings.recorded &&
+      meta.readings.occurrences === doc.corrections.filter((e) => e.cls === 'reading').reduce((a, e) => a + e.hits, 0),
+    `every recorded reading fires, and the document says so ` +
+      `(${meta.readings.recorded} recorded, ${meta.readings.applied} applied, ${meta.readings.occurrences} occurrence(s))`,
+  );
+  check(
+    meta.leftVisible === leftWords.length,
+    `the damaged words left visible are the recomputed ones (${meta.leftVisible} stated, ${leftWords.length} recomputed)`,
+  );
+  check(
+    JSON.stringify(meta.leftWords.slice().sort()) === JSON.stringify(leftWords.slice().sort()),
+    `and they are named, not merely counted (${meta.leftWords.join(', ')})`,
   );
 }
 
@@ -392,7 +549,7 @@ section('no rule touches the front-matter region');
       ...doc,
       corrections: [
         ...doc.corrections,
-        { find: 'From the Greeh of Porphyry', repl: 'From the Greek of Porphyry', cls: 'ocr', note: 'a fixture: this would repair the evidence the reading cites' },
+        { find: 'From the Greeh of Porphyry', repl: 'From the Greek of Porphyry', cls: 'reading', note: 'a fixture: this would repair the evidence the reading cites' },
       ],
     });
     bad = 'accepted (the assertion is a no-op)';
@@ -433,16 +590,16 @@ section('the section titles are the reading view\'s words, and a damaged one is 
     mine.every((m, i) => m.raw === doc.toc[i].raw),
     'and every `raw` title is the same words with NO rule applied (the transcription view\'s title)',
   );
-  // the flag is a measured statement, recomputed here: a damaged word that no
-  // READING rule (opener/digit) touches. An ocr rule only removes characters.
-  const readings = edits.filter((c) => c.cls !== 'ocr');
-  const census = (w) => /[\^_|\\*+=~{}[\]@$%#<>¬£±»«]/.test(w);
+  // the flag is a measured statement, recomputed here with the EXTRACTOR's own
+  // census (the base policy's measured damage set, not a second regex): a damaged
+  // word that no READING rule touches. A `review` rule is a LEAVE, not a reading,
+  // so a word it names stays damaged and stays flagged.
+  const readings = edits.filter((c) => c.action !== 'leave');
   const mineDamaged = mine.filter((m) => {
     const words = m.raw.replace(/…$/, '').split(' ');
-    return words.some((w) => {
-      const bare = w.replace(/^[.,;:?!()"'\u201c\u201d\[]+/, '').replace(/[.,;:?!()"\u201c\u201d\]|\\]+$/, '');
-      return bare !== '' && /[A-Za-z]/.test(bare) && census(bare) && !readings.some((r) => r.find === bare || bare.includes(r.find));
-    });
+    return words.some(
+      (w) => wordDamaged(w) && !readings.some((r) => r.find === w || w.includes(r.find)),
+    );
   });
   const docDamaged = doc.toc.filter((t) => t.damaged).map((t) => t.n);
   check(
@@ -451,9 +608,9 @@ section('the section titles are the reading view\'s words, and a damaged one is 
       `(recomputed: ${mineDamaged.map((m) => `§${m.n}`).join(', ')}; the document marks ${docDamaged.map((n) => `§${n}`).join(', ')})`,
   );
   check(
-    docDamaged.length > 0 && doc.toc.filter((t) => t.damaged).every((t) => t.damagedWords.length > 0),
-    `each marked title names the transcription's own damaged words, so the mark is evidence and not a shrug ` +
-      `(${doc.toc.filter((t) => t.damaged).map((t) => `§${t.n}: ${t.damagedWords.join(' ')}`).join('; ')})`,
+    doc.toc.filter((t) => t.damaged).every((t) => t.damagedWords.length > 0),
+    `every marked title names the transcription's own damaged words, so the mark is evidence and not a shrug ` +
+      `(${doc.toc.filter((t) => t.damaged).map((t) => `§${t.n}: ${t.damagedWords.join(' ')}`).join('; ') || 'none marked'})`,
   );
   // §11: its opener's damage is a READING (the rule states the print's number), so
   // its title must come out readable and unmarked — the other side of the flag
@@ -463,11 +620,22 @@ section('the section titles are the reading view\'s words, and a damaged one is 
     `§11's title is repaired by its opener rule and NOT marked — the raw form still carries the damage ` +
       `(${JSON.stringify(s11.raw)} → ${JSON.stringify(s11.title)})`,
   );
+  /* §2 USED TO BE THE FLAGGED CASE, and it is the policy's own demonstration:
+     the print's words there ARE determinable ("The ancients, indeed, very properly
+     consecrated a cave to the world", the 1823 parallel), so the policy SUBSTITUTES
+     them and the title becomes readable and unmarked. This assertion can fail two
+     ways: if a reading rule for those words is dropped (the title goes back to
+     carrying damage and is flagged), or if the census stops seeing the damage the
+     raw title carried (then the flag would be a lie). */
   const s2 = doc.toc.find((t) => t.n === 2);
   check(
-    s2.damaged === true && /[\^_]/.test(s2.raw) && doc.toc.every((t) => t.title !== s2.raw),
-    `§2's title is marked damaged, and the damaged words are NOT shipped as a title ` +
-      `(${JSON.stringify(s2.title)})`,
+    !s2.damaged && /[\^_]/.test(s2.raw) && s2.title === 'The ancients, indeed…',
+    `§2's title is the print's own words, substituted by recorded readings, and NOT flagged ` +
+      `(raw ${JSON.stringify(s2.raw)} → ${JSON.stringify(s2.title)})`,
+  );
+  check(
+    doc.toc.every((t) => t.title !== t.raw || !wordDamaged(t.raw)),
+    'and no title ships the transcription\'s damaged run as its own title',
   );
   check(
     doc.toc.every((t) => t.title.length > 0 && t.raw.length > 0),

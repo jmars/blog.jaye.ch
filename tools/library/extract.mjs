@@ -236,11 +236,68 @@ export const proposedPath = (slug) => join(EDITS_DIR, `${slug}.proposed.json`);
  * is load-bearing, not decorative: `opener` rules repair the division numbers,
  * and the extraction cannot find a section until they are applied; `digit` rules
  * repair printed numbers and note markers, each pinned to the line it was read
- * from; `ocr` rules touch a word's letters and come last, so they can never
- * consume a number or a division before the pass that needs it has run. A file
- * whose classes are not grouped in this order is rejected at load rather than
- * silently applied out of order. */
-export const EDIT_CLASSES = ['opener', 'digit', 'ocr', 'review'];
+ * from; `reading` rules supply the print's word for a damaged run and come last,
+ * so they can never consume a number or a division before the pass that needs it
+ * has run; `review` rules record a passage whose reading is NOT determinable
+ * (action "leave") and change nothing. A file whose classes are not grouped in
+ * this order is rejected at load rather than silently applied out of order.
+ *
+ * THE CLASS THAT IS GONE, AND WHY. The family used to be called `ocr` and its
+ * rules DELETED the transcription's damage marker with no reading offered — 104
+ * of them, every one a pure deletion, 87 of which glued two printed words
+ * together or left a non-word (MEASURED by the review). `reading` replaces it:
+ * a rule of this class must record the print's word, and a damaged word whose
+ * reading is not known gets no rule at all and stays visible under the base
+ * policy (`_base.json`). */
+export const EDIT_CLASSES = ['opener', 'digit', 'reading', 'review'];
+
+/** Where the shared POLICY lives — the file every text inherits. It is not a rule
+ * list: it states the damage-character set (MEASURED, not guessed), what each
+ * class means, the application order, and the rule the pipeline enforces —
+ * substitute the reading when it is recorded, otherwise leave the marker in
+ * place. A text's own file is DATA under it. */
+export const BASE_POLICY = join(EDITS_DIR, '_base.json');
+
+/** The shared policy, read once per process. A missing or malformed base is an
+ * error whenever a text carries rules: a per-text file without the policy it
+ * claims to be written under is a rule list whose meaning is not stated. */
+let baseCache = null;
+export function loadBasePolicy() {
+  if (baseCache) return baseCache;
+  if (!existsSync(BASE_POLICY)) {
+    throw new Error(`library: the base policy is missing (${BASE_POLICY}) — every text's rules are written under it`);
+  }
+  let raw;
+  try {
+    raw = JSON.parse(readFileSync(BASE_POLICY, 'utf8'));
+  } catch (e) {
+    throw new Error(`library: the base policy is not valid JSON — ${e.message}`);
+  }
+  if (raw.rule !== 'substitute-if-known-else-leave') {
+    throw new Error(
+      `library: the base policy states the rule "${raw.rule}" — this pipeline implements ` +
+        `"substitute-if-known-else-leave" and will not apply another`,
+    );
+  }
+  if (!Array.isArray(raw.damage) || raw.damage.length === 0 || raw.damage.some((c) => typeof c !== 'string' || c.length !== 1)) {
+    throw new Error(`library: the base policy's damage set is not a non-empty list of single characters`);
+  }
+  for (const c of EDIT_CLASSES) {
+    if (!raw.classes || typeof raw.classes[c] !== 'string') {
+      throw new Error(`library: the base policy does not define the class "${c}"`);
+    }
+  }
+  baseCache = {
+    rule: raw.rule,
+    damage: raw.damage.join(''),
+    damageList: raw.damage.slice(),
+    classes: raw.classes,
+    order: Array.isArray(raw.order) ? raw.order : EDIT_CLASSES.slice(),
+    measured: raw.damageMeasured || null,
+    states: raw.states || '',
+  };
+  return baseCache;
+}
 const classRank = (cls) => {
   const i = EDIT_CLASSES.indexOf(cls);
   if (i < 0) throw new Error(`library: the correction class "${cls}" is not one of ${EDIT_CLASSES.join(', ')}`);
@@ -267,6 +324,7 @@ const classRank = (cls) => {
 export function loadEdits(slug) {
   const file = editsPath(slug);
   if (!existsSync(file)) return { edits: [], meta: null };
+  const base = loadBasePolicy();
   let raw;
   try {
     raw = JSON.parse(readFileSync(file, 'utf8'));
@@ -276,6 +334,11 @@ export function loadEdits(slug) {
   if (raw.slug !== slug) {
     throw new Error(`library: ${slug}: the edits file names "${raw.slug}" — a rule list that names another text is a rule list for another text`);
   }
+  if (raw.base !== '_base.json') {
+    throw new Error(
+      `library: ${slug}: the edits file does not name the base policy it is written under (expected "base": "_base.json")`,
+    );
+  }
   if (!Array.isArray(raw.edits) || raw.edits.length === 0) {
     throw new Error(`library: ${slug}: the edits file carries no rules`);
   }
@@ -283,20 +346,39 @@ export function loadEdits(slug) {
   const seen = new Map();
   const edits = raw.edits.map((e, i) => {
     const where = `the edits file's rule ${i + 1}`;
-    for (const k of ['find', 'replace', 'class', 'note']) {
-      if (typeof e[k] !== 'string' || e[k] === '') {
-        throw new Error(`library: ${slug}: ${where} has no ${k} — a rule without one is not reviewable`);
-      }
+    if (typeof e.class !== 'string' || !base.classes[e.class]) {
+      throw new Error(`library: ${slug}: ${where} has class "${e.class}", which the base policy does not define`);
     }
-    if (e.find === e.replace) {
-      throw new Error(`library: ${slug}: ${where} ("${e.find}") replaces the text with itself — it is not a correction`);
+    const leave = e.action === 'leave';
+    if (leave) {
+      // A LEAVE records a decision, it does not change text: it needs its find
+      // (the damaged run it is a decision about) and a note, and a `replace`
+      // would be the reading it says it does not have.
+      if (typeof e.find !== 'string' || e.find === '') {
+        throw new Error(`library: ${slug}: ${where} carries action "leave" and no find — a leave is a decision about a damaged run`);
+      }
+      if (e.replace != null) {
+        throw new Error(`library: ${slug}: ${where} ("${e.find}") carries action "leave" AND a replace — a leave that states a reading is a reading, not a leave`);
+      }
+      if (typeof e.note !== 'string' || e.note === '') {
+        throw new Error(`library: ${slug}: ${where} ("${e.find}") has no note — a decision nobody can review is not a decision`);
+      }
+    } else {
+      for (const k of ['find', 'replace', 'note']) {
+        if (typeof e[k] !== 'string' || e[k] === '') {
+          throw new Error(`library: ${slug}: ${where} has no ${k} — a rule without one is not reviewable`);
+        }
+      }
+      if (e.find === e.replace) {
+        throw new Error(`library: ${slug}: ${where} ("${e.find}") replaces the text with itself — it is not a correction`);
+      }
     }
     const r = classRank(e.class);
     if (r < rank) {
       throw new Error(
         `library: ${slug}: ${where} ("${e.find}") is class "${e.class}", which is out of pipeline order — ` +
           `the classes must be grouped ${EDIT_CLASSES.join(' → ')}, because an opener is what lets the ` +
-          `extraction find a section and an ocr rule may consume the characters a later class needs`,
+          `extraction find a section and a reading rule may consume the characters a later class needs`,
       );
     }
     rank = r;
@@ -307,9 +389,61 @@ export function loadEdits(slug) {
       );
     }
     seen.set(e.find, i + 1);
-    return { find: e.find, repl: e.replace, cls: e.class, note: e.note };
+    // A leave spends no bytes: it counts its occurrences and replaces nothing.
+    return { find: e.find, repl: leave ? e.find : e.replace, cls: e.class, note: e.note, action: leave ? 'leave' : 'replace' };
   });
-  return { edits, meta: { classes: raw.classes || {}, order: raw.order || null } };
+  checkReadingPolicy(edits, slug, base);
+  return { edits, meta: { classes: raw.classes || {}, order: raw.order || null, base } };
+}
+
+/** THE POLICY, AS AN ASSERTION THAT CAN FAIL — and the reason it is a POLICY.
+ *
+ * A rule that carries a character of the damage set INSIDE a word (between two
+ * letters of its find) may not resolve that word by deleting the character: it
+ * must record the print's word. Mechanised as: such a rule's `replace` must not
+ * be obtainable from its `find` by deletion alone. "the_jMowers" -> "thejMowers"
+ * IS obtainable (drop the marker) and fails; "the_jMowers" -> "the powers" is
+ * not, and passes. A marker standing at a word's EDGE is not covered here — the
+ * review measured 17 such rules whose plain removal is the printed word — so the
+ * scope is stated rather than overstated: this catches the glue and the non-word
+ * (87 of the 104 the review counted), not every silent deletion. The three the
+ * review called BLOCKERs (`_put`->"but", `\he`->"the", `cavern*`->"caverns") are
+ * edge cases of this test and are asserted by the extractor's smoke against the
+ * parallel's own words.
+ */
+export function checkReadingPolicy(edits, slug, base) {
+  const bad = [];
+  for (const e of edits) {
+    if (e.action === 'leave') continue;
+    const dmg = [...base.damage];
+    for (let i = 1; i < e.find.length - 1; i++) {
+      if (!dmg.includes(e.find[i])) continue;
+      if (/[A-Za-z]/.test(e.find[i - 1]) && /[A-Za-z]/.test(e.find[i + 1])) {
+        if (isPureDeletion(e.find, e.repl)) bad.push(e);
+        break;
+      }
+    }
+  }
+  if (bad.length) {
+    throw new Error(
+      `library: ${slug}: ${bad.length} rule(s) remove a damage character from INSIDE a word without recording a ` +
+        `reading — the reading view would assert a word the edition does not have:\n` +
+        bad
+          .map((e) => `  ${e.cls}  ${JSON.stringify(e.find)} → ${JSON.stringify(e.repl)}  ${e.note}`)
+          .join('\n') +
+        `\n  Fix the rules file: record the print's word in \`replace\` (class "reading"), or record a ` +
+        `\`{find, action: "leave"}\` (class "review") and let the damage show.`,
+    );
+  }
+}
+
+/** Is `to` obtainable from `from` by deletion alone? A greedy subsequence walk —
+ * order preserved, nothing inserted, nothing substituted. */
+export function isPureDeletion(from, to) {
+  if (to.length >= from.length) return false;
+  let j = 0;
+  for (let i = 0; i < from.length && j < to.length; i++) if (from[i] === to[j]) j++;
+  return j === to.length;
 }
 
 /**
@@ -329,10 +463,13 @@ export function applyEditsCounted(text, rules, onHit) {
   let out = text;
   for (let i = 0; i < rules.length; i++) {
     const f = rules[i].find;
-    if (!f || f === rules[i].repl) continue;
+    if (!f) continue;
+    const leave = rules[i].action === 'leave';
+    if (!leave && f === rules[i].repl) continue;
     const parts = out.split(f);
     if (parts.length === 1) continue;
     if (onHit) onHit(i, parts.length - 1);
+    if (leave) continue; // a leave records its occurrences and spends no bytes
     out = parts.join(rules[i].repl);
   }
   return out;
@@ -350,7 +487,7 @@ export function applyEditsCounted(text, rules, onHit) {
  * point of the count is that it is the count the READER's application produces.
  */
 export function editReport(blocks, corrections) {
-  const rules = corrections.map((c) => ({ find: c.find, repl: c.repl }));
+  const rules = corrections.map((c) => ({ find: c.find, repl: c.repl, action: c.action }));
   const hits = rules.map(() => 0);
   const kinds = rules.map(() => new Set());
   for (const b of blocks) {
@@ -523,25 +660,41 @@ export function sectionTitle(text) {
   return words.length > cut ? `${title}…` : title;
 }
 
-/** The characters a transcription uses where the print has a letter or a mark
- * the scan could not carry. This is the DAMAGE census the extractor counts by —
- * the classes it knows, and the only ones it treats as damage. (Not a global
- * regex: `.test` on a global regex carries `lastIndex` between calls, which is
- * how a census comes to count every second word.) */
-const DAMAGE = /[\^_|\\*+=~{}[\]@$%#<>¬£±»«]/;
+/** The characters a transcription uses where the print has a letter or a mark the
+ * scan could not carry. THE SET IS NOT DECLARED HERE: it is the base policy's
+ * (`tools/library/edits/_base.json`) `damage` list, which was MEASURED on the
+ * transcription rather than guessed — every character standing inside a
+ * letter-bearing token that a 1917 print cannot set inside a word. The policy is
+ * the one place the set is stated, so the census, the reading view's marking and
+ * the rules' own validation cannot disagree about what damage is.
+ *
+ * MEASURED on this edition: `^ _ ~ * / £ > \ | # ™ ± » « } { &` — and the
+ * characters a print DOES set inside a word (the full stop of an abbreviation,
+ * the apostrophe of a contraction, a comma, a dash) are excluded, because marking
+ * one of those as damage would be a false claim in the reading view. The base
+ * file carries the counts and the excluded set. */
+let damageRe = null;
+function damageRegex() {
+  if (!damageRe) {
+    const inClass = loadBasePolicy()
+      .damage.replace(/[\\\]^$.*+?()[{|]/g, '\\$&');
+    damageRe = new RegExp(`[${inClass}]`);
+  }
+  return damageRe;
+}
 
 /** A word of the transcription that carries a character the census marks as
  * damage: a word whose letters were lost. A reader cannot tell such a word from
- * an English one, and the reading view's `ocr` rules only REMOVE the character —
- * their own note says the lost letter is not guessed, so the word stays wrong.
- * A word that mixes letters with digits is the census's other damaged class: no
- * character can be removed from it without inventing a letter or leaving one. */
+ * an English one, and the reading view either shows the recorded reading for it
+ * or shows it as the transcription has it (marker and all). A word that mixes
+ * letters with digits is the census's other damaged class: no character can be
+ * removed from it without inventing a letter or leaving one. */
 export function wordDamaged(word) {
   const bare = word
     .replace(/^[.,;:?!()"'\u201c\u201d\[]+/, '')
     .replace(/[.,;:?!()"\u201c\u201d\]|\\]+$/, '');
   if (bare === '' || !/[A-Za-z]/.test(bare)) return false;
-  return DAMAGE.test(bare) || /[A-Za-z]\d|\d[A-Za-z]/.test(bare);
+  return damageRegex().test(bare) || /[A-Za-z]\d|\d[A-Za-z]/.test(bare);
 }
 
 /** Cut a section title down to the words the cap keeps, before ellipsising — so a
@@ -568,7 +721,7 @@ function titleWords(text) {
  * opener rule and is not flagged. A title is never invented to hide either case.
  */
 export function titleDamage(rawTitle, correctedTitle, rules) {
-  const readings = rules.filter((r) => r.cls !== 'ocr');
+  const readings = rules.filter((r) => r.cls !== 'review');
   const stripped = titleWords(rawTitle).filter(
     (w) => wordDamaged(w) && !readings.some((r) => r.find === w || w.includes(r.find)),
   );
@@ -1206,18 +1359,16 @@ export function extract(src, meta) {
     throw new Error(`library: ${entry.slug}: two sections derive the same title — the titles must distinguish them`);
   }
 
-  /* 7b. The damage the rules do NOT reach, measured rather than described: the
-   * words of the body the census marks as damaged, and how many of them the rules
-   * repair (one rule per distinct damaged word — the rule list is generated from
-   * exactly this census, so the two counts are the two halves of one picture). A
-   * word whose damage no rule can reach — a numeral standing inside a word
-   * ("ever7it"), where removing the character invents a letter — is COUNTED, not
-   * guessed at, and the count is stated in provenance. */
+  /* 7b. THE POLICY, COUNTED — on the text the reader is given. The base policy is
+   * "substitute the reading when one is recorded, otherwise leave the marker in
+   * place", so the two numbers are (i) the readings applied and (ii) the damaged
+   * words the reading view still shows. Both are measured on the served body text
+   * AFTER the rules run: a word the rules resolved no longer carries damage, and
+   * one they did not is exactly the word whose marker a reader can still see. */
   const bodyText = out
     .filter((b) => (b.t === 'p' || b.t === 'verse') && b.at && /^s\d/.test(b.at))
     .map((b) => b.x.replace(/\n/g, ' '))
     .join(' ');
-  const census = damageCensus(bodyText, corrections.map((c) => c.find));
 
   /* 7c. The hit table: every rule, and how many times it fires in the text the
    * reading view is given. It is measured here, shipped with each rule, and the
@@ -1227,6 +1378,7 @@ export function extract(src, meta) {
   report.forEach((r, i) => {
     corrections[i].hits = r.hits;
   });
+  const policy = policyReport(bodyText, corrections);
 
   /* 7d. What the LEAF MODEL found is a finding like any other, and the document
    * keeps it: every page marker that does not stand at its leaf's own boundary,
@@ -1274,37 +1426,51 @@ export function extract(src, meta) {
     toc,
     blocks: out,
     corrections,
+    // THE DAMAGE SET, from the base policy to the reading view. The app marks a
+    // character of this set where a damaged word has no recorded reading, so the
+    // reader can SEE that the word is damaged instead of reading a silent edit.
+    damage: loadBasePolicy().damage,
     correctionsMeta: {
       reviewed: true,
       order: 'the order this list gives them, first to last, applied to every occurrence one text block at a time',
+      policy: {
+        rule: loadBasePolicy().rule,
+        damage: loadBasePolicy().damage,
+        base: 'the shared base policy every text inherits',
+        states: loadBasePolicy().states,
+      },
       classes: Object.fromEntries(
-        ['opener', 'digit', 'ocr'].map((k) => [k, corrections.filter((c) => c.cls === k).length]),
+        EDIT_CLASSES.map((k) => [k, corrections.filter((c) => c.cls === k).length]),
       ),
       hits: Object.fromEntries(
-        ['opener', 'digit', 'ocr'].map((k) => [
+        EDIT_CLASSES.map((k) => [
           k,
           corrections.filter((c) => c.cls === k).reduce((a, c) => a + c.hits, 0),
         ]),
       ),
       repeated: report.filter((r) => r.hits > 1).map((r) => ({ cls: r.cls, find: r.find, hits: r.hits })),
-      damagedWords: census.damaged,
-      repairedWords: census.repaired,
-      unrepairedWords: census.unrepaired,
-      unrepairedList: census.words,
+      readings: policy.readings,
+      leftVisible: policy.left.damaged,
+      leftWords: policy.left.words,
+      damagedWords: policy.raw.damaged,
+      repairedWords: policy.raw.repaired,
+      unrepairedWords: policy.raw.unrepaired,
+      unrepairedList: policy.raw.words,
       damagedTitles: toc.filter((t) => t.damaged).map((t) => t.n),
       note:
-        'The reading view of this text is produced by these rules and nothing else: the transcription ' +
-        'served here is verbatim and uncorrected, and each rule is applied to it in this order. Every ' +
-        'rule fires at least once in the served text, and one that fires nowhere is caught before ' +
-        'this document is served, because a rule that matches nothing is machinery nothing read. ' +
-        'The "opener" rules are ' +
-        'readings the print requires for its divisions to run in order. The "digit" rules are the ' +
-        'printed numbers and note markers the transcription wrote through an OCR confusion, each ' +
-        'pinned to the line or marker it was read from. The "ocr" rules remove a character that is ' +
-        'not a letter from a word whose letters were lost, and they offer no reading of what was ' +
-        'lost: the words the rules cannot reach are counted and left as the transcription has them. ' +
-        'A section title the rules still leave damaged is marked, with the words named, rather than ' +
-        'repaired by a guess.',
+        'The reading view of this text is produced by these rules and nothing else, under the policy in ' +
+        'tools/library/edits/_base.json: the transcription served here is verbatim and uncorrected, and each ' +
+        'rule is applied to it in this order. Every rule fires at least once in the served text, and one that ' +
+        'fires nowhere is caught before this document is served, because a rule that matches nothing is ' +
+        'machinery nothing read. The "opener" rules are readings the print requires for its divisions to run ' +
+        'in order. The "digit" rules are the printed numbers and note markers the transcription wrote through ' +
+        'an OCR confusion, each pinned to the line or marker it was read from. The "reading" rules record the ' +
+        "print's own word for a damaged run, so the reading view shows what the edition says instead of a " +
+        'word the transcription left damaged. The "review" rules record that a reading is NOT determinable there (action ' +
+        '"leave"), and a damaged word with no rule at all is left the same way: the policy substitutes a ' +
+        'reading when one is recorded and otherwise LEAVES THE MARKER IN PLACE, visible in the reading view. ' +
+        'The readings applied and the damaged words left visible are counted below, and a section title the ' +
+        'rules still leave damaged is marked, with the words named, rather than repaired by a guess.',
     },
     dropped: dropped.map((x) => ({ x, why: 'the library stamp, not text' })),
     findings,
@@ -1374,7 +1540,7 @@ export function damageCensus(text, finds) {
   for (const rawTok of text.split(/\s+/)) {
     const tok = rawTok.replace(/^[.,;:?!()"'„“”\[]+/, '').replace(/[.,;:?!()"“”\]|\\]+$/, '');
     if (tok === '' || !/[A-Za-z]/.test(tok)) continue; // a word, not the scan's debris
-    if (seen.has(tok) || !DAMAGE.test(tok)) continue;
+    if (seen.has(tok) || !damageRegex().test(tok)) continue;
     seen.add(tok);
     if (!rules.has(tok)) unrepaired.add(tok);
   }
@@ -1383,6 +1549,48 @@ export function damageCensus(text, finds) {
     repaired: seen.size - unrepaired.size,
     unrepaired: unrepaired.size,
     words: [...unrepaired],
+  };
+}
+
+/**
+ * THE POLICY, COUNTED — the numbers the provenance reports and the smoke asserts.
+ *
+ * The base policy is "substitute the reading when one is recorded, otherwise leave
+ * the marker in place", so there are exactly two outcomes to count, and they are
+ * counted on the text the reader is given, not on the file:
+ *
+ *   `recorded`  the rules of class `reading`: every one records the print's word,
+ *               and every one fires at least once (the build fails otherwise);
+ *   `applied`   their OCCURRENCES in the served text — the readings the reading
+ *               view actually shows;
+ *   `left`      the distinct damaged words the reading view still shows, after
+ *               every reading has been applied. This is the policy's own output:
+ *               no rule removed their marker, so the damage is visible.
+ *
+ * The partition is honest without a `repaired` count: a word is either shown as
+ * its recorded reading (it no longer carries damage) or left as the transcription
+ * has it (it does). Every reading that matches nothing is caught before this, so
+ * `recorded === appliedRules`.
+ */
+export function policyReport(rawText, corrections) {
+  const rules = corrections.map((c) => ({ find: c.find, repl: c.repl, action: c.action }));
+  const view = applyEditsCounted(rawText, rules);
+  const rawCensus = damageCensus(rawText, corrections.map((c) => c.find));
+  const left = damageCensus(view, []);
+  const readings = corrections.filter((c) => c.cls === 'reading');
+  const applied = readings.filter((c) => c.hits > 0).length;
+  const occurrences = readings.reduce((a, c) => a + (c.hits || 0), 0);
+  const leaves = corrections.filter((c) => c.action === 'leave');
+  return {
+    raw: rawCensus,
+    left,
+    readings: {
+      recorded: readings.length,
+      applied,
+      occurrences,
+      leavesRecorded: leaves.length,
+      leavesFired: leaves.filter((c) => c.hits > 0).length,
+    },
   };
 }
 

@@ -54,6 +54,8 @@ type alias Doc =
     , toc : List TocEntry
     , blocks : List Block
     , corrections : List Correction
+    , damage : String
+    , leftWords : List String
     }
 
 
@@ -165,13 +167,22 @@ decoder =
     D.oneOf [ D.field "corrections" (D.list correction), D.succeed [] ]
         |> D.andThen
             (\cs ->
-                D.map6 (\s l i ps t bs -> Doc s l i ps t bs cs)
+                D.map8 (\s l i ps t bs dmg left -> Doc s l i ps t bs cs dmg left)
                     (D.field "slug" D.string)
                     (D.field "lang" D.string)
                     (D.field "source" (D.field "item" D.string))
                     (D.field "pages" (D.list page))
                     (D.field "toc" (D.list tocEntry))
                     (D.field "blocks" (D.list block))
+                    -- the base policy's damage set, and the words the policy
+                    -- leaves visible: a document built before the policy carries
+                    -- neither, and then nothing is marked as damaged apparatus
+                    (D.oneOf [ D.field "damage" D.string, D.succeed "" ])
+                    (D.oneOf
+                        [ D.field "correctionsMeta" (D.field "leftWords" (D.list D.string))
+                        , D.succeed []
+                        ]
+                    )
             )
 
 

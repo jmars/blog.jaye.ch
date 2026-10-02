@@ -124,9 +124,9 @@ const settle = async () => {
 
 /** Boot the built shell the way a browser does: parse it, then run its scripts
  * in document order, skipping the data block (which is not a script). */
-async function boot({ hash = '', stored = null } = {}) {
+async function boot({ hash = '', stored = null, doc = null } = {}) {
   const w = new Window({ url: `http://localhost/library/${SLUG}/${hash}` });
-  installGlobals(w, () => Promise.resolve({ ok: true, text: () => Promise.resolve(docText) }));
+  installGlobals(w, () => Promise.resolve({ ok: true, text: () => Promise.resolve(doc || docText) }));
 
   const scrolled = [];
   const focused = [];
@@ -340,64 +340,148 @@ section('reading and transcription');
   }
 }
 
+/* ---------- 7a2. the damage the policy leaves is VISIBLE (the policy's proof) ---------- */
+
+section('a recorded reading renders, and damage with no reading renders marked');
+{
+  const DOCJSON = JSON.parse(docText);
+  const damage = DOCJSON.damage;
+  const ctx = await boot();
+  check(
+    typeof damage === 'string' && damage.length > 0,
+    `the document carries the base policy's damage set (${JSON.stringify(damage)})`,
+  );
+
+  /* (1) A DAMAGED WORD WHOSE READING IS RECORDED RENDERS THE READING. The three
+     cases the review called BLOCKERs are checked in the extractor's smoke against
+     the parallel's own words; here it is what the COMPILED APP shows. FAILS IF the
+     rule is not applied client-side, or the app marks a word it has resolved. */
+  const reading = ctx.w.document.getElementById('reader-app').textContent;
+  const put = DOCJSON.corrections.find((c) => c.find === '_put');
+  check(
+    !!put && put.repl === 'but' && put.action !== 'leave',
+    `the document records the reading "but" for the transcription's "_put" (${put ? JSON.stringify(put.repl) : 'no rule'})`,
+  );
+  check(
+    reading.includes('but the other to souls de scending'),
+    'and the reading view shows "but the other to souls descending"',
+  );
+
+  /* (2) A DAMAGED WORD WITH NO RECORDED READING RENDERS THE TRANSCRIPTION'S OWN
+     CHARACTERS, WITH THE DAMAGE VISIBLE. Every character of the damage set that
+     survives into the reading view is inside a mark; the count is cross-checked
+     against the rendered text, so a wrong mark or a missing one both fail. */
+  const marks = [...ctx.w.document.querySelectorAll('#reader-app mark.rd-damage')];
+  check(marks.length > 0, `the reading view marks the damage it leaves (${marks.length} mark(s))`);
+  check(
+    marks.every((m) => [...m.textContent].every((c) => damage.includes(c))),
+    'every marked character is one of the document\'s damage set — no printed letter is marked',
+  );
+  /* Counted over the PROSE the reader meets, not the whole chrome: the reader's own
+     furniture happens to contain characters of the damage set ("go\u203a\u00bb" is the
+     next-page control and the volume transcribes a \u00bb in "the cavern\u00bb"), and counting
+     those would make the assertion about the buttons. */
+  const prose = [...ctx.w.document.querySelectorAll('#reader-app .rd-p, #reader-app .rd-verse, #reader-app .rd-note-body')]
+    .map((e) => e.textContent)
+    .join('\u0000');
+  const markedChars = marks.reduce((a, m) => a + m.textContent.length, 0);
+  const inView = [...prose].filter((c) => damage.includes(c)).length;
+  check(
+    markedChars === inView,
+    `every damage character in the rendered reading text is marked, and none else ` +
+      `(${markedChars} marked of ${inView} present)`,
+  );
+  const left = DOCJSON.correctionsMeta.leftWords || [];
+  check(
+    left.length > 0 && marks.some((m) => m.textContent.includes('_') || m.textContent.includes('^')),
+    `the ${left.length} word(s) the policy leaves visible are shown with their damage marked ` +
+      `(${left.slice(0, 3).join(', ')})`,
+  );
+  check(
+    reading.includes('that_jgthe'),
+    'and a word with no recorded reading is shown AS THE TRANSCRIPTION HAS IT ("that_jgthe")',
+  );
+
+  /* (3) THE TRANSCRIPTION VIEW IS NOT MARKED: it is the verbatim text, and a mark
+     there would claim the transcription's own characters are apparatus. */
+  const toggle = ctx.byText('#reader-app .rd-views button', 'transcription');
+  if (toggle) {
+    ctx.click(toggle);
+    await settle();
+    const t = [...ctx.w.document.querySelectorAll('#reader-app mark.rd-damage')];
+    check(t.length === 0, `the transcription view marks nothing (${t.length} mark(s)) — it is the verbatim text`);
+  } else {
+    check(false, 'the transcription view is offered');
+  }
+}
+
 /* ---------- 7b. the contents list, and the titles that could not be repaired ---------- */
 
 section('the contents list: a damaged title is stated, not shipped');
 {
   const DOCJSON = JSON.parse(docText);
   const marked = DOCJSON.toc.filter((t) => t.damaged);
-  // recomputed from the served document, not read off the app
   const DAMAGED = '[the opening words are damaged in this transcription]';
-  const ctx = await boot();
+
+  /* SECTION 2 IS THE POLICY'S OWN DEMONSTRATION, and it used to be the flagged
+     case. Its opening words ARE determinable ("The ancients, indeed, very
+     properly consecrated a cave to the world", the 1823 parallel), so the policy
+     SUBSTITUTES them and the title is now the edition's own words. This assertion
+     fails if a reading rule for those words is dropped: the title goes back to
+     carrying damage and is flagged. */
+  const s2 = DOCJSON.toc.find((t) => t.n === 2);
+  check(
+    marked.length === 0 &&
+      !s2.damaged &&
+      /[\^_]/.test(s2.raw) &&
+      s2.title === 'The ancients, indeed…',
+    `the policy repaired the one title the transcription damaged ` +
+      `(§2: raw ${JSON.stringify(s2.raw)} -> ${JSON.stringify(s2.title)}), so no title is flagged (${marked.length})`,
+  );
+
+  /* THE FLAG ITSELF, DRIVEN FROM A FIXTURE. The real text now has no flagged
+     title, so the mechanism is exercised on a synthetic document: a title the
+     repairs cannot restore must be STATED, not shipped, and its own damaged words
+     must stand beside the statement as evidence. FAILS IF the app renders the
+     damaged words as the entry, or drops the statement, or drops the evidence. */
+  const synthetic = JSON.parse(docText);
+  const RAW2 = 'Thp_anrt\u2019p\u2019rii\u2019c:, i"Hpfdt v^ry properly con se';
+  synthetic.toc = synthetic.toc.map((t) => (t.n === 2 ? { ...t, damaged: true, damagedWords: RAW2, raw: RAW2 } : t));
+  const ctx = await boot({ doc: JSON.stringify(synthetic) });
   const toc = ctx.w.document.querySelector('#reader-app .rd-toc');
   check(!!toc, 'the contents list is rendered');
   const labels = [...toc.querySelectorAll('a')].map((a) => a.textContent);
-  const raw = marked.map((t) => t.raw);
+  const fixtureRaw = synthetic.toc.filter((t) => t.damaged).map((t) => t.raw);
   check(
-    marked.length > 0 && raw.every((r) => r.includes('^') || r.includes('_')),
-    `the document marks ${marked.length} title(s) damaged, and each carries the transcription's damaged words ` +
-      `(${marked.map((t) => `§${t.n}`).join(', ')})`,
-  );
-  // the LABELS are the titles: the damaged words may stand beside an entry as its
-  // evidence, but they must never BE the entry
-  check(
-    labels.every((l) => !raw.some((r) => l.includes(r))),
-    `no damaged title is offered as a title in the reading view (${JSON.stringify(raw.map((r) => r.slice(0, 24)))})`,
+    fixtureRaw.length === 1 && labels.every((l) => !fixtureRaw.some((r) => l.includes(r))),
+    `no damaged title is offered as a title in the reading view (${fixtureRaw.length} flagged in the fixture)`,
   );
   check(
-    labels.filter((l) => l.includes(DAMAGED)).length === marked.length,
-    `and each marked division's entry states the gap instead (${labels.filter((l) => l.includes(DAMAGED)).length} of ${marked.length})`,
+    labels.filter((l) => l.includes(DAMAGED)).length === fixtureRaw.length,
+    `and the flagged division's entry states the gap instead ` +
+      `(${labels.filter((l) => l.includes(DAMAGED)).length} of ${fixtureRaw.length})`,
   );
   check(
-    raw.every((r) => toc.textContent.includes(`the transcription reads “${r}”`)),
-    'and each entry carries those words beside the statement, so nothing is hidden',
+    fixtureRaw.every((r) => toc.textContent.includes(`the transcription reads \u201C${r}\u201D`)),
+    'and the entry carries those words beside the statement, so nothing is hidden',
   );
-  // §11 is the counter-case: its damage is repaired by a READING rule (the
-  // opener states the print's number), so its title must be shown, not flagged
-  const s11 = DOCJSON.toc.find((t) => t.n === 11);
+  // §11 is the counter-case: its damage is repaired by a READING rule (the opener
+  // states the print's number), so its title must be shown, not flagged
+  const s11 = synthetic.toc.find((t) => t.n === 11);
   check(
     !s11.damaged && toc.textContent.includes(s11.title) && toc.textContent.includes(DAMAGED),
-    `§11's title is shown (its opener rule reads the print's own words) while the flagged entries state the gap ` +
+    `§11's title is shown (its opener rule reads the print's own words) while the flagged entry states the gap ` +
       `(${JSON.stringify(s11.title)})`,
   );
-  // the transcription view shows the transcription's own title words, and keeps
-  // the flag: neither view offers damaged words as a title
+  // the transcription view keeps the flag too
   const toggle = ctx.byText('#reader-app .rd-views button', 'transcription');
   ctx.click(toggle);
   await settle();
   const toc2 = ctx.w.document.querySelector('#reader-app .rd-toc');
-  const clean = DOCJSON.toc.filter((t) => !t.damaged);
   check(
-    clean.every((t) => toc2.textContent.includes(t.raw)),
-    `the transcription view derives every undamaged title from the transcription's own words ` +
-      `(${clean.length} checked)`,
+    [...toc2.querySelectorAll('a')].filter((a) => a.textContent.includes(DAMAGED)).length === fixtureRaw.length,
+    `and the flagged entry states the gap in the transcription view too (${fixtureRaw.length})`,
   );
-  check(
-    [...toc2.querySelectorAll('a')].filter((a) => a.textContent.includes(DAMAGED)).length === marked.length,
-    `and the flagged entries state the gap in the transcription view too (${marked.length})`,
-  );
-  // FAILS IF: the title is derived from the raw words in the reading view (the
-  // defect this section exists for), or a damaged title is quietly shipped.
 }
 
 /* ---------- 7c. the repairs list, with the measured hit counts ---------- */
@@ -424,9 +508,32 @@ section('the repairs list is the rule list, with its measured hits');
       const td = tr.querySelectorAll('td');
       return { cls: td[0].textContent.trim(), find: td[1].textContent, repl: td[2].textContent, hits: td[3].textContent.trim(), why: td[4].textContent };
     });
+    // A LEAVE row shows the sentence, not the find repeated: the document stores
+    // repl === find for a leave, and the panel must not offer the damaged run as
+    // if it were a reading.
+    const LEFT = 'no reading recorded — left';
     check(
-      tbl.every((r, i) => r.find === DOCJSON.corrections[i].find && r.repl === DOCJSON.corrections[i].repl && r.cls === DOCJSON.corrections[i].cls),
+      tbl.every(
+        (r, i) =>
+          r.find === DOCJSON.corrections[i].find &&
+          r.cls === DOCJSON.corrections[i].cls &&
+          r.repl === (DOCJSON.corrections[i].repl === DOCJSON.corrections[i].find ? LEFT : DOCJSON.corrections[i].repl),
+      ),
       'each row is the document\'s own rule, in the document\'s order',
+    );
+    // THE POLICY, ON THE PANEL: a rule that records no reading says so, and the
+    // damaged words the policy leaves are listed too — the panel shows BOTH halves.
+    const leaves = DOCJSON.corrections.filter((r) => r.repl === r.find);
+    check(
+      leaves.length === tbl.filter((r) => r.repl === LEFT).length,
+      `every rule that records no reading says so in the panel (${leaves.length} of ${tbl.length})`,
+    );
+    check(
+      (DOCJSON.correctionsMeta.leftWords || []).length === 0 ||
+        [...panel.querySelectorAll('.rd-left-list li')].map((li) => li.textContent).join('\u0000') ===
+          DOCJSON.correctionsMeta.leftWords.join('\u0000'),
+      `and the damaged words the policy leaves are listed beside the rules ` +
+        `(${(DOCJSON.correctionsMeta.leftWords || []).length} word(s))`,
     );
     // the hit count is the DOCUMENT's measurement, recomputed here from the
     // document: a rule applied in order to every block, counting what it changes
@@ -438,7 +545,7 @@ section('the repairs list is the rule list, with its measured hits');
         const parts = text.split(r.find);
         if (parts.length > 1) {
           mine[i] += parts.length - 1;
-          text = parts.join(r.repl);
+          if (r.repl !== r.find) text = parts.join(r.repl);
         }
       });
     }
@@ -525,9 +632,237 @@ section('the running heads, the citation and the progress');
   // FAILS IF: the citation is built from anything but the document's own edition
   // metadata — the plan's string, character for character, with p. 15 because the
   // reader is on #p15.
-  const url = ctx.w.document.querySelector('#reader-app .rd-cite-url');
+  // The URL is looked up by its own data-cite name rather than by class: the
+  // panel now carries TWO .rd-cite-url elements (the passage's and the page's),
+  // and a class selector would assert the citation grammar against whichever one
+  // happens to come first in the document.
+  const flagsJson = /<script type="application\/json" id="reader-flags">([\s\S]*?)<\/script>/.exec(html);
+  const flags = flagsJson ? JSON.parse(flagsJson[1]) : null;
+  const url = ctx.w.document.querySelector('#reader-app [data-cite="page-url"]');
   check(!!url && url.getAttribute('href').endsWith(`/library/${SLUG}/#p15`), 'and it names the URL a citation needs');
   // FAILS IF: the URL is missing or points somewhere the page does not resolve.
+  /* THE PER-PASSAGE CITATION (plan §11 phase 5). The page citation above is what
+   * a citation by printed page is; this is the passage's OWN anchor, which is
+   * what a reader who wants to cite the sentence rather than the page needs.
+   * Driven from a PARAGRAPH anchor, because that is the finest unit the document
+   * materialises (#s4-3, the reserved grammar) and the case a page citation
+   * cannot express. Every expectation is recomputed here: the line's edition head
+   * from the shell's own flags block, the division and the page from the served
+   * document, the anchor from the fragment the reader arrived by. */
+  const pctx = await boot({ hash: '#s4-1' });
+  pctx.click(pctx.byText('#reader-app .rd-bar-right button', 'cite'));
+  await settle();
+  const pline = pctx.w.document.querySelector('#reader-app [data-cite="passage"]');
+  const purl = pctx.w.document.querySelector('#reader-app [data-cite="passage-url"]');
+  check(!!pline && !!purl, 'and the panel cites the PASSAGE, not only the page');
+  // FAILS IF: the panel still offers one citation per page and nothing finer.
+  const c = flags && flags.citation;
+  const docJson = JSON.parse(docText);
+  const head = c ? `${c.author}, ` : '';
+  const tail = c ? `, trans. ${c.translator} (${c.place}: ${c.publisher}, ${c.year})` : '';
+  const secOf = (b) => (b.t === 'sec' ? b.n : null);
+  const pageAt = new Map();
+  {
+    // the printed page each paragraph anchor stands under, and the division it
+    // is in — recomputed from the served document, not read off the app
+    let page = null;
+    let sec = null;
+    for (const b of docJson.blocks) {
+      if (b.t === 'pb' && b.page != null) page = b.page;
+      if (secOf(b) != null) sec = secOf(b);
+      if (b.at) pageAt.set(b.at, { page, sec });
+    }
+    for (const b of docJson.blocks) if (b.at && !pageAt.has(b.at)) pageAt.set(b.at, { page, sec });
+  }
+  const known = docJson.blocks.find((b) => b.at === 's4-1');
+  check(!!known, `the served document materialises the paragraph anchor the citation is taken from (${!!known})`);
+  const at4 = known ? pageAt.get('s4-1') : null;
+  const wantPassage = known
+    ? `${head}On the Cave of the Nymphs${tail}, §${at4.sec}, p. ${at4.page}`
+    : '';
+  const gotPassage = pline ? pline.textContent.replace(/\s+/g, ' ').trim() : '';
+  check(
+    known && gotPassage === wantPassage,
+    `and its line is the edition's, the division's and the page's, read off the document (${JSON.stringify(gotPassage)})`,
+  );
+  // FAILS IF: the division is taken from the scroll position rather than the
+  // anchor, if the page is missing, or if an imprint is written into the app.
+  const href = purl ? purl.getAttribute('href') : '';
+  check(href.endsWith(`/library/${SLUG}/#s4-1`), `and its deep link is the passage's own anchor (${href})`);
+  // FAILS IF: the link is the page's anchor, or the section's, where the document
+  // has a paragraph anchor to cite.
+  const target = href.slice(href.indexOf('#') + 1);
+  check(
+    !!target && !!pctx.w.document.querySelector(`#reader-app #${target}`),
+    `and following it lands on the passage: #${target} exists in the app`,
+  );
+  // FAILS IF: the app cites an anchor it does not itself render — a citation that
+  // resolves nowhere is worse than none, and this is the one assertion that can
+  // catch the case where the document and the app disagree about an id.
+}
+
+{
+  // The passage clause is read off the ANCHOR and not off the scroll position
+  // (phase 5). A note's anchor is a note: the notes region sits after the last
+  // division, so a position-derived clause there would say "§18" about a note to
+  // section 3 — a claim about the text that is simply false.
+  const docJson = JSON.parse(docText);
+  const n5 = docJson.blocks.find((b) => b.t === 'notedef' && b.n === 5);
+  const ctx = await boot({ hash: `#${n5.id || `n${n5.n}`}` });
+  ctx.click(ctx.byText('#reader-app .rd-bar-right button', 'cite'));
+  await settle();
+  const pline = ctx.w.document.querySelector('#reader-app [data-cite="passage"]');
+  const got = pline ? pline.textContent.replace(/\s+/g, ' ').trim() : '';
+  check(
+    got.endsWith(`note ${n5.n}`),
+    `a note's citation names the note and not the division the notes region sits after (${JSON.stringify(got)})`,
+  );
+  // FAILS IF: the clause is derived from currentSection — the last division
+  // before the notes region is §18, and every note would be cited as §18.
+  check(!/§/.test(got), 'and it claims no division for a note');
+}
+
+{
+  /* THE CITATION IS ABOUT THE PASSAGE IT WAS OPENED ON (plan §11 phase 5).
+   * MEASURED in a real browser, and the reason this block exists: with the panel
+   * rendered after the book in the flow, opening it moved focus to the bottom of
+   * the document, the reader's position followed the scroll, and the panel then
+   * cited the LAST note of the volume (§18, note 25) instead of the section the
+   * reader had asked about. Happy-dom reproduces the position change exactly:
+   * it has no layout, so every flow mark's rect is zero and the scroll report
+   * lands on the last entry — which is the same value the real browser produced.
+   * The two steps are asserted in order: first that the instrument MOVES the
+   * position, then that the citation does not follow it. */
+  const moved = await boot({ hash: '#s4-1' });
+  const here0 = moved.w.document.querySelector('#reader-app .rd-here').textContent;
+  moved.w.dispatchEvent(new moved.w.Event('scroll'));
+  await settle();
+  const here1 = moved.w.document.querySelector('#reader-app .rd-here').textContent;
+  check(here0 !== here1, `a scroll report moves the reader's position (${JSON.stringify(here0)} → ${JSON.stringify(here1)})`);
+  // FAILS IF: the scroll port is dead in this environment — the check below would
+  // then pass for the wrong reason, asserting nothing.
+
+  const ctx = await boot({ hash: '#s4-1' });
+  ctx.click(ctx.byText('#reader-app .rd-bar-right button', 'cite'));
+  await settle();
+  const before = (ctx.w.document.querySelector('#reader-app [data-cite="passage"]') || {}).textContent;
+  const urlBefore = (ctx.w.document.querySelector('#reader-app [data-cite="passage-url"]') || { getAttribute: () => '' }).getAttribute('href');
+  ctx.w.dispatchEvent(new ctx.w.Event('scroll'));
+  await settle();
+  const after = (ctx.w.document.querySelector('#reader-app [data-cite="passage"]') || {}).textContent;
+  const urlAfter = (ctx.w.document.querySelector('#reader-app [data-cite="passage-url"]') || { getAttribute: () => '' }).getAttribute('href');
+  check(
+    !!before && before === after && urlBefore === urlAfter,
+    `and a position change while the panel is open does not change the citation it was opened to give (${JSON.stringify(after)})`,
+  );
+  // FAILS IF: the panel derives its passage from the live position — the citation
+  // then follows the scroll, which in a real browser meant the panel answering
+  // with the end of the book.
+  check(/§4/.test(after || ''), `and the panel still cites the division it was opened on (${JSON.stringify(after)})`);
+  // FAILS IF: the freeze is lost in some other way (a re-render that drops it).
+}
+
+{
+  /* RANGE PRINT (plan §11 phase 5, the notes as endnotes). Setting a printed-page
+   * range keeps the passages inside it and prints the notes those passages refer
+   * to at the back — the annotations are not stripped out of a range, and the
+   * front matter (which has no printed number) is not carried into a print of
+   * numbered pages. Both expectations are recomputed from the served document:
+   * the references standing on the range's pages, plus the notes whose own page
+   * the volume prints inside it. The range itself is CHOSEN FROM THE DOCUMENT —
+   * the printed page carrying the most note references — so the instrument
+   * cannot quietly test a page with nothing on it. */
+  const docJson = JSON.parse(docText);
+  const refsByPage = new Map();
+  {
+    let page = null;
+    for (const b of docJson.blocks) {
+      if (b.t === 'pb' && b.page != null) page = b.page;
+      if (b.t === 'ref' && page != null) {
+        if (!refsByPage.has(page)) refsByPage.set(page, []);
+        refsByPage.get(page).push(b.n);
+      }
+    }
+  }
+  const pick = [...refsByPage.entries()].sort((a, b) => b[1].length - a[1].length)[0] || [15, []];
+  const range = [pick[0], pick[0]];
+  const refsInRange = new Set();
+  const defsInRange = new Set();
+  {
+    let page = null;
+    for (const b of docJson.blocks) {
+      if (b.t === 'pb' && b.page != null) page = b.page;
+      const inside = page != null && page >= range[0] && page <= range[1];
+      if (b.t === 'ref' && inside) refsInRange.add(b.n);
+      if (b.t === 'notedef' && inside) defsInRange.add(b.n);
+    }
+  }
+  const wanted = new Set([...refsInRange, ...defsInRange]);
+  const ctx = await boot();
+  ctx.click(ctx.byText('#reader-app .rd-bar-right button', 'cite'));
+  await settle();
+  const boxes = [...ctx.w.document.querySelectorAll('#reader-app .rd-print-controls input')];
+  check(boxes.length === 2, `the range is picked by printed page — two fields in the panel (${boxes.length})`);
+  // FAILS IF: there is no range control, or it is not two printed-page fields.
+  boxes[0].value = String(range[0]);
+  boxes[0].dispatchEvent(new ctx.w.Event('input', { bubbles: true }));
+  await settle();
+  boxes[1].value = String(range[1]);
+  boxes[1].dispatchEvent(new ctx.w.Event('input', { bubbles: true }));
+  await settle();
+  const notes = [...ctx.w.document.querySelectorAll('#reader-app .rd-note')].map((el) => ({
+    n: Number(el.querySelector('.rd-note-n').textContent.trim()),
+    out: el.classList.contains('rd-out'),
+  }));
+  const kept = notes.filter((x) => !x.out).map((x) => x.n).sort((a, b) => a - b);
+  // A note is emitted as one block per paragraph the volume prints it in (note 8
+  // and note 10 each stand in two), so the comparison is over the note NUMBERS
+  // kept — and then over the blocks, because a rule that kept the first
+  // paragraph of a note and dropped the second would pass a numbers-only check.
+  const keptSet = [...new Set(kept)];
+  const wantedSorted = [...wanted].sort((a, b) => a - b);
+  check(
+    keptSet.join(',') === wantedSorted.join(','),
+    `a ${range[0]}–${range[1]} print keeps exactly the notes its pages refer to or print (${keptSet.join(', ')} of ${notes.length} blocks; wanted ${wantedSorted.join(', ')})`,
+  );
+  // FAILS IF: a range still prints every note (the rule is not applied) or none
+  // of them (the annotations are dropped, which is what the page did before).
+  const wantBlocks = notes.filter((x) => wanted.has(x.n)).length;
+  check(
+    kept.length === wantBlocks,
+    `and every block of those notes is kept, not only their first (${kept.length} of ${wantBlocks})`,
+  );
+  // FAILS IF: the rule is applied per note rather than per block, so a note whose
+  // text runs over two paragraphs is printed half-thrown-away.
+  check(
+    wanted.size > 0 && wanted.size < notes.length,
+    `and that is neither all nor none of them (${wanted.size} notes of ${notes.length} blocks)`,
+  );
+  // FAILS IF: the page the instrument picked carries no note and no note is
+  // printed — the equality above would then hold between two empty sets and the
+  // assertion would be measuring nothing.
+  const front = [...ctx.w.document.querySelectorAll('#reader-app .rd-in-front')];
+  const frontOut = front.filter((el) => el.classList.contains('rd-out')).length;
+  check(
+    front.length > 0 && frontOut === front.length,
+    `and the front matter — which has no printed number — is not carried into a print of numbered pages (${frontOut} of ${front.length} out)`,
+  );
+  // FAILS IF: an entry with no readable page is kept by a ranged print, which is
+  // how the title pages and the digitiser's stamp used to ride along with any
+  // range at all.
+  const clearBtn = [...ctx.w.document.querySelectorAll('#reader-app .rd-print-controls button')].find(
+    (b) => /whole text/.test(b.textContent),
+  );
+  if (clearBtn) {
+    ctx.click(clearBtn);
+    await settle();
+    const all = [...ctx.w.document.querySelectorAll('#reader-app .rd-note')].filter(
+      (el) => !el.classList.contains('rd-out'),
+    ).length;
+    check(all === notes.length, `and the whole text prints every note again (${all} of ${notes.length})`);
+    // FAILS IF: the range cannot be cleared — a reader who printed a range would
+    // be stuck with a book of missing notes.
+  }
 }
 
 {

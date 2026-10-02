@@ -1,12 +1,13 @@
 {
   "slug": "porphyry-on-the-cave-of-the-nymphs-taylor-1917",
   "edition": "Porphyry, On the Cave of the Nymphs, trans. Thomas Taylor (London: John M. Watkins, 1917)",
-  "order": "The rules apply in the order this list gives them, first to last, each one to every occurrence, one text block at a time — the order the reading view applies them in and the order their hits are counted in. Order decides: a rule whose find an earlier rule has already replaced fires zero times, and the build FAILS on a rule that fires zero times, so a redundant rule is caught rather than shipped. The classes are grouped in the order the pipeline needs them: opener (the divisions, which the extraction itself needs before it can find a section), digit (the printed numbers and the note markers, pinned to the line or the marker they were read from), ocr (a word whose letters the transcription lost).",
+  "base": "_base.json",
+  "order": "The rules apply in the order this list gives them, first to last, each one to every occurrence, one text block at a time — the order the reading view applies them in and the order their hits are counted in. Order decides: a rule whose find an earlier rule has already replaced fires zero times, and the build FAILS on a rule that fires zero times, so a redundant rule is caught rather than shipped. The classes are grouped in the order the pipeline needs them: opener (the divisions, which the extraction needs before it can find a section), digit (printed numbers and note markers, each pinned to its line), reading (the print's own word, where this edition records it), review (a passage whose harm is real but whose reading is not determinable — recorded as left, never deleted).",
   "classes": {
     "opener": "a division number the transcription mangled, where the print has a reading",
     "digit": "a printed number or a note marker read through an OCR digit confusion",
-    "ocr": "a word carrying a character that is not a letter; the character is removed, no reading is offered",
-    "review": "a passage whose harm is real but whose correct reading cannot be determined from the source"
+    "reading": "the print's word for a damaged run, recorded from this edition's own context or from the parallel edition — the reading view shows it; the transcription is never edited",
+    "review": "a passage whose harm is real but whose correct reading cannot be determined from the source: recorded with action \"leave\", so its damage stays visible"
   },
   "edits": [
     {
@@ -59,627 +60,687 @@
     },
     {
       "find": "hf>",
-      "replace": "hf",
-      "class": "ocr",
-      "note": "> stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "be",
+      "class": "reading",
+      "note": "the print reads \"hf>\"->\"be\" (\"it would be absurd for\"): the transcription's own sentence"
     },
     {
       "find": "in_d^scfi5mga",
-      "replace": "indscfi5mga",
-      "class": "ocr",
-      "note": "_ ^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "in describing a",
+      "class": "reading",
+      "note": "the print reads \"in describing a\" (the transcription's own words \"in_d^scfi5mga cave fabricated\")"
     },
     {
       "find": "^jnerely",
-      "replace": "jnerely",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "merely",
+      "class": "reading",
+      "note": "the print reads \"merely\" (the transcription's own words \"^jnerely by poetical license\")"
     },
     {
       "find": "_the",
       "replace": "the",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is exactly the letters present, \"the\""
     },
     {
-      "find": "Thp_anrt'p'rii'c",
-      "replace": "Thpanrt'p'rii'c",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "find": "Thp_anrt'p'rii'c:",
+      "replace": "The ancients",
+      "class": "reading",
+      "note": "the print reads \"The ancients, indeed, very properly consecrated a cave to the world\" (the 1823 parallel edition:8667,8680); the transcription's own comma after the colon supplies the first comma, and the machine proposal \"The Pythagoreans, and after them Plato,\" is another sentence"
     },
     {
       "find": "v^ry",
-      "replace": "vry",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "very",
+      "class": "reading",
+      "note": "the print reads \"very\" (the 1823 parallel edition:8667+)"
     },
     {
       "find": "jQhe^ajricients",
-      "replace": "jQheajricients",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the ancients",
+      "class": "reading",
+      "note": "the print reads \"the ancients\""
     },
     {
       "find": "obscurity_o£",
-      "replace": "obscurityo",
-      "class": "ocr",
-      "note": "_ £ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "obscurity of",
+      "class": "reading",
+      "note": "the print reads \"obscurity of\""
     },
     {
       "find": "the_cavern»",
-      "replace": "thecavern",
-      "class": "ocr",
-      "note": "_ » stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the cavern,",
+      "class": "reading",
+      "note": "the print reads \"the cavern,\""
     },
     {
-      "find": "^and",
-      "replace": "and",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "find": "qreneratioi^and",
+      "replace": "generation, and",
+      "class": "reading",
+      "note": "the print reads \"generation, and\"; this find is unique to its site, where the shorter \"^and\" glued two printed words"
+    },
+    {
+      "find": "obscure .^and",
+      "replace": "obscure, and",
+      "class": "reading",
+      "note": "the print reads \"obscure, and its very bottom is darkness itself\"; unique to its site, where the shorter \"^and\" also matched a glue"
     },
     {
       "find": "Persians,^",
       "replace": "Persians,",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"Persians,\""
     },
     {
       "find": "regions^",
       "replace": "regions",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"regions\""
     },
     {
       "find": "rites}",
       "replace": "rites",
-      "class": "ocr",
-      "note": "} stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"rites\""
     },
     {
       "find": "fabric^tSdJfcUUMitb£a'y",
-      "replace": "fabrictSdJfcUUMitba'y",
-      "class": "ocr",
-      "note": "^ £ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "fabricated by Mithra.",
+      "class": "reading",
+      "note": "the print reads \"fabricated by Mithra.\""
     },
     {
       "find": "t*16",
-      "replace": "t16",
-      "class": "ocr",
-      "note": "* stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the",
+      "class": "reading",
+      "note": "the print reads \"the\" (\"But the things contained in the cavern\")"
     },
     {
       "find": "oL^he",
-      "replace": "oLhe",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "of the",
+      "class": "reading",
+      "note": "the print reads \"of the\""
     },
     {
       "find": "«ffma±es.^",
-      "replace": "ffmaes.",
-      "class": "ocr",
-      "note": "« ± ^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "climates.",
+      "class": "reading",
+      "note": "the print reads \"climates.\" (the 1823 parallel edition:8745, \"symbols of the mundane elements and climates\"); the proposal \"powers\" is wrong"
     },
     {
       "find": "y^Nfpt",
-      "replace": "yNfpt",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "Not",
+      "class": "reading",
+      "note": "the print reads \"Not\" (\"Not only, however, did the ancients\")"
     },
     {
       "find": "n^rom",
-      "replace": "nrom",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "From",
+      "class": "reading",
+      "note": "the print reads \"From\""
     },
     {
       "find": "a^den",
-      "replace": "aden",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "a den",
+      "class": "reading",
+      "note": "the print reads \"a den\""
     },
     {
       "find": "leUcfers'^f",
-      "replace": "leUcfers'f",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "leaders of",
+      "class": "reading",
+      "note": "the print reads \"leaders of\""
     },
     {
       "find": "cavern*",
-      "replace": "cavern",
-      "class": "ocr",
-      "note": "* stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "caverns",
+      "class": "reading",
+      "note": "BLOCKER: the print reads \"caverns\" (\"because caverns are dark, stony, and humid\", the 1823 parallel edition:8823)"
     },
     {
       "find": "j>fjyhich",
-      "replace": "jfjyhich",
-      "class": "ocr",
-      "note": "> stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "of which",
+      "class": "reading",
+      "note": "the print reads \"of which\""
     },
     {
       "find": "cave^",
       "replace": "cave",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"cave\""
     },
     {
       "find": "be~assumed",
-      "replace": "beassumed",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "be assumed",
+      "class": "reading",
+      "note": "the print reads \"be assumed\""
     },
     {
       "find": "Eox_we_p_eculiarly",
-      "replace": "Eoxwepeculiarly",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "For we peculiarly",
+      "class": "reading",
+      "note": "the print reads \"For we peculiarly\" (the 1823 parallel edition:8849)"
     },
     {
       "find": "the_jMowers",
-      "replace": "thejMowers",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the powers",
+      "class": "reading",
+      "note": "the print reads \"the powers\" (the 1823 parallel edition:8849); NOT \"the flowers\""
     },
     {
       "find": "pver^wajters",
-      "replace": "pverwajters",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "over waters",
+      "class": "reading",
+      "note": "the print reads \"over waters\" (the 1823 parallel edition:8849)"
     },
     {
       "find": "Nyjnph^",
-      "replace": "Nyjnph",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "Nymphs;",
+      "class": "reading",
+      "note": "the print reads \"Nymphs; and this term also\" (the 1823 parallel edition:8849+)"
     },
     {
       "find": "this^erm_also",
-      "replace": "thisermalso",
-      "class": "ocr",
-      "note": "^ _ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "this term also",
+      "class": "reading",
+      "note": "the print reads \"this term also\""
     },
     {
       "find": "souls_wjio_have",
-      "replace": "soulswjiohave",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "souls who have",
+      "class": "reading",
+      "note": "the print reads \"souls who have\""
     },
     {
       "find": "air.^",
       "replace": "air.",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"air.\""
     },
     {
       "find": "aguatic~nymipEsi",
-      "replace": "aguaticnymipEsi",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "aquatic nymphs",
+      "class": "reading",
+      "note": "the print reads \"aquatic nymphs\""
     },
     {
       "find": "p\\irple",
-      "replace": "pirple",
-      "class": "ocr",
-      "note": "\\ stands where the print has a letter; removed, and no reading of the lost letter is offered"
-    },
-    {
-      "find": "-1i\"^lHi.n*-iL",
-      "replace": "-1i\"lHi.n-iL",
-      "class": "ocr",
-      "note": "^ * stands where the print has a letter; removed, and no reading of the lost letter is offered"
-    },
-    {
-      "find": "^X",
-      "replace": "X",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "purple",
+      "class": "reading",
+      "note": "the print reads \"purple\""
     },
     {
       "find": "h_qney_combs_?__",
-      "replace": "hqneycombs?",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "honeycombs.",
+      "class": "reading",
+      "note": "the print reads \"honeycombs.\""
     },
     {
       "find": "^utrefactiojn1_and",
-      "replace": "utrefactiojn1and",
-      "class": "ocr",
-      "note": "^ _ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "putrefaction, and",
+      "class": "reading",
+      "note": "the print reads \"putrefaction, and\" (\"preserved from putrefaction, and inveterate ulcers\")"
     },
     {
       "find": "^stUJ",
-      "replace": "stUJ",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "still",
+      "class": "reading",
+      "note": "the print reads \"still\" (\"Farther still, it is also sweet\")"
     },
     {
       "find": "J~a",
-      "replace": "Ja",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "taste",
+      "class": "reading",
+      "note": "the print reads \"taste\" (the 1823 parallel edition:9034, \"it is also sweet to the taste\"); the parallel is the evidence, the transcription alone does not give it"
     },
     {
       "find": "jjy_bejg§l_who",
-      "replace": "jjybejg§lwho",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "by bees, who",
+      "class": "reading",
+      "note": "the print reads \"by bees, who\""
     },
     {
       "find": "{into",
       "replace": "into",
-      "class": "ocr",
-      "note": "{ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"into\""
     },
     {
       "find": "jt_i§_a_symbol",
-      "replace": "jti§asymbol",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "it is a symbol",
+      "class": "reading",
+      "note": "the print reads \"it is a symbol\""
     },
     {
       "find": "the_amphorae",
-      "replace": "theamphorae",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the amphorae",
+      "class": "reading",
+      "note": "the print reads \"the amphorae\""
     },
     {
       "find": "symbols_",
       "replace": "symbols",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"symbols\""
     },
     {
       "find": "Cayes^",
-      "replace": "Cayes",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "Caves,",
+      "class": "reading",
+      "note": "the print reads \"Caves,\" (\"9. Caves, therefore, in the most remote periods\")"
     },
     {
       "find": "adds^that",
-      "replace": "addsthat",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "adds, that",
+      "class": "reading",
+      "note": "the print reads \"adds, that\""
     },
     {
       "find": "other^which",
-      "replace": "otherwhich",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "other, which",
+      "class": "reading",
+      "note": "the print reads \"other, which\""
     },
     {
       "find": "to~~FRp",
-      "replace": "toFRp",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "to the south",
+      "class": "reading",
+      "note": "the print reads \"to the south\" (the 1823 parallel edition:9319+)"
     },
     {
       "find": "4g_",
-      "replace": "4g",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "is",
+      "class": "reading",
+      "note": "the print reads \"is\" (\"what is indicated by this narration\")"
     },
     {
       "find": "thl^narration~PwhetheT'T:Be",
-      "replace": "thlnarrationPwhetheT'T:Be",
-      "class": "ocr",
-      "note": "^ ~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "this narration; whether the",
+      "class": "reading",
+      "note": "the print reads \"this narration; whether the\""
     },
     {
       "find": "reality_",
       "replace": "reality",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"reality\""
     },
     {
       "find": "others7~or",
-      "replace": "others7or",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "others, or",
+      "class": "reading",
+      "note": "the print reads \"others, or\""
     },
     {
       "find": "Are_jCancer",
-      "replace": "ArejCancer",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "are Cancer",
+      "class": "reading",
+      "note": "the print reads \"are Cancer\""
     },
     {
       "find": "j__but",
-      "replace": "jbut",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "; but",
+      "class": "reading",
+      "note": "the print reads \"; but\""
     },
     {
       "find": "#ip",
-      "replace": "ip",
-      "class": "ocr",
-      "note": "# stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the",
+      "class": "reading",
+      "note": "the print reads \"the\" (\"the gates of the Homeric cavern\", the 1823 parallel edition:9319)"
     },
     {
       "find": "gatps-o£",
-      "replace": "gatps-o",
-      "class": "ocr",
-      "note": "£ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "gates of",
+      "class": "reading",
+      "note": "the print reads \"gates of\""
     },
     {
       "find": "was_",
       "replace": "was",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"was\""
     },
     {
-      "find": "Bo/>a",
-      "replace": "Bo/a",
-      "class": "ocr",
-      "note": "> stands where the print has a letter; removed, and no reading of the lost letter is offered"
-    },
-    {
-      "find": "conse^",
-      "replace": "conse",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "find": "conse^ quence",
+      "replace": "consequence",
+      "class": "reading",
+      "note": "the print reads \"consequence\" (the transcription split the word across a line, \"conse^ quence\")"
     },
     {
       "find": "eyej^whefe—",
-      "replace": "eyejwhefe—",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "every where",
+      "class": "reading",
+      "note": "the print reads \"every where\""
     },
     {
       "find": "fias~\"a",
-      "replace": "fias\"a",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "has a",
+      "class": "reading",
+      "note": "the print reads \"has a\""
     },
     {
       "find": "twofuld^entrance",
-      "replace": "twofuldentrance",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "twofold entrance",
+      "class": "reading",
+      "note": "the print reads \"twofold entrance\""
     },
     {
       "find": "a^symbol",
-      "replace": "asymbol",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "a symbol",
+      "class": "reading",
+      "note": "the print reads \"a symbol\""
     },
     {
       "find": "earth~;f",
-      "replace": "earth;f",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "earth;",
+      "class": "reading",
+      "note": "the print reads \"earth; and the one is eastern\" (the trailing f is the transcription's stray)"
     },
     {
       "find": "fo~~tlTe~lieavens",
-      "replace": "fotlTelieavens",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "to the heavens",
+      "class": "reading",
+      "note": "the print reads \"to the heavens\" (the 1823 parallel edition:9755)"
     },
     {
       "find": "_put",
-      "replace": "put",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "but",
+      "class": "reading",
+      "note": "BLOCKER: the print reads \"but the other to souls descending to the earth\" (the 1823 parallel edition:9755-9756); \"put\" is a different sentence"
     },
     {
       "find": "the~other",
-      "replace": "theother",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the other",
+      "class": "reading",
+      "note": "the print reads \"the other\""
     },
     {
       "find": "TvfnnrK_",
-      "replace": "TvfnnrK",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "tubs",
+      "class": "reading",
+      "note": "the print reads \"tubs\""
     },
     {
       "find": "Blesrjn£3",
-      "replace": "Blesrjn3",
-      "class": "ocr",
-      "note": "£ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "Blessings",
+      "class": "reading",
+      "note": "the print reads \"Blessings\""
     },
     {
       "find": "anc^",
-      "replace": "anc",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "and",
+      "class": "reading",
+      "note": "the print reads \"and\""
     },
     {
       "find": "th^jpjpjpj^hejcavfir",
-      "replace": "thjpjpjpjhejcavfir",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the top of the cavern",
+      "class": "reading",
+      "note": "the print reads \"the top of the cavern\""
     },
     {
       "find": "cavern^",
       "replace": "cavern",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"cavern\""
     },
     {
       "find": "fren£e._.an",
-      "replace": "frene..an",
-      "class": "ocr",
-      "note": "£ _ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "hence an",
+      "class": "reading",
+      "note": "the print reads \"hence an\""
     },
     {
       "find": "svnhr>i",
-      "replace": "svnhri",
-      "class": "ocr",
-      "note": "> stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "symbol",
+      "class": "reading",
+      "note": "the print reads \"symbol\""
     },
     {
       "find": "Eicsent_pavern",
-      "replace": "Eicsentpavern",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "present cavern",
+      "class": "reading",
+      "note": "the print reads \"present cavern\" (the 1823 parallel edition:9893); NOT \"Hesperian\""
     },
     {
       "find": "/For_tJl«*",
-      "replace": "/FortJl",
-      "class": "ocr",
-      "note": "_ « * stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "For the",
+      "class": "reading",
+      "note": "the print reads \"For the\""
     },
     {
       "find": "t^Prplant'",
-      "replace": "tPrplant'",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the plant",
+      "class": "reading",
+      "note": "the print reads \"the plant\""
     },
     {
       "find": "t^\"f^li^rva.J",
-      "replace": "t\"flirva.J",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "of Minerva",
+      "class": "reading",
+      "note": "the print reads \"of Minerva\""
     },
     {
       "find": "uniY.ej£e_",
-      "replace": "uniY.eje",
-      "class": "ocr",
-      "note": "£ _ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "universe",
+      "class": "reading",
+      "note": "the print reads \"universe\""
     },
     {
       "find": "effecj^of",
-      "replace": "effecjof",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "effect of",
+      "class": "reading",
+      "note": "the print reads \"effect of\""
     },
     {
       "find": "the_work",
-      "replace": "thework",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the work",
+      "class": "reading",
+      "note": "the print reads \"the work\""
     },
     {
       "find": "near^",
       "replace": "near",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"near\""
     },
     {
       "find": "Jhe_dignity",
-      "replace": "Jhedignity",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the dignity",
+      "class": "reading",
+      "note": "the print reads \"the dignity\""
     },
     {
       "find": "excellence~ot",
-      "replace": "excellenceot",
-      "class": "ocr",
-      "note": "~ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "excellence of",
+      "class": "reading",
+      "note": "the print reads \"excellence of\""
     },
     {
       "find": "is^ever-flpjLinsh|ng",
-      "replace": "isever-flpjLinshng",
-      "class": "ocr",
-      "note": "^ | stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "is ever-flourishing",
+      "class": "reading",
+      "note": "the print reads \"is ever-flourishing\""
     },
     {
       "find": "degree_",
       "replace": "degree",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"degree\""
     },
     {
       "find": "this~caye_(aswe^jiave__",
-      "replace": "thiscaye(aswejiave",
-      "class": "ocr",
-      "note": "~ _ ^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "this cave, as we have",
+      "class": "reading",
+      "note": "the print reads \"this cave, as we have\""
     },
     {
       "find": "therefore^",
       "replace": "therefore",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"therefore\""
     },
     {
       "find": "naturally_jever-flourIsKing",
-      "replace": "naturallyjever-flourIsKing",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "naturally ever-flourishing",
+      "class": "reading",
+      "note": "the print reads \"naturally ever-flourishing\""
     },
     {
       "find": "it_Js__sj.cjceAjtoJMinerva",
-      "replace": "itJssj.cjceAjtoJMinerva",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "it is consecrated to Minerva",
+      "class": "reading",
+      "note": "the print reads \"it is consecrated to Minerva\""
     },
     {
       "find": "sj;ipj>lies",
-      "replace": "sj;ipjlies",
-      "class": "ocr",
-      "note": "> stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "supplies",
+      "class": "reading",
+      "note": "the print reads \"supplies\""
     },
     {
-      "find": "ajid_ajifonls_aj*^^",
-      "replace": "ajidajifonlsaj",
-      "class": "ocr",
-      "note": "_ * ^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
-    },
-    {
-      "find": "^s",
-      "replace": "s",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "find": "by ^s which",
+      "replace": "by which",
+      "class": "reading",
+      "note": "the print reads \"by which\" (the 1823 parallel edition:9786-9787); this find is unique to its site, where the shorter \"^s\" left a stray letter"
     },
     {
       "find": "fjpjjnsjtpfjL^",
-      "replace": "fjpjjnsjtpfjL",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "deposited",
+      "class": "reading",
+      "note": "the print reads \"be deposited\" (the 1823 parallel edition:9936); NOT \"dismissed\""
     },
     {
       "find": "\\he",
-      "replace": "he",
-      "class": "ocr",
-      "note": "\\ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the",
+      "class": "reading",
+      "note": "BLOCKER: the print reads \"the olive, and consult with Minerva\" (the 1823 parallel edition:10010)"
     },
     {
       "find": "us^a_man",
-      "replace": "usaman",
-      "class": "ocr",
-      "note": "^ _ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "us a man",
+      "class": "reading",
+      "note": "the print reads \"to us a man who\""
     },
     {
       "find": "rp£Tilar",
-      "replace": "rpTilar",
-      "class": "ocr",
-      "note": "£ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "regular",
+      "class": "reading",
+      "note": "the print reads \"regular\" (\"in a regular manner over the sea\")"
     },
     {
       "find": "nn(li>",
-      "replace": "nn(li",
-      "class": "ocr",
-      "note": "> stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "finds",
+      "class": "reading",
+      "note": "the print reads \"finds\" (\"finds a nation\")"
     },
     {
       "find": "thought_that_",
-      "replace": "thoughtthat",
-      "class": "ocr",
-      "note": "_ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "thought, that",
+      "class": "reading",
+      "note": "the print reads \"thought, that\""
     },
     {
       "find": "thiskind^",
-      "replace": "thiskind",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "this kind",
+      "class": "reading",
+      "note": "the print reads \"this kind\""
     },
     {
       "find": "the^,rnnjfrtures",
-      "replace": "the,rnnjfrtures",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "the conjectures",
+      "class": "reading",
+      "note": "the print reads \"the conjectures\""
     },
     {
       "find": "images^",
       "replace": "images",
-      "class": "ocr",
-      "note": "^ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "class": "reading",
+      "note": "stray marker at the word's edge; the printed word is \"images\""
     },
     {
       "find": "j)f_a.Jakl£",
-      "replace": "j)fa.Jakl",
-      "class": "ocr",
-      "note": "_ £ stands where the print has a letter; removed, and no reading of the lost letter is offered"
+      "replace": "of a fable",
+      "class": "reading",
+      "note": "the print reads \"of a fable\" (the 1823 parallel edition:10020); NOT \"of a Jove\""
+    },
+    {
+      "find": "i\"Hpfdt",
+      "replace": "indeed,",
+      "class": "reading",
+      "note": "the print reads \"indeed,\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:8667 \"The ancients, indeed, very properly consecrated a\")"
+    },
+    {
+      "find": "ajgyejbpjthe",
+      "replace": "a cave to the",
+      "class": "reading",
+      "note": "the print reads \"a cave to the\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:8680 \"cave to the world, whether assumed collectively\")"
+    },
+    {
+      "find": "/Thus,",
+      "replace": "Thus,",
+      "class": "reading",
+      "note": "the print reads \"Thus,\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:8774 \"Thus, too, Ceres educated Proserpine, with\")"
+    },
+    {
+      "find": "plants./",
+      "replace": "plants.",
+      "class": "reading",
+      "note": "the print reads \"plants.\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:8877 \"the souls of plants. Some likewise are of opinion\")"
+    },
+    {
+      "find": "Gods7",
+      "replace": "Gods,",
+      "class": "reading",
+      "note": "the print reads \"Gods,\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:9246 \"were consecrated to the Gods, before temples were erected\")"
+    },
+    {
+      "find": "y/z.,",
+      "replace": "viz.",
+      "class": "reading",
+      "note": "the print reads \"viz.\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:9277 \"two extremities in the heavens, viz. the winter tropic\")"
+    },
+    {
+      "find": "/on",
+      "replace": "on",
+      "class": "reading",
+      "note": "the print reads \"on\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:9928 \"the rewards of victory are conferred on the conquerors\")"
+    },
+    {
+      "find": "/nature.",
+      "replace": "nature.",
+      "class": "reading",
+      "note": "the print reads \"nature.\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:9955 \"are images of a material nature. And on this account\")"
+    },
+    {
+      "find": "however7it",
+      "replace": "however, it",
+      "class": "reading",
+      "note": "the print reads \"however, it\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:8697 \"Since, however, it is continually flowing, and is of\")"
+    },
+    {
+      "find": "-1i\"^lHi.n*-iL",
+      "action": "leave",
+      "class": "review",
+      "note": "LEAVE: the foot of the print's p.20 is a page artefact; not determinable from the transcription, and the the 1823 parallel edition has nothing there (the 1823 parallel edition:9021). Recorded as left, not deleted"
+    },
+    {
+      "find": "^X",
+      "action": "leave",
+      "class": "review",
+      "note": "LEAVE: same page artefact as the rule above; not determinable"
+    },
+    {
+      "find": "Bo/>a",
+      "action": "leave",
+      "class": "review",
+      "note": "LEAVE: a Greek word the transcription mangled; not determinable from the transcription"
+    },
+    {
+      "find": "ajid_ajifonls_aj*^^",
+      "action": "leave",
+      "class": "review",
+      "note": "LEAVE: the print lost WORDS, not a character (\"and affords a friendly branch to the suppliant petitioner\", the 1823 parallel edition:9040+); a rule that supplied them would be a second text"
     }
   ]
 }
