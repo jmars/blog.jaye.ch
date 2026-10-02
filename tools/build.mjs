@@ -3313,6 +3313,27 @@ function editionHtml(t, lib) {
 
 function provenanceHtml(t, cited, stats, a, dmg, edition) {
   const p = [];
+  /* WHAT THIS IS, said before anything else about it. A reader who arrives on a
+   * library page needs to know, in the first line, that the page is an EDITION OF
+   * A TRANSCRIPTION rather than a clean text — because the reading view shows the
+   * print's word where one could be determined and the scanner's damage where it
+   * could not, and a reader who does not know that will read the second kind as
+   * the author's error. "Repaired edition" is the honest short name for it: the
+   * transcription is the witness, the repairs are recorded rules applied to it,
+   * and nothing is repaired beyond what a witness decides. (MEASURED, this text:
+   * 115 reading rules, 3 division openers, 5 digit normalisations, and 2 damaged
+   * runs where no reading was determinable — left visible, not guessed.) */
+  p.push(
+    `<p><b>A repaired edition, not a clean text.</b> What stands here is a transcription of the printed ` +
+      `edition below — every character of it kept — with a RECORDED SET OF REPAIRS applied to the reading ` +
+      `view. Each repair is a rule with the words it changes, why, and how many times it fires; the rules ` +
+      `are applied by the view and are never baked into the words served, so the transcription is always ` +
+      `beside its repairs and the difference between the two views is the repair list itself. Where the ` +
+      `print's word could NOT be determined — from the transcription's own context or from a parallel ` +
+      `edition of the same translation — no repair is invented: the scanner's damage stays, marked, and a ` +
+      `rule records the decision to leave it. So this edition reads cleanly in most places and shows its ` +
+      `damage in the rest, and it never silently says anything the print does not.</p>`,
+  );
   p.push(`<p><b>Edition.</b> ${esc(t.edition)}</p>`);
   if (stats) {
     p.push(
@@ -3352,8 +3373,10 @@ function provenanceHtml(t, cited, stats, a, dmg, edition) {
     }
     p.push(
       `<p><b>What the transcription gets wrong, and you will see.</b> Measured on the text of this ` +
-        `page: ${bits.join('; ')}. Nothing here is repaired — a corrected text is a new edition, and ` +
-        `this page is a transcription of a printed one, so the defects are left in place and named. ` +
+        `page: ${bits.join('; ')}. These are the defects the repairs do NOT reach: a corrected text is a ` +
+        `new edition, and this page is a transcription of a printed one whose damage is repaired only ` +
+        `where a reading could be determined (see the repairs, below, for what is reached and what is ` +
+        `left). What is left is left in place AND NAMED rather than deleted. ` +
         `A word that reads oddly is usually the transcription and not the edition: the long s of the ` +
         `print is frequently taken for an f, and a page number of the volume stands in the running ` +
         `text where the printer put it. Where a heading is a bare number it is the volume's own ` +
@@ -4131,8 +4154,14 @@ function buildLibraryIndex() {
   const preamble =
     servedNow +
     `<p>This is the shelf the readings rest on: the public-domain editions of the works the blog’s ` +
-    `argument is made of, each one an unedited transcription of a printed book, arranged in the order ` +
-    `of the argument rather than in the order of a library catalogue.</p>` +
+    `argument is made of, arranged in the order of the argument rather than in the order of a library ` +
+    `catalogue. Each one is a transcription of a printed book — the scanner’s own characters, kept — and ` +
+    `some carry REPAIRS, applied by the reading view and never baked into the words served. A repaired ` +
+    `edition reads cleanly where a reading could be determined from a witness — the transcription’s own ` +
+    `context, or a parallel edition of the same translation — and shows its damage, marked, where none ` +
+    `could be: it never silently says anything the print does not. Every repair is a rule with the words ` +
+    `it changes, why, and how often it fires, listed in the reader, so the two views can be read against ` +
+    `each other and the difference between them is that list.</p>` +
     `<p>The four groups are the site’s own axis — the ascent from inside, the ascent performed, the ` +
     `ascent argued, and the counter-texts. Two more hold what is not on that line at all: the dialogues ` +
     `and commentaries the argument reads, and the other ascents, which walk the same route in other ` +
