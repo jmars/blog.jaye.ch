@@ -59,6 +59,1254 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": "Cloth, Svo. is. net. Post free is. 2d. Wrappers. 6d. net. Post free jd.",
+      "replace": "Cloth, 8vo. 1s. net. Post free 1s. 2d. Wrappers. 6d. net. Post free 7d.",
+      "class": "reading",
+      "note": "Class 2: three substitutions without any damage character — 8 read as S ('Svo.'), 1 read as i twice ('is.'), and 7 read as j ('jd.' for '7d.'). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Cloth, Svo. is. net. Post free is. 2d. Wrappers. 6d. net. Post free 7d.",
+      "replace": "Cloth, 8vo. 1s. net. Post free 1s. 2d. Wrappers. 6d. net. Post free 7d.",
+      "class": "reading",
+      "note": "Class 2: 8 read as S ('Svo.') and 1 read as i twice ('is.'); no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Theobald Cloth, 8vo. Price is. net. Post free is. 2d.",
+      "replace": "Theobald Cloth, 8vo. Price 1s. net. Post free 1s. 2d.",
+      "class": "reading",
+      "note": "Class 2: numeral 1 read as letter i twice ('is.' for '1s.'); invisible to a damage-character census. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Wrappers, Svo. Price 6d. net. Post free 7d.",
+      "replace": "Wrappers, 8vo. Price 6d. net. Post free 7d.",
+      "class": "reading",
+      "note": "Class 2: 'Svo.' for '8vo.' — numeral 8 read as S; no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "through the desire of generation, the soul",
+      "replace": "through the desire of coition, the soul",
+      "class": "reading",
+      "note": "A wrong English word carrying no damage character: the print reads 'coition', not 'generation' — the dangerous class invisible to any character census. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "[l only add, that, by ancient theologists",
+      "replace": "[I only add, that, by ancient theologists",
+      "class": "reading",
+      "note": "Class 2 — lower-case l substituted for the pronoun I at the head of the bracketed addition. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Scholia on the Phcedrus of Plato, \" are",
+      "replace": "Scholia on the Phædrus of Plato, \" are",
+      "class": "reading",
+      "note": "Class 2 — the print's æ-ligature 'Phædrus' read as 'ce', leaving the plausible-looking non-word 'Phcedrus'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Orphic fiction \"is beautifully unfolded",
+      "replace": "Orphic fiction is beautifully unfolded",
+      "class": "reading",
+      "note": "Class 1 — a spurious opening quotation-mark standing before 'is'; the quotation properly opens at 'Orpheus says' after 'as follows : '. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "according to a priuation of the funeral",
+      "replace": "according to a privation of the funeral",
+      "class": "reading",
+      "note": "Class 2 — 'privation' with the v dropped, leaving the plausible non-word 'priuation'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Wrappers, Svo. Price 3d. Post free 4d.",
+      "replace": "Wrappers, 8vo. Price 3d. Post free 4d.",
+      "class": "reading",
+      "note": "Class 2: the numeral 8 of '8vo.' read as capital S ('Svo.'), a plausible-looking non-word with no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Wrappers, Svo. Price 6d. Post free 7d.",
+      "replace": "Wrappers, 8vo. Price 6d. Post free 7d.",
+      "class": "reading",
+      "note": "Class 2: 'Svo.' for '8vo.' — numeral 8 read as S; no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "to call those that are married nymphs",
+      "replace": "to call these that are married nymphs",
+      "class": "reading",
+      "note": "A single substituted English word with no damage character ('those' for the print's 'these'), invisible to the character count; the parallel, though a different printing, is clean here and decides. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "Scholia on the Phcedrus of Plato, pub",
+      "replace": "Scholia on the Phædrus of Plato, pub",
+      "class": "reading",
+      "note": "Class 2 — 'Phædrus' with the æ ligature read as 'ce' (second occurrence). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Wrappers, Svo. 6d. net. Post free 7d.",
+      "replace": "Wrappers, 8vo. 6d. net. Post free 7d.",
+      "class": "reading",
+      "note": "Class 2: 'Svo.' for '8vo.' — numeral 8 read as S; no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "remarks in the Phcedo, that the soul",
+      "replace": "remarks in the Phædo, that the soul",
+      "class": "reading",
+      "note": "Class 2 — 'Phædo' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Price is. 6d. net. Post free is. yd.",
+      "replace": "Price 1s. 6d. net. Post free 1s. 7d.",
+      "class": "reading",
+      "note": "Class 2: the shilling numeral 1 was read as the letter i in both 'is.', and the 7 of '7d.' as y ('yd.') — plausible-looking wrong words with no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Price is. 6d. net. Post free is. 7d.",
+      "replace": "Price 1s. 6d. net. Post free 1s. 7d.",
+      "class": "reading",
+      "note": "Class 2: numeral 1 read as letter i twice ('is.' for '1s.'); no damage character anywhere in the words. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "to be liber ated from this sensible",
+      "replace": "to be liberated from this sensible",
+      "class": "reading",
+      "note": "Class 3 broken word: 'liberated' is split in two as 'liber ated' (the print's join or hyphen lost at the break) and the split is still shown to the reader of the published text. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "then be liber ated from labours",
+      "replace": "then be liberated from labours",
+      "class": "reading",
+      "note": "Class 3 broken word: a second occurrence of 'liberated' split in two as 'liber ated', still visible in the reading view. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "bowls, jhen, and the amphorae",
+      "replace": "bowls, then, and the amphorae",
+      "class": "reading",
+      "note": "'then' misread 'jhen' (t for j) — a plausible-looking wrong word carrying no damage character, invisible to the character census; class 2. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "those instru ments pertaining",
+      "replace": "those instruments pertaining",
+      "class": "reading",
+      "note": "'instruments' split as 'instru ments' (dropped line-end hyphen); class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "these instru ments of weaving",
+      "replace": "these instruments of weaving",
+      "class": "reading",
+      "note": "Second occurrence of 'instruments' split as 'instru ments'; class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "and not of ^ any other matter",
+      "replace": "and not of any other matter",
+      "class": "reading",
+      "note": "Caret standing alone between 'of' and 'any' where the print has only the word-space; class 1. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "tinged from nalood. and wool",
+      "replace": "tinged from blood; and wool",
+      "class": "reading",
+      "note": "'blood;' misread 'nalood.' (b for n, semicolon read as period) — a plausible-looking non-word with no damage character, census-blind; class 2. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "heavens throught the influx",
+      "replace": "heavens through the influx",
+      "class": "reading",
+      "note": "Class 2 — 'through' with its final h turned to t, leaving the plausible non-word 'throught'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Cui nautce septem germani",
+      "replace": "Cui nautæ septem germani",
+      "class": "reading",
+      "note": "Class 2 — Latin 'nautæ' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Commentary on the Timceus",
+      "replace": "Commentary on the Timæus",
+      "class": "reading",
+      "note": "Class 2 — 'Timæus' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "webs will y evidently be",
+      "replace": "webs will evidently be",
+      "class": "reading",
+      "note": "Stray 'y' artefact standing between 'will' and 'evidently' — not a damage-set character, so census-blind; class 1. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "dyed from / animal juice",
+      "replace": "dyed from animal juice",
+      "class": "reading",
+      "note": "Slash (damage set) standing alone between 'from' and 'animal' — the print's space read as a symbol; class 1. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "peculiarity . in ... the",
+      "replace": "peculiarity in the",
+      "class": "reading",
+      "note": "Class 1 — a stray full stop and a dot-leader artefact stand in the reading view where the print carries plain spaces. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "siirh nhgriirit;ifif::J",
+      "replace": "such obscurities,",
+      "class": "reading",
+      "note": "Run-together fragment in which 'such obscurities,' collapsed into noise with semicolon/colon artefacts and no damage-set character; class 2. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "Pythagoreans. ancLafter",
+      "replace": "Pythagoreans; and after",
+      "class": "reading",
+      "note": "Class 3: 'and after' is fused into the run-together fragment 'ancLafter' (with d misread cL), and the full stop before it should be the parallel's semicolon — no damage character anywhere, so the census is blind. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "woven from ^> the blood",
+      "replace": "woven from the blood",
+      "class": "reading",
+      "note": "'^>' standing alone before 'the blood' where the print has nothing but the space; class 1. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "inspective guar dian of",
+      "replace": "inspective guardian of",
+      "class": "reading",
+      "note": "'guardian' split as 'guar dian' (dropped line-end hyphen); class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "an ex cess of moisture",
+      "replace": "an excess of moisture",
+      "class": "reading",
+      "note": "The printed word 'excess' is broken in two by a spurious space ('ex cess') with no damage character in it, so no rule fired and the census is blind to it — class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "essentially \\4 darkand",
+      "replace": "essentially dark and",
+      "class": "reading",
+      "note": "A backslash (damage set) with a stray 4 stands in the reading view between 'essentially' and the word after it — very likely the print's own space read as a symbol (or a misread mark); the print reads 'essentially dark and obscure'; class 1. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "De Nuptiis Philologies",
+      "replace": "De Nuptiis Philologiæ",
+      "class": "reading",
+      "note": "Class 2 — Martianus Capella's title 'De Nuptiis Philologiæ', the ligature mangled to make a wrong Latin form 'Philologies'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Proclus on the Timceus",
+      "replace": "Proclus on the Timæus",
+      "class": "reading",
+      "note": "Class 2 — 'Timæus' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "connected. , iThrough",
+      "replace": "connected. Through",
+      "class": "reading",
+      "note": "Class 1: stray ' , i' debris stands between the full stop and 'Through' in the reading view's own text. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "dwell, near fountains",
+      "replace": "dwelt near fountains",
+      "class": "reading",
+      "note": "Class 2: 'dwell' is a plausible real word substituted for the parallel's 'dwelt' (missing t), with a stray comma after it — invisible to any character census. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "fountains and river ;",
+      "replace": "fountains and rivers ;",
+      "class": "reading",
+      "note": "The plural 's' is missing from 'rivers' — a wrong word with no damage character, invisible to the census (class 2). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "or Mithra. as well as",
+      "replace": "For Mithra, as well as",
+      "class": "reading",
+      "note": "'For' has lost its initial letter to become 'or', and Mithra's comma has been read as a period — wrong words carrying no damage character (class 2). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "is fhe, npminrgus and",
+      "replace": "is the Demiurgus and",
+      "class": "reading",
+      "note": "'the' mislettered as 'fhe' (the comma is scanner debris) and 'Demiurgus' — Taylor's standing rendering of δημιουργός — mislettered as 'npminrgus': substitution damage with no damage character (class 2). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "in stead of two gates",
+      "replace": "instead of two gates",
+      "class": "reading",
+      "note": "Word broken in two where the same word stands whole earlier in the sentence, class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "intelligible con cern",
+      "replace": "intelligible concerns",
+      "class": "reading",
+      "note": "Class 3 broken word: the word is split as 'con cern' and the final s is also lost, so the reading view shows two fragments where the print has one word; the parallel supplies 'concerns'. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "in the Timceus, calls",
+      "replace": "in the Timæus, calls",
+      "class": "reading",
+      "note": "Class 2 — 'Timæus' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "described >by Proclus",
+      "replace": "described by Proclus",
+      "class": "reading",
+      "note": "Class 1 — the damage character '>' standing between 'described' and 'by', the print's own space read as a symbol; the reading is the space. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "SUDDEN DEATH &THE WAR",
+      "replace": "SUDDEN DEATH & THE WAR",
+      "class": "reading",
+      "note": "Class 3: two words fused — the space after the print's ampersand was lost, giving '&THE'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "therefore, The world",
+      "replace": "therefore, the world",
+      "class": "reading",
+      "note": "Class 2: wrong capital mid-sentence, a substituted letter no census can count. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "rites per taining to",
+      "replace": "rites pertaining to",
+      "class": "reading",
+      "note": "Class 3: 'pertaining' is broken in two by a spurious space in both the reading view and the transcription. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "have sus pected that",
+      "replace": "have suspected that",
+      "class": "reading",
+      "note": "'suspected' split in two ('sus pected'), a line-end break whose hyphen the scanner dropped; class 3. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "souls that fail into",
+      "replace": "souls that fall into",
+      "class": "reading",
+      "note": "Class 2: 'fail' is a wrong word for 'fall', invisible to any character census. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "tmmHarjfi gfatnpnts",
+      "replace": "mundane elements",
+      "class": "reading",
+      "note": "Class 2: two garbled non-words carrying no damage-set character and therefore invisible to the census, left unrepaired in the reading view. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "contents everywhere",
+      "replace": "contents every where",
+      "class": "reading",
+      "note": "Class 3: 'every where' fused into 'everywhere'; the same section's print carries the word as two. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "den For the powers",
+      "replace": "den. For the powers",
+      "class": "reading",
+      "note": "Class 2: a sentence-opening 'For' with no preceding stop — the print's period after 'den' is missing at the block seam. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "\\ But he is placed",
+      "replace": "But he is placed",
+      "class": "reading",
+      "note": "A lone backslash stands before the paragraph-initial 'But' — scanner debris for the paragraph opening (lost space/indent, possibly page-top furniture), still visible in the reading view (class 1); no separate reading is invented for the mark. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Charing Cross Read",
+      "replace": "Charing Cross Road",
+      "class": "reading",
+      "note": "Class 2: a wrong real English word — 'oa' of 'Road' read as 'ea' ('Read'); no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "bottom i darkness",
+      "replace": "bottom is darkness",
+      "class": "reading",
+      "note": "Class 2: a missing s leaves the real English word 'i' — exactly the dangerous census-blind shape. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "JOHN M, W ATKINS,",
+      "replace": "JOHN M. WATKINS,",
+      "class": "reading",
+      "note": "Class 3: the surname is broken in two by a false space ('W ATKINS' for 'WATKINS'), with the period after the initial also misread as a comma ('M,'). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "\"noTTo sucn souls",
+      "replace": "world; for to such souls",
+      "class": "reading",
+      "note": "Class 1 — several words collapsed into noise ('world; for to', with 'such' misread 'sucn') still standing in the reading view; the 1917's punctuation there is not separable from the noise. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "mvsticallyplaces",
+      "replace": "mystically places",
+      "class": "reading",
+      "note": "Two words fused into one, with y additionally misread as v; class 3 fusion. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "a passagetosouls",
+      "replace": "a passage to souls",
+      "class": "reading",
+      "note": "Class 3: three words fused into one ('passage to souls') with no damage character in the fused mass. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "s de scending i",
+      "replace": "s descending i",
+      "class": "reading",
+      "note": "'descending' broken in two at a line break and still shown split in the reading view (class 3). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "arrexpTaHatiori",
+      "replace": "an explanation",
+      "class": "reading",
+      "note": "Two words collapsed into a non-word artefact standing openly in the reading view with no damage character to flag it, class 1. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "inter pretative",
+      "replace": "interpretative",
+      "class": "reading",
+      "note": "Class 3 — 'interpretative' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "imperfec.tumque",
+      "replace": "imperfectumque",
+      "class": "reading",
+      "note": "Class 1 — a stray full stop standing inside the Latin word 'imperfectumque' of Claudian's line. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "e situa tion o",
+      "replace": "e situation o",
+      "class": "reading",
+      "note": "'situation' split in two; class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "signi fication",
+      "replace": "signification",
+      "class": "reading",
+      "note": "Class 3: 'signification' broken in two, census-blind. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "recesses doors",
+      "replace": "recesses and trenches, caverns, doors",
+      "class": "reading",
+      "note": "Whole printed words 'and trenches, caverns,' dropped between 'recesses' and 'doors' with no damage character anywhere in the surviving text, class 2 — invisible to the census. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "that > hostile",
+      "replace": "that hostile",
+      "class": "reading",
+      "note": "A lone '>' stands between the words where the print carries only a space — the classic lost-space marker, still visible in the reading view (class 1). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "philo sophical",
+      "replace": "philosophical",
+      "class": "reading",
+      "note": "Class 3 — 'philosophical' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "distribu tion",
+      "replace": "distribution",
+      "class": "reading",
+      "note": "Class 3: 'distribution' broken in two, census-blind. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "place \\ which",
+      "replace": "place which",
+      "class": "reading",
+      "note": "Class 1: '\\' stands alone between words — the print's own space the scanner read as a symbol; give the space back. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "make a cavern",
+      "replace": "take a cavern",
+      "class": "reading",
+      "note": "Class 2, the dangerous class: 'make' is a plausible English word carrying no damage character, but the parallel prints 'take'. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "Naiades? from",
+      "replace": "Naiades from",
+      "class": "reading",
+      "note": "Class 1: a stray question mark stands mid-declarative sentence where the print carries no mark — an artefact in the reading view's own text. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "is y manifest",
+      "replace": "is manifest",
+      "class": "reading",
+      "note": "Class 1: a stray 'y' stands alone between 'is' and 'manifest' — an artefact the character census cannot count. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "thepoetjralls",
+      "replace": "the poet calls",
+      "class": "reading",
+      "note": "'the poet calls' fused into one token with 'c' turned to 'jr', still standing whole in the reading view (class 3). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "«*•<*, anH js",
+      "replace": ", and is",
+      "class": "reading",
+      "note": "Class 1 run-together fragment: the comma after 'taste' and the words 'and is' collapsed into scanner noise that still stands in the reading view, carrying the only two damage characters ('«' and '*') the build counted. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "putre faction",
+      "replace": "putrefaction",
+      "class": "reading",
+      "note": "Class 3: 'putrefaction' broken in two and still shown split in the reading view, with no damage character to alert the census. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "trans cendent",
+      "replace": "transcendent",
+      "class": "reading",
+      "note": "Class 3 — 'transcendent' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "illumi nating",
+      "replace": "illuminating",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "inte.llfrtnal",
+      "replace": "intellectual",
+      "class": "reading",
+      "note": "Class 1 — an OCR artefact standing in the reading view's own text whose characters (letters and full stops) fall outside the damage set, so the census is blind to it. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "by / a wisdom",
+      "replace": "by a wisdom",
+      "class": "reading",
+      "note": "Class 1 — a slash marker stands alone between words in the reading view; it is the print's own space, read as a symbol — give the space. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "con secrated",
+      "replace": "consecrated",
+      "class": "reading",
+      "note": "Class 3: 'consecrated' is broken in two by a lost line-break; neither half carries a damage character, so a character census cannot see it. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "the ' Spirit",
+      "replace": "the Spirit",
+      "class": "reading",
+      "note": "A lone apostrophe stands between 'the' and 'Spirit' in the reading view — the print's own space read as a symbol (class 1). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "terres trial",
+      "replace": "terrestrial",
+      "class": "reading",
+      "note": "Class 3: 'terrestrial' is broken across the line break, the hyphen read as a space, leaving the spurious 'terres trial'. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "fluctuat ing",
+      "replace": "fluctuating",
+      "class": "reading",
+      "note": "Class 3: 'fluctuating' is split in two by the line-end break, leaving 'fluctuat ing'. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "cojisecrated",
+      "replace": "consecrated",
+      "class": "reading",
+      "note": "Class 2: wrong word carrying no damage character ('n' read as 'ji'); the reading view still shows it wrong after the adjacent '_' on 'reality_' was repaired. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": " Capri corn,",
+      "replace": " Capricorn,",
+      "class": "reading",
+      "note": "Class 3: 'Capricorn' split in two ('Capri corn'); this 1917 printing spells the name 'Capricorn' as in block 1, where the 1823 parallel has 'Capricornus'. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "appella tion",
+      "replace": "appellation",
+      "class": "reading",
+      "note": "Broken word: 'appellation' split in two (class 3). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "con formably",
+      "replace": "conformably",
+      "class": "reading",
+      "note": "Word broken in two by a lost line-end hyphen, class 3; reading view still prints it as two words. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "themselves ;",
+      "replace": "themselves;",
+      "class": "reading",
+      "note": "OCR inserted a space before the semicolon; the artefact stands in the reading view, class 1 (the print carries no space there). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "testi monies",
+      "replace": "testimonies",
+      "class": "reading",
+      "note": "Word broken in two by a lost line-end hyphen, class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "trans lation",
+      "replace": "translation",
+      "class": "reading",
+      "note": "Class 3 — 'translation' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "de nominated",
+      "replace": "denominated",
+      "class": "reading",
+      "note": "Class 3 — 'denominated' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "repre sented",
+      "replace": "represented",
+      "class": "reading",
+      "note": "Class 3 — 'represented' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "explana tion",
+      "replace": "explanation",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost; the print reads 'explanation' as one word. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "intem perate",
+      "replace": "intemperate",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "separa tions",
+      "replace": "separations",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "gates omit a",
+      "replace": "gates emit a",
+      "class": "reading",
+      "note": "Class 2: 'omit' is a wrong English word with no damage character in it; the print reads 'emit'. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "ex position",
+      "replace": "exposition",
+      "class": "reading",
+      "note": "'exposition' split in two; class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "itself. and",
+      "replace": "itself, and",
+      "class": "reading",
+      "note": "Class 2: a full stop before a lowercase 'and' — the print's comma misread as a period. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "simili tude",
+      "replace": "similitude",
+      "class": "reading",
+      "note": "Class 3: 'similitude' is broken in two and left broken in the reading view. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "re ceptacle",
+      "replace": "receptacle",
+      "class": "reading",
+      "note": "Class 3: 'receptacle' is broken in two and left broken in the reading view. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "cavernwhich",
+      "replace": "cavern which",
+      "class": "reading",
+      "note": "Class 3: 'cavern' and 'which' fused into one word; the reading view itself still prints 'a cavernwhich'. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": " cold ness ",
+      "replace": " coldness ",
+      "class": "reading",
+      "note": "Broken word: 'coldness' split in two (class 3). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "con versant",
+      "replace": "conversant",
+      "class": "reading",
+      "note": "Class 3 — 'conversant' broken across a print line, the hyphen lost as a space. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "remark able",
+      "replace": "remarkable",
+      "class": "reading",
+      "note": "Class 3 — 'remarkable' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Pythag oras",
+      "replace": "Pythagoras",
+      "class": "reading",
+      "note": "Class 3 — 'Pythagoras' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "signify ing",
+      "replace": "signifying",
+      "class": "reading",
+      "note": "Class 3 — 'signifying' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "per petuity",
+      "replace": "perpetuity",
+      "class": "reading",
+      "note": "Class 3 — 'perpetuity' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "refine ment",
+      "replace": "refinement",
+      "class": "reading",
+      "note": "Class 3 — 'refinement' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "insati able",
+      "replace": "insatiable",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Com mentary",
+      "replace": "Commentary",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "per forated",
+      "replace": "perforated",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost (the same block has 'perforated' unsplit later). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "flpiirishes",
+      "replace": "flourishes",
+      "class": "reading",
+      "note": "Class 1 — a garbled word of plain letters standing in the reading view for 'flourishes', invisible to any character census. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "thejvictors",
+      "replace": "the victors",
+      "class": "reading",
+      "note": "Class 3 — 'the victors' fused into one word with a stray j standing for the space; no damage character. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "some thing",
+      "replace": "something",
+      "class": "reading",
+      "note": "'something' split in two; class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "in tention",
+      "replace": "intention",
+      "class": "reading",
+      "note": "'intention' split in two; class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "(Thus also",
+      "replace": "Thus also",
+      "class": "reading",
+      "note": "Class 1: an unmatched parenthesis, scanner debris, stands before 'Thus' in the reading view's text. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "too. Ceres",
+      "replace": "too, Ceres",
+      "class": "reading",
+      "note": "Class 2: the comma after 'too' is misread as a period, splitting one clause into a fragment. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "to' Nymphs",
+      "replace": "to Nymphs",
+      "class": "reading",
+      "note": "Class 1: a stray apostrophe artefact after 'to' (not in the damage set, invisible to the census); the parallel suggests it is the print's comma drifted from after 'Nymphs'. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "cath artic",
+      "replace": "cathartic",
+      "class": "reading",
+      "note": "Class 3: 'cathartic' broken in two with no damage character, invisible to the census. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": " per tain ",
+      "replace": " pertain ",
+      "class": "reading",
+      "note": "Broken word: 'pertain' split in two (class 3). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "in com mon",
+      "replace": "in common",
+      "class": "reading",
+      "note": "Broken word: 'common' split in two (class 3). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "gener ated",
+      "replace": "generated",
+      "class": "reading",
+      "note": "Class 3 — 'generated' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "remind ing",
+      "replace": "reminding",
+      "class": "reading",
+      "note": "Class 3 — 'reminding' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "pub lished",
+      "replace": "published",
+      "class": "reading",
+      "note": "Class 3 — 'published' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "immu table",
+      "replace": "immutable",
+      "class": "reading",
+      "note": "Class 3 — 'immutable' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "know ledge",
+      "replace": "knowledge",
+      "class": "reading",
+      "note": "Class 3 — 'knowledge' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "con tinued",
+      "replace": "continued",
+      "class": "reading",
+      "note": "Class 3 — 'continued' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "rudi ments",
+      "replace": "rudiments",
+      "class": "reading",
+      "note": "Class 3 — 'rudiments' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "gen erated",
+      "replace": "generated",
+      "class": "reading",
+      "note": "Class 3 — 'generated' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "impetu ous",
+      "replace": "impetuous",
+      "class": "reading",
+      "note": "Class 3 — 'impetuous' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "per ceives",
+      "replace": "perceives",
+      "class": "reading",
+      "note": "Class 3 — 'perceives' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "propitipus",
+      "replace": "propitious",
+      "class": "reading",
+      "note": "Class 2: a non-word with no damage mark in it, invisible to a character census; the print reads 'propitious'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "pos sessed",
+      "replace": "possessed",
+      "class": "reading",
+      "note": "Class 3: the word is broken at the print's line break and the hyphen was lost in flattening. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "narra tion",
+      "replace": "narration",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "signi fied",
+      "replace": "signified",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost (the same block already carries 'signified' unsplit, confirming the print's word). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Euri pides",
+      "replace": "Euripides",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost (note 23 above carries 'Euripides' unsplit). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "the eartju",
+      "replace": "the earth",
+      "class": "reading",
+      "note": "Class 2: 'earth' with the final 'h' misread as 'ju' — a wrong word carrying no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "dark ness",
+      "replace": "darkness",
+      "class": "reading",
+      "note": "'darkness' split in two; class 3, confirmed whole in the parallel printing. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "ZoTbaster",
+      "replace": "Zoroaster",
+      "class": "reading",
+      "note": "Class 2: 'Zoroaster' garbled by substituted letters with no damage character, still shown in the reading view. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "pre side.",
+      "replace": "preside.",
+      "class": "reading",
+      "note": "Class 3: 'preside' is broken in two ('pre side') and left so in the reading view. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "dwell ing",
+      "replace": "dwelling",
+      "class": "reading",
+      "note": "Class 3: 'dwelling' is broken in two and left broken in the reading view. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "con sists",
+      "replace": "consists",
+      "class": "reading",
+      "note": "Class 3: 'consists' broken in two with no damage character anywhere, still shown split in the reading view. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "like wise",
+      "replace": "likewise",
+      "class": "reading",
+      "note": "Class 3: 'likewise' broken in two with no damage character. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "pre sides",
+      "replace": "presides",
+      "class": "reading",
+      "note": "Class 3: the word 'presides' is broken in two by the print's line-end break, which the scanner read as a space. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "situ ated",
+      "replace": "situated",
+      "class": "reading",
+      "note": "Class 3: 'situated' broken in two by a false space; the reading view still carries the break. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "Dedicated",
+      "replace": "dedicated",
+      "class": "reading",
+      "note": "A capital D substituted mid-sentence in 'are not Dedicated' — a wrong word carrying no damage character (class 2). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "the 7 sea",
+      "replace": "the sea",
+      "class": "reading",
+      "note": "Class 1 visible artefact: a stray digit 7 stands alone between 'the' and 'sea' in the reading view's own text — scanner debris standing where the print carries only the space between the two words, so the print reads 'the sea' (if the 1917 print should carry a footnote numeral at this spot a human must retain it). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "sen sible",
+      "replace": "sensible",
+      "class": "reading",
+      "note": "Class 3 — 'sensible' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "physi cal",
+      "replace": "physical",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "pro bable",
+      "replace": "probable",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "par takes",
+      "replace": "partakes",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "cavi ties",
+      "replace": "cavities",
+      "class": "reading",
+      "note": "Class 3: line-break split with the hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "evi dent",
+      "replace": "evident",
+      "class": "reading",
+      "note": "'evident' is broken in two by a flattened line break the print does not carry as a space; class 3. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "essenceT",
+      "replace": "essence.",
+      "class": "reading",
+      "note": "Capital T substituted for the sentence's full stop — a wrong character with no damage marker, and the reading view still shows 'essenceT' (class 2). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "whichare",
+      "replace": "which are",
+      "class": "reading",
+      "note": "'which are' fused into one word with no damage character, invisible to the census (class 3). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "soulsi f",
+      "replace": "souls",
+      "class": "reading",
+      "note": "Debris 'i f' clinging to 'souls' still stands in the reading view, where the print reads simply 'souls' (class 1). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "water) .",
+      "replace": "water",
+      "class": "reading",
+      "note": "A closing parenthesis and full stop stand as debris after 'water' in the reading view, where the print runs straight on to 'is the nutriment' (class 1). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "how ever",
+      "replace": "however",
+      "class": "reading",
+      "note": "Class 3: 'however' is split in two by the line-end break the scanner read as a space. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "imagelmd",
+      "replace": "image and",
+      "class": "reading",
+      "note": "Class 3: 'image' and 'and' fused with letter noise ('lmd' for 'and'), still shown fused in the reading view. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "man. who",
+      "replace": "man, who",
+      "class": "reading",
+      "note": "The print's comma after 'man' was read as a full stop — a substitution invisible to any damage-character census (class 2); the recorded reading repaired 'us^a_man' but left the period wrong. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "mean ing",
+      "replace": "meaning",
+      "class": "reading",
+      "note": "'meaning' broken in two by a spurious space, carried unchanged into the reading view — class 3. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "de rived",
+      "replace": "derived",
+      "class": "reading",
+      "note": "Class 3 — 'derived' broken across a print line, hyphen lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "her self",
+      "replace": "herself",
+      "class": "reading",
+      "note": "Class 3 — 'herself' broken at a print line-end within a block that shows several line breaks (same lost-hyphen damage as 'signify ing' and 'impetu ous' here). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "givingjt",
+      "replace": "giving it",
+      "class": "reading",
+      "note": "Class 3 — 'giving it' fused into one word, the space and initial i collapsing to a j, with no damage character for the census to see. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "yngrtnmj",
+      "replace": "wisdom",
+      "class": "reading",
+      "note": "Class 1 — a garbled word standing in the reading view for 'wisdom' (the print's following comma was lost with the noise). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": ".Minerva",
+      "replace": "Minerva",
+      "class": "reading",
+      "note": "Class 1 — a stray full stop at the head of the block stands in the reading view where the lost word 'and' belongs; page-boundary debris, not the print's. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "wisdom?.",
+      "replace": "wisdom.",
+      "class": "reading",
+      "note": "Class 2 — a question mark substituted for the print's full stop, carrying no damage character and so invisible to the census. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "thecaye",
+      "replace": "the cave",
+      "class": "reading",
+      "note": "'the cave' fused into one word with c misread as y; class 3 fusion. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "un fold",
+      "replace": "unfold",
+      "class": "reading",
+      "note": "'unfold' split in two; class 3. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "'symbol",
+      "replace": "symbol",
+      "class": "reading",
+      "note": "Class 1: a stray apostrophe (not a damage-set character, so the census never saw it) clings to the first word of the block; possibly the tail of the text lost at the preceding seam. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "me. the",
+      "replace": "me, the",
+      "class": "reading",
+      "note": "Class 2: a full stop before lowercase 'the' — the print's comma after 'me' misread as a period. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "denlike",
+      "replace": "den-like",
+      "class": "reading",
+      "note": "Class 2: the plausible-looking non-word 'denlike' — the print's hyphen in 'den-like' is missing. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "For\" in",
+      "replace": "For in",
+      "class": "reading",
+      "note": "A stray quotation mark stands in the reading view between 'For' and 'in consequence' where the print has the space; this printing sets no comma after 'For' ('For they', 'For we', 'For the ancients') (class 1). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "thejiL.",
+      "replace": "them.",
+      "class": "reading",
+      "note": "'them.' garbled to 'thejiL.' carrying no damage character — census-blind and still shown unrepaired in the reading view (class 2). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "smiTfi.",
+      "replace": "south.",
+      "class": "reading",
+      "note": "'south.' garbled to 'smiTfi.' with no damage character anywhere in it — a census-blind wrong word standing in the reading view (class 2). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "fiealso",
+      "replace": "He also",
+      "class": "reading",
+      "note": "Two print words, 'He also', fused into one token (with the H additionally misread) — a census-blind fusion the character count cannot see (class 3). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "nymphsT",
+      "replace": "nymphs.",
+      "class": "reading",
+      "note": "A capital T fused to 'nymphs' where the print's sentence full-stop stands (the next paragraph opens 'But these places') — a wrong word with no damage character (class 2). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "retains",
+      "replace": "detains",
+      "class": "reading",
+      "note": "Wrong word carrying no damage character — d read as r; the parallel printing cleanly reads 'detains'; class 2. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "In deed",
+      "replace": "Indeed",
+      "class": "reading",
+      "note": "The single word 'Indeed' is broken in two by a spurious space, with no damage character anywhere (class 3). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "rpannpr",
+      "replace": "manner",
+      "class": "reading",
+      "note": "A plausible-looking non-word standing for 'manner' with no damage character in it — the dangerous census-invisible class (class 2). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "i tne w",
+      "replace": "i the w",
+      "class": "reading",
+      "note": "Substituted letter (n for h) making a plausible-looking non-word with no damage character — class 2. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "nearthe",
+      "replace": "near the",
+      "class": "reading",
+      "note": "Class 3 — 'near the' fused into one word with no damage character anywhere in it. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "crowns-",
+      "replace": "crowns;",
+      "class": "reading",
+      "note": "Class 2 — a line-break hyphen stands in the reading view where the print closes the clause with a semicolon; no damage character. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "Jlence",
+      "replace": "Hence",
+      "class": "reading",
+      "note": "H misread as J — a wrong word carrying no damage character; class 2. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "form..",
+      "replace": "form.",
+      "class": "reading",
+      "note": "Class 1: a doubled full stop is an artefact still standing in the reading view's text where the print carries one period. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "caveni",
+      "replace": "cavern",
+      "class": "reading",
+      "note": "Class 2: 'cavern' misread as the plausible-looking non-word 'caveni' (r as i), no damage character present. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "rpmntq",
+      "replace": "remote",
+      "class": "reading",
+      "note": "OCR garbage standing for 'remote' with no damage-set character, so the character census never counts it — a wrong word still standing in the reading view (class 2). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "(v. n)",
+      "replace": "(v. 11)",
+      "class": "reading",
+      "note": "Class 2: no damage mark, but 'n' is not a letter here — it is the scanner's joining of '11', the verse number of the print's citation. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "CEneus",
+      "replace": "Œneus",
+      "class": "reading",
+      "note": "Class 2: the print's ligature Œ was read as 'CE', leaving the name 'CEneus' — a plausible-looking wrong form carrying no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "t-hi.c",
+      "replace": "this",
+      "class": "reading",
+      "note": "Class 1 — a garbled fragment standing in the reading view for the print's 'this', carrying no damage-set character. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "jwhich",
+      "replace": "which",
+      "class": "reading",
+      "note": "Class 2 — a substituted letter (j for w) leaves a plausible-looking non-word with no damage character, still standing in the reading view. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "ooetT",
+      "replace": "poet,",
+      "class": "reading",
+      "note": "'poet' garbled to 'ooet' with a stray T artefact (the print's comma) standing in the reading view's text; class 1 artefact. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "oT aH",
+      "replace": "of all",
+      "class": "reading",
+      "note": "Class 2: two wrong words with no damage character in them — 'of' misread 'oT' and 'all' misread 'aH'. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "tfiem",
+      "replace": "them",
+      "class": "reading",
+      "note": "Class 2: 'them' misread as the non-word 'tfiem', carrying no damage character. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "jwjth",
+      "replace": "with",
+      "class": "reading",
+      "note": "Class 2: a mis-scanned 'with' (j for i) carrying no damage character, still standing in the reading view as a non-word the census cannot see. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "morel",
+      "replace": "more",
+      "class": "reading",
+      "note": "'morel' is a real-looking wrong word standing where the print has 'more', with no damage character — class 2, the census-blind class. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "nlivp",
+      "replace": "olive",
+      "class": "reading",
+      "note": "Class 1 — a garbled word standing in the reading view for 'olive'; the damage around it was repaired but this word, holding no damage-set character, was left. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "Jeing",
+      "replace": "being",
+      "class": "reading",
+      "note": "Class 2 — a capital J substituted for b leaves a plausible-looking non-word with no damage character (the dash before it may be this print's own). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "' jHj",
+      "replace": "an",
+      "class": "reading",
+      "note": "Class 1 — a run-together fragment standing in the reading view for the print's 'an', none of its characters in the damage set. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "Ivith",
+      "replace": "with",
+      "class": "reading",
+      "note": "Class 2 — a capital I substituted for w leaves a plausible-looking non-word with no damage character. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "QYfT",
+      "replace": "over",
+      "class": "reading",
+      "note": "The word 'over' corrupted to the non-word 'QYfT' with no damage-set character, invisible to the census (class 2). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "thff",
+      "replace": "the dark and stormy sea",
+      "class": "reading",
+      "note": "'thff' is a corruption of 'the' carrying no damage marker, and the print's following words 'dark and stormy sea' were dropped entirely between it and the next block's 'of generation' — silent word-loss wholly invisible to the character count (class 2). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "she^",
+      "replace": "she",
+      "class": "reading",
+      "note": "Class 1: a '^' damage mark still standing at the end of the word in the reading view, most likely debris of the lost line-end hyphen or scanner noise; the printed word is simply 'she'. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "fby",
+      "replace": "(by",
+      "class": "reading",
+      "note": "Class 2 — a stray letter f stands where the print opens its parenthetical insertion (this printing parenthesises its insertions, as '(i.e.' and the surviving ')' after 'essence' show). (decided by the transcription and the 1823 parallel.)"
+    },
+    {
       "find": "hf>",
       "replace": "be",
       "class": "reading",
