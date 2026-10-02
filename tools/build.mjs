@@ -54,7 +54,7 @@ import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
 import { GROUPS, TEXTS, MODERN_EDITIONS, shelfFiles, textSource, isPublished } from './library/shelf.mjs';
-import { preprocess, renderBlocks, partition, assess, countParagraphs } from './library/reader.mjs';
+import { preprocess, renderBlocks, partition, assess, countParagraphs, applyCorrections } from './library/reader.mjs';
 import {
   hasEdition,
   editionPath,
@@ -767,6 +767,17 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 .sres .sr-w li { padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px;
   background: var(--bg2); font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
 .sres .sr-none, .sres .sr-hint { padding: 14px 0; font-family: var(--serif); color: var(--dim); }
+/* The second group's HEADING — printed only when the group has something in it,
+   because an empty heading over an empty list is a promise the page does not
+   keep. It is a divider, not a result: no link, no score, nothing to select. */
+.sres .sr-grp { margin: 26px 0 0; padding: 10px 0 6px; border-top: 2px solid var(--line);
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--accent2); }
+/* A shelf result is a CITATION: the edition and the division are the link, the
+   passage is quoted under it. It is styled as prose rather than as a card —
+   the passage is the thing, and the score sits with the edition line. */
+.sres .sr-shelf .sr-t { color: var(--accent); }
+.sres .sr-shelf .sr-s { margin: 0; font-style: italic; }
 /* the offer button is styled where it lands as well as in the list: the
    "did you mean" one is in the status line above the results, not in .sres */
 .sres .sr-go, .sstatus .sr-go { font: inherit; font-family: var(--mono); font-size: 12px; color: var(--accent2);
@@ -2869,6 +2880,11 @@ function searchIndex(navPosts) {
   // search and degrades to today's behaviour without it.
   const deep = deepIndex(vocab, sources, STOPWORDS);
   const dTotals = deepTotals(deep);
+  // The shelf's own half, in the same fetched file: one fetch, two groups. The
+  // page's inline index is untouched by it (the build measures and reports both
+  // halves — see buildSearch).
+  const shelf = shelfIndex();
+  deep.shelf = shelf;
   return {
     data,
     deep,
@@ -2891,6 +2907,10 @@ function searchIndex(navPosts) {
       deepPositions: dTotals.positions,
       deepPassages: dTotals.passages,
       deepLongest: dTotals.longest,
+      shelfDocs: shelf.docs.length,
+      shelfPassages: shelf.pass.length,
+      shelfWords: shelf.words.postings.length,
+      shelfSkipped: shelf.skipped,
     },
   };
 }
@@ -2919,6 +2939,19 @@ function buildSearch(navPosts) {
       `${totals.deepPassages} passages (longest ${totals.deepLongest} chars) — ${deepBytes} bytes raw, ` +
       `${deepGz} gzipped on the wire (the server encodes)`,
   );
+  // The shelf's half, MEASURED on its own: what it adds to the fetched file, so
+  // the cost of the second group is a number and not a shrug. (Its passages are
+  // the text itself, so the cost is the shelf's own prose, plus the word list.)
+  const shelfJson = JSON.stringify(deep.shelf).replaceAll('<', '\\u003c');
+  const shelfBytes = Buffer.byteLength(shelfJson);
+  const shelfGz = gzipSync(shelfJson, { level: 9 }).length;
+  log(
+    `search shelf half: ${totals.shelfPassages} passage(s) of ${totals.shelfDocs} text(s), ` +
+      `${totals.shelfWords} word(s) in its own list` +
+      (totals.shelfSkipped ? `, ${totals.shelfSkipped} served text(s) with no reading to cite` : '') +
+      ` — the shelf adds ${shelfBytes} bytes raw, ${shelfGz} gzipped, to a fetched half that is now ` +
+      `${deepBytes} raw / ${deepGz} gzipped (the shelf is ${((shelfGz / deepGz) * 100).toFixed(1)}% of it on the wire)`,
+  );
   const json = JSON.stringify(data).replaceAll('<', '\\u003c');
   const client = stripJsComments(readFileSync(join(ROOT, 'tools', 'search', 'search.js'), 'utf8'));
   const seriesOf = [];
@@ -2931,7 +2964,17 @@ function buildSearch(navPosts) {
   const kindOpts = kindsOf.map((k) => option(k, k)).join('');
 
   const prose =
-    `<p>This page searches all ${totals.docs} published pieces at once and tells you <i>which of three ` +
+    `<p>This page searches all ${totals.docs} published pieces at once` +
+    // the shelf's half, stated only when the build serves a text: a page that
+    // named a group it cannot answer with would be advertising a facet that
+    // returns nothing (the index is emitted from the same SERVED list)
+    (totals.shelfDocs
+      ? ` and, <b>below them</b>, the ${totals.shelfDocs} published library ` +
+        `${totals.shelfDocs === 1 ? 'text' : 'texts'} in the <a href="/library/">the shelf</a> — ` +
+        `${totals.shelfPassages} passages in all, cited by section and printed page and linked into the ` +
+        `book they stand in`
+      : '') +
+    ` and tells you <i>which of three ` +
     `signals</i> put each result in front of you. The first is the <b>words</b>: the terms the pieces ` +
     `actually use, three characters and longer, each with the pieces it occurs in — looked up as a whole ` +
     `word and as the beginning of one, where a hit in a piece's title or a section heading counts for more ` +
@@ -2989,12 +3032,32 @@ function buildSearch(navPosts) {
     `passages fetched once from this site. Snippets come from each piece's own words: the passage a match ` +
     `sat in when the fetched half is there, and each piece's headings, summary and opening passage when it ` +
     `is not — so a piece matched deep inside shows its opening rather than the matched line. Scores are ` +
-    `relative to the query and are not a judgement of the piece.</p>`;
+    `relative to the query and are not a judgement of the piece.</p>` +
+    // The shelf's own paragraph: what the second group IS, and what it does not
+    // do. Written only when there is a shelf to speak of.
+    (totals.shelfDocs
+      ? `<p><b>In the shelf.</b> The library's own texts are searched in a group of their own, ` +
+        `<b>always below the pieces</b>: a book is the source a reading argues from, not a competitor to ` +
+        `the argument, so a passage of a book never outranks a piece. The two groups are answered from two ` +
+        `separate indexes and rendered as two lists in order — the numbers are never compared across them, ` +
+        `which is what makes the order impossible to get wrong rather than merely intended. Every rule ` +
+        `holds over the shelf as over the pieces: a phrase is still adjacency, <code>~</code> still ` +
+        `corrects, <code>/a pattern/</code> still walks the words, and a hit in a text's or a section's ` +
+        `title still outranks a hit in a passage's body. A shelf result is a <b>citation</b> — the ` +
+        `edition, the section or the printed page, and the passage's own words — and it links to that ` +
+        `passage in the book. The shelf's index carries only the texts this build serves, so a result can ` +
+        `never point at a page the site does not have. The series and kind facets filter the <i>pieces</i> ` +
+        `and leave the shelf alone (a book is not filed in a blog series); the <code>where</code> control ` +
+        `shows one group on its own. The line above the results counts both groups, so the shelf is ` +
+        `visible even when a query finds nothing in it.</p>`
+      : '');
 
   const body =
     `<section><div class="wrap">` +
     `<div class="hint"># ${totals.docs} pieces · ${totals.vocab} words in the list · ${totals.citations} ` +
-    `citations from ${totals.works} works · three signals: the words, the vectors, the links</div>` +
+    `citations from ${totals.works} works` +
+    (totals.shelfDocs ? ` · ${totals.shelfPassages} passages in the shelf` : '') +
+    ` · three signals: the words, the vectors, the links</div>` +
     `<form class="sform" id="sf" role="search">` +
     `<div class="sq-wrap">` +
     `<div class="srow"><span class="s-lab" aria-hidden="true">$</span>` +
@@ -3015,6 +3078,13 @@ function buildSearch(navPosts) {
     `<label for="sf-sort">order</label>` +
     `<select id="sf-sort" name="sort"><option value="">relevance</option>` +
     `<option value="new">newest first</option></select>` +
+    // the group filter exists only when there are two groups to filter
+    (totals.shelfDocs
+      ? `<label for="sf-where">where</label>` +
+        `<select id="sf-where" name="where"><option value="any">the pieces and the shelf</option>` +
+        `<option value="pieces">the pieces only</option>` +
+        `<option value="shelf">the shelf only</option></select>`
+      : '') +
     `</div>` +
     `</form>` +
     `<div class="sstatus" id="sstatus" role="status" aria-live="polite"></div>` +
@@ -3033,7 +3103,9 @@ function buildSearch(navPosts) {
     `search index: ${totals.docs} pieces, ${totals.vocab} terms (${totals.singleton} of them in exactly one piece), ` +
       `${totals.postings} term-to-piece pairs, ${totals.strong} terms in titles and headings, ` +
       `${totals.links} links, ${totals.citations} citations over ${totals.works} works, ${totals.catalogued} ` +
-      `catalogued; data block ${Buffer.byteLength(json)} bytes`,
+      `catalogued; data block ${Buffer.byteLength(json)} bytes; ` +
+      `the shelf's group: ${totals.shelfPassages} passage(s) of ${totals.shelfDocs} text(s), ` +
+      `${totals.shelfWords} word(s) in its own list (searched separately — see tools/search/search.js)`,
   );
   log(
     `search automaton: ${totals.dafsaStates} states, ${totals.dafsaEdges} transitions over ${totals.vocab} terms ` +
@@ -3047,15 +3119,247 @@ function buildSearch(navPosts) {
     description:
       `Search all ${totals.docs} pieces of blog.jaye.ch by three signals at once — a word index, a tf-idf ` +
       `vector space, and a datalog query over the blog's own citation graph — with the reason each result ` +
-      `matched.`,
+      `matched` +
+      (totals.shelfDocs ? `, and the passages of the published library texts below them.` : '.'),
     prompt: 'grep -r',
     heroTitle: 'The <span class="fx">search</span>',
     tagline:
       `every published piece, by <b>three signals</b> at once — the words, the vectors, and the links between ` +
-      `them.`,
+      `them` +
+      (totals.shelfDocs ? `; and, below them, the <b>passages</b> of the published library texts.` : '.'),
     body,
     navCurrent: '/search/',
   };
+}
+
+/* ---------- the shelf's half of the search index ----------------------------
+ *
+ * The search answers in TWO GROUPS and this is the second one: a PASSAGE of a
+ * published library text, cited and linked, below the pieces. The blog is the
+ * argument and the shelf is the source it argues from, so a passage is not a
+ * competitor to a piece — it is where the argument comes from. The two groups
+ * are kept apart BY CONSTRUCTION rather than by care: this half has its own word
+ * list, its own automaton, its own passage numbering and its own scores, the
+ * client searches it with its own provider, and the page renders the two answers
+ * as two lists in order (tools/search/search.js) — no number from this half is
+ * ever handed to a piece's ranking, because no code path carries one across.
+ *
+ * WHAT IS INDEXED is the READING VIEW of the texts the build SERVES — the same
+ * `SERVED` list the library's own pages are emitted from, so the index and the
+ * pages cannot disagree about which text is reachable and a result can never
+ * link to a page the public cannot reach.
+ *
+ *   A text with a STORED EDITION is indexed from its DOCUMENT, with the recorded
+ *   corrections APPLIED: the reading view is what a reader reads, and a word
+ *   that only the transcription's damage spells is not a word of the book. The
+ *   passages are the reader's own grouping (elm/src/Reader/Document.elm `flow`):
+ *   a paragraph is a run of consecutive p/verse/ref blocks, a note is a run of
+ *   notedef blocks with one number, and the front matter and the advertisements
+ *   are left out — as they are of the app's own in-text search. Each passage
+ *   carries the document's own anchor: the paragraph label the extractor gave it
+ *   (`s4-3`), else the section it stands in (`s4`), else the printed page
+ *   (`p14`), else its region (`snotes`), so a result links INTO the book.
+ *
+ *   A text served from the shelf ALONE (no stored edition) is indexed from its
+ *   transcription page's own blocks — the same reader that page is rendered with
+ *   and the same `partition` call that decides its parts — so the index says what
+ *   the page shows. Such a page has no section or printed-page anchors at all, so
+ *   a passage links to the heading it stands under (the id the page renders), and
+ *   to the page (or its part) when nothing precedes it. A text whose
+ *   transcription is not worth reading is not served as text at all (the
+ *   library's own `assess`) and is not indexed either.
+ *
+ * A passage is [doc, anchor, printed page, the section's opening, section number,
+ * text, page path] — the last only when the passage is not on the text's first
+ * page. The word list is the pieces' own rule over the passages (SEARCH_WORD,
+ * three characters and longer, stopwords aside), held in the same kind of
+ * automaton, so a query word is looked up, prefixed, fuzzed and patterned in both
+ * groups by the same rules — over two word lists that are never walked together.
+ * Nothing here is fetched twice: the passages carry their own text, so a result
+ * renders without a second request.
+ */
+
+/** One stored edition's reading view, as passages, in document order.
+ *
+ * The grouping is the reader's own (`flow`), reproduced here because the index
+ * must be of the passages a reader sees: a note reference inside a paragraph
+ * keeps the paragraph whole (the reference's own words stand where the print has
+ * them), and the note definitions are grouped by number. The text of a passage is
+ * the reading view's (`shownText`): the grouped run with the recorded corrections
+ * applied, which is both what the app's own in-text search reads and what the
+ * build's own hit table counts. */
+function shelfPassages(doc) {
+  const out = [];
+  let region = '';
+  let sec = null;         // the section NUMBER the blocks stand in
+  let secId = null;
+  let page = null;        // the printed page the blocks stand on
+  let opening = false;    // the next paragraph opens its section
+  let open = null;
+  const close = () => {
+    if (open) out.push(open);
+    open = null;
+  };
+  for (const b of doc.blocks) {
+    switch (b.t) {
+      case 'region':
+        close();
+        region = b.kind;
+        break;
+      case 'sec':
+        close();
+        secId = b.id;
+        sec = b.n;
+        opening = true;
+        break;
+      case 'pb':
+        close();
+        if (b.page != null) page = b.page;
+        break;
+      case 'rh':
+        close();          // furniture: suppressed by the reading view
+        break;
+      case 'p':
+      case 'verse': {
+        const x = b.t === 'verse' ? b.x.replace(/\n/g, ' ') : b.x;
+        if (open && open.k === 'p') {
+          open.parts.push(x);
+          if (!open.at && b.at) open.at = b.at;
+        } else {
+          close();
+          open = { k: 'p', parts: [x], at: b.at || null, page, region, sec, secId, strong: opening };
+          opening = false;
+        }
+        break;
+      }
+      case 'ref': {
+        // a reference splits a paragraph in the blocks, not in the reading view
+        if (open && open.k === 'p') {
+          open.parts.push(b.x);
+          if (!open.at && b.at) open.at = b.at;
+        } else {
+          close();
+          open = { k: 'p', parts: [b.x], at: b.at || null, page, region, sec, secId, strong: opening };
+          opening = false;
+        }
+        break;
+      }
+      case 'notedef': {
+        // the notes are their own region and their own anchors: a note never
+        // claims the section number its blocks sit under (they sit under the
+        // last one, which is not where the note belongs)
+        if (open && open.k === 'n' && open.n === b.n) open.parts.push(b.x);
+        else {
+          close();
+          open = { k: 'n', n: b.n, id: b.id || null, parts: [b.x], page, region, sec: null, secId: null, strong: false };
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  }
+  close();
+  const passages = [];
+  for (const o of out) {
+    // the front matter and the advertisements are not the text: the app's own
+    // in-text search excludes them by the same region marks, and the plan's
+    // provenance says the publisher's catalogue is marked and not searched
+    if (o.region === 'front' || o.region === 'ads') continue;
+    const text = applyCorrections(o.parts.join(o.k === 'p' ? '' : ' '), doc.corrections);
+    if (!text) continue;
+    const anchor =
+      o.k === 'n'
+        ? o.id || 'n' + o.n
+        : o.at || o.secId || (o.page != null ? `p${o.page}` : o.region === 'notes' ? 'snotes' : 'sfront');
+    passages.push({ anchor, page: o.page, strong: !!o.strong, sec: o.sec, text });
+  }
+  return passages;
+}
+
+/** A text served from the shelf alone: the blocks its own page renders, split
+ * into the parts that page is emitted in. `libraryTextPages` and this read ONE
+ * `partition` call over one `preprocess` result, so a passage's page path is the
+ * page that really carries it. */
+function shelfTranscriptionPassages(t, src) {
+  const doc = preprocess(src, {});
+  const parts = partition(doc, LIBRARY_MAX_BYTES);
+  const out = [];
+  parts.forEach((p, i) => {
+    const base = i === 0 ? `/library/${t.slug}/` : `/library/${t.slug}/part-${i + 1}/`;
+    let head = null;      // the heading a passage stands under, if it has one
+    for (const b of p.blocks) {
+      if (b.type === 'heading') {
+        head = b.id;
+        continue;
+      }
+      out.push({ anchor: head, page: null, strong: false, sec: null, text: b.text, base: i === 0 ? '' : base });
+    }
+  });
+  return out;
+}
+
+/** The shelf index over the texts this build serves: the documents, the
+ * passages, and their own word list. `only` narrows it to one text (the build's
+ * own CLI mode, for a test or a shard); it does not widen the gate. */
+function shelfIndex(only = null) {
+  const texts = only ? SERVED.filter((t) => t.slug === only) : SERVED;
+  const files = texts.some((t) => !editionDocs.has(t.slug)) ? shelfFiles() : null;
+  const docs = [];
+  const pass = [];
+  let skipped = 0;
+  for (const t of texts) {
+    const doc = editionDocs.get(t.slug) || null;
+    let list;
+    if (doc) {
+      list = shelfPassages(doc);
+    } else {
+      const src = readFileSync(textSource(t, files), 'utf8');
+      // a transcription the library's own measure will not serve as text is not
+      // indexed: its page carries no reading to cite
+      if (!assess(src, t.lang).readable) {
+        skipped++;
+        continue;
+      }
+      list = shelfTranscriptionPassages(t, src);
+    }
+    if (!list.length) {
+      skipped++;
+      continue;
+    }
+    const i = docs.length;
+    docs.push({
+      slug: t.slug,
+      title: t.title,
+      author: t.author,
+      translator: t.translator || '',
+      // the section NUMBER -> its title, which is the shelf's own heading: a hit
+      // in it weighs more than a hit in a passage's body (see search.js)
+      sec: doc ? doc.toc.map((s) => [s.n, s.title]) : [],
+    });
+    for (const p of list) {
+      const row = [i, p.anchor, p.page, p.strong ? 1 : 0, p.sec, p.text];
+      if (p.base) row.push(p.base);
+      pass.push(row);
+    }
+  }
+  // the word list: the pieces' own token rule over the passages, and the
+  // postings are PASSAGE numbers — this half's own numbering, never a piece's
+  const byTerm = new Map();
+  const seen = new Set();
+  for (let i = 0; i < pass.length; i++) {
+    seen.clear();
+    for (const w of searchTerms(pass[i][5])) {
+      if (seen.has(w)) continue;
+      seen.add(w);
+      let row = byTerm.get(w);
+      if (!row) byTerm.set(w, (row = []));
+      row.push(i);
+    }
+  }
+  const terms = [...byTerm.keys()].sort();
+  const { dafsa } = dafsaOf(terms);
+  return { docs, pass, words: { dafsa, postings: terms.map((t) => byTerm.get(t)) }, skipped };
 }
 
 /* ---------- discovery files: feed, sitemap, robots ---------- */
@@ -3550,10 +3854,42 @@ const READER_CSS = `
 }
 .rd-pop-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-family: var(--sans); font-size: 12px; color: var(--dim); }
 .rd-pop-foot { display: flex; gap: 8px; align-items: baseline; margin-top: 10px; font-family: var(--sans); font-size: 11.5px; }
+/* The repairs list is an OVERLAY, like the citation panel above and the note
+   popover. It was rendered after the whole book in the flow — the same bug the
+   citation panel is documented for — so a reader at the top of the volume
+   clicked the control, the 125-row table was appended after 18 divisions and the
+   footer, and NOTHING VISIBLE HAPPENED. An overlay is the only rendering that
+   puts the list where the reader already is.
+   The geometry is chosen for a TABLE of 125 rows and five columns (class /
+   transcription / reading / fires / why), not for a note: it is a sheet the
+   width of the reading column and nearly the height of the window, and it
+   scrolls its own content. It does NOT move into the right margin the way
+   .rd-cite does — the margin is min(26rem, 30vw), about 36rem at 1920px, and the
+   why column alone is capped at 34rem, so a five-column table there would wrap
+   every justification to one word per line. The margin is right for a citation
+   (one passage, copied by eye while the passage stays visible); it is wrong for
+   a table. Centred rather than bottom-anchored like .rd-cite for the same
+   reason: the citation is anchored to the passage under the reader, this list is
+   the whole book's policy and belongs to no passage. No scrim: a scrim would
+   block the page and make a non-modal layer look modal, and the reader is meant
+   to be able to keep reading behind it. */
 .rd-diff {
-  margin-top: 28px; padding: 16px; background: var(--bg2);
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(76rem, 94vw); max-height: 82vh; overflow: auto;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .35); z-index: 60;
+  padding: 16px 18px; background: var(--bg2);
   border: 1px solid var(--line); border-radius: 10px;
   font-family: var(--sans); font-size: 13px;
+}
+/* On a narrow screen there is less page to keep visible behind the sheet and
+   more table to fit, so it takes nearly the whole window. The table is five
+   columns of which two hold transcription runs that have no spaces in them (the
+   OCR damage is inside words), and those runs alone held the table 154px wider
+   than the sheet MEASURED at 420px — so at this width the long runs may break
+   anywhere rather than push the sheet sideways. */
+@media (max-width: 61.99em) {
+  .rd-diff { width: 96vw; max-height: 92vh; padding: 12px; }
+  .rd-diff td, .rd-diff code { overflow-wrap: anywhere; }
 }
 /* The citation panel is an OVERLAY, like the note popover (plan §11 phase 5).
    It was rendered after the whole book in the flow, so opening it either showed
@@ -3577,7 +3913,7 @@ const READER_CSS = `
 @media (min-width: 78em) {
   .rd-cite { left: auto; right: 16px; transform: none; width: min(26rem, 30vw); }
 }
-.rd-cite-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.rd-cite-head, .rd-diff-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .rd-cite h3, .rd-diff h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: 8px; }
 .rd-cite-line { font-family: var(--serif); font-size: 15px; }
 .rd-cite-url { font-family: var(--mono); font-size: 12px; }
@@ -3967,7 +4303,9 @@ function libraryTextPages(t, navPosts, cited) {
   let lib = null;
   let edoc = null;
   if (stored) {
-    edoc = extract(src, { entry: t, sha256: sha256(src) });
+    // the pre-pass at the top of the build already extracted every served
+    // edition; the fallback is for a caller that runs this alone (the tests do)
+    edoc = editionDocs.get(t.slug) || extract(src, { entry: t, sha256: sha256(src) });
     editionDocs.set(t.slug, edoc);
     lib = counts(edoc);
   }
@@ -4939,11 +5277,69 @@ checkFootnotes();
 checkDates(manifest);
 checkFeatured(manifest);
 
+/* THE SHELF INDEX ON ITS OWN — a mode for the tests and for a shard.
+ *
+ * `node tools/build.mjs --shelf-index[=/path/to.json] [--only=<slug>]` builds the
+ * shelf's half of the search index and NOTHING ELSE: no page, no dist, no
+ * deletion — it prints what it built, or writes it where it was asked to. Two
+ * reasons it exists as a mode of THE BUILD rather than as a test fixture: the
+ * index a test holds to account is then the index the build produces (one
+ * builder, one gate), and a shelf of many texts can be indexed one at a time.
+ * The gate is the build's own: a text is indexed when the build SERVES it, so
+ * under the default gate `--only=<held-back>` refuses — which is what makes the
+ * difference between a default build and LIBRARY=1 provable rather than asserted.
+ */
+{
+  const arg = process.argv.find((a) => a === '--shelf-index' || a.startsWith('--shelf-index='));
+  if (arg) {
+    const out = arg === '--shelf-index' ? '' : arg.slice('--shelf-index='.length);
+    const only = (process.argv.find((a) => a.startsWith('--only=')) || '').slice('--only='.length);
+    if (only && !SERVED.some((t) => t.slug === only)) {
+      console.error(
+        `build: '${only}' is not served by this build — ${SERVED.length} text(s) are ` +
+          `(${LIBRARY ? 'LIBRARY=1 previews the whole shelf' : 'the published ones; LIBRARY=1 previews the whole shelf'})`,
+      );
+      process.exit(1);
+    }
+    const saved = SERVED.slice();
+    for (const t of only ? saved.filter((x) => x.slug === only) : saved) {
+      if (!hasEdition(t.slug)) continue;
+      const src = readFileSync(editionPath(t.slug), 'utf8');
+      editionDocs.set(t.slug, extract(src, { entry: t, sha256: sha256(src) }));
+    }
+    const shelf = shelfIndex(only || null);
+    const json = JSON.stringify(shelf).replaceAll('<', '\\u003c');
+    const bytes = Buffer.byteLength(json);
+    const gz = gzipSync(json, { level: 9 }).length;
+    if (out) writeFileSync(out, json);
+    console.log(
+      `shelf index: ${shelf.pass.length} passage(s) of ${shelf.docs.length} text(s), ` +
+        `${shelf.words.postings.length} word(s)` +
+        (shelf.skipped ? `, ${shelf.skipped} text(s) skipped` : '') +
+        ` — ${shelf.docs.map((d) => d.slug).join(', ') || 'none'}`,
+    );
+    console.log(`shelf index bytes: ${bytes} raw, ${gz} gzipped${out ? ` — written to ${out}` : ''}`);
+    process.exit(0);
+  }
+}
+
 rmSync(DIST, { recursive: true, force: true });
 // The feed, the sitemap and robots are built from the PUBLISHED posts even in a
 // PREVIEW build: a preview is a local approximation of the site, and the
 // discovery files describe the public one.
 const livePosts = published(manifest);
+
+/* The served EDITIONS, extracted once, before anything that reads them: the
+ * search's shelf half and the library's own pages are then built from the SAME
+ * documents, so the two cannot disagree about which text is served or what it
+ * says. `libraryTextPages` reuses these (editionDocs) instead of extracting
+ * again; a text that has no stored edition is not extracted at all. */
+for (const t of SERVED) {
+  if (!hasEdition(t.slug)) continue;
+  const src = readFileSync(editionPath(t.slug), 'utf8');
+  editionDocs.set(t.slug, extract(src, { entry: t, sha256: sha256(src) }));
+}
+
 const written = [];
 written.push({ rel: 'index.html', html: writePage('index.html', buildHome(manifest), navPosts) });
 for (const post of postsToBuild) {

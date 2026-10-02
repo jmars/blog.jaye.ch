@@ -2690,7 +2690,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		H: func(record.H),
+		I: func(record.I),
 		aG: record.aG,
 		aB: record.aB
 	}
@@ -2960,7 +2960,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.H;
+		var message = !tag ? value : tag < 3 ? value.a : value.I;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.aG;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -5129,11 +5129,11 @@ var $author$project$Reader$Transcription = 1;
 var $elm$json$Json$Decode$decodeValue = _Json_run;
 var $author$project$Reader$Store$Stored = F6(
 	function (position, page, section, bookmarks, view, scale) {
-		return {G: bookmarks, P: page, a0: position, D: scale, by: section, j: view};
+		return {H: bookmarks, Q: page, a0: position, D: scale, by: section, j: view};
 	});
 var $author$project$Reader$Store$Bookmark = F3(
 	function (id, label, page) {
-		return {a: id, N: label, P: page};
+		return {a: id, O: label, Q: page};
 	});
 var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$json$Json$Decode$map3 = _Json_map3;
@@ -5186,7 +5186,7 @@ var $author$project$Reader$Store$decoder = A7(
 				A2($elm$json$Json$Decode$field, 'scale', $elm$json$Json$Decode$int),
 				$elm$json$Json$Decode$succeed(3)
 			])));
-var $author$project$Reader$Store$empty = {G: _List_Nil, P: $elm$core$Maybe$Nothing, a0: $elm$core$Maybe$Nothing, D: 3, by: $elm$core$Maybe$Nothing, j: 'reading'};
+var $author$project$Reader$Store$empty = {H: _List_Nil, Q: $elm$core$Maybe$Nothing, a0: $elm$core$Maybe$Nothing, D: 3, by: $elm$core$Maybe$Nothing, j: 'reading'};
 var $elm$core$Result$withDefault = F2(
 	function (def, result) {
 		if (!result.$) {
@@ -5212,25 +5212,25 @@ var $author$project$Reader$init = function (flags) {
 		ab: $elm$core$Dict$empty,
 		n: flags.n,
 		z: flags.z,
-		V: false,
+		W: false,
 		ac: 0,
-		K: $elm$core$Maybe$Nothing,
+		L: $elm$core$Maybe$Nothing,
 		A: false,
 		e: _List_Nil,
 		ad: false,
 		ax: flags.aw,
-		M: 0,
+		N: 0,
 		h: _List_Nil,
 		ae: '',
 		aq: $elm$core$Dict$empty,
-		O: $elm$core$Dict$empty,
+		P: $elm$core$Dict$empty,
 		s: '',
 		t: $elm$core$Maybe$Nothing,
 		k: 0,
-		R: '',
+		S: '',
 		g: $elm$core$Maybe$Nothing,
 		D: stored.D,
-		X: false,
+		E: false,
 		ai: flags.ai,
 		u: stored,
 		as: false,
@@ -5849,7 +5849,7 @@ var $author$project$Reader$Document$correction = A6(
 var $elm$json$Json$Decode$map8 = _Json_map8;
 var $author$project$Reader$Document$Page = F2(
 	function (leaf, page) {
-		return {br: leaf, P: page};
+		return {br: leaf, Q: page};
 	});
 var $author$project$Reader$Document$page = A3(
 	$elm$json$Json$Decode$map2,
@@ -5860,7 +5860,7 @@ var $author$project$Reader$Document$page = A3(
 		A2($elm$json$Json$Decode$field, 'page', $elm$json$Json$Decode$int)));
 var $author$project$Reader$Document$TocEntry = F6(
 	function (id, n, title, raw, damaged, page) {
-		return {aN: damaged, a: id, v: n, P: page, a5: raw, al: title};
+		return {aN: damaged, a: id, v: n, Q: page, a5: raw, al: title};
 	});
 var $elm$json$Json$Decode$bool = _Json_decodeBool;
 var $author$project$Reader$Document$tocEntry = A7(
@@ -6801,11 +6801,11 @@ var $author$project$Reader$Document$flow = function (blocks) {
 								return _Utils_update(
 									acc,
 									{
-										U: A3(
+										V: A3(
 											$elm$core$Dict$update,
 											sec,
 											$author$project$Reader$Document$addLabel(at),
-											acc.U)
+											acc.V)
 									});
 							} else {
 								break _v0$3;
@@ -6818,11 +6818,11 @@ var $author$project$Reader$Document$flow = function (blocks) {
 								return _Utils_update(
 									acc,
 									{
-										U: A3(
+										V: A3(
 											$elm$core$Dict$update,
 											sec,
 											$author$project$Reader$Document$addLabel(at),
-											acc.U)
+											acc.V)
 									});
 							} else {
 								break _v0$3;
@@ -6833,11 +6833,11 @@ var $author$project$Reader$Document$flow = function (blocks) {
 				}
 				return acc;
 			}),
-		{U: $elm$core$Dict$empty, ar: _List_Nil},
+		{V: $elm$core$Dict$empty, ar: _List_Nil},
 		blocks);
 	var st = A3(
 		$elm$core$List$foldl,
-		$author$project$Reader$Document$step(labels.U),
+		$author$project$Reader$Document$step(labels.V),
 		{ap: $elm$core$Set$empty, r: false, t: $author$project$Reader$Document$ONone, C: _List_Nil, ah: '', by: $elm$core$Maybe$Nothing, y: $elm$core$Set$empty},
 		blocks);
 	return $elm$core$List$reverse(
@@ -6900,10 +6900,10 @@ var $author$project$Reader$Store$bookmarkEnc = function (b) {
 				$elm$json$Json$Encode$string(b.a)),
 				_Utils_Tuple2(
 				'label',
-				$elm$json$Json$Encode$string(b.N)),
+				$elm$json$Json$Encode$string(b.O)),
 				_Utils_Tuple2(
 				'page',
-				A2($author$project$Reader$Store$maybe, $elm$json$Json$Encode$int, b.P))
+				A2($author$project$Reader$Store$maybe, $elm$json$Json$Encode$int, b.Q))
 			]));
 };
 var $elm$json$Json$Encode$list = F2(
@@ -6924,13 +6924,13 @@ var $author$project$Reader$Store$encode = function (s) {
 				A2($author$project$Reader$Store$maybe, $elm$json$Json$Encode$string, s.a0)),
 				_Utils_Tuple2(
 				'page',
-				A2($author$project$Reader$Store$maybe, $elm$json$Json$Encode$int, s.P)),
+				A2($author$project$Reader$Store$maybe, $elm$json$Json$Encode$int, s.Q)),
 				_Utils_Tuple2(
 				'section',
 				A2($author$project$Reader$Store$maybe, $elm$json$Json$Encode$string, s.by)),
 				_Utils_Tuple2(
 				'bookmarks',
-				A2($elm$json$Json$Encode$list, $author$project$Reader$Store$bookmarkEnc, s.G)),
+				A2($elm$json$Json$Encode$list, $author$project$Reader$Store$bookmarkEnc, s.H)),
 				_Utils_Tuple2(
 				'view',
 				$elm$json$Json$Encode$string(s.j)),
@@ -6950,8 +6950,8 @@ var $author$project$Reader$viewName = function (v) {
 var $author$project$Reader$persistCmd = function (m) {
 	var s = $author$project$Reader$Store$encode(
 		{
-			G: m.u.G,
-			P: $author$project$Reader$currentPage(m),
+			H: m.u.H,
+			Q: $author$project$Reader$currentPage(m),
 			a0: $elm$core$Maybe$Just(
 				A2($author$project$Reader$anchorAt, m, m.k)),
 			D: m.D,
@@ -6970,7 +6970,7 @@ var $author$project$Reader$withNote = F2(
 		var _v0 = $author$project$Reader$noteOf(aid);
 		if (!_v0.$) {
 			var n = _v0.a;
-			return A2($elm$core$Dict$member, n, m.O) ? _Utils_update(
+			return A2($elm$core$Dict$member, n, m.P) ? _Utils_update(
 				m,
 				{
 					t: $elm$core$Maybe$Just(n)
@@ -7194,7 +7194,7 @@ var $author$project$Reader$docRules = function (m) {
 			function ($) {
 				return $.au;
 			},
-			m.K));
+			m.L));
 };
 var $author$project$Reader$inlineText = function (i) {
 	switch (i.$) {
@@ -7239,7 +7239,7 @@ var $author$project$Reader$search = F2(
 			$elm$core$String$trim(q)) < 2) {
 			return _Utils_update(
 				m,
-				{M: 0, h: _List_Nil, R: q});
+				{N: 0, h: _List_Nil, S: q});
 		} else {
 			var needle = $elm$core$String$toLower(
 				$elm$core$String$trim(q));
@@ -7257,7 +7257,7 @@ var $author$project$Reader$search = F2(
 				A2($elm$core$List$indexedMap, $elm$core$Tuple$pair, m.e));
 			return _Utils_update(
 				m,
-				{M: 0, h: hits, R: q});
+				{N: 0, h: hits, S: q});
 		}
 	});
 var $elm$core$Tuple$second = function (_v0) {
@@ -7272,7 +7272,7 @@ var $author$project$Reader$stepHit = F2(
 			return _Utils_Tuple2(m, $elm$core$Platform$Cmd$none);
 		} else {
 			var n = $elm$core$List$length(m.h);
-			var ix = A2($elm$core$Basics$modBy, n, m.M + d);
+			var ix = A2($elm$core$Basics$modBy, n, m.N + d);
 			var entryIx = A2(
 				$elm$core$Maybe$withDefault,
 				0,
@@ -7280,7 +7280,7 @@ var $author$project$Reader$stepHit = F2(
 					A2($elm$core$List$drop, ix, m.h)));
 			var m1 = _Utils_update(
 				m,
-				{M: ix, k: entryIx});
+				{N: ix, k: entryIx});
 			var _v0 = $elm$core$List$head(
 				A2($elm$core$List$drop, entryIx, m.e));
 			if (!_v0.$) {
@@ -7376,7 +7376,7 @@ var $author$project$Reader$tocIds = function (m) {
 					},
 					d.bc);
 			},
-			m.K));
+			m.L));
 };
 var $author$project$Reader$stepSection = F2(
 	function (d, m) {
@@ -7444,10 +7444,10 @@ var $author$project$Reader$update = F2(
 						m,
 						{
 							ab: $author$project$Reader$buildAnchors(entries),
-							K: $elm$core$Maybe$Just(doc),
+							L: $elm$core$Maybe$Just(doc),
 							e: entries,
 							aq: $author$project$Reader$noteLanguages(entries),
-							O: $author$project$Reader$Document$noteTexts(entries)
+							P: $author$project$Reader$Document$noteTexts(entries)
 						});
 					var fromHash = $author$project$Reader$hashOf(m1.ax);
 					if ($elm$core$String$isEmpty(fromHash)) {
@@ -7567,12 +7567,12 @@ var $author$project$Reader$update = F2(
 						{t: $elm$core$Maybe$Nothing}),
 					cmd);
 			case 15:
-				var open = !m.V;
+				var open = !m.W;
 				return _Utils_Tuple2(
 					_Utils_update(
 						m,
 						{
-							V: open,
+							W: open,
 							ac: open ? m.k : m.ac
 						}),
 					open ? $author$project$Reader$focusOn('rd-cite') : $elm$core$Platform$Cmd$none);
@@ -7580,8 +7580,8 @@ var $author$project$Reader$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						m,
-						{X: !m.X}),
-					$elm$core$Platform$Cmd$none);
+						{E: !m.E}),
+					m.E ? $author$project$Reader$focusOn('rd-rules-btn') : $author$project$Reader$focusOn('rd-rules'));
 			case 17:
 				var s = msg.a;
 				var _v5 = $elm$core$String$toInt(
@@ -7677,8 +7677,8 @@ var $author$project$Reader$update = F2(
 				var label = $author$project$Reader$positionLabel(m);
 				var bm = {
 					a: A2($author$project$Reader$anchorAt, m, m.k),
-					N: label,
-					P: $author$project$Reader$currentPage(m)
+					O: label,
+					Q: $author$project$Reader$currentPage(m)
 				};
 				var m1 = _Utils_update(
 					m,
@@ -7686,7 +7686,7 @@ var $author$project$Reader$update = F2(
 						u: _Utils_update(
 							$author$project$Reader$st0,
 							{
-								G: A2(
+								H: A2(
 									$elm$core$List$cons,
 									bm,
 									A2(
@@ -7694,7 +7694,7 @@ var $author$project$Reader$update = F2(
 										function (b) {
 											return !_Utils_eq(b.a, bm.a);
 										},
-										$author$project$Reader$st0.G))
+										$author$project$Reader$st0.H))
 							})
 					});
 				return _Utils_Tuple2(
@@ -7710,12 +7710,12 @@ var $author$project$Reader$update = F2(
 						u: _Utils_update(
 							$author$project$Reader$st0,
 							{
-								G: A2(
+								H: A2(
 									$elm$core$List$filter,
 									function (b) {
 										return !_Utils_eq(b.a, bid);
 									},
-									$author$project$Reader$st0.G)
+									$author$project$Reader$st0.H)
 							})
 					});
 				return _Utils_Tuple2(
@@ -7761,7 +7761,11 @@ var $author$project$Reader$update = F2(
 						case 'ArrowRight':
 							return shift ? A2($author$project$Reader$stepSection, 1, m) : A2($author$project$Reader$stepPage, 1, m);
 						case 'Escape':
-							return _Utils_Tuple2(
+							return m.E ? _Utils_Tuple2(
+								_Utils_update(
+									m,
+									{E: false}),
+								$author$project$Reader$focusOn('rd-rules-btn')) : _Utils_Tuple2(
 								_Utils_update(
 									m,
 									{A: false, t: $elm$core$Maybe$Nothing}),
@@ -8141,7 +8145,7 @@ var $author$project$Reader$bar = function (m) {
 							[
 								$elm$html$Html$Attributes$id('rd-q'),
 								$elm$html$Html$Attributes$type_('search'),
-								$elm$html$Html$Attributes$value(m.R),
+								$elm$html$Html$Attributes$value(m.S),
 								$elm$html$Html$Attributes$placeholder('search this text'),
 								$elm$html$Html$Events$onInput($author$project$Reader$Query),
 								$elm$html$Html$Events$onFocus(
@@ -8161,7 +8165,7 @@ var $author$project$Reader$bar = function (m) {
 							[
 								$elm$html$Html$text(
 								$elm$core$String$isEmpty(
-									$elm$core$String$trim(m.R)) ? '' : ($elm$core$List$isEmpty(m.h) ? 'no match' : ($elm$core$String$fromInt(m.M + 1) + (' of ' + ($elm$core$String$fromInt(
+									$elm$core$String$trim(m.S)) ? '' : ($elm$core$List$isEmpty(m.h) ? 'no match' : ($elm$core$String$fromInt(m.N + 1) + (' of ' + ($elm$core$String$fromInt(
 									$elm$core$List$length(m.h)) + (($elm$core$List$length(m.h) === 1) ? ' passage' : ' passages'))))))
 							])),
 						A2(
@@ -8215,7 +8219,7 @@ var $author$project$Reader$bar = function (m) {
 								A2(
 								$elm$html$Html$Attributes$attribute,
 								'aria-pressed',
-								$author$project$Reader$bool(m.V)),
+								$author$project$Reader$bool(m.W)),
 								$elm$html$Html$Events$onClick($author$project$Reader$CiteToggle)
 							]),
 						_List_fromArray(
@@ -8226,20 +8230,21 @@ var $author$project$Reader$bar = function (m) {
 						$elm$html$Html$button,
 						_List_fromArray(
 							[
+								$elm$html$Html$Attributes$id('rd-rules-btn'),
 								$elm$html$Html$Attributes$type_('button'),
 								$elm$html$Html$Attributes$class('rd-btn'),
 								A2(
 								$elm$html$Html$Attributes$attribute,
 								'aria-pressed',
-								$author$project$Reader$bool(m.X)),
+								$author$project$Reader$bool(m.E)),
 								$elm$html$Html$Events$onClick($author$project$Reader$RulesToggle)
 							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								'repairs ' + $elm$core$String$fromInt(
+								'what was changed (' + ($elm$core$String$fromInt(
 									$elm$core$List$length(
-										$author$project$Reader$docRules(m))))
+										$author$project$Reader$docRules(m))) + ')'))
 							])),
 						A2(
 						$elm$html$Html$button,
@@ -8387,7 +8392,7 @@ var $author$project$Reader$passageClause = F3(
 		}
 	});
 var $author$project$Reader$citePanel = function (m) {
-	if (!m.V) {
+	if (!m.W) {
 		return $elm$html$Html$text('');
 	} else {
 		var tail = $author$project$Reader$citationTail(m.z);
@@ -8846,9 +8851,9 @@ var $author$project$Reader$tocLink = F2(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(item.N),
+							$elm$html$Html$text(item.O),
 							function () {
-							var _v0 = item.P;
+							var _v0 = item.Q;
 							if (!_v0.$) {
 								var p = _v0.a;
 								return A2(
@@ -8888,7 +8893,7 @@ var $author$project$Reader$tocLink = F2(
 				]));
 	});
 var $author$project$Reader$tocItems = function (m) {
-	var _v0 = m.K;
+	var _v0 = m.L;
 	if (_v0.$ === 1) {
 		return _List_Nil;
 	} else {
@@ -8899,8 +8904,8 @@ var $author$project$Reader$tocItems = function (m) {
 				return {
 					ao: t.aN ? $elm$core$Maybe$Just(t.a5) : $elm$core$Maybe$Nothing,
 					a: t.a,
-					N: $elm$core$String$fromInt(t.v) + (' · ' + (t.aN ? $author$project$Reader$damagedTitle : ((!m.j) ? t.al : t.a5))),
-					P: t.P
+					O: $elm$core$String$fromInt(t.v) + (' · ' + (t.aN ? $author$project$Reader$damagedTitle : ((!m.j) ? t.al : t.a5))),
+					Q: t.Q
 				};
 			},
 			doc.bc);
@@ -8914,8 +8919,8 @@ var $author$project$Reader$tocItems = function (m) {
 						{
 							ao: $elm$core$Maybe$Nothing,
 							a: rid,
-							N: $author$project$Reader$regionLabel(kind),
-							P: $elm$core$Maybe$Nothing
+							O: $author$project$Reader$regionLabel(kind),
+							Q: $elm$core$Maybe$Nothing
 						});
 				} else {
 					return $elm$core$Maybe$Nothing;
@@ -8997,7 +9002,7 @@ var $author$project$Reader$contents = function (m) {
 					[
 						$elm$html$Html$text('Marks')
 					])),
-				$elm$core$List$isEmpty(m.u.G) ? A2(
+				$elm$core$List$isEmpty(m.u.H) ? A2(
 				$elm$html$Html$p,
 				_List_fromArray(
 					[
@@ -9020,7 +9025,7 @@ var $author$project$Reader$contents = function (m) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									A2($author$project$Reader$linkTo, bm.a, bm.N),
+									A2($author$project$Reader$linkTo, bm.a, bm.O),
 									A2(
 									$elm$html$Html$button,
 									_List_fromArray(
@@ -9029,7 +9034,7 @@ var $author$project$Reader$contents = function (m) {
 											$elm$html$Html$Attributes$class('rd-btn rd-x'),
 											$elm$html$Html$Events$onClick(
 											$author$project$Reader$BookmarkRemove(bm.a)),
-											A2($elm$html$Html$Attributes$attribute, 'aria-label', 'Remove the mark at ' + bm.N)
+											A2($elm$html$Html$Attributes$attribute, 'aria-label', 'Remove the mark at ' + bm.O)
 										]),
 									_List_fromArray(
 										[
@@ -9037,7 +9042,7 @@ var $author$project$Reader$contents = function (m) {
 										]))
 								]));
 					},
-					m.u.G)),
+					m.u.H)),
 				A2(
 				$elm$html$Html$h3,
 				_List_Nil,
@@ -9195,7 +9200,7 @@ var $author$project$Reader$pieces = F2(
 	});
 var $author$project$Reader$highlight = F2(
 	function (m, s) {
-		var q = $elm$core$String$trim(m.R);
+		var q = $elm$core$String$trim(m.S);
 		return ($elm$core$String$length(q) < 2) ? _List_fromArray(
 			[
 				$elm$html$Html$text(s)
@@ -9343,7 +9348,7 @@ var $author$project$Reader$inlineView = F3(
 										]))
 								])),
 							function () {
-							var _v1 = A2($elm$core$Dict$get, n, m.O);
+							var _v1 = A2($elm$core$Dict$get, n, m.P);
 							if (!_v1.$) {
 								var t = _v1.a;
 								return A2(
@@ -9748,7 +9753,7 @@ var $author$project$Reader$notesInPrint = function (m) {
 	var _v0 = m.g;
 	if (_v0.$ === 1) {
 		return $elm$core$Set$fromList(
-			$elm$core$Dict$keys(m.O));
+			$elm$core$Dict$keys(m.P));
 	} else {
 		var _v1 = _v0.a;
 		var a = _v1.a;
@@ -9973,7 +9978,7 @@ var $author$project$Reader$popover = function (m) {
 							A2(
 								$elm$core$Maybe$withDefault,
 								'',
-								A2($elm$core$Dict$get, n, m.O)))
+								A2($elm$core$Dict$get, n, m.P)))
 						])),
 					A2(
 					$elm$html$Html$div,
@@ -10014,7 +10019,7 @@ var $elm$html$Html$thead = _VirtualDom_node('thead');
 var $elm$html$Html$tr = _VirtualDom_node('tr');
 var $author$project$Reader$rulesPanel = F2(
 	function (m, doc) {
-		if (!m.X) {
+		if (!m.E) {
 			return $elm$html$Html$text('');
 		} else {
 			var rules = $author$project$Reader$docRules(m);
@@ -10023,17 +10028,43 @@ var $author$project$Reader$rulesPanel = F2(
 				$elm$html$Html$aside,
 				_List_fromArray(
 					[
+						$elm$html$Html$Attributes$id('rd-rules'),
 						$elm$html$Html$Attributes$class('rd-diff'),
+						A2($elm$html$Html$Attributes$attribute, 'role', 'dialog'),
+						A2($elm$html$Html$Attributes$attribute, 'aria-modal', 'false'),
+						A2($elm$html$Html$Attributes$attribute, 'tabindex', '-1'),
 						A2($elm$html$Html$Attributes$attribute, 'aria-label', 'The repairs, as rules')
 					]),
 				_List_fromArray(
 					[
 						A2(
-						$elm$html$Html$h3,
-						_List_Nil,
+						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('The repairs, as rules')
+								$elm$html$Html$Attributes$class('rd-diff-head')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h3,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('The repairs, as rules')
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$type_('button'),
+										$elm$html$Html$Attributes$class('rd-btn'),
+										$elm$html$Html$Events$onClick($author$project$Reader$RulesToggle),
+										A2($elm$html$Html$Attributes$attribute, 'aria-label', 'Close the list of repairs')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('✕')
+									]))
 							])),
 						A2(
 						$elm$html$Html$p,
@@ -10318,7 +10349,7 @@ var $author$project$Reader$view = function (m) {
 									]))
 							]));
 				} else {
-					var _v0 = m.K;
+					var _v0 = m.L;
 					if (_v0.$ === 1) {
 						return A2(
 							$elm$html$Html$div,

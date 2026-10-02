@@ -331,7 +331,17 @@ update msg m =
             )
 
         RulesToggle ->
-            ( { m | showRules = not m.showRules }, Cmd.none )
+            -- opening moves focus into the overlay and closing returns it to the
+            -- control that opened it: the panel is a dialog, so a keyboard reader
+            -- has to be able to reach it (and Escape from it) and to get back.
+            -- Both are `position: fixed`, so neither focus moves the reading position.
+            ( { m | showRules = not m.showRules }
+            , if m.showRules then
+                focusOn "rd-rules-btn"
+
+              else
+                focusOn "rd-rules"
+            )
 
         RangeFrom s ->
             case String.toInt (String.trim s) of
@@ -422,7 +432,14 @@ update msg m =
                             stepPage 1 m
 
                     "Escape" ->
-                        ( { m | drawer = False, open = Nothing }, Cmd.none )
+                        -- one layer at a time: the repairs list covers the page,
+                        -- so it goes first, and focus goes back to its control;
+                        -- then the drawer and the note popover, as before.
+                        if m.showRules then
+                            ( { m | showRules = False }, focusOn "rd-rules-btn" )
+
+                        else
+                            ( { m | drawer = False, open = Nothing }, Cmd.none )
 
                     _ ->
                         ( m, Cmd.none )
@@ -1128,7 +1145,7 @@ bar m =
         , pager m
         , div [ class "rd-bar-right" ]
             [ button [ type_ "button", class "rd-btn", attribute "aria-pressed" (bool m.cite), Ev.onClick CiteToggle ] [ text "cite" ]
-            , button [ type_ "button", class "rd-btn", attribute "aria-pressed" (bool m.showRules), Ev.onClick RulesToggle ] [ text ("repairs " ++ String.fromInt (List.length (docRules m))) ]
+            , button [ id "rd-rules-btn", type_ "button", class "rd-btn", attribute "aria-pressed" (bool m.showRules), Ev.onClick RulesToggle ] [ text ("what was changed (" ++ String.fromInt (List.length (docRules m)) ++ ")") ]
             , button [ type_ "button", class "rd-btn", Ev.onClick (ScaleSet (m.scale - 1)), attribute "aria-label" "Smaller text" ] [ text "A−" ]
             , button [ type_ "button", class "rd-btn", Ev.onClick (ScaleSet (m.scale + 1)), attribute "aria-label" "Larger text" ] [ text "A+" ]
             ]
@@ -2120,8 +2137,29 @@ rulesPanel m doc =
             left =
                 doc.leftWords
         in
-        aside [ class "rd-diff", attribute "aria-label" "The repairs, as rules" ]
-            [ h3 [] [ text "The repairs, as rules" ]
+        -- An OVERLAY, following the citation panel. It used to be rendered here,
+        -- after the whole book, in the flow: a reader at the top of the volume
+        -- clicked the control, the table was appended after 18 divisions and the
+        -- footer, and nothing visible happened. As an overlay it is where the
+        -- reader is (`.rd-diff` in READER_CSS), so it must not be put back in the
+        -- flow — the app smoke asserts the fixed positioning.
+        -- role=dialog with aria-modal="false" is what it is: a layer a reader
+        -- opens, that takes focus and is closed by Escape, but that does NOT make
+        -- the page behind it inert — the reader can still read and scroll there.
+        aside
+            [ id "rd-rules"
+            , class "rd-diff"
+            , attribute "role" "dialog"
+            , attribute "aria-modal" "false"
+            , attribute "tabindex" "-1"
+            , attribute "aria-label" "The repairs, as rules"
+            ]
+            [ div [ class "rd-diff-head" ]
+                [ h3 [] [ text "The repairs, as rules" ]
+                , button
+                    [ type_ "button", class "rd-btn", Ev.onClick RulesToggle, attribute "aria-label" "Close the list of repairs" ]
+                    [ text "✕" ]
+                ]
             , p [ class "rd-dim" ]
                 [ text "The transcription is served exactly as it stands. The policy is: a recorded reading is substituted where one is recorded, and where none is the transcription's own characters stay — damage and all, marked in the reading view. These rules are the readings; nothing here is written into the text. The number beside each rule is how many times it fires in this text — counted when the document was built, in the order the rules are applied, so a rule cannot claim a repair it does not make." ]
             , if List.isEmpty rules then

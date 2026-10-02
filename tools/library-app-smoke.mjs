@@ -496,7 +496,7 @@ section('the repairs list is the rule list, with its measured hits');
 {
   const DOCJSON = JSON.parse(docText);
   const ctx = await boot();
-  const btn = ctx.byText('#reader-app .rd-bar button', 'repairs');
+  const btn = ctx.byText('#reader-app .rd-bar button', 'what was changed');
   check(!!btn, 'the repairs control is there');
   if (btn) {
     ctx.click(btn);
@@ -576,6 +576,78 @@ section('the repairs list is the rule list, with its measured hits');
       tbl.every((r) => r.why.length > 0),
       'and every rule says why it is there — a rule with no reason is not reviewable',
     );
+  }
+}
+
+/* ---------- 7d. the repairs list is an OVERLAY, where the reader already is ---------- */
+
+section('the repairs list opens where the reader is, not at the end of the book');
+{
+  // The bug this section exists for: `rulesPanel` was rendered in the FLOW, after
+  // all 18 divisions and the footer, so a reader at the top of the volume clicked
+  // the control and nothing visible happened — this very smoke passed, because
+  // happy-dom lays nothing out and the panel was in the DOM either way. The
+  // citation panel had the same bug and was fixed by making it fixed-position; the
+  // halves below are what happy-dom CAN see of that fix.
+  const ctx = await boot();
+  const main = ctx.w.document.getElementById('rd-main');
+  const btn = ctx.byText('#reader-app .rd-bar button', 'what was changed');
+  check(!!btn, 'the control says what it does rather than only counting (what was changed (N))');
+  if (btn) {
+    const before = { pct: pctOf(ctx), hash: ctx.w.location.hash, scrolled: ctx.scrolled.length };
+    ctx.click(btn);
+    await settle();
+    const panel = ctx.w.document.querySelector('#reader-app .rd-diff');
+    check(!!panel, 'clicking it opens the panel');
+    if (panel) {
+      // FAILS IF: the panel is rendered inside the reading flow (inside `main_`
+      // or the `.rd-cols` grid). That is where an in-flow panel lives — the
+      // position that made the bug, and the position a later edit would restore.
+      check(
+        !main.contains(panel) && !panel.closest('.rd-cols'),
+        'and the panel is not part of the reading flow (#rd-main / .rd-cols)',
+      );
+      // FAILS IF: `.rd-diff` loses `position: fixed` — the panel goes back into
+      // the flow, which is exactly the bug. happy-dom resolves the page's own
+      // stylesheet through getComputedStyle, so the property is readable here
+      // even though nothing is laid out: the flow default is `static`.
+      const cs = ctx.w.getComputedStyle(panel);
+      check(
+        cs.position === 'fixed',
+        `and it is an OVERLAY: .rd-diff resolves to position:${cs.position || '(static)'} (in the flow it is static, and the reader at the top sees nothing)`,
+      );
+      const mh = parseFloat(cs.maxHeight);
+      check(
+        cs.overflow === 'auto' && mh > 0 && mh < ctx.w.innerHeight,
+        `with its own scroll and a height capped below the window (${cs.maxHeight} of ${ctx.w.innerHeight}px), so the page stays readable behind it`,
+      );
+      check(
+        Number(cs.zIndex) >= 60,
+        `and it sits above the text (z-index ${cs.zIndex}, the layer the note popover and the citation panel use)`,
+      );
+      // FAILS IF: opening the panel moves the reader. That is the second half of
+      // the documented failure — focus moving into a panel rendered at the end of
+      // the book yanked the reader to the end of the volume; and an overlay must
+      // leave the reading position exactly where it was.
+      check(pctOf(ctx) === before.pct, `opening it does not move the reading position (${before.pct}% before and after)`);
+      check(ctx.scrolled.length === before.scrolled, 'and it scrolls nothing into view');
+      check(ctx.w.location.hash === before.hash, `and it writes no new position to the fragment (${JSON.stringify(before.hash)})`);
+      // FAILS IF: the panel cannot be dismissed from the keyboard, or focus is
+      // left inside an element that has just been removed.
+      panel.dispatchEvent(new ctx.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      await settle();
+      check(!ctx.w.document.querySelector('#reader-app .rd-diff'), 'and Escape closes it');
+      check(
+        ctx.focused.includes('rd-rules') && ctx.focused.includes('rd-rules-btn'),
+        'focus goes into the panel on opening and back to the control on Escape',
+      );
+      // the label states the open/closed state, as it did before the relabel
+      const btn2 = ctx.byText('#reader-app .rd-bar button', 'what was changed');
+      check(
+        btn2 && btn2.getAttribute('aria-pressed') === 'false',
+        'and the control still carries its aria-pressed state (pressed=false once closed)',
+      );
+    }
   }
 }
 
