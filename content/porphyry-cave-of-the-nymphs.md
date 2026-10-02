@@ -14,7 +14,7 @@ The book is a short treatise doing one thing: explaining a passage of Homer. It 
 
 > "What does Homer obscurely signify by the cave in Ithaca, which he describes in the following verses ?"
 
-— Porphyry, section 1; Taylor's translation, 1917 printing.[^s1q] What follows is not a treatise on the soul that happens to use Homer as an illustration. It is an exegesis of fourteen lines of the *Odyssey*, book thirteen, and every sentence of it is accountable to those lines. This is also the blog's first **direct** Porphyry. He has been a figure on the edge of the series all along: the pupil who arranged and edited [Plotinus](/plotinus-collected-writings/), and the author of the *Letter to Anebo* that [Iamblichus, On the Mysteries](/iamblichus-on-the-mysteries/) answers. Here he is read as a book, and the edition matters. Taylor published the treatise in 1823 in the *Select Works*, where the title page advertises, after the translations, "AN APPENDIX, EXPLAINING THE ALLEGORY OF THE WANDERINGS OF ULYSSES. BY THE TRANSLATOR."[^tp] So the 1823 volume does two things the 1917 reissue does not: it carries an Introduction in which Taylor frames the treatise, and an Appendix in which he extends its method over the whole *Odyssey*. Taylor's Introduction is where he says what he thinks the treatise is for:
+— Porphyry, [section 1](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s1); Taylor's translation, 1917 printing.[^s1q] What follows is not a treatise on the soul that happens to use Homer as an illustration. It is an exegesis of fourteen lines of the *Odyssey*, book thirteen, and every sentence of it is accountable to those lines. This is also the blog's first **direct** Porphyry. He has been a figure on the edge of the series all along: the pupil who arranged and edited [Plotinus](/plotinus-collected-writings/), and the author of the *Letter to Anebo* that [Iamblichus, On the Mysteries](/iamblichus-on-the-mysteries/) answers. Here he is read as a book, and the edition matters. Taylor published the treatise in 1823 in the *Select Works*, where the title page advertises, after the translations, "AN APPENDIX, EXPLAINING THE ALLEGORY OF THE WANDERINGS OF ULYSSES. BY THE TRANSLATOR."[^tp] So the 1823 volume does two things the 1917 reissue does not: it carries an Introduction in which Taylor frames the treatise, and an Appendix in which he extends its method over the whole *Odyssey*. Taylor's Introduction is where he says what he thinks the treatise is for:
 
 > "Porphyry, in his treatise On the Cave of the Nymphs, having informed us, that Numenius, the Pythagorean, considered the person of Ulysses, in the Odyssey, as the image of a man who passes in a regular manner over the stormy sea of generation, or a sensible life, and thus at length arrives at a region where tempest and seas are unknown, and finds a nation …"
 
@@ -43,17 +43,17 @@ The passage is the cave at the head of the harbour of Phorcys, where the Phaeaci
 > That to the north is pervious to mankind :
 > The sacred south t'immortals is consign'd."
 
-— Porphyry, section 1, quoting Homer; Taylor's translation, 1917 printing.[^verses]
+— Porphyry, [section 1](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s1), quoting Homer; Taylor's translation, 1917 printing.[^verses]
 
 Everything in the treatise hangs on those lines, and the first move is not interpretation but a refutation of the obvious reading. Porphyry denies that Homer reports a real cave, with a borrowed argument — that the poet
 
 > "under the veil of allegory, conceals some mysterious signification"
 
-— Porphyry, section 1; Taylor's translation, 1917 printing.[^veil] The argument is Cronius', and Porphyry marks it as his from the start: those who have described the island have, as Cronius says, "made no mention of such a cave being found in it",[^cronius1] and Cronius insists the story cannot be history. Porphyry's own sentence making the point states the treatise's premise:
+— Porphyry, [section 1](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s1); Taylor's translation, 1917 printing.[^veil] The argument is Cronius', and Porphyry marks it as his from the start: those who have described the island have, as Cronius says, "made no mention of such a cave being found in it",[^cronius1] and Cronius insists the story cannot be history. Porphyry's own sentence making the point states the treatise's premise:
 
 > "And it is equally absurd to suppose, that nature herself should point out, in this place, one path for the descent of all mankind, and again another path for all the Gods."
 
-— Porphyry, section 1; Taylor's translation, 1917 printing.[^absurd]
+— Porphyry, [section 1](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s1); Taylor's translation, 1917 printing.[^absurd]
 
 From there it builds a question list out of the physical details, and the list is what makes it a commentary rather than an essay: why the cave is of the nymphs called Naiades and not of nymphs simply; why there are bowls and jars when nothing is said to fill them, but bees deposit honey in them as in hives; why the weaving beams are stone rather than wood; why the gate of men is turned north and the gate of the gods south.[^qlist] Then a concession, and a passage of geography: Porphyry allows that something like the cave may exist, quoting Artemidorus the Ephesian on the island, and concludes, "This cave, therefore, will not be entirely an Homeric fiction." But whether the poet describes it as it is or adds something of his own, "the same inquiries remain".[^artemidorus] The treatise will not settle whether the cave is real. It will settle what it means.
 
@@ -65,11 +65,11 @@ The first identification is the large one, and Porphyry gives it in the second s
 
 > "through the cave indicating the world, which was generated from matter"
 
-— Porphyry, section 2; Taylor's translation, 1917 printing.[^worldmatter] Caves are spontaneous productions, connascent with the earth and hollow inside; and the world, produced from no external cause and self-adherent, is allied to matter. Matter, on this account, is "denominated a stone and a rock" for its sluggish and repercussive nature with respect to form.[^matter] Then the sentence that makes the allegory turn:
+— Porphyry, [section 2](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s2); Taylor's translation, 1917 printing.[^worldmatter] Caves are spontaneous productions, connascent with the earth and hollow inside; and the world, produced from no external cause and self-adherent, is allied to matter. Matter, on this account, is "denominated a stone and a rock" for its sluggish and repercussive nature with respect to form.[^matter] Then the sentence that makes the allegory turn:
 
 > "through the connecting power, and orderly distribution of form, from which also it is called world, it is beautiful and delightful."
 
-— Porphyry, section 2; Taylor's translation, 1917 printing.[^connect] Hence the cave is properly denominated a cave: lovely to him who first enters it through its participation of forms, obscure to him who surveys its foundation with an intellectual eye, its exterior parts pleasant and its interior parts dark.
+— Porphyry, [section 2](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s2); Taylor's translation, 1917 printing.[^connect] Hence the cave is properly denominated a cave: lovely to him who first enters it through its participation of forms, obscure to him who surveys its foundation with an intellectual eye, its exterior parts pleasant and its interior parts dark.
 
 That is the frame, and the kind of claim it makes should be marked. It is not that the cave is *like* the world: a cave **is** a symbol of the world, on the grounds that the two share matter, darkness and a hollow shape. The treatise then establishes that caves were dedicated in fact. In the second section the Persians perform their initiation "in a place which they denominate a cavern", and Eubulus reports that Zoroaster first consecrated a cave in the mountains of Persia "in honour of Mithra, the maker and father of all things".[^persiancave] And in the third section, in Porphyry's own summary sentence, "to the world they dedicated caves and dens; as likewise to Nymphs … on account of the water which trickles, or is diffused in caverns, over which the Naiades, as we shall shortly observe, preside" — the ellipsis standing for a cross-reference the printing carries there.[^cavesdens]
 
@@ -77,15 +77,15 @@ The fourth section separates two senses, and it is where the treatise is most ca
 
 > "For the ancients thought that these souls are incumbent on water which is inspired by divinity, as Numenius says"
 
-— Porphyry, section 4; Taylor's translation, 1917 printing.[^numeniuswater] The thesis follows in one clause:
+— Porphyry, [section 4](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s4); Taylor's translation, 1917 printing.[^numeniuswater] The thesis follows in one clause:
 
 > "for souls descending into generation fly to moisture"
 
-— Porphyry, section 4; Taylor's translation, 1917 printing.[^moisture] The witnesses are stacked behind it: Heraclitus, that "moisture appears delightful and not deadly to souls", and again that "We live their death, and we die their life";[^heraclitus] and the Egyptians, for whom the planets sail rather than stand. Water is the substance of the descent, and the fifth section is a short physiology of it: souls, corporeal or incorporeal, while they attract body, are "drenched in moisture" and so verge to humidity, the dead being evoked by the effusion of bile and blood; Heraclitus gives the maxim in the other direction — "a dry soul is the wisest" — while Porphyry gives the mechanism: the spirit becomes moist through the desire of generation, the soul attracting a humid vapour from verging to generation.[^mistsoul] And then the identification that ties the water to the nymphs, in five words:
+— Porphyry, [section 4](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s4); Taylor's translation, 1917 printing.[^moisture] The witnesses are stacked behind it: Heraclitus, that "moisture appears delightful and not deadly to souls", and again that "We live their death, and we die their life";[^heraclitus] and the Egyptians, for whom the planets sail rather than stand. Water is the substance of the descent, and the fifth section is a short physiology of it: souls, corporeal or incorporeal, while they attract body, are "drenched in moisture" and so verge to humidity, the dead being evoked by the effusion of bile and blood; Heraclitus gives the maxim in the other direction — "a dry soul is the wisest" — while Porphyry gives the mechanism: the spirit becomes moist through the desire of generation, the soul attracting a humid vapour from verging to generation.[^mistsoul] And then the identification that ties the water to the nymphs, in five words:
 
 > "…into generation are the nymphs called naiades"
 
-— Porphyry, section 5; Taylor's translation, 1917 printing.[^naiades] The nymphs of the water are the souls on their way in; marriage is called being a nymph, because it is being joined to generation.
+— Porphyry, [section 5](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s5); Taylor's translation, 1917 printing.[^naiades] The nymphs of the water are the souls on their way in; marriage is called being a nymph, because it is being joined to generation.
 
 ---
 
@@ -95,23 +95,23 @@ The gates are the sharpest part of the treatise and the part the blog came for. 
 
 > "Homer was not satisfied with saying that it had two gates"
 
-— Porphyry, section 9; Taylor's translation, 1917 printing.[^twogates] The rest of that sentence the 1917 printing breaks and the 1823 printing carries: the poet adds that one of the gates "was turned towards the north, but the other, which was more divine, to the south".[^twogatesb] And Porphyry marks a piece of authorial care: the poet calls the northern gate pervious to descent, but says nothing of the southern gate's perviousness at all, only that it "is inaccessible to men, but it is the path of the immortals".[^inaccessible]
+— Porphyry, [section 9](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s9); Taylor's translation, 1917 printing.[^twogates] The rest of that sentence the 1917 printing breaks and the 1823 printing carries: the poet adds that one of the gates "was turned towards the north, but the other, which was more divine, to the south".[^twogatesb] And Porphyry marks a piece of authorial care: the poet calls the northern gate pervious to descent, but says nothing of the southern gate's perviousness at all, only that it "is inaccessible to men, but it is the path of the immortals".[^inaccessible]
 
 The identification of the gates is where the cosmology becomes astronomy. Porphyry states the premise as received, and attributes it:
 
 > "as Numenius and his familiar Cronius assert"
 
-— Porphyry, section 10; Taylor's translation, 1917 printing.[^numcron] That is the attribution he gives for the claim that a cavern is an image and symbol of the world; the two caps of the heaven are his own mapping on top of it. The summer tropic is in Cancer and the winter tropic in Capricorn, Cancer being nearest to us and attributed to the Moon, Capricorn invisible from here and given to Saturn.[^tropics] Then the gates are named:
+— Porphyry, [section 10](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s10); Taylor's translation, 1917 printing.[^numcron] That is the attribution he gives for the claim that a cavern is an image and symbol of the world; the two caps of the heaven are his own mapping on top of it. The summer tropic is in Cancer and the winter tropic in Capricorn, Cancer being nearest to us and attributed to the Moon, Capricorn invisible from here and given to Saturn.[^tropics] Then the gates are named:
 
 > "that Cancer is the gate through which souls descend; but Capricorn that through which they ascend."
 
-— Porphyry, section 11; Taylor's translation, 1917 printing.[^cancer] Cancer is northern and suited to descent, Capricorn southern and suited to ascent, so the verse's two gates are the two solstitial signs and the direction of travel in the poem's geography is the direction of travel in the cosmos: **north is down, south is up**.[^cancerb]
+— Porphyry, [section 11](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s11); Taylor's translation, 1917 printing.[^cancer] Cancer is northern and suited to descent, Capricorn southern and suited to ascent, so the verse's two gates are the two solstitial signs and the direction of travel in the poem's geography is the direction of travel in the cosmos: **north is down, south is up**.[^cancerb]
 
 Porphyry then does something worth marking, because it is the treatise's most exact piece of reading. Homer gives the southern gate to "the immortals", not to "the gods", and Porphyry insists on the difference:
 
 > "but the southern gates are not the avenues of the Gods, but of souls ascending to the Gods."
 
-— Porphyry, section 11; Taylor's translation, 1917 printing.[^avenues] The reason he gives is a claim about us: the name "immortals" is also common to our souls, "which are per se, or essentially, immortal".[^appellation] The poem's word is honoured exactly, and the honouring changes what the gate is for: if the southern gate were the gods' own avenue, the cave would be a picture of divine traffic, whereas with the word "immortals" it is a picture of souls going home. **A reader can check that move against the verse**, and it is one of the two things in this treatise a second person can check.
+— Porphyry, [section 11](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s11); Taylor's translation, 1917 printing.[^avenues] The reason he gives is a claim about us: the name "immortals" is also common to our souls, "which are per se, or essentially, immortal".[^appellation] The poem's word is honoured exactly, and the honouring changes what the gate is for: if the southern gate were the gods' own avenue, the cave would be a picture of divine traffic, whereas with the word "immortals" it is a picture of souls going home. **A reader can check that move against the verse**, and it is one of the two things in this treatise a second person can check.
 
 The winds follow the gates, the north wind suiting souls falling into generation, the south wind dissolving life,[^winds] and in the fourteenth section the general principle is stated: every twofold entrance is a symbol of a nature that runs in two directions, so that one gate pertains "to Gods and good (daemons)" and the other "to mortals and depraved natures".[^pertains] Parmenides, Porphyry adds, "mentions these two gates" in a treatise on the nature of things, and Pherecydes Syrus "also mentions recesses and trenches, caverns, doors, and gates".[^witnesses]
 
@@ -123,17 +123,17 @@ The sixth section brings the allegory down to objects, and there the treatise is
 
 > "what symbol can be more appropriate than those instruments pertaining to weaving?"
 
-— Porphyry, section 6; Taylor's translation, 1917 printing.[^weaving] The answer to the stone beams is anatomy: the formation of the flesh is on and about the bones, "which in the bodies of animals resemble stones", so the beams of the loom are stone because the frame of a living body is bone, and the purple web is flesh woven from blood.[^flesh] The body then gets the treatise's second large figure:
+— Porphyry, [section 6](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s6); Taylor's translation, 1917 printing.[^weaving] The answer to the stone beams is anatomy: the formation of the flesh is on and about the bones, "which in the bodies of animals resemble stones", so the beams of the loom are stone because the frame of a living body is bone, and the purple web is flesh woven from blood.[^flesh] The body then gets the treatise's second large figure:
 
 > "the body is a garment with which the soul is invested, a thing wonderful to the sight"
 
-— Porphyry, section 6; Taylor's translation, 1917 printing.[^garment] The figure is not Porphyry's coinage, and he says so: Proserpine is represented by Orpheus as weaving a web, and the heavens are called a veil by the ancients.[^proserpine]
+— Porphyry, [section 6](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s6); Taylor's translation, 1917 printing.[^garment] The figure is not Porphyry's coinage, and he says so: Proserpine is represented by Orpheus as weaving a web, and the heavens are called a veil by the ancients.[^proserpine]
 
 The seventh and eighth sections are about honey, and they are the best example in the treatise of how far one physical detail stretches. The jars hold honeycombs and not water; honey is the nutriment of bees, and also what is offered to the dead, since the poet pours nectar and ambrosia into the nostrils of corpses to prevent putrefaction. Being both cathartic and preservative, it is "the symbol of a preserving and defending power" when the Persians offer it to the guardian of fruits.[^persians] And then the reading on which the section turns, because it is a reading of a *myth*:
 
 > "the sweetness of honey signifies, with theologists, the same thing as the pleasure arising from generation, by which Saturn, being ensnared, was castrated."
 
-— Porphyry, section 7; Taylor's translation, 1917 printing.[^honey] In Orpheus, Saturn is caught by Jupiter through honey, is intoxicated, and sleeps, so the sweetness of honey means the pleasure that draws souls down. Bees are read the same way — the priestesses of Ceres were called bees, Proserpine was called honied, the moon was called a bee — and honey is at the same time a symbol of death, which is why libations of honey go to the terrestrial gods. Even the boundary is policed: all souls proceeding into generation are not simply called bees, Porphyry says, "but those who will live in it justly and who, after having performed such things as are acceptable to the Gods".[^bees]
+— Porphyry, [section 7](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s7); Taylor's translation, 1917 printing.[^honey] In Orpheus, Saturn is caught by Jupiter through honey, is intoxicated, and sleeps, so the sweetness of honey means the pleasure that draws souls down. Bees are read the same way — the priestesses of Ceres were called bees, Proserpine was called honied, the moon was called a bee — and honey is at the same time a symbol of death, which is why libations of honey go to the terrestrial gods. Even the boundary is policed: all souls proceeding into generation are not simply called bees, Porphyry says, "but those who will live in it justly and who, after having performed such things as are acceptable to the Gods".[^bees]
 
 ---
 
@@ -143,28 +143,28 @@ The last stretch turns to the olive at the head of the cave, where the allegory 
 
 > "But the growth of the olive in such a situation is not fortuitous, as some one may suspect, but contains the enigma of the cavern."
 
-— Porphyry, section 15; Taylor's translation, 1917 printing.[^olive] The olive is the plant of Minerva, and Minerva is wisdom — the 1917 printing breaks that sentence and the 1823 printing carries it:
+— Porphyry, [section 15](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s15); Taylor's translation, 1917 printing.[^olive] The olive is the plant of Minerva, and Minerva is wisdom — the 1917 printing breaks that sentence and the 1823 printing carries it:
 
 > "hence an olive, the symbol of this wisdom, flourishes near the present cavern, which is an image of the world."
 
-— Porphyry, section 15; Taylor's translation, 1823 printing.[^olive2] The olive is ever-flourishing, its leaves turning white end upward in summer and downward in winter, which is why suppliants extend olive branches, exchanging "the sorrowful darkness of danger for the fair light of security and peace"; the Demiurgus "invigorates miserable and suppliant souls".[^demiurgus]
+— Porphyry, [section 15](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s15); Taylor's translation, 1823 printing.[^olive2] The olive is ever-flourishing, its leaves turning white end upward in summer and downward in winter, which is why suppliants extend olive branches, exchanging "the sorrowful darkness of danger for the fair light of security and peace"; the Demiurgus "invigorates miserable and suppliant souls".[^demiurgus]
 
 Then the sixteenth section, which is the treatise's nearest thing to an instruction, and the sentence to read twice:
 
 > "it is requisite to sit at the foot of the olive, and consult with Minerva by what means we may most effectually destroy that hostile rout of passions which insidiously lurk in the secret recesses of the soul."
 
-— Porphyry, section 16; Taylor's translation, 1823 printing. The 1917 printing carries the same sentence with two words broken.[^sit] That is the treatise telling someone to do something — and the someone is Ulysses, inside the allegory. Porphyry's preamble makes that clear: "Here, naked, and assuming a suppliant habit", afflicted in body, averse to the energies of sense, one sits at the foot of the olive.[^sit2] The person who sits is the figure in the poem, read as the soul.
+— Porphyry, [section 16](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s16); Taylor's translation, 1823 printing. The 1917 printing carries the same sentence with two words broken.[^sit] That is the treatise telling someone to do something — and the someone is Ulysses, inside the allegory. Porphyry's preamble makes that clear: "Here, naked, and assuming a suppliant habit", afflicted in body, averse to the energies of sense, one sits at the foot of the olive.[^sit2] The person who sits is the figure in the poem, read as the soul.
 
 And then the identification the series went looking for, which Porphyry attributes rather than claims:
 
 > "it was not without reason that Numenius and his followers thought the person of Ulysses in the Odyssey represented to us a man, who passes in a regular manner over the dark and stormy sea of generation, and thus at length arrives at that region where tempests and seas are unknown, and finds a nation
 > "Who ne'er knew salt, or heard the billows roar.""
 
-— Porphyry, section 16; Taylor's translation, 1823 printing.[^ulysses] So Odysseus is the soul that comes in through the water and goes out through it. The port of the cave is named Phorcys, which Porphyry reads as a statement about matter — "It is the port of the ancient marine Phorcys"[^phorcys] — and the seat under the olive belongs to Ulysses precisely as a suppliant, "as to one who implores divinity, and would appease his natal demon with a suppliant branch".[^suppliant] The story ends at the oar mistaken for a winnowing fan; then the eighteenth section defends the method against the charge that interpretations of this kind are "forced, and nothing more than the conjectures of ingenious men".[^forced] The defence is not a rule for reading but a claim about the poet — that it "must not be denied that he has obscurely … indicated the images of things of a more divine nature in the fiction of a fable", the ellipsis standing for the printing's page-break — and its ground is Homer's wisdom:
+— Porphyry, [section 16](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s16); Taylor's translation, 1823 printing.[^ulysses] So Odysseus is the soul that comes in through the water and goes out through it. The port of the cave is named Phorcys, which Porphyry reads as a statement about matter — "It is the port of the ancient marine Phorcys"[^phorcys] — and the seat under the olive belongs to Ulysses precisely as a suppliant, "as to one who implores divinity, and would appease his natal demon with a suppliant branch".[^suppliant] The story ends at the oar mistaken for a winnowing fan; then the eighteenth section defends the method against the charge that interpretations of this kind are "forced, and nothing more than the conjectures of ingenious men".[^forced] The defence is not a rule for reading but a claim about the poet — that it "must not be denied that he has obscurely … indicated the images of things of a more divine nature in the fiction of a fable", the ellipsis standing for the printing's page-break — and its ground is Homer's wisdom:
 
 > "it would not have been possible to devise the whole of this hypothesis unless the figment had been transferred (to an appropriate meaning) from certain established truths."
 
-— Porphyry, section 18; Taylor's translation, 1917 printing.[^figment] Then the treatise stops: "But reserving the discussion of this for another treatise, we shall here finish our explanation of the present Cave of the Nymphs."[^finish]
+— Porphyry, [section 18](/library/porphyry-on-the-cave-of-the-nymphs-taylor-1917/#s18); Taylor's translation, 1917 printing.[^figment] Then the treatise stops: "But reserving the discussion of this for another treatise, we shall here finish our explanation of the present Cave of the Nymphs."[^finish]
 
 ---
 

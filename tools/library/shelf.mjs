@@ -414,13 +414,18 @@ export const TEXTS = [
   {
     slug: 'porphyry-on-the-cave-of-the-nymphs-taylor-1917',
     group: 'philosophy-sources',
-    // PUBLISHED (plan §11 phase 5): this is the one text that has run the whole
-    // way — a stored edition with its own rules, a leaf-accurate page model, a
-    // pinned anchor manifest and a reader — and it is what the reading of the
-    // same treatise will link its section citations to. Every other entry stays
-    // held back: an unreadable transcription published is worse than an absent
-    // page, and their state is unchanged by this flag.
-    published: false,
+    // PUBLISHED (plan §11 phase 5): the first text to run the whole way — a stored
+    // edition, a leaf-accurate page model reconciled against the archive's own
+    // leaves, pinned anchors, and a repair rule set in which every rule fires and
+    // every reading was verified against a witness (the transcription's own
+    // context, or the 1823 parallel of the same translation). Two damaged runs
+    // remain and are left visible rather than guessed: they are the page furniture
+    // of a page break, not words.
+    //
+    // Every other entry stays held back: an unreadable transcription published is
+    // worse than an absent page, and they have none of the above. Their state is
+    // unchanged by this flag.
+    published: true,
     file: 'Porphyry-On-the-Cave-of-the-Nymphs-Taylor-1917',
     // the archive.org identifier this transcription came from. The build serves
     // the EDITION in the repo (content/library/<slug>/), never the archive; this
