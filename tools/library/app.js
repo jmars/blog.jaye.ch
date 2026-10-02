@@ -8100,7 +8100,7 @@ var $author$project$Reader$bar = function (m) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('reading')
+								$elm$html$Html$text('repaired')
 							])),
 						A2(
 						$elm$html$Html$button,
@@ -8117,7 +8117,7 @@ var $author$project$Reader$bar = function (m) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('transcription')
+								$elm$html$Html$text('as scanned')
 							]))
 					])),
 				A2(

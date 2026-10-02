@@ -69,6 +69,19 @@
  *     damage a reading rule READS (§11's opener) must come out readable and
  *     unmarked. Fails if a title is derived from the raw words, if a still-damaged
  *     title ships unmarked, or if a readable one is marked damaged.
+ *  6d. THE DAMAGE THE READING VIEW STILL SHOWS IS COUNTED IN TWO CLASSES AND
+ *     ACCOUNTED FOR IN FULL (fix 2 and fix 3 of the standalone-marker brief). Both
+ *     counts are recomputed here from the served document — the damaged WORDS no
+ *     rule resolved, and the STANDALONE MARKERS (letterless tokens carrying a
+ *     damage character) standing between words — over the text the reading view
+ *     actually renders (`p`, `verse` and `notedef`; the running heads are
+ *     suppressed and the page markers are chrome). Fails if the two classes
+ *     overlap or are merged, if a marker is counted among the words, if either
+ *     count disagrees with the document's, or if any damage character in the
+ *     reading view stands in a token belonging to NEITHER class. That last clause
+ *     is the one that would have caught the gap the author found: MEASURED, the
+ *     document reported 2 damaged words while the reading view showed 33 damage
+ *     characters, because the other 31 stood alone between words.
  *  7. THE EDITION IN THE REPO IS THE SHELF FILE, AND A CHANGED SHELF FILE CANNOT
  *     OVERWRITE IT. The stored edition's sha256 is compared with the shelf's when
  *     the shelf is present, and the importer is run against a MODIFIED copy of
@@ -102,6 +115,8 @@ import {
   wordDamaged,
   applyEditsCounted,
   damageCensus,
+  markerCensus,
+  damageCharCount,
   serialiseDoc,
   plainText,
   anchorLists,
@@ -496,15 +511,27 @@ section('the policy: substitute-when-recorded, leave otherwise, never delete');
       `(${leave.map((e) => JSON.stringify(e.find)).join(', ')})`,
   );
 
-  /* (3) THE COUNTS, RECOMPUTED HERE from the served body text: how many readings
-     the reading view applies, and how many damaged words it leaves visible. FAILS
-     IF the document's report and a re-derivation disagree. */
-  const body = doc.blocks
-    .filter((b) => (b.t === 'p' || b.t === 'verse') && b.at && /^s\d/.test(b.at))
-    .map((b) => b.x.replace(/\n/g, ' '))
-    .join(' ');
+  /* (3) THE COUNTS, RECOMPUTED HERE from the served text of the READING VIEW:
+     how many readings the reading view applies, how many damaged words and how
+     many standalone markers it leaves visible, and whether those two classes
+     account for every damage character the reading view still shows. FAILS IF the
+     document's report and a re-derivation disagree, IF a marker is counted as a
+     word (or the reverse), or IF any damage character in the reading view is
+     explained by neither class — which is the gap this section exists to catch:
+     MEASURED, before it was widened, the document said 2 damaged words while the
+     reading view showed 33 damage characters.
+
+     The DOMAIN is recomputed too, not copied: the blocks the app renders in the
+     reading view (`Reader.Document.flow` -> FPara from `p`/`verse`, FNote from
+     `notedef`), each block corrected on its own, joined as the reader joins them.
+     Fails if the extractor counts over a narrower text than the reader is shown
+     (the earlier domain was the section-labelled body paragraphs, which left out
+     the notes and the unlabelled paragraphs). */
+  const readingBlocks = doc.blocks.filter((b) => b.t === 'p' || b.t === 'verse' || b.t === 'notedef');
+  const body = readingBlocks.map((b) => b.x.replace(/\n/g, ' ')).join(' ');
   const view = applyEditsCounted(body, doc.corrections.map((c) => ({ find: c.find, repl: c.repl, action: c.action })));
   const leftWords = damageCensus(view, []).words;
+  const leftMarkers = markerCensus(view);
   check(
     meta.readings.recorded === edits.filter((e) => e.cls === 'reading').length &&
       meta.readings.applied === meta.readings.recorded &&
@@ -513,12 +540,54 @@ section('the policy: substitute-when-recorded, leave otherwise, never delete');
       `(${meta.readings.recorded} recorded, ${meta.readings.applied} applied, ${meta.readings.occurrences} occurrence(s))`,
   );
   check(
-    meta.leftVisible === leftWords.length,
-    `the damaged words left visible are the recomputed ones (${meta.leftVisible} stated, ${leftWords.length} recomputed)`,
+    meta.leftWordCount === leftWords.length,
+    `the damaged WORDS left visible are the recomputed ones (${meta.leftWordCount} stated, ${leftWords.length} recomputed)`,
   );
   check(
     JSON.stringify(meta.leftWords.slice().sort()) === JSON.stringify(leftWords.slice().sort()),
     `and they are named, not merely counted (${meta.leftWords.join(', ')})`,
+  );
+  check(
+    meta.leftMarkerCount === leftMarkers.length &&
+      JSON.stringify(meta.leftMarkers.slice().sort()) === JSON.stringify(leftMarkers.slice().sort()),
+    `the STANDALONE MARKERS left visible are counted and named apart from the words ` +
+      `(${meta.leftMarkerCount} stated, ${leftMarkers.length} recomputed: ${meta.leftMarkers.join(', ')})`,
+  );
+  check(
+    meta.leftWords.every((w) => !leftMarkers.includes(w)) &&
+      meta.leftMarkers.every((mk) => !meta.leftWords.includes(mk) && !/[A-Za-z]/.test(mk)),
+    `and the two counts are disjoint: no marker is counted as a word, and no word as a marker ` +
+      `(a marker is a token with no letter in it — ${meta.leftMarkers.length} marker(s), all letterless)`,
+  );
+  /* THE ACCOUNTING (fix 3): every damage character the reading view shows stands
+     inside one of those words or one of those markers — counted per OCCURRENCE,
+     not per distinct token, because `\` occurs three times and `^` twice before the
+     reading rule reaches it. FAILS IF a damage character stands in a token that is
+     neither (the class the word census could not see), or IF the document's own
+     damage-character total is not the one the served text has. */
+  const damage = loadBasePolicy().damageList;
+  let chars = 0;
+  const unexplained = [];
+  for (const tok of view.split(/\s+/)) {
+    const n = [...tok].filter((c) => damage.includes(c)).length;
+    if (n === 0) continue;
+    chars += n;
+    if (/[A-Za-z]/.test(tok)) {
+      const stripped = tok.replace(/^[.,;:?!()"'„“”\[]+/, '').replace(/[.,;:?!()"“”\]|\\]+$/, '');
+      if (!leftWords.includes(stripped)) unexplained.push(tok);
+    } else if (!leftMarkers.includes(tok)) unexplained.push(tok);
+  }
+  const rawChars = damageCharCount(body);
+  check(
+    chars === damageCharCount(view) && chars === meta.leftDamageChars && rawChars > chars,
+    `the reading view still shows ${chars} damage character(s) of the ${rawChars} the transcription carries — ` +
+      `the document says ${meta.leftDamageChars}, and the rules remove ${rawChars - chars}`,
+  );
+  check(
+    unexplained.length === 0,
+    `and every one of those ${chars} characters stands inside one of the ${leftWords.length} damaged word(s) ` +
+      `or one of the ${leftMarkers.length} standalone marker(s) — ${unexplained.length} unexplained` +
+      `${unexplained.length ? `: ${JSON.stringify(unexplained.slice(0, 6))}` : ''}`,
   );
 }
 

@@ -1361,12 +1361,25 @@ export function extract(src, meta) {
 
   /* 7b. THE POLICY, COUNTED — on the text the reader is given. The base policy is
    * "substitute the reading when one is recorded, otherwise leave the marker in
-   * place", so the two numbers are (i) the readings applied and (ii) the damaged
-   * words the reading view still shows. Both are measured on the served body text
-   * AFTER the rules run: a word the rules resolved no longer carries damage, and
-   * one they did not is exactly the word whose marker a reader can still see. */
-  const bodyText = out
-    .filter((b) => (b.t === 'p' || b.t === 'verse') && b.at && /^s\d/.test(b.at))
+   * place", so the numbers are (i) the readings applied and (ii) the damage the
+   * reading view still shows: the damaged words and the STANDALONE MARKERS the
+   * rules did not reach. All are measured on the served text AFTER the rules run:
+   * a word the rules resolved no longer carries damage, and one they did not is
+   * exactly the word whose marker a reader can still see.
+   *
+   * The DOMAIN is the text the reading view renders: every `p`, `verse` and
+   * `notedef` block, in document order, one block at a time, with the hard-wrapped
+   * lines joined as the reader joins them. That is the app's own rendering set
+   * (`Reader.Document.flow` → `FPara`/`FNote`); running heads (`rh`) are furniture
+   * the reading view suppresses and the transcription view shows, and the page
+   * markers (`pb`) are chrome. MEASURED, and why the domain is stated here: the
+   * earlier domain was the section-labelled body paragraphs only, which left the
+   * note definitions and the unlabelled paragraphs of the front matter and the
+   * advertisements outside the census — so the count said 2 while the reading view
+   * showed 33 damage characters. A count over less than the reading view is not a
+   * count of the reading view. */
+  const readingViewText = out
+    .filter((b) => b.t === 'p' || b.t === 'verse' || b.t === 'notedef')
     .map((b) => b.x.replace(/\n/g, ' '))
     .join(' ');
 
@@ -1378,7 +1391,7 @@ export function extract(src, meta) {
   report.forEach((r, i) => {
     corrections[i].hits = r.hits;
   });
-  const policy = policyReport(bodyText, corrections);
+  const policy = policyReport(readingViewText, corrections);
 
   /* 7d. What the LEAF MODEL found is a finding like any other, and the document
    * keeps it: every page marker that does not stand at its leaf's own boundary,
@@ -1450,8 +1463,15 @@ export function extract(src, meta) {
       ),
       repeated: report.filter((r) => r.hits > 1).map((r) => ({ cls: r.cls, find: r.find, hits: r.hits })),
       readings: policy.readings,
-      leftVisible: policy.left.damaged,
+      leftWordCount: policy.left.damaged,
       leftWords: policy.left.words,
+      leftMarkerCount: policy.left.markers.length,
+      leftMarkers: policy.left.markers,
+      leftDamageChars: policy.left.chars,
+      readingView:
+        'the text the reading view renders: every p, verse and notedef block in document order, rules ' +
+        'applied, counted after they run. Running heads are furniture the view suppresses; page markers ' +
+        'are chrome.',
       damagedWords: policy.raw.damaged,
       repairedWords: policy.raw.repaired,
       unrepairedWords: policy.raw.unrepaired,
@@ -1469,8 +1489,11 @@ export function extract(src, meta) {
         'word the transcription left damaged. The "review" rules record that a reading is NOT determinable there (action ' +
         '"leave"), and a damaged word with no rule at all is left the same way: the policy substitutes a ' +
         'reading when one is recorded and otherwise LEAVES THE MARKER IN PLACE, visible in the reading view. ' +
-        'The readings applied and the damaged words left visible are counted below, and a section title the ' +
-        'rules still leave damaged is marked, with the words named, rather than repaired by a guess.',
+        'The damage that survives is counted in TWO classes, kept apart because they are different things: ' +
+        'the damaged WORDS no rule resolved, and the STANDALONE MARKERS — one or more damage characters ' +
+        'standing as their own token between words, a lost space or the scanner\u2019s debris — which are NOT ' +
+        'words and are not counted as any. Both counts, the damage characters they account for between ' +
+        'them, and a section title the rules still leave damaged, are stated below.',
     },
     dropped: dropped.map((x) => ({ x, why: 'the library stamp, not text' })),
     findings,
@@ -1519,9 +1542,9 @@ export function latinLang(text) {
  * PARTITION, so the three counts add up and the provenance cannot tell a story
  * the numbers do not support:
  *
- *   `damaged`    distinct WORDS of the body — a word being a token with a letter
- *                in it, not the scan's debris — that carry a character the census
- *                marks as damage;
+ *   `damaged`    distinct WORDS — a word being a token with a letter in it, not
+ *                the scan's debris — that carry a character the census marks as
+ *                damage;
  *   `repaired`   of those, the ones a rule NAMES — its `find` is the whole word,
  *                so the rule is a statement about that word;
  *   `unrepaired` the rest. A rule that only reaches part of the word may still
@@ -1532,6 +1555,12 @@ export function latinLang(text) {
  *
  * The unrepaired words are counted, named in the build log, and never turned into
  * a rule: a rule that guessed would be worse than the damage.
+ *
+ * A WORD here is exactly "a whitespace token with a letter in it". The other half
+ * of the damage — a marker standing ALONE between words, with no letter to
+ * qualify it as a word — is counted by `markerCensus`, deliberately apart from
+ * this one. The two are not the same thing and merging them would hide which is
+ * which; the split is total, because a token either has a letter or does not.
  */
 export function damageCensus(text, finds) {
   const rules = new Set(finds || []);
@@ -1553,6 +1582,49 @@ export function damageCensus(text, finds) {
 }
 
 /**
+ * THE STANDALONE MARKERS — the half of the damage a word census cannot see, and
+ * the reason the model needed widening.
+ *
+ * MEASURED on this edition's reading view: the words census reported 2 damaged
+ * words while the reading view still showed 33 damage characters. The rest were
+ * not in words at all — they were markers standing as their OWN token between
+ * words (`of ^ any other matter`, `petitioner. _ Thus`, a `\` alone between
+ * `place` and `which`), which the word census skips by construction
+ * (`if (tok === '' || !/[A-Za-z]/.test(tok)) continue`) because it is looking for
+ * words.
+ *
+ * A STANDALONE MARKER is a whitespace token that has NO LETTER and carries at
+ * least one character of the policy's damage set. It is DAMAGE on the same terms
+ * as a damaged word: either the scan lost the SPACE the print has there, or the
+ * token is the scan's debris (page furniture, a shattered run). It is NOT a word,
+ * so it is counted here and never mixed into the word count: a reader told "2
+ * damaged words" is told the truth about words, and the honest statement about
+ * the damage as a whole is "2 damaged words, 13 standalone markers".
+ *
+ * The tokens are reported AS THEY STAND in the reading view (the raw token, not
+ * an edge-stripped one), because a marker has no word around it to strip to: what
+ * the list names is what the reader sees.
+ */
+export function markerCensus(text) {
+  const seen = new Set();
+  for (const tok of text.split(/\s+/)) {
+    if (tok === '' || !damageRegex().test(tok)) continue;
+    if (/[A-Za-z]/.test(tok)) continue; // a damaged word: damageCensus's half
+    seen.add(tok);
+  }
+  return [...seen];
+}
+
+/** How many characters of the policy's damage set the text still shows. The
+ * number the two censuses have to account for between them, counted on the same
+ * text they are counted on. */
+export function damageCharCount(text) {
+  let n = 0;
+  for (const c of text) if (damageRegex().test(c)) n++;
+  return n;
+}
+
+/**
  * THE POLICY, COUNTED — the numbers the provenance reports and the smoke asserts.
  *
  * The base policy is "substitute the reading when one is recorded, otherwise leave
@@ -1563,9 +1635,13 @@ export function damageCensus(text, finds) {
  *               and every one fires at least once (the build fails otherwise);
  *   `applied`   their OCCURRENCES in the served text — the readings the reading
  *               view actually shows;
- *   `left`      the distinct damaged words the reading view still shows, after
- *               every reading has been applied. This is the policy's own output:
- *               no rule removed their marker, so the damage is visible.
+ *   `left`      the damage the reading view still shows, after every reading has
+ *               been applied, in its TWO classes, kept apart because they are
+ *               different things and one number would hide that:
+ *                 `left.words`   the distinct damaged WORDS no rule resolved;
+ *                 `left.markers` the distinct STANDALONE MARKERS between words;
+ *                 `left.chars`   the damage characters still standing in the view,
+ *                                which those two lists account for item by item.
  *
  * The partition is honest without a `repaired` count: a word is either shown as
  * its recorded reading (it no longer carries damage) or left as the transcription
@@ -1576,14 +1652,14 @@ export function policyReport(rawText, corrections) {
   const rules = corrections.map((c) => ({ find: c.find, repl: c.repl, action: c.action }));
   const view = applyEditsCounted(rawText, rules);
   const rawCensus = damageCensus(rawText, corrections.map((c) => c.find));
-  const left = damageCensus(view, []);
+  const leftWords = damageCensus(view, []);
   const readings = corrections.filter((c) => c.cls === 'reading');
   const applied = readings.filter((c) => c.hits > 0).length;
   const occurrences = readings.reduce((a, c) => a + (c.hits || 0), 0);
   const leaves = corrections.filter((c) => c.action === 'leave');
   return {
     raw: rawCensus,
-    left,
+    left: { ...leftWords, markers: markerCensus(view), chars: damageCharCount(view) },
     readings: {
       recorded: readings.length,
       applied,

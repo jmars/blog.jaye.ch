@@ -317,7 +317,7 @@ section('resume');
 
 /* ---------- 7. the two views differ, and only one is repaired ---------- */
 
-section('reading and transcription');
+section('the two views are named for what they are — repaired and as scanned');
 {
   const ctx = await boot();
   const reading = ctx.text();
@@ -325,18 +325,48 @@ section('reading and transcription');
   // FAILS IF: the correction rules are not applied client-side.
   check(!reading.includes('I i. What does Homer'), 'and not the transcription’s damaged numeral');
   // FAILS IF: the reading view serves the verbatim blocks.
-  const toggle = ctx.byText('#reader-app .rd-views button', 'transcription');
-  check(!!toggle, 'the transcription view is offered');
+
+  /* THE LABELS STATE WHICH VIEW HAS THE REPAIRS. They read "reading" and
+     "transcription", which named neither the difference nor the default, and the
+     author asked where the repaired text was while looking at the view that has
+     it. FAILS IF either button is relabelled back to a word that does not say what
+     the view is, if a third button appears, or if the labels are swapped. */
+  const buttons = [...ctx.w.document.querySelectorAll('#reader-app .rd-views button')];
+  const labels = buttons.map((b) => b.textContent.trim());
+  check(
+    labels.length === 2 && labels[0] === 'repaired' && labels[1] === 'as scanned',
+    `the two view buttons say which is which (${labels.map((l) => JSON.stringify(l)).join(' and ')})`,
+  );
+  /* THE REPAIRED VIEW IS THE DEFAULT AND IS THE ONE PRESSED. FAILS IF the default
+     flips to the transcription, or if aria-pressed stops tracking the view — the
+     label and the state must agree, or a reader cannot tell which text is shown. */
+  check(
+    buttons.length === 2 &&
+      buttons[0].getAttribute('aria-pressed') === 'true' &&
+      buttons[1].getAttribute('aria-pressed') === 'false' &&
+      reading.includes('1. What does Homer'),
+    'the repaired view is the default, and its button is the one pressed (aria-pressed)',
+  );
+
+  const toggle = ctx.byText('#reader-app .rd-views button', 'as scanned');
+  check(!!toggle, 'the "as scanned" view is offered');
   if (toggle) {
     ctx.click(toggle);
     await settle();
     const transcription = ctx.text();
-    check(transcription.includes('I i. What does Homer'), 'the transcription view carries the verbatim block');
+    check(transcription.includes('I i. What does Homer'), 'the as-scanned view carries the verbatim block');
     // FAILS IF: repairs were baked into the served text — the transcription view
     // is the whole reason they are not.
     check(!transcription.includes('1. What does Homer'), 'and not the repair');
     check(reading !== transcription, 'the same block reads two ways');
     // FAILS IF: the two views are the same text with a different label.
+    const back = ctx.byText('#reader-app .rd-views button', 'repaired');
+    check(!!back, 'and the repaired view can be returned to');
+    if (back) {
+      ctx.click(back);
+      await settle();
+      check(ctx.text().includes('1. What does Homer'), 'returning to it shows the repaired text again');
+    }
   }
 }
 
@@ -381,9 +411,11 @@ section('a recorded reading renders, and damage with no reading renders marked')
      furniture happens to contain characters of the damage set ("go\u203a\u00bb" is the
      next-page control and the volume transcribes a \u00bb in "the cavern\u00bb"), and counting
      those would make the assertion about the buttons. */
-  const prose = [...ctx.w.document.querySelectorAll('#reader-app .rd-p, #reader-app .rd-verse, #reader-app .rd-note-body')]
-    .map((e) => e.textContent)
-    .join('\u0000');
+  const proseEls = [
+    ...ctx.w.document.querySelectorAll('#reader-app .rd-p, #reader-app .rd-verse, #reader-app .rd-note-body'),
+  ];
+  const proseParts = proseEls.map((e) => e.textContent);
+  const prose = proseParts.join('\u0000');
   const markedChars = marks.reduce((a, m) => a + m.textContent.length, 0);
   const inView = [...prose].filter((c) => damage.includes(c)).length;
   check(
@@ -408,14 +440,98 @@ section('a recorded reading renders, and damage with no reading renders marked')
       `(${left.join(', ')})`,
   );
 
+  /* (2b) THE TWO CLASSES OF DAMAGE, AND THE MARKS THEY ACCOUNT FOR (fix 2, fix 3).
+     The marked characters are not enough on their own: a mark on a token that is
+     neither a damaged word nor a standalone marker would be damage nothing counts,
+     which is exactly the gap the author found (the document said "2 damaged words"
+     while the reading view showed 33 damage characters).
+
+     MEASURED, and why this is counted the way it is: the app renders the prose as
+     it groups it, not as the document stores it — a margin note is drawn a SECOND
+     time inside the paragraph that references it (`.rd-margin`, aria-hidden), and
+     a paragraph the transcription split around a reference marker is joined back
+     together. So the damage characters are counted over the reading text MINUS the
+     margin copies, which is the text the document's own count is over. FAILS IF the
+     app marks damage outside the reading text, drops a mark, duplicates one into
+     the count, or renders a damage character the document's measurement does not
+     account for. */
+  const inMargin = (el) => {
+    for (let n = el; n; n = n.parentElement) if (n.classList && n.classList.contains('rd-margin')) return true;
+    return false;
+  };
+  const readingMarks = marks.filter((m) => !inMargin(m));
+  const readingChars = readingMarks.reduce((a, m) => a + m.textContent.length, 0);
+  const marginChars = markedChars - readingChars;
+  const readingText = proseParts.join('\u0000');
+  const markers = DOCJSON.correctionsMeta.leftMarkers || [];
+  check(
+    readingChars > 0 &&
+      readingChars === DOCJSON.correctionsMeta.leftDamageChars &&
+      readingChars < markedChars &&
+      marginChars > 0,
+    `the reading text shows and marks exactly the ${readingChars} damage character(s) the document's two ` +
+      `counts account for (${DOCJSON.correctionsMeta.leftDamageChars} stated; the ${marginChars} in the ` +
+      `margin copies of the notes are the same text drawn twice, and are marked there too)`,
+  );
+  check(
+    DOCJSON.correctionsMeta.leftWordCount === left.length &&
+      DOCJSON.correctionsMeta.leftMarkerCount === markers.length &&
+      markers.every((mk) => !/[A-Za-z]/.test(mk)) &&
+      !markers.some((mk) => left.includes(mk)),
+    `the document states the two counts apart — ${DOCJSON.correctionsMeta.leftWordCount} damaged word(s) and ` +
+      `${DOCJSON.correctionsMeta.leftMarkerCount} standalone marker(s), the markers all letterless and none of ` +
+      `them counted among the words`,
+  );
+  const missingInView = [...markers, ...left].filter((name) => !readingText.includes(name));
+  check(
+    markers.length > 0 && missingInView.length === 0,
+    `and every name in both lists stands in the rendered reading text — the ${markers.length} standalone ` +
+      `marker(s) (${markers.slice(0, 4).map((m) => JSON.stringify(m)).join(' ')}) and the ${left.length} ` +
+      `damaged word(s)` +
+      `${missingInView.length ? `; MISSING ${JSON.stringify(missingInView)}` : ''}`,
+  );
+  /* (2c) AN ADDED READING FOR A STANDALONE MARKER FIRES, AND THE MARKER GOES
+     (fix 2's proof 4). The two readings added for markers standing between words
+     record the print's SPACE, so the passages read as the 1823 parallel has them.
+     FAILS IF either rule is dropped, is mis-spaced and stops matching, or is
+     written without the spaces and starts eating the `^`/`_` that stand INSIDE
+     words (`in_d^scfi5mga`, `that_jg_the`), which no rule may touch by deletion. */
+  check(
+    prose.includes('petitioner. Thus, too') &&
+      prose.includes('and not of any other matter') &&
+      prose.includes('governed by an intellectual nature') &&
+      !markers.includes('_') &&
+      !markers.includes('^') &&
+      [...prose].includes('^'),
+    'the readings recorded for the standalone markers " ^ " and " _ " fire: "petitioner. _ Thus" reads ' +
+      '"petitioner. Thus", "and not of ^ any" reads "and not of any", "governed ^ by" reads "governed by" — ' +
+      'no standalone ^ or _ is left, while the ^ standing INSIDE a left-visible word is untouched',
+  );
+
   /* (3) THE TRANSCRIPTION VIEW IS NOT MARKED: it is the verbatim text, and a mark
      there would claim the transcription's own characters are apparatus. */
-  const toggle = ctx.byText('#reader-app .rd-views button', 'transcription');
+  const toggle = ctx.byText('#reader-app .rd-views button', 'as scanned');
   if (toggle) {
     ctx.click(toggle);
     await settle();
     const t = [...ctx.w.document.querySelectorAll('#reader-app mark.rd-damage')];
     check(t.length === 0, `the transcription view marks nothing (${t.length} mark(s)) — it is the verbatim text`);
+    /* AND IT STILL SHOWS EVERY MARKER THE READINGS REPAIRED (proof 5). The served
+       text is verbatim and the rules are applied by the VIEW, so the markers the
+       reading view no longer shows must stand in this one. FAILS IF a repair is
+       ever baked into the served blocks, or if the view switch stops re-reading
+       the raw text. */
+    const raw = [...ctx.w.document.querySelectorAll('#reader-app .rd-p, #reader-app .rd-verse, #reader-app .rd-note-body')]
+      .map((e) => e.textContent)
+      .join('\u0000');
+    check(
+      raw.includes('petitioner. _ Thus') &&
+        raw.includes('and not of ^ any other matter') &&
+        raw.includes('governed ^ by an intellectual nature') &&
+        raw.includes('- -1i"^lHi.n*-iL'),
+      'and the transcription view still carries every one of them verbatim: "petitioner. _ Thus", ' +
+        '"and not of ^ any other matter", "governed ^ by", and the page furniture run',
+    );
   } else {
     check(false, 'the transcription view is offered');
   }
@@ -480,7 +596,7 @@ section('the contents list: a damaged title is stated, not shipped');
       `(${JSON.stringify(s11.title)})`,
   );
   // the transcription view keeps the flag too
-  const toggle = ctx.byText('#reader-app .rd-views button', 'transcription');
+  const toggle = ctx.byText('#reader-app .rd-views button', 'as scanned');
   ctx.click(toggle);
   await settle();
   const toc2 = ctx.w.document.querySelector('#reader-app .rd-toc');
@@ -683,7 +799,7 @@ section('the running heads, the citation and the progress');
   check(ctx.w.document.querySelectorAll('#reader-app .rd-rh').length === 0, 'the reading view shows no running heads');
   // FAILS IF: the furniture is not suppressed — the page numbers inside the
   // heads then read as prose ("6 ON THE CAVE OF THE NYMPHS" mid-sentence).
-  const t = ctx.byText('#reader-app .rd-views button', 'transcription');
+  const t = ctx.byText('#reader-app .rd-views button', 'as scanned');
   ctx.click(t);
   await settle();
   const heads = ctx.w.document.querySelectorAll('#reader-app .rd-rh').length;

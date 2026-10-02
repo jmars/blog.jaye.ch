@@ -749,6 +749,18 @@
       "note": "SUPERSEDES the recorded LEAVE. The run stands between the anchors \"crowns-\" and \"petitioner\", and the 1823 parallel reads \"and affords a friendly branch to the suppliant petitioner\" — so the replacement carries the WHOLE slot between the anchors. A half repair (the earlier pass proposed only \"and affords a friendly\") would be worse than the leave: it yields a sentence that reads as the author's error."
     },
     {
+      "find": " ^ ",
+      "replace": " ",
+      "class": "reading",
+      "note": "a STANDALONE MARKER: the print has a SPACE where the transcription has a ^ standing alone between two words — a lost space, not a lost letter. Spaced on both sides so it can never reach a ^ INSIDE a word (in_d^scfi5mga, v^ry), which has its own recorded reading. Two occurrences, both on the shelf: 1823 parallel:8982 (\"consist of stone, and not of any other matter\") and 1823 parallel:9926."
+    },
+    {
+      "find": " _ ",
+      "replace": " ",
+      "class": "reading",
+      "note": "the same class as the rule above, for a _ standing alone between two words: \"petitioner. _ Thus\" where the print has \"petitioner. Thus\" (1823 parallel:9925). One occurrence. Spaced on both sides, so the 55 _ that stand inside words are untouched."
+    },
+    {
       "find": "-1i\"^lHi.n*-iL",
       "action": "leave",
       "class": "review",

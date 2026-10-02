@@ -1095,18 +1095,24 @@ bar m =
             ]
             [ text (if m.drawer then "✕ contents" else "☰ contents") ]
         , div [ class "rd-views", attribute "role" "group", attribute "aria-label" "Which text" ]
+            -- THE TWO BUTTONS SAY WHICH VIEW HAS THE REPAIRS. They used to read
+            -- "reading" and "transcription", and a reader who asked where the
+            -- repaired text was asked it while looking at this view — the label
+            -- named neither the difference nor the default. The ids, the
+            -- aria-pressed state and the stored names are unchanged; the visible
+            -- text now states what the button does.
             [ button
                 [ type_ "button", class "rd-btn"
                 , attribute "aria-pressed" (bool (m.view == Reading))
                 , Ev.onClick (ViewSet Reading)
                 ]
-                [ text "reading" ]
+                [ text "repaired" ]
             , button
                 [ type_ "button", class "rd-btn"
                 , attribute "aria-pressed" (bool (m.view == Transcription))
                 , Ev.onClick (ViewSet Transcription)
                 ]
-                [ text "transcription" ]
+                [ text "as scanned" ]
             ]
         , div [ class "rd-search" ]
             [ label [ class "rd-vh", A.for "rd-q" ] [ text "Search this text" ]
