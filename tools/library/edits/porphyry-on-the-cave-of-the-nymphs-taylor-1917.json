@@ -59,6 +59,24 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": "sepgrgtinflt * Qip yf niuiflo, a sceptre of ruling, and a key (\\fQ'f\"rHin\" p™*\"**-^",
+      "replace": "separating, a cup of vivific, a sceptre of ruling, and a key of guardian power",
+      "class": "reading",
+      "note": "the print reads \"a signature of separating, a cup of vivific, a sceptre of ruling, and a key of guardian power\" — there is NO Greek here; the transcription's run is a misread of that English. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "life, the reward of severe",
+      "replace": "life, as the reward of severe",
+      "class": "reading",
+      "note": "the print reads \"in the athletic race of life, as the reward of severe toil\" — the word \"as\" was lost. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "sacred to soulis",
+      "replace": "sacred to souls",
+      "class": "reading",
+      "note": "the print reads \"this cave was sacred to souls and aquatic nymphs\" — 'soulis' is 'souls' misread. (decided by the transcription's own context.)"
+    },
+    {
       "find": "Qypnf every virtue",
       "replace": "in an accurate knowledge of every virtue",
       "class": "reading",
@@ -1781,10 +1799,10 @@
       "note": "the print reads \"the plant\""
     },
     {
-      "find": "t^\"f^li^rva.J",
-      "replace": "of Minerva;",
+      "find": "t^\"f^li^rva.J \\",
+      "replace": "of Minerva, and",
       "class": "reading",
-      "note": "the print reads \"of Minerva;\" — the 1823 parallel reads \"For the olive is the plant of Minerva; and Minerva is wisdom\" (:9895); the earlier \"of Minerva\" dropped the semicolon."
+      "note": "the print reads \"the plant of Minerva, and Minerva is wisdom\" (scan, printed page 37). The span now takes the trailing mark, which is the shredded \"and\"; the earlier reading \"of Minerva;\" left it standing."
     },
     {
       "find": "uniY.ej£e_",
