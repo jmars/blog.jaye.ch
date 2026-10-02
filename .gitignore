@@ -27,3 +27,6 @@ content/headers/*.png
 
 # Internal plans — the repo is public (keep them out of git)
 plans/
+
+# Scan page images (PD, but bulky and re-fetchable by tools/library/scan.mjs)
+content/library/*/scans/
