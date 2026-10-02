@@ -59,6 +59,7 @@ import {
   readEdition,
   editionPath,
   hasEdition,
+  witnessPath,
   sha256,
   wordDamaged,
 } from './extract.mjs';
@@ -233,15 +234,23 @@ function readParallel(slug) {
   const spec = PARALLELS[slug];
   const name = process.env.LIBRARY_PARALLEL || (spec && spec.file);
   if (!name) return null;
+  // Prefer the LIBRARY's imported copy (the witness beside the rule); fall back
+  // to the shelf, which may be absent once the edition is in the repo.
+  const imported = witnessPath(slug, name);
+  if (imported) {
+    const text = readFileSync(imported, 'utf8');
+    PARALLEL_FILE = imported;
+    return { name: basename(imported), path: imported, text, sha256: sha256(text), why: spec ? spec.why : 'named by LIBRARY_PARALLEL', from: 'library' };
+  }
   const files = shelfFiles();
   const resolved = shelfFile(name, files);
   PARALLEL_FILE = resolved;
   const path = join(SHELF, resolved);
   if (!existsSync(path)) {
-    throw new Error(`library: the parallel "${resolved}" is not on the shelf (${SHELF})`);
+    throw new Error(`library: the parallel "${resolved}" is not on the shelf (${SHELF}) and not imported into the library`);
   }
   const text = readFileSync(path, 'utf8');
-  return { name: resolved, path, text, sha256: sha256(text), why: spec ? spec.why : 'named by LIBRARY_PARALLEL' };
+  return { name: resolved, path, text, sha256: sha256(text), why: spec ? spec.why : 'named by LIBRARY_PARALLEL', from: 'shelf' };
 }
 
 /** The served text's reading view, and its damaged words. */

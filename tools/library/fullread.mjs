@@ -75,6 +75,7 @@ import {
   applyEditsCounted,
   editsPath,
   hasEdition,
+  witnessPath,
 } from './extract.mjs';
 import { TEXTS, SHELF, shelfFiles, shelfFile } from './shelf.mjs';
 import {
@@ -498,9 +499,11 @@ function write(slug, payload) {
 export function readParallel(slug) {
   const spec = parallelSpec(slug);
   if (!spec) return null;
-  const resolved = shelfFile(spec.file, shelfFiles());
-  const path = join(SHELF, resolved);
-  if (!existsSync(path)) throw new Error(`library: the parallel "${resolved}" is not on the shelf (${SHELF})`);
+  // Prefer the LIBRARY's imported witness; fall back to the shelf.
+  const imported = witnessPath(slug, spec.file);
+  const resolved = spec.file;
+  const path = imported || join(SHELF, shelfFile(spec.file, shelfFiles()));
+  if (!existsSync(path)) throw new Error(`library: the parallel "${resolved}" is not on the shelf (${SHELF}) and not imported into the library`);
   const text = readFileSync(path, 'utf8');
   const lines = text.split('\n');
   const tokens = [];

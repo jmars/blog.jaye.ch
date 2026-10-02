@@ -91,7 +91,7 @@ import {
   bareFolio,
   joinLines,
 } from './reader.mjs';
-import { TEXTS, shelfFiles, textSource } from './shelf.mjs';
+import { TEXTS, SHELF, shelfFiles, shelfFile, textSource } from './shelf.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -2001,6 +2001,58 @@ export function checkAnchors(doc, file = anchorPath(doc.slug)) {
 
 /* ---------- the one-time import ---------- */
 
+/** A WITNESS EDITION held in the library beside the transcription. The parallel
+ * of a text (another printing of the same work) is not a library reading of its
+ * own — it may be a multi-treatise volume the extractor cannot serve — so it is
+ * kept verbatim under `<slug>/witnesses/<name>.txt` and recorded in
+ * `<slug>/witnesses.json`. The tools read it THERE, not from the shelf: the shelf
+ * may be absent, and the evidence a rule was decided from belongs in the library
+ * beside the rule. Matched by the shelf filename the record names, so the caller
+ * keeps naming the file and never guesses a slug. Returns the path, or null. */
+export function witnessPath(slug, shelfFilename) {
+  const rec = join(LIBRARY_DIR, slug, 'witnesses.json');
+  if (!existsSync(rec)) return null;
+  try {
+    const j = JSON.parse(readFileSync(rec, 'utf8'));
+    for (const w of j.witnesses || []) {
+      if (w.shelf === shelfFilename) {
+        const p = join(LIBRARY_DIR, slug, 'witnesses', `${w.name}.txt`);
+        if (existsSync(p)) return p;
+      }
+    }
+  } catch {
+    /* an unreadable record is not a reason to guess a witness */
+  }
+  return null;
+}
+
+/** Copy a shelf file into the library as a WITNESS of `slug`, ONCE, recording
+ * its sha256. A witness is evidence for a reading, never a served text, so it
+ * carries no document, no anchors and no pages, and the build never reads it. */
+export function importWitness(slug, shelfFilename, why) {
+  const resolved = shelfFile(shelfFilename, shelfFiles());
+  const bytes = readFileSync(join(SHELF, resolved));
+  const sha256 = createHash('sha256').update(bytes).digest('hex');
+  const name = basename(resolved).replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const dir = join(LIBRARY_DIR, slug, 'witnesses');
+  mkdirSync(dir, { recursive: true });
+  const rec = join(LIBRARY_DIR, slug, 'witnesses.json');
+  const doc = existsSync(rec) ? JSON.parse(readFileSync(rec, 'utf8')) : { slug, witnesses: [] };
+  const prev = (doc.witnesses || []).find((w) => w.shelf === resolved);
+  if (prev && prev.sha256 !== sha256) {
+    throw new Error(
+      `library: ${slug}: the witness "${resolved}" has changed since it was imported.\n` +
+        `  imported: ${prev.sha256}\n  now:      ${sha256}\n  Nothing was overwritten — a reading may have been decided from the old bytes.`,
+    );
+  }
+  if (prev) return { ...prev, skipped: true };
+  writeFileSync(join(dir, `${name}.txt`), bytes);
+  const out = { name, shelf: resolved, sha256, bytes: bytes.length, why: why || '', imported: new Date().toISOString().slice(0, 10) };
+  doc.witnesses = [...(doc.witnesses || []), out];
+  writeFileSync(rec, `${JSON.stringify(doc, null, 2)}\n`);
+  return out;
+}
+
 /** Copy the shelf's transcription into the repo, ONCE, and record where it came
  * from. The shelf is the source of an import, never a build dependency: after
  * this, the build reads `content/library/<slug>/source.txt` and the shelf can be
@@ -2057,11 +2109,27 @@ if (invokedDirectly) {
         ? `library: ${slug}: already imported, unchanged (${r.sha256})`
         : `library: ${slug}: imported ${r.shelf} (${r.bytes} bytes, ${r.sha256})`,
     );
+  } else if (cmd === '--witness') {
+    // --witness <slug> <shelf-filename> [why] — copy a shelf file into the
+    // library as a witness of <slug> (a parallel edition a reading was decided
+    // from). Held verbatim; the build never serves or extracts it.
+    const [, wslug, shelf, ...why] = process.argv.slice(2);
+    if (!wslug || !shelf) {
+      console.error('usage: node tools/library/extract.mjs --witness <slug> <shelf-filename> [why]');
+      process.exit(2);
+    }
+    const r = importWitness(wslug, shelf, why.join(' '));
+    console.log(
+      r.skipped
+        ? `library: ${wslug}: witness ${r.shelf} already imported, unchanged (${r.sha256})`
+        : `library: ${wslug}: witness ${r.shelf} -> witnesses/${r.name}.txt (${r.bytes} bytes, ${r.sha256})`,
+    );
   } else {
     console.error(
       'usage: node tools/library/extract.mjs --import <slug>\n' +
-        '  The build extracts stored editions itself (tools/build.mjs); this command line only\n' +
-        '  imports one from the shelf, once, and refuses to replace a changed one.',
+        '       node tools/library/extract.mjs --witness <slug> <shelf-filename> [why]\n' +
+        '  The build extracts stored editions itself (tools/build.mjs); these commands only\n' +
+        '  bring a text in from the shelf, once, and refuse to replace a changed one.',
     );
     process.exit(2);
   }
