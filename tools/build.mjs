@@ -4026,17 +4026,23 @@ function libraryTextPages(t, navPosts, cited) {
     // the page is what the app renders, and the transcription below it is what a
     // reader without scripts gets (the app puts it away once it is up). A text
     // served from the shelf alone has no document, so it keeps the page it has.
+    /* THE READER COMES FIRST and the provenance stands BELOW it. The page exists
+     * for the book; the apparatus — the edition, what was done to the text, the
+     * repairs, what the transcription gets wrong — is what a reader goes looking
+     * for after they have the text, not a gate in front of it. (Same correction as
+     * the library index and, before that, the map and search pages.) The heading
+     * for the provenance section is what makes the two halves findable; the
+     * reader's own contents drawer is the way into the book itself. */
+    const provSection =
+      section('Provenance', '# the edition, what was done to it, and what it gets wrong', prov);
     const def = edoc
       ? page({
-          body:
-            section('Provenance', '# the edition, and what was done to it', prov) +
-            readerShell(t, edoc, transcription),
+          body: readerShell(t, edoc, transcription) + provSection,
           navCurrent: base,
           head: `<style>\n${stripComments(READER_CSS)}</style>`,
         })
       : page({
-          body:
-            section('Provenance', '# the edition, and what was done to it', prov) + transcription,
+          body: transcription + provSection,
           navCurrent: base,
         });
     pages.push({ rel: `library/${t.slug}/index.html`, def });
@@ -4182,13 +4188,18 @@ function buildLibraryIndex() {
     `the letters are not the letters of the print — so it is served as a stated gap rather than as noise ` +
     `dressed as prose.</p>`;
 
+  /* THE TEXTS COME FIRST. A reader arrives wanting the book, not an account of the
+   * shelf — the same mistake the map and the search pages were fixed for. So the
+   * groups are the page: each one a heading and its texts, immediately. The
+   * provenance, the axis, what is absent and why, and the stated gaps stand BELOW
+   * them, where they answer the questions a reader has after meeting the shelf. */
+  const notes =
+    `<section><div class="wrap"><h2 id="about-the-shelf">About this shelf</h2>` +
+    `<div class="hint"># what it is, what was done to the texts, and what is not here</div>` +
+    `<div class="prose">${preamble}</div></div></section>`;
   const body =
-    section(
-      'The library',
-      '# the public-domain root texts the readings rest on',
-      preamble,
-      { before: toc(groups), after: '' },
-    ) + groups;
+    groups +
+    notes;
 
   return {
     title: 'The library — blog.jaye.ch',
