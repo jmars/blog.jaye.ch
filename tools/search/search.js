@@ -40,7 +40,10 @@
  *   Search.matchPattern(body, opts) -> { terms, capped }
  *   Search.matchFuzzy(word, k) -> { words: [{w, d}], capped }
  *   Search.matchPrefix(prefix, cap) -> { terms, capped }
- *   Search.query(text, opts) -> { results: [{i, score, why}], counts, marks }
+ *   Search.query(text, opts) -> { results: [{i, score, why, named}], counts, marks }
+ *                    (a result carries the same `named` the providers use: the
+ *                    query's own words are in it, which is the split the page
+ *                    renders — the named rows stand, the related ones follow)
  *
  * Three things read the same automaton three more ways for the reader, and none
  * of them has an index of its own: the words that BEGIN with what is being typed
@@ -570,6 +573,11 @@
     var avg = 0;
     for (d = 0; d < n; d++) avg += len[d];
     avg = n ? avg / n : 1;
+    // The SHELF arrives in the same file — one fetch, two groups — and is
+    // decoded HERE, beside the pieces' half, so a page that has the pieces'
+    // passages always has the shelf's: there is no state in which the second
+    // group is half-loaded.
+    if (raw.shelf) idx.shelf = makeShelf(raw.shelf, idx.stop);
     return { lex: raw.lex, pass: pass, passAt: passAt, len: len, avg: avg, k1: BM25_K1, b: BM25_B };
   }
 
@@ -1368,18 +1376,42 @@
       t = rel[i];
       note(t[1], GW.points_at, 'graph: linked from ' + slug(t[0]));
     }
+    // THE SAME-SERIES SIGNAL IS COLLAPSED, not itemised. It fires once per seed
+    // into every piece in that seed's series, so a query with six seeds used to
+    // write a badge per neighbour — MEASURED on "wetiko": four of one result's six
+    // badges were "same series as X (readings)", which crowded out the reasons
+    // that say something (a term hit, a vector match, a shared citation) and told
+    // the reader only what the result's own series label already says. So the
+    // signal still scores — it is a real, if weak, reason — and ONE badge states
+    // it, once, with the count: "graph: 4 of its neighbours are in its series".
+    // The same collapsing applies to `near`, which is weaker still.
     rel = db.relOf('same_series');
     counts.same_series = rel.length;
+    var seriesCount = {};
     for (i = 0; i < rel.length; i++) {
       t = rel[i];
-      note(t[1], GW.same_series, 'graph: same series as ' + slug(t[0]) + ' (' + (idx.docs[t[0]] ? idx.docs[t[0]].series : t[1]) + ')');
+      seriesCount[t[1]] = (seriesCount[t[1]] || 0) + 1;
+      score[t[1]] = Math.max(score[t[1]] || 0, GW.same_series);
     }
+    Object.keys(seriesCount).forEach(function (q) {
+      var n = seriesCount[q];
+      var r = why[q] || (why[q] = []);
+      r.push(n === 1
+        ? 'graph: one neighbour in its series'
+        : 'graph: ' + n + ' of its neighbours are in its series');
+    });
     rel = db.relOf('near');
     counts.near = rel.length;
+    var nearCount = {};
     for (i = 0; i < rel.length; i++) {
       t = rel[i];
-      note(t[1], GW.near, 'graph: two links from ' + slug(t[0]));
+      nearCount[t[1]] = (nearCount[t[1]] || 0) + 1;
+      score[t[1]] = Math.max(score[t[1]] || 0, GW.near);
     }
+    Object.keys(nearCount).forEach(function (q) {
+      var r = why[q] || (why[q] = []);
+      r.push('graph: reached by two hops');
+    });
     for (var key in score) out.push({ i: +key, score: score[key], why: why[key] });
     out.sort(function (a, b) { return b.score - a.score || a.i - b.i; });
     return { list: out, counts: counts };
@@ -1413,6 +1445,323 @@
     if (opts.series && d.series !== opts.series) return false;
     if (opts.kind && d.kind !== opts.kind) return false;
     return true;
+  }
+
+  /* ---------- provider 4: the shelf — its OWN index, its OWN list -----------
+   *
+   * The published library texts, as PASSAGES: the second group of the answer,
+   * rendered BELOW the pieces and never merged with them. Everything here works
+   * on the shelf's own word list, its own automaton, its own passage numbering
+   * and its own scores, and the only thing it shares with the pieces is the
+   * reader's query. That is what makes a shelf passage outranking a piece — or a
+   * piece's rank depending on a passage — IMPOSSIBLE rather than merely avoided:
+   * `shelfQuery` returns a list of its own and `render` lays the two lists out in
+   * order, so there is no step at which the two numbers are compared, and the
+   * graph rules are seeded from the pieces' own fused list (runQuery), never
+   * from a passage.
+   *
+   * A passage is ONE paragraph or note of the reading view, carrying its own
+   * text (the emitted index holds it, so a result renders without a second
+   * fetch), the document it belongs to, the anchor it links to, and the printed
+   * page where the volume has one:
+   *
+   *   [doc, anchor, page, opens-the-section, section number, text, page path?]
+   *
+   * The disciplines hold over it unchanged, each over the shelf's own list: a
+   * quoted phrase is ADJACENCY in the passage's own words, a `~word` is the same
+   * fuzzy walk, a `/pattern/` the same automaton walk, and a hit in a section's
+   * title weighs more than a hit in a passage's body — the shelf's equivalent of
+   * a heading, which is what a section title IS.
+   */
+
+  /* The shelf's three weights. The FIRST two are the pieces' own calibration
+   * carried over: an exact body hit is 1, and a hit in a text's or a section's
+   * title is 2.6x it — the same factor the pieces' index uses for a title or a
+   * heading hit, so the two groups state one discipline rather than two.
+   * `open` (1.35) is a CHOSEN tie-break, not fitted on a corpus: the passage that
+   * OPENS a section is where that section's title claim is made, and the reading
+   * view puts the title in its heading, so the opening passage is heading-
+   * adjacent and goes above a passage deep inside the section. It only ever
+   * reorders passages of comparable weight; the heading factor above it decides. */
+  var SHELF_W = { body: 1, head: 2.6, open: 1.35 };
+
+  function makeShelf(raw, stop) {
+    if (!raw || !raw.pass) return null;
+    var dafsa = raw.words && raw.words.dafsa ? decodeDafsa(raw.words.dafsa) : null;
+    var terms = dafsa ? dafsaTerms(dafsa) : [];
+    var at = {}, i, p;
+    for (i = 0; i < terms.length; i++) at[terms[i]] = i;
+    var docs = raw.docs || [], pass = raw.pass || [];
+    var postings = (raw.words && raw.words.postings) || [];
+    // the HEAD WORDS of a passage: the terms of its document's title, author and
+    // translator, of its section's title, and of the heading it stands under.
+    // Held as a term set per passage so the question "is this word a heading for
+    // this passage?" is a lookup, and so `strong` can be built at load in one
+    // pass over the passages instead of over the postings.
+    var headOf = new Array(pass.length);
+    var strong = [];
+    var headTerms = function (s) {
+      var out = {}, w = String(s || '').toLowerCase().match(/[a-z][a-z'-]+/g) || [];
+      for (var k = 0; k < w.length; k++) if (w[k].length >= 3 && !stop[w[k]]) out[w[k]] = 1;
+      return out;
+    };
+    var docHead = [];
+    for (i = 0; i < docs.length; i++) {
+      docHead.push(headTerms((docs[i].title || '') + ' ' + (docs[i].author || '') + ' ' + (docs[i].translator || '')));
+    }
+    var secHead = [];
+    for (i = 0; i < docs.length; i++) {
+      var byN = {}, h = docs[i].sec || [], k;
+      for (k = 0; k < h.length; k++) byN[h[k][0]] = headTerms(h[k][1]);
+      secHead.push(byN);
+    }
+    var headHead = [];
+    for (i = 0; i < docs.length; i++) {
+      var hh = {}, hm = docs[i].heads || [];
+      for (k = 0; k < hm.length; k++) hh[hm[k][0]] = headTerms(hm[k][1]);
+      headHead.push(hh);
+    }
+    for (p = 0; p < pass.length; p++) {
+      var row = pass[p];
+      var d = row[0], sec = row[4], anchor = row[1];
+      var set = {};
+      var add = function (o) { if (o) for (var k2 in o) set[k2] = 1; };
+      add(docHead[d]);
+      if (sec != null && secHead[d]) add(secHead[d][sec]);
+      if (headHead[d]) add(headHead[d][anchor]);
+      headOf[p] = set;
+      for (var t2 in set) {
+        var ti = at[t2];
+        if (ti === undefined) continue;
+        if (!strong[ti]) strong[ti] = [];
+        strong[ti].push(p);
+      }
+    }
+    return {
+      docs: docs, pass: pass, terms: terms, at: at, dafsa: dafsa, postings: postings,
+      n: pass.length, headOf: headOf, strong: strong,
+    };
+  }
+
+  /** Is this word a HEADING for this passage — in its document's title, its
+   * section's title, or the heading it stands under? The shelf's own
+   * title/heading hit, which outranks a body hit WITHIN this group. */
+  function shelfHead(shelf, p, term) {
+    return !!(shelf.headOf[p] && shelf.headOf[p][term]);
+  }
+
+  /** The shelf's lexical pass: exact and prefix lookup over ITS word list, with
+   * a section-title hit weighted above a body hit and a passage that OPENS its
+   * section weighted above one deep inside it. Postings are passage numbers. */
+  function shelfLexical(shelf, text, opts, stats, stop) {
+    var toks = tokenize(text, stop);
+    var score = {}, why = {}, named = {}, hitAt = {}, i, j;
+    var T = shelf.terms.length;
+    for (i = 0; i < toks.length; i++) {
+      var t = toks[i];
+      var lo = lowBound(shelf.terms, t), hi = lo;
+      while (hi < T && hi - lo < PREFIX_CAP && shelf.terms[hi].indexOf(t) === 0) {
+        var term = shelf.terms[hi], post = shelf.postings[hi];
+        var exact = term === t;
+        var w = shelfIdf(shelf, hi) * (exact ? 1 : 0.55);
+        for (j = 0; j < post.length; j++) {
+          var p = post[j], row = shelf.pass[p];
+          var s = w * (shelfHead(shelf, p, term) ? SHELF_W.head : (row[3] ? SHELF_W.open : SHELF_W.body));
+          score[p] = (score[p] || 0) + s;
+          if (exact) named[p] = 1;
+          if (hitAt[p] === undefined) hitAt[p] = p;
+          var r = why[p] || (why[p] = []);
+          var label = (exact ? 'term: "' : 'prefix: "') + t + '"';
+          if (r.indexOf(label) < 0 && r.length < 6) r.push(label);
+        }
+        hi++;
+      }
+    }
+    // a fuzzy term walks the SHELF's automaton: the same budget, the same rule
+    // that a word found this way never counts as a word the reader typed
+    var fz = fuzzyTerms(text, stop);
+    if (stats) { stats.words = 0; stats.k = 0; stats.capped = false; stats.ms = 0; stats.off = false; }
+    if (fz.length && !shelf.dafsa) {
+      if (stats) stats.off = true;
+    } else if (fz.length) {
+      var t0 = now();
+      for (var fi = 0; fi < fz.length; fi++) {
+        var fq = fz[fi].q;
+        var hit = fuzzyWalk(shelf.dafsa, fq, fz[fi].k, FUZZY_CAP);
+        if (hit.capped && stats) stats.capped = true;
+        if (stats && fz[fi].k > stats.k) stats.k = fz[fi].k;
+        for (var wi = 0; wi < hit.words.length; wi++) {
+          var ti = shelf.at[hit.words[wi].w];
+          if (ti === undefined) continue;
+          if (stats) stats.words++;
+          var fd = hit.words[wi].d;
+          var fw = shelfIdf(shelf, ti) * (1 - fd / (fq.length + 1));
+          var flabel = 'fuzzy: "' + fq + '" → ' + hit.words[wi].w +
+            ' (' + fd + (fd === 1 ? ' edit)' : ' edits)');
+          var fpost = shelf.postings[ti];
+          for (j = 0; j < fpost.length; j++) {
+            var fp = fpost[j];
+            score[fp] = (score[fp] || 0) + fw * (shelfHead(shelf, fp, hit.words[wi].w) ? SHELF_W.head : SHELF_W.body);
+            var fr = why[fp] || (why[fp] = []);
+            if (fr.indexOf(flabel) < 0 && fr.length < 6) fr.push(flabel);
+          }
+        }
+      }
+      if (stats) stats.ms = Math.round((now() - t0) * 10) / 10;
+    }
+    var out = [];
+    for (var key in score) out.push({ p: +key, score: score[key], why: why[key], named: !!named[key], hitAt: hitAt[key] });
+    return out;
+  }
+
+  function shelfIdf(shelf, ti) {
+    return Math.log(1 + Math.max(1, shelf.n) / Math.max(1, shelf.postings[ti].length));
+  }
+
+  /** The phrase, over ONE passage's own words: the recorded words of the run at
+   * anchor+their offset, with every word of the passage advancing the count
+   * (stopwords included) — the same adjacency rule the pieces are matched by,
+   * over the shelf's text. Returns the character offset of the match, or -1. */
+  function phraseInPassage(text, seq) {
+    var m = String(text).toLowerCase().match(WORD) || [];
+    var at = new Array(m.length), pos = 0, k, i, j;
+    // the character offset of each word, so a snippet can open at the match
+    var re = /[a-z][a-z'-]+/g, mm;
+    while ((mm = re.exec(String(text).toLowerCase()))) at[pos++] = mm.index;
+    var anchors = [];
+    for (i = 0; i < m.length; i++) if (m[i] === seq[0].w) anchors.push(i);
+    for (k = 0; k < anchors.length; k++) {
+      var a = anchors[k], ok = true;
+      for (j = 1; j < seq.length; j++) {
+        if (m[a + seq[j].off - seq[0].off] !== seq[j].w) { ok = false; break; }
+      }
+      if (ok) return at[a] === undefined ? 0 : at[a];
+    }
+    return -1;
+  }
+
+  /**
+   * The shelf's answer: a list of PASSAGES, of its own, capped and counted. It
+   * never sees a piece's index and never returns a piece, so no caller can
+   * compare the two — which is the grouping's whole point.
+   */
+  function shelfQuery(text, opts) {
+    var idx = S._idx;
+    var shelf = idx && idx.shelf;
+    opts = opts || {};
+    var counts = {
+      results: 0, shown: 0, passages: shelf ? shelf.n : 0, texts: shelf ? shelf.docs.length : 0,
+      dropped: 0, terms: 0, pattern: '', matched: 0, reCapped: false, reError: '',
+      fuzzy: 0, fuzzyWords: 0, fuzzyK: 0, fuzzyCapped: false, fuzzyOff: false,
+      phrases: 0, phraseDocs: 0, phraseMiss: '', ms: 0, off: !shelf,
+    };
+    // `off` is "this page has no shelf to search", not "this page's shelf is
+    // empty": a build that serves no text has no group to count, and a build
+    // that serves one must say "0 passages in the shelf" for a query that misses
+    // it (the reader has to be able to see the group is there).
+    if (shelf && !shelf.docs.length) counts.off = true;
+    if (!shelf) return { results: [], counts: counts };
+    var t0 = now();
+    var pat = patternOf(text);
+    var lex, marks = null, i;
+    var toks = [], fzs = [], phr = { phrases: [], dropped: [] }, fstats = {};
+    var keep = null;      // passage -> the offset its phrase matched at
+    if (pat) {
+      counts.pattern = pat.text;
+      if (pat.error) { counts.reError = pat.error; counts.ms = Math.round((now() - t0) * 10) / 10; return { results: [], counts: counts }; }
+      var hit = pat.pattern.walk(shelf.dafsa);
+      counts.matched = hit.terms.length;
+      counts.reCapped = hit.capped;
+      // patternLexical speaks the PIECES' shape (a result is `i`); the shelf's is
+      // `p` — the one place the two providers meet, and it is renamed here so no
+      // passage number can be mistaken for a piece index downstream
+      lex = patternLexical(shelf, pat, hit.terms).map(function (x) {
+        return { p: x.i, score: x.score, why: x.why, named: true };
+      });
+      marks = {};
+      for (i = 0; i < hit.terms.length; i++) marks[hit.terms[i]] = 1;
+    } else {
+      toks = tokenize(text, idx.stop);
+      fzs = fuzzyTerms(text, idx.stop);
+      phr = phraseTerms(text, idx.stop);
+      counts.terms = toks.length;
+      counts.fuzzy = fzs.length;
+      counts.phrases = phr.phrases.length;
+      if (!toks.length && !fzs.length && !phr.phrases.length) { counts.ms = Math.round((now() - t0) * 10) / 10; return { results: [], counts: counts }; }
+      lex = shelfLexical(shelf, text, opts, fstats, idx.stop);
+      counts.fuzzyWords = fstats.words;
+      counts.fuzzyK = fstats.k;
+      counts.fuzzyCapped = fstats.capped;
+      counts.fuzzyOff = fstats.off;
+      // each quoted run is one AND-ed demand over the passages' own words: a
+      // passage no phrase holds is out of the shelf's answer, and a phrase whose
+      // words the shelf's list does not hold at all is SAID
+      if (phr.phrases.length) {
+        var miss = null, phDocs = [];
+        for (var pi = 0; pi < phr.phrases.length; pi++) {
+          var seq = phr.phrases[pi].seq, found = {};
+          for (var vi = 0; vi < seq.length; vi++) if (shelf.at[seq[vi].w] === undefined) miss = miss || seq[vi].w;
+          // the candidates are the passages holding the run's first word: a
+          // phrase's candidate set is its first word's posting list
+          var first = shelf.at[seq[0].w];
+          var cand = first === undefined ? [] : shelf.postings[first];
+          for (var ci = 0; ci < cand.length; ci++) {
+            var off = phraseInPassage(shelf.pass[cand[ci]][5], seq);
+            if (off >= 0) found[cand[ci]] = off;
+          }
+          phDocs.push(found);
+        }
+        counts.phraseMiss = miss || '';
+        var both = [];
+        for (var key in phDocs[0]) {
+          var all = true;
+          for (var ki = 1; ki < phDocs.length; ki++) if (phDocs[ki][key] === undefined) { all = false; break; }
+          if (all) { keep = keep || {}; keep[+key] = phDocs[0][key]; both.push(+key); }
+        }
+        counts.phraseDocs = both.length;
+      }
+    }
+    var named = {}, m = {}, why = {}, hitAt = {}, maxL = 0;
+    for (i = 0; i < lex.length; i++) {
+      if (lex[i].score > maxL) maxL = lex[i].score;
+      if (lex[i].named) named[lex[i].p] = 1;
+    }
+    for (i = 0; i < lex.length; i++) {
+      m[lex[i].p] = (m[lex[i].p] || 0) + (maxL ? lex[i].score / maxL : 0);
+      why[lex[i].p] = (why[lex[i].p] || []).concat(lex[i].why).slice(0, 6);
+      if (lex[i].hitAt !== undefined && hitAt[lex[i].p] === undefined) hitAt[lex[i].p] = lex[i].hitAt;
+    }
+    // a phrase NAMES the passages that hold it: it is a demand on the ANSWER,
+    // exactly as it is over the pieces
+    if (keep) {
+      var filtered = {};
+      for (var kp in m) if (keep[kp] !== undefined) filtered[kp] = m[kp];
+      for (var ka in keep) {
+        if (m[ka] === undefined) { filtered[ka] = 1; why[ka] = []; }
+        var r0 = why[ka] || (why[ka] = []);
+        for (var pj = 0; pj < phr.phrases.length; pj++) {
+          var lbl = 'phrase: "' + phr.phrases[pj].text + '"';
+          if (r0.indexOf(lbl) < 0 && r0.length < 6) r0.push(lbl);
+        }
+        named[ka] = 1;
+      }
+      m = filtered;
+    }
+    var all = [];
+    for (var key2 in m) {
+      var row = shelf.pass[key2];
+      all.push({ p: +key2, doc: row[0], anchor: row[1], page: row[2], sec: row[4], text: row[5],
+        base: row[6] || '', score: m[key2], why: why[key2] || [], named: !!named[key2] });
+    }
+    all.sort(function (a, b) {
+      return (b.named ? 1 : 0) - (a.named ? 1 : 0) || b.score - a.score || a.p - b.p;
+    });
+    counts.results = all.length;
+    counts.dropped = Math.max(0, all.length - (opts.limit || RESULT_CAP));
+    counts.ms = Math.round((now() - t0) * 10) / 10;
+    var out = all.slice(0, opts.limit || RESULT_CAP);
+    counts.shown = out.length;
+    return { results: out, counts: counts, marks: marks };
   }
 
   /* ---------- the fused query --------------------------------------------- */
@@ -1598,7 +1947,7 @@
     counts.graphOnlyDropped = graphOnlyDropped;
     var all = [];
     for (key in m) if (allowed(idx, +key, opts)) {
-      all.push({ i: +key, score: m[key], why: why[key] || [], hitAt: hitAt[key] !== undefined ? hitAt[key] : null });
+      all.push({ i: +key, score: m[key], why: why[key] || [], hitAt: hitAt[key] !== undefined ? hitAt[key] : null, named: !!named[+key] });
     }
     // a phrase is a demand on the ANSWER, not a boost to the words: with the
     // deep half present, the pieces a phrase named are the whole of the answer
@@ -1733,11 +2082,16 @@
    * first, not only in the passage under it. The link carries the query, so
    * the piece the reader opens marks the words it was found by — the snippet
    * already showed WHERE, this is the same answer continued on the page
-   * itself. */
-  function resultHtml(idx, r, toks, marks, text) {
+   * itself.
+   *
+   * `folded` marks a row the query did NOT name: it is rendered in the page,
+   * under the row that counts the related results, and starts out hidden. It is
+   * in the list and not fetched — the disclosure only shows what is already
+   * there. */
+  function resultHtml(idx, r, toks, marks, text, folded) {
     var d = idx.docs[r.i];
     var link = '/' + esc(d.slug) + '/' + (text ? '?q=' + encodeURIComponent(text) : '');
-    return '<li class="sr">' +
+    return '<li class="sr' + (folded ? ' sr-rel' : '') + '"' + (folded ? ' hidden' : '') + '>' +
       '<a class="sr-t" href="' + link + '">' + markText(esc(d.title), toks, marks) + '</a>' +
       '<div class="sr-m">' + esc(d.series || 'unfiled') + ' · ' + esc(d.kind || '') + ' · ' + esc(d.date || '') +
       '<span class="sr-sc">' + r.score.toFixed(2) + '</span></div>' +
@@ -1746,16 +2100,169 @@
       '</li>';
   }
 
+  /** The query as the two lines that count the groups state it: the words that
+   * NAME a piece. Those are the ordinary words and a quoted run — the run AS
+   * WRITTEN, because that is the demand the pieces were asked, stopwords and
+   * all — and never a `~word`: the walk found a word the reader did not type, so
+   * a fuzzy word names nothing and is left out of the quotation. A pattern is
+   * quoted as the pattern it is (it carries its own slashes). Cut short with a
+   * mark when the query is long: this is a quotation of the query, not the
+   * query. */
+  function queryLabel(text, c, toks, stop) {
+    if (c.pattern) return c.pattern;
+    var ph = phraseTerms(text, stop), ws = toks.slice(0), pi;
+    for (pi = 0; pi < ph.phrases.length; pi++) ws.push(ph.phrases[pi].text);
+    if (!ws.length) ws = [String(text).replace(/~/g, ' ').replace(/\s+/g, ' ').trim()];
+    var label = ws.slice(0, 6).join(' ');
+    if (label.length > 46) label = label.slice(0, 45).replace(/\s\S*$/, '') + '…';
+    return label;
+  }
+
+  /** The row the related results stand behind — the disclosure, and the sentence
+   * that says what it holds. It is a BUTTON carrying aria-expanded, not a native
+   * `<details>`: the results are the children of an `<ol>`, which admits only
+   * `<li>` and script elements, so a `<details>` would have to wrap the related
+   * rows in a SECOND list inside an `<li>` — taking them out of the list the
+   * arrow keys walk and out of the order the shelf's heading is placed against.
+   * A button toggling the siblings keeps one list, one order.
+   *
+   * The count is always in it and never a bare "more": the reader must be able
+   * to see that the tail exists, how big it is, and that the query is not in
+   * it. Both wordings ride on the element (data-more/data-less) so the toggle
+   * needs no second copy of the numbers. */
+  function tailRowHtml(relN, label, words, isPattern) {
+    var what = isPattern
+      ? 'the pattern ' + esc(label) + ' reached no word of theirs'
+      : words > 1
+        ? 'none of your words is in them'
+        : '"' + esc(label) + '" is not in ' + (relN === 1 ? 'it' : 'them');
+    var more = relN + ' more ' + (relN === 1 ? 'is' : 'are') + ' related — ' + what;
+    var less = 'hide the ' + relN + ' related result' + (relN === 1 ? '' : 's');
+    return '<li class="sr-tail" role="presentation">' +
+      '<button type="button" class="sr-more" aria-expanded="false" data-more="' + esc(more) +
+      '" data-less="' + esc(less) + '">' + esc(more) + '</button></li>';
+  }
+
+  /** A SHELF result: a CITATION, not a card. The link goes INTO the book — the
+   * anchor the passage carries (`#s4`, `#p14`, a note, the heading a shelf-only
+   * text stands under) — and the line reads as a citation of it: the edition's
+   * author and title, the division, and the passage's own words with the query's
+   * words marked. Nothing here is fetched: the passage's text is in the index. */
+  function shelfLabel(shelf, r) {
+    var a = r.anchor, m;
+    if (!a) return 'the opening';
+    if ((m = /^s(\d+)(?:-\d+)?$/.exec(a))) return '§' + m[1];
+    if ((m = /^n(\d+)$/.exec(a))) return 'note ' + m[1];
+    if ((m = /^p(\d+)$/.exec(a))) return 'p. ' + m[1];
+    if (a === 'snotes') return 'the notes';
+    if (a === 'sfront') return 'the front matter';
+    var hm = (shelf.docs[r.doc] || {}).heads || [];
+    for (var i = 0; i < hm.length; i++) if (hm[i][0] === a) return hm[i][1];
+    return 'the text';
+  }
+
+  /** The passage's own words, windowed around the match when it is long — the
+   * same rule the pieces' snippets use, and the window never opens or closes in
+   * the middle of a word. */
+  function shelfSnippet(r, toks, marks) {
+    var text = String(r.text || '');
+    var find = -1, i, at;
+    if (marks) {
+      // a pattern query: open the window at the first word the walk reached
+      var re = /[a-z][a-z'-]+/g, mm, lo = text.toLowerCase();
+      while ((mm = re.exec(lo))) { if (marks[mm[0]]) { find = mm.index; break; } }
+    }
+    for (i = 0; i < toks.length; i++) {
+      at = text.toLowerCase().indexOf(toks[i]);
+      if (at >= 0 && (find < 0 || at < find)) find = at;
+    }
+    if (find < 0) find = 0;
+    if (text.length <= SNIPPET_MAX) return markText(esc(text), toks, marks);
+    var start = find > 110 ? find - 110 : 0;
+    var cut = text.slice(start, start + SNIPPET_MAX - 20);
+    if (start) cut = cut.replace(/^\S*\s/, '');
+    cut = cut.replace(/\s\S*$/, '');
+    return (start ? '…' : '') + markText(esc(cut), toks, marks) + '…';
+  }
+
+  function shelfResultHtml(shelf, r, toks, marks) {
+    var d = shelf.docs[r.doc] || {};
+    // the passage's page: the document's first page, or the part it was split
+    // into. Built by splitting, not by a regex — a regex holding a slash pair
+    // would be eaten by the build's comment stripper (it removes // to the end
+    // of the line, and a regex literal is not a comment).
+    var seg = String(r.base || '').split('/').filter(function (s) { return s; }).pop() || '';
+    var href = '/library/' + esc(d.slug) + '/' + (seg ? esc(seg) + '/' : '') +
+      (r.anchor ? '#' + esc(r.anchor) : '');
+    var meta = 'the shelf';
+    if (d.translator) meta += ' · tr. ' + esc(d.translator);
+    if (r.page != null) meta += ' · the printed page ' + r.page;
+    return '<li class="sr sr-shelf">' +
+      '<a class="sr-t" href="' + href + '">' + markText(esc(d.author + ', ' + d.title), toks, marks) +
+      ' — ' + esc(shelfLabel(shelf, r)) + '</a>' +
+      '<div class="sr-m">' + meta + '<span class="sr-sc">' + r.score.toFixed(2) + '</span></div>' +
+      '<p class="sr-s">“' + shelfSnippet(r, toks, marks) + '”</p>' +
+      '<ul class="sr-w">' + r.why.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' +
+      '</li>';
+  }
+
   function render(idx, box, status, text, opts) {
-    var res = query(text, opts || {});
+    opts = opts || {};
+    var res = query(text, opts);
     var c = res.counts;
+    // The SECOND GROUP, searched by its OWN provider over its OWN index and
+    // rendered after the pieces as its own list. Nothing above this line knows
+    // the shelf exists and nothing below it can change a piece's rank: the two
+    // answers are two lists, laid out in order.
+    var wantPieces = opts.where !== 'shelf';
+    var wantShelf = opts.where !== 'pieces';
+    var sh = wantShelf ? shelfQuery(text, opts)
+      : { results: [], counts: { results: 0, shown: 0, off: true, ms: 0 } };
+    var sc = sh.counts;
     // the words the MARKS show: a phrase's own words included, quoted or not
     var mkToks = c.pattern ? [] : tokenize(text, idx.stop).concat(
       c.phrases ? phraseWords(text, idx.stop) : []);
     var toks = c.pattern ? [] : tokenize(text, idx.stop);
-    if (!res.results.length) {
+    var pieces = wantPieces ? res.results : [];
+    /* THE SPLIT the engine already keeps, now rendered as one. `named` is set
+     * when an EXACT term hit named a piece — the query's own words are in its
+     * prose — and `tier` already sorts on it, so the named rows are the top of
+     * the list by construction and the rest is what the VECTORS called similar,
+     * what the GRAPH reached, what a PREFIX or a fuzzy word found, or what a
+     * phrase only partly holds. Those are related to the query, not the query's
+     * answer: measured on "wetiko", of the 24 rows the page showed, 6 pieces
+     * contain the word and the other 18 do not — and they were interleaved with
+     * the 6 all the way down.
+     *
+     * So the named rows stand and the related ones follow behind one row that
+     * COUNTS them — never dropped, never hidden without a count, one click or
+     * one arrow key away. The split is not made when nothing names the query
+     * (a prefix like "procl" names nothing, and folding the whole answer away
+     * while the reader is still typing would be worse than the crowding), and
+     * not under `newest first`: there the reader has chosen an order over the
+     * answer, and the engine's own `sort=new` path already puts the date above
+     * the rank. */
+    var namedN = 0, relN = 0, ri;
+    for (ri = 0; ri < res.results.length; ri++) {
+      if (res.results[ri].named) namedN++;
+      else relN++;
+    }
+    var folded = namedN > 0 && relN > 0 && c.sort !== 'new';
+    // The text the answer was computed for. When the zero-result fallback ran,
+    // that is the CORRECTED query — the split belongs to it, because the reader's
+    // own words named nothing, which is exactly what a fallback is.
+    var atext = c.fallbackFrom ? c.fallbackTo : text;
+    var atoks = c.fallbackFrom ? tokenize(atext, idx.stop) : toks;
+    var label = queryLabel(atext, c, atoks, idx.stop);
+    var labelN = label ? label.split(' ').length : 0;
+    // A pattern is already quoted as the pattern it is (see queryLabel); the
+    // words of a query are quoted here, once, so every sentence that states the
+    // split quotes them the same way.
+    var qlabel = c.pattern ? esc(label) : '"' + esc(label) + '"';
+    if (!pieces.length) {
       var msg;
-      if (c.reError) msg = 'That pattern is not one this page can read: ' + c.reError + '.';
+      if (!wantPieces) msg = '';
+      else if (c.reError) msg = 'That pattern is not one this page can read: ' + c.reError + '.';
       else if (c.pattern) msg = c.matched
         ? 'Nothing in the published pieces answers to the words that pattern reached.'
         : 'No word in the list answers to that pattern.';
@@ -1765,22 +2272,50 @@
         : 'No word in the list is within ' + c.fuzzyK + (c.fuzzyK === 1 ? ' edit' : ' edits') +
           ' of a word you marked. Two tildes widen it to two.';
       else msg = 'Type a word — the pieces are searched by their words, their vectors and their links.';
-      if (c.phrases && !c.pattern) {
+      if (c.phrases && !c.pattern && wantPieces) {
         // a phrase that matched nothing is SAID, with its own text, rather
         // than padded out with its words' separate hits
         if (c.phraseMiss) msg = 'No piece says that phrase — the word "' + c.phraseMiss + '" is not one the pieces use at all.';
         else if (!c.phraseDocs) msg = 'No piece has those words next to each other, in that order.';
       }
-      box.innerHTML = '<li class="sr-none">' + esc(msg) + '</li>' +
-        (idx.hints.length && !toks.length && !c.pattern
+      // The pieces' group with nothing in it says so in one line — and when the
+      // shelf has the answer, the line points at it instead of claiming there
+      // is none.
+      if (msg && sh.results.length) {
+        msg = 'Nothing in the pieces — ' + sh.results.length +
+          (sc.results > sh.results.length ? ' of ' + sc.results : '') +
+          ' passage' + (sc.results === 1 ? '' : 's') + ' in the shelf, below.';
+      }
+      box.innerHTML = (msg ? '<li class="sr-none">' + esc(msg) + '</li>' : '') +
+        (idx.hints.length && !toks.length && !c.pattern && wantPieces
           ? '<li class="sr-hint">Try: ' + idx.hints.map(function (h) {
               return '<button type="button" class="sr-go" data-q="' + esc(h) + '">' + esc(h) + '</button>';
             }).join(' ') + '</li>'
           : '');
     } else {
-      box.innerHTML = res.results.map(function (r) { return resultHtml(idx, r, mkToks, res.marks, text); }).join('');
+      // The named rows, then the row that counts the related ones, then those
+      // rows themselves — the SAME markup, in the same order, each row in the
+      // group the engine put it in.
+      var list = '';
+      for (ri = 0; ri < pieces.length; ri++) {
+        if (!folded || pieces[ri].named) list += resultHtml(idx, pieces[ri], mkToks, res.marks, text);
+      }
+      if (folded) {
+        list += tailRowHtml(relN, label, labelN, !!c.pattern);
+        for (ri = 0; ri < pieces.length; ri++) {
+          if (!pieces[ri].named) list += resultHtml(idx, pieces[ri], mkToks, res.marks, text, 1);
+        }
+      }
+      box.innerHTML = list;
     }
-    var shown = res.results.length;
+    // The shelf's list is a list of its own, appended after the pieces'. A group
+    // with nothing in it gets NO heading: an empty heading over an empty list is
+    // a promise the page does not keep.
+    if (sh.results.length) {
+      box.innerHTML += '<li class="sr-grp" role="presentation">in the shelf</li>' +
+        sh.results.map(function (r) { return shelfResultHtml(idx.shelf, r, mkToks, sh.marks); }).join('');
+    }
+    var shown = wantPieces ? res.results.length : 0;
     var sug = c.suggest;
     // When the correction was RUN rather than offered (the zero-result fallback),
     // the line says so and names the word it used; the offer stays for the thin
@@ -1795,9 +2330,35 @@
     var head = '';
     if (c.reError) {
       head = '# nothing searched · the pattern ' + esc(c.pattern) + ' is not one this page can read: ' + esc(c.reError);
-    } else if (shown) {
-      head = '# ' + shown + (c.results > shown ? ' of ' + c.results : '') + ' result' +
-        (c.results === 1 ? '' : 's') + ' · ' + c.ms + ' ms · ' +
+    } else if (shown || sh.results.length) {
+      // BOTH counts, always: the reader can see that the second group exists —
+      // and that a query found nothing in it — without the page printing an
+      // empty heading over an empty list.
+      // The shelf is counted only when the page HAS one: a build with no served
+      // text must not print a group it cannot answer with (sc.off says so).
+      //
+      // The pieces' clause states the SPLIT as well as the count: how many of
+      // them the query NAMED, and — when the related rows are folded below —
+      // how many more are related to it. "of N" is the pieces' total, so a cap
+      // is still reported; the reader can add the two numbers and get what is
+      // on the page, which is what the disclosure shows.
+      var capOf = c.results > shown ? ' of ' + c.results : '';
+      var verb = namedN === 1 ? (c.pattern ? 'matches' : 'names') : (c.pattern ? 'match' : 'name');
+      var pieceText = '';
+      if (wantPieces && shown) {
+        pieceText = namedN
+          ? namedN + capOf + ' piece' + (c.results === 1 ? '' : 's') + ' ' + verb + ' ' + qlabel
+          : shown + capOf + ' piece' + (c.results === 1 ? '' : 's') + ' · none ' +
+            (c.pattern ? 'matches' : 'names') + ' ' + qlabel;
+        if (folded) pieceText += ' · ' + relN + ' more ' + (relN === 1 ? 'is' : 'are') + ' related';
+      }
+      var groups = pieceText +
+        (wantPieces && wantShelf && !sc.off ? ' · ' : '') +
+        (wantShelf && !sc.off
+          ? sh.results.length + (sc.results > sh.results.length ? ' of ' + sc.results : '') + ' passage' +
+            (sc.results === 1 ? '' : 's') + ' in the shelf'
+          : '');
+      head = '# ' + groups + ' · ' + c.ms + ' ms · ' +
         (c.pattern
           ? 'the pattern ' + esc(c.pattern) + ' reached ' + c.matched + ' word' + (c.matched === 1 ? '' : 's') +
             (c.reCapped ? ' (the list stops at ' + PREFIX_CAP + ')' : '') + ' · '
@@ -1815,6 +2376,11 @@
           ? (c.phraseDocs + ' piece' + (c.phraseDocs === 1 ? '' : 's') + ' say the phrase' +
             (c.phrases > 1 ? 's' : '') + (c.phraseMiss ? ' (the word "' + esc(c.phraseMiss) + '" is in no piece)' : '') + ' · ')
           : '') +
+        (sc.phrases
+          ? (sc.phraseDocs + ' passage' + (sc.phraseDocs === 1 ? '' : 's') + ' in the shelf hold it' +
+            (sc.phraseMiss ? ' (the shelf\'s list does not have "' + esc(sc.phraseMiss) + '")' : '') + ' · ')
+          : '') +
+        (sc.dropped ? sc.dropped + ' passage' + (sc.dropped === 1 ? '' : 's') + ' in the shelf beyond the cap · ' : '') +
         'the graph rules fired: ' +
         c.related + ' shared-citation, ' + c.points_at + ' link, ' + c.same_series + ' same-series, ' + c.near + ' two-hop' +
         (c.graphOnlyDropped
@@ -1827,13 +2393,15 @@
     else if (note) status.innerHTML = '# nothing was found for that · ' + note;
     else if (c.phrasePending) status.textContent = '# the phrases are still loading — these results are the words only';
     else status.textContent = '';
+    res.shelf = sh;
     return res;
   }
 
-  /** `?q=`, the facets and the result order, so a search is a link someone can
-   * send. The order is in the URL only when it is not the default one. */
+  /** `?q=`, the facets, the group filter and the result order, so a search is a
+   * link someone can send. The order and the group are in the URL only when
+   * they are not the default ones. */
   function readUrl() {
-    var q = '', s = '', k = '', so = '', raw = String((window.location && window.location.search) || '').replace(/^\?/, '');
+    var q = '', s = '', k = '', so = '', wh = '', raw = String((window.location && window.location.search) || '').replace(/^\?/, '');
     var parts = raw ? raw.split('&') : [];
     for (var i = 0; i < parts.length; i++) {
       var kv = parts[i].split('='), val = decodeURIComponent(kv[1] || '');
@@ -1841,8 +2409,9 @@
       else if (kv[0] === 'series') s = val;
       else if (kv[0] === 'kind') k = val;
       else if (kv[0] === 'sort') so = val;
+      else if (kv[0] === 'where') wh = val;
     }
-    return { q: q, series: s, kind: k, sort: so };
+    return { q: q, series: s, kind: k, sort: so, where: wh };
   }
   function writeUrl(st) {
     var q = [];
@@ -1850,6 +2419,7 @@
     if (st.series) q.push('series=' + encodeURIComponent(st.series));
     if (st.kind) q.push('kind=' + encodeURIComponent(st.kind));
     if (st.sort && st.sort !== 'rel') q.push('sort=' + encodeURIComponent(st.sort));
+    if (st.where && st.where !== 'any') q.push('where=' + encodeURIComponent(st.where));
     try {
       window.history.replaceState(null, '', '/search/' + (q.length ? '?' + q.join('&') : ''));
     } catch (e) { /* a browser that refuses history still searches */ }
@@ -1864,6 +2434,7 @@
     var series = document.getElementById('sf-series');
     var kind = document.getElementById('sf-kind');
     var sortSel = document.getElementById('sf-sort');
+    var whereSel = document.getElementById('sf-where');
     var comp = document.getElementById('scomp');
     var compList = document.getElementById('scomp-list');
     var compCap = document.getElementById('scomp-cap');
@@ -1872,6 +2443,7 @@
     if (url.series && series) series.value = url.series;
     if (url.kind && kind) kind.value = url.kind;
     if (url.sort && sortSel) sortSel.value = url.sort;
+    if (url.where && whereSel) whereSel.value = url.where;
     var sel = -1;              // the result the arrow keys have reached
     var compTerms = [];        // the completions the box is offering
     var compAt = -1;           // the one of them the arrow keys have reached
@@ -1881,11 +2453,12 @@
         series: series ? series.value : '',
         kind: kind ? kind.value : '',
         sort: sortSel ? sortSel.value : '',
+        where: whereSel ? whereSel.value : 'any',
       };
     }
     function run(push) {
       var st = stateOf();
-      render(idx, box, status, st.q, { series: st.series, kind: st.kind, sort: st.sort });
+      render(idx, box, status, st.q, { series: st.series, kind: st.kind, sort: st.sort, where: st.where });
       sel = -1;
       if (push) writeUrl(st);
     }
@@ -1893,12 +2466,34 @@
     /* ---- the keyboard's selection over the results ---------------------- */
 
     function rows() { return box.querySelectorAll('li.sr'); }
+    /* The folded tail: the rows the query did NOT name stand in the list behind
+     * the one row that counts them (see tailRowHtml). Opening it shows rows that
+     * are ALREADY in the page; nothing is fetched and nothing is lost. */
+    function tailBtn() { return box.querySelector('button.sr-more'); }
+    function setTail(open) {
+      var b = tailBtn(), r = box.querySelectorAll('li.sr-rel'), i;
+      for (i = 0; i < r.length; i++) r[i].hidden = !open;
+      if (b) {
+        b.setAttribute('aria-expanded', open ? 'true' : 'false');
+        b.textContent = open ? b.getAttribute('data-less') : b.getAttribute('data-more');
+      }
+    }
+    box.addEventListener('click', function (e) {
+      var b = tailBtn(), t = e.target;
+      if (!b) return;
+      while (t && t !== box && t !== b) t = t.parentNode;
+      if (t !== b) return;
+      setTail(b.getAttribute('aria-expanded') !== 'true');
+    });
     function paintSel() {
       var r = rows(), i;
       for (i = 0; i < r.length; i++) {
         if (i === sel) r[i].classList.add('sr-on');
         else r[i].classList.remove('sr-on');
       }
+      // a selection that walks into the folded tail OPENS it: a key must never
+      // rest on a row that is not on the screen
+      if (sel >= 0 && r[sel] && r[sel].hidden) setTail(true);
       if (sel >= 0 && r[sel] && typeof r[sel].scrollIntoView === 'function') {
         try { r[sel].scrollIntoView({ block: 'nearest' }); } catch (e) { }
       }
@@ -2014,6 +2609,7 @@
     if (series) series.addEventListener('change', function () { run(true); });
     if (kind) kind.addEventListener('change', function () { run(true); });
     if (sortSel) sortSel.addEventListener('change', function () { run(true); });
+    if (whereSel) whereSel.addEventListener('change', function () { run(true); });
     input.addEventListener('blur', function () {
       // the list cannot be used without the field: leaving the field, or
       // clicking one of its own options, closes it. The click is handled first
@@ -2088,6 +2684,7 @@
       lexical: function (q, opts) { return lexical(S._idx, q, opts || {}); },
       vector: function (q, opts) { return vector(S._idx, q, opts || {}); },
       graph: function (q, opts) { return graph(S._idx, q, opts || {}); },
+      shelf: function (q, opts) { return shelfQuery(q, opts || {}); },
     },
     /** The words a pattern reaches, off the automaton — the query's own path
      * into the index, exposed so a test can ask it directly. A pattern the
@@ -2137,6 +2734,13 @@
       return { p: p, text: (idx.deep.pass[i] || [])[p] || '' };
     },
     query: function (text, opts) { return query(text, opts); },
+    /** The second group's own query, over the shelf's own index — the list the
+     * page renders BELOW the pieces. It returns passages, never pieces, so a
+     * test can hold the two groups apart the way the page does. */
+    queryShelf: function (text, opts) { return shelfQuery(text, opts); },
+    /** The shelf's decoded index (its passages, docs and word list), for a test
+     * that wants to hold the page's answer against the emitted index. */
+    shelf: function () { return S._idx ? S._idx.shelf : null; },
     /** The words within `k` edits of a word, off the automaton — the fuzzy
      * path into the index, exposed so a test can hold it against a plain scan of
      * the word list. `k` defaults to one edit, the budget a single `~` asks for.

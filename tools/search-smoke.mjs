@@ -19,6 +19,11 @@
  *     and asserts the page's own vectors are identical — the one test that
  *     proves the build's projection and the client's are the same projection;
  *   - asserts the datalog rules FIRE, and that their reasons reach the results;
+ *   - asserts the page's list STOPS WHERE THE EVIDENCE STOPS: for a bare term,
+ *     the rows above the disclosure are exactly the pieces whose prose contains
+ *     it (recomputed from content/), the rest are folded behind a row that
+ *     counts them, and the status line states both — the failure mode being a
+ *     list of twenty-four pieces of which six answer the query;
  *   - drives the box and the URL: ?q= round-trips, the facets narrow, typing
  *     fills the list.
  *
@@ -32,9 +37,16 @@
  */
 import { readFileSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
+import { tmpdir as osTmpdir } from 'node:os';
+// The page's own renderer and the build's own partitioning, for the ONE check
+// that has to know what a page emits (the anchors of a text served from the
+// shelf alone): the question there is "does the id this index names exist in the
+// page", and only the renderer that writes the page can answer it.
+import { preprocess as pagePreprocess, partition as pagePartition } from './library/reader.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PAGE = join(ROOT, 'dist', 'search', 'index.html');
@@ -1249,6 +1261,804 @@ console.log('== the arrival marks (a post page opened with ?q=)');
   console.log(`  the fetched half: ${Buffer.byteLength(raw)} bytes raw, ${gz} gzipped (the server encodes on the wire)`);
   check(Buffer.byteLength(raw) < 4 * 1024 * 1024,
     `the fetched half is one file, ${Math.round(gz / 1024)} KB gzipped — the page itself stays as it was`);
+}
+
+/* ---------- 7m. the SECOND GROUP: the published library texts --------------
+ *
+ * The page answers in two groups — the pieces, and below them the passages of
+ * the shelf — and every claim about that is asserted here against the BUILT
+ * page and the BUILT document, never against a constant:
+ *
+ *   - the passages the index holds are recomputed from the served document
+ *     (`dist/library/<slug>/t`) with this file's own reading-view builder and
+ *     its own correction applier, and must match the index passage for passage;
+ *   - the phrase/fuzzy/pattern expectations are computed from THAT builder's
+ *     texts, so the assertions are holdable in either direction;
+ *   - the anchors are checked against the anchors the BUILT document declares
+ *     (and, for a text served from the shelf alone, against the ids the page's
+ *     own renderer emits);
+ *   - the shelf the build emits carries only the texts the build SERVES, and the
+ *     asymmetry is proven by building the OTHER shelf (LIBRARY=1) with the
+ *     build's own CLI and asking the same page the same question.
+ *
+ * The section runs with the fetched half already installed (7g above), which is
+ * where the shelf arrives — it is part of the same fetched file.
+ */
+console.log('== the second group: the shelf');
+{
+  // the one text a default build serves: taken from the page's own index, never
+  // hard-coded — a build that publishes another text just tests that one too
+  const shelfRaw = deepRaw && deepRaw.shelf;
+  check(!!shelfRaw && Array.isArray(shelfRaw.pass) && shelfRaw.pass.length > 0,
+    `the fetched half carries the shelf's own index (${shelfRaw ? shelfRaw.pass.length : 0} passage(s), ` +
+      `${shelfRaw ? shelfRaw.docs.length : 0} text(s) — only the texts this build serves)`);
+  const shelf = S.shelf();
+  check(!!shelf && shelf.n === shelfRaw.pass.length && shelf.terms.length === shelfRaw.words.postings.length,
+    `the page decodes it: ${shelf && shelf.n} passage(s), ${shelf && shelf.terms.length} word(s) in the shelf's OWN list`);
+
+  /* ---- the reading view, rebuilt from the served document ---------------
+   *
+   * A SECOND writing of the reading view (the build's is the first): the same
+   * grouping, but the corrections applied by this file's own applier, and the
+   * text assembled here. It has to reproduce the index exactly — passage count,
+   * anchors, printed pages, section numbers, the "opens the section" flags and
+   * the text — or the index is not the reading view it claims to be.
+   *
+   * FAILS IF: the index is built from the raw transcription (a correction's
+   * `find` would appear in the text), from a different grouping (a paragraph
+   * split at a reference would come out as two passages), or with a different
+   * join rule.
+   */
+  const docPath = (slug) => join(ROOT, 'dist', 'library', slug, 't');
+  const shelfDocRaw = JSON.parse(readFileSync(docPath(shelfRaw.docs[0].slug), 'utf8'));
+  const applyRules = (text, rules) => {
+    let out = text;
+    for (const r of rules) {
+      if (!r.find || r.find === r.repl || r.action === 'leave') continue;
+      out = out.split(r.find).join(r.repl);
+    }
+    return out;
+  };
+  /** The reading view: what the app renders, from the served blocks. */
+  function readingView(doc) {
+    const out = [];
+    let region = '', sec = null, secId = null, page = null, opening = false, open = null;
+    const close = () => { if (open) out.push(open); open = null; };
+    for (const b of doc.blocks) {
+      if (b.t === 'region') { close(); region = b.kind; }
+      else if (b.t === 'sec') { close(); secId = b.id; sec = b.n; opening = true; }
+      else if (b.t === 'pb') { close(); if (b.page != null) page = b.page; }
+      else if (b.t === 'rh') { close(); }
+      else if (b.t === 'notedef') {
+        if (open && open.k === 'n' && open.n === b.n) open.parts.push(b.x);
+        else { close(); open = { k: 'n', n: b.n, id: b.id || null, parts: [b.x], page, region, sec: null, secId: null, strong: false }; }
+      } else if (b.t === 'p' || b.t === 'verse' || b.t === 'ref') {
+        const x = b.t === 'verse' ? b.x.replace(/\n/g, ' ') : b.x;
+        if (open && open.k === 'p') { open.parts.push(x); if (!open.at && b.at) open.at = b.at; }
+        else { close(); open = { k: 'p', parts: [x], at: b.at || null, page, region, sec, secId, strong: opening }; opening = false; }
+      }
+    }
+    close();
+    const ps = [];
+    for (const o of out) {
+      if (o.region === 'front' || o.region === 'ads') continue;
+      const text = applyRules(o.parts.join(o.k === 'p' ? '' : ' '), doc.corrections);
+      if (!text) continue;
+      const anchor = o.k === 'n' ? (o.id || 'n' + o.n)
+        : (o.at || o.secId || (o.page != null ? 'p' + o.page : o.region === 'notes' ? 'snotes' : 'sfront'));
+      ps.push({ anchor, page: o.page, sec: o.sec, strong: o.strong, text });
+    }
+    return ps;
+  }
+  const view = readingView(shelfDocRaw);
+  let vDiff = 0, vFirst = '';
+  for (let i = 0; i < Math.max(view.length, shelf.pass.length); i++) {
+    const a = view[i], b = shelf.pass[i];
+    const same = a && b && a.anchor === b[1] && a.text === b[5] && a.page === b[2] && a.sec === b[4] &&
+      (a.strong ? 1 : 0) === b[3];
+    if (!same) { vDiff++; if (!vFirst) vFirst = `passage ${i}: ${JSON.stringify(a && [a.anchor, a.page, a.sec, a.strong])} vs ${JSON.stringify(b && [b[1], b[2], b[4], b[3]])}`; }
+  }
+  check(view.length === shelf.pass.length && vDiff === 0,
+    `the index's ${shelf.pass.length} passage(s) are the reading view, rebuilt here from the served document ` +
+      `(${vDiff} difference(s)${vFirst ? ' — ' + vFirst : ''})`);
+  // and the reading view is the CORRECTED text, not the transcription: every
+  // rule that REPLACES something must have left no `find` behind in it
+  const replacing = shelfDocRaw.corrections.filter((r) => r.find && r.find !== r.repl && r.action !== 'leave');
+  const allShelfText = shelf.pass.map((r) => r[5]).join(' ');
+  const leftover = replacing.filter((r) => allShelfText.includes(r.find));
+  check(replacing.length > 0 && leftover.length === 0,
+    `the indexed text is the CORRECTED reading view: none of the ${replacing.length} replacing rule(s) leaves its ` +
+      `find in it (${leftover.length} left${leftover.length ? ': ' + JSON.stringify(leftover[0].find) : ''})`);
+  const applied = replacing.filter((r) => allShelfText.includes(r.repl)).length;
+  check(applied > replacing.length / 2,
+    `and the repaired readings are what stands in it (${applied} of ${replacing.length} rules' replacements occur in the indexed text)`);
+
+  /* ---- every anchor the index names resolves ---------------------------- */
+  const docAnchors = new Set();
+  for (const b of shelfDocRaw.blocks) {
+    if (b.at) docAnchors.add(b.at);
+    if (b.id) docAnchors.add(b.id);
+  }
+  const unresolved = shelf.pass.filter((r) => !r[1] || !docAnchors.has(r[1]));
+  check(unresolved.length === 0,
+    `every one of the ${shelf.pass.length} passage(s) carries an anchor the BUILT document itself declares ` +
+      `(${docAnchors.size} anchor(s) in the document; ${unresolved.length} not found)`);
+
+  /* ---- the two groups, one query in both ------------------------------- */
+  const postTerms = new Set(S._idx.terms);
+  const startsPostWord = (t) => {
+    let lo = 0, hi = S._idx.terms.length;
+    while (lo < hi) { const mid = (lo + hi) >>> 1; if (S._idx.terms[mid] < t) lo = mid + 1; else hi = mid; }
+    return lo < S._idx.terms.length && S._idx.terms[lo].indexOf(t) === 0;
+  };
+  let bothTerm = null;
+  for (const t of shelf.terms) {
+    if (t.length < 6) continue;
+    const p = S.query(t, { limit: 200 }).results.length;
+    const s = S.queryShelf(t).results.length;
+    if (p > 0 && p < 40 && s > 0) { bothTerm = t; break; }
+  }
+  check(!!bothTerm, `a word occurs in both groups (pieces and the shelf): "${bothTerm}"`);
+  const shownRaw = d.getElementById('sres');
+  const statusRaw = d.getElementById('sstatus');
+  const piecesRes = S.query(bothTerm, { limit: 200 });
+  const shelfRes = S.queryShelf(bothTerm, { limit: 200 });
+  const rendered = S.render(shownRaw, statusRaw, bothTerm);
+  const rowsAll = [...shownRaw.querySelectorAll('li.sr')];
+  const pieceRows = rowsAll.filter((li) => !li.classList.contains('sr-shelf'));
+  const shelfRows = rowsAll.filter((li) => li.classList.contains('sr-shelf'));
+  const grp = [...shownRaw.querySelectorAll('li.sr-grp')];
+  check(pieceRows.length === Math.min(piecesRes.results.length, 24) && shelfRows.length === Math.min(shelfRes.results.length, 24),
+    `the page renders the two groups with their OWN counts: ${pieceRows.length} piece row(s) (the provider says ` +
+      `${piecesRes.results.length}) and ${shelfRows.length} passage row(s) (the shelf provider says ${shelfRes.results.length})`);
+  check(grp.length === 1 && grp[0].textContent.trim() === 'in the shelf',
+    `the second group has its own heading ("${grp.length ? grp[0].textContent.trim() : 'none'}")`);
+  const firstShelf = rowsAll.findIndex((li) => li.classList.contains('sr-shelf'));
+  const lastPiece = rowsAll.map((li) => !li.classList.contains('sr-shelf')).lastIndexOf(true);
+  // The piece group ends at its last ROW or at the disclosure row that counts
+  // the related pieces, whichever comes last: a query can fold part of its
+  // answer behind that row, and the heading still follows the pieces — nothing
+  // from the first group sits below it.
+  const kidsRaw = [...shownRaw.children];
+  const tailEl = shownRaw.querySelector('li.sr-tail');
+  const grpAt = kidsRaw.indexOf(grp[0]);
+  const piecesEnd = Math.max(lastPiece < 0 ? -1 : kidsRaw.indexOf(rowsAll[lastPiece]), tailEl ? kidsRaw.indexOf(tailEl) : -1);
+  check(lastPiece >= 0 && firstShelf > lastPiece && grpAt === piecesEnd + 1,
+    `AND EVERY PIECE COMES FIRST: the last piece row is ${lastPiece}, the piece group ends at ${piecesEnd}, the ` +
+      `group heading sits at ${grpAt}, the first passage row is ${firstShelf} — the groups are two lists in order, not one list by score`);
+  // the status line, read as the sentence it is: the pieces' clause first (its
+  // total, named or folded), then the shelf's. The split adds ONE clause to the
+  // pieces' own sentence ("N more are related"), asserted here rather than
+  // tolerated: the two counts must be the two groups.
+  const stTxt = statusRaw.textContent;
+  const stSegs = stTxt.replace(/^# /, '').split(' · ');
+  const pieceSeg = stSegs[0] || '';
+  const pm = pieceSeg.match(/^(\d+)(?: of (\d+))? pieces? name[s]? "([^"]*)"$/) ||
+    pieceSeg.match(/^(\d+)(?: of (\d+))? pieces?$/);
+  const rm = (stSegs[1] || '').match(/^(\d+) more (?:is|are) related$/);
+  const stTotal = pm ? +(pm[2] || pm[1]) : -1;
+  const stShelf = stSegs.map((s) => /^(\d+) passages? in the shelf$/.exec(s)).find(Boolean);
+  check(!!pm && stTotal === piecesRes.results.length && !!stShelf && +stShelf[1] === shelfRes.results.length,
+    `the status line counts BOTH groups separately: "${stTxt.slice(0, 96)}"`);
+  check(!rm || (+pm[1] <= stTotal && +rm[1] > 0),
+    `and the pieces' sentence says how many named it and how many are related: "${pieceSeg}"`);
+
+  /* ---- a word only the shelf has: no pieces, the passages --------------- */
+  let shelfOnly = null;
+  for (const t of shelf.terms) {
+    if (!/^[a-z]{6,}$/.test(t)) continue;
+    if (postTerms.has(t) || startsPostWord(t)) continue;
+    if (S.queryShelf(t).results.length === 0) continue;
+    const r = S.query(t, { limit: 200 });
+    if (r.results.length === 0 && !r.counts.fallbackFrom && !r.counts.suggest) { shelfOnly = t; break; }
+  }
+  check(!!shelfOnly, `a word occurs in the shelf and in no piece at all: "${shelfOnly}"`);
+  const onlyShelf = S.queryShelf(shelfOnly, { limit: 200 });
+  const onlyRender = S.render(shownRaw, statusRaw, shelfOnly);
+  const onlyRows = [...shownRaw.querySelectorAll('li.sr')];
+  check(onlyRender.results.length === 0 && onlyShelf.results.length > 0,
+    `"${shelfOnly}": no piece answers (${onlyRender.results.length}) and the shelf does (${onlyShelf.results.length} passage(s))`);
+  check(onlyRows.filter((li) => li.classList.contains('sr-shelf')).length === Math.min(onlyShelf.results.length, 24) &&
+    onlyRows.filter((li) => !li.classList.contains('sr-shelf')).length === 0,
+    `and the page shows ONLY the shelf's list for it (${onlyRows.filter((li) => li.classList.contains('sr-shelf')).length} passage row(s), no piece row)`);
+  check(/Nothing in the pieces — \d+ passage/.test(shownRaw.textContent),
+    `with one honest line for the empty group: "${shownRaw.querySelector('li.sr-none') ? shownRaw.querySelector('li.sr-none').textContent.trim().slice(0, 80) : ''}"`);
+
+  /* ---- a passage is a CITATION, and its link resolves ------------------ */
+  const firstRow = () => [...shownRaw.querySelectorAll('li.sr-shelf')];
+  const cit = firstRow()[0];
+  const link = cit.querySelector('a.sr-t');
+  const href = link.getAttribute('href');
+  const frag = (href.match(/#(.+)$/) || [])[1];
+  const path = href.split('#')[0];
+  check(/^\/library\/[a-z0-9-]+\/(part-\d+\/)?$/.test(path) && !!frag,
+    `a shelf result links INTO the book: ${href}`);
+  check(/^[A-Z][^,]*,\s/.test(link.textContent) && /—/.test(link.textContent),
+    `and reads as a citation of the edition ("${link.textContent.trim()}")`);
+  const hrefSlug = path.split('/')[2];
+  const hrefDoc = hrefSlug === shelfDocRaw.slug ? shelfDocRaw
+    : JSON.parse(readFileSync(docPath(hrefSlug), 'utf8'));
+  const hrefAnchors = new Set();
+  for (const b of hrefDoc.blocks) { if (b.at) hrefAnchors.add(b.at); if (b.id) hrefAnchors.add(b.id); }
+  check(hrefAnchors.has(frag), `the anchor it names exists in the served document of ${hrefSlug} (#${frag})`);
+  check(existsSync(join(ROOT, 'dist', 'library', hrefSlug, 'index.html')),
+    `and the page that fragment is on was built (dist/library/${hrefSlug}/index.html)`);
+  check(cit.querySelector('.sr-s').textContent.indexOf('“') === 0 &&
+    cit.querySelectorAll('.sr-s mark').length > 0,
+    `the passage is quoted with the query's word marked: "${cit.querySelector('.sr-s').textContent.trim().slice(0, 70)}"`);
+
+  /* ---- the disciplines, over the shelf's own list ---------------------- */
+
+  // a phrase is still ADJACENCY: a two-word run the passages really hold
+  const shelfWords = (t) => (String(t).toLowerCase().match(/[a-z][a-z'-]+/g) || []);
+  const recordable = (w) => w.length >= 3 && !STOP.has(w) && shelf.at[w] !== undefined;
+  const holdsSeq = (seq, text) => {
+    const m = shelfWords(text);
+    for (let i = 0; i < m.length; i++) {
+      let ok = true;
+      for (let j = 1; j < seq.length; j++) if (m[i + seq[j].off - seq[0].off] !== seq[j].w) { ok = false; break; }
+      if (ok) return true;
+    }
+    return false;
+  };
+  let phraseCase = null;
+  for (let p = 0; p < view.length && !phraseCase; p++) {
+    const m = shelfWords(view[p].text);
+    for (let i = 0; i + 1 < m.length; i++) {
+      if (!recordable(m[i]) || !recordable(m[i + 1]) || m[i].length < 5 || m[i + 1].length < 5 || m[i] === m[i + 1]) continue;
+      const seq = [{ w: m[i], off: 0 }, { w: m[i + 1], off: 1 }];
+      const want = [];
+      for (let q = 0; q < view.length; q++) if (holdsSeq(seq, view[q].text)) want.push(q);
+      if (want.length >= 1 && want.length <= 4) phraseCase = { ph: m[i] + ' ' + m[i + 1], want };
+      break;
+    }
+  }
+  check(!!phraseCase, `a phrase the shelf's passages hold was found ("${phraseCase && phraseCase.ph}")`);
+  const phrShelf = S.queryShelf('"' + phraseCase.ph + '"', { limit: 200 });
+  check(norm(phrShelf.results.map((r) => r.p)) === norm(phraseCase.want),
+    `"${phraseCase.ph}" matches exactly the passages whose OWN words hold it adjacent ` +
+      `(${phrShelf.results.length} passage(s), the adjacency scan says ${phraseCase.want.length})`);
+  const phrWhy = phrShelf.results.every((r) => r.why.some((w) => w === 'phrase: "' + phraseCase.ph + '"'));
+  check(phrShelf.results.length > 0 && phrWhy, 'and the reason travels: every passage carries the phrase it matched');
+  // a phrase is a DEMAND on the shelf's answer too: a second phrase nothing says
+  // adjacent leaves nothing, however many of its words the passages hold
+  const notAdj = S.queryShelf('"proclus cave"', { limit: 200 });
+  check(notAdj.results.length === 0 && notAdj.counts.phrases === 1,
+    `a phrase the shelf's passages never say that way answers nothing (${notAdj.results.length}), though the words are loose terms in the pieces`);
+
+  // a `~` still corrects, over the shelf's own word list
+  let fuzzyCase = null;
+  for (const t of shelf.terms) {
+    if (!/^[a-z]{8,}$/.test(t)) continue;
+    if (postTerms.has(t) || startsPostWord(t)) continue;
+    const typo = t.slice(0, 3) + t[4] + t[3] + t.slice(5);
+    if (typo === t || shelf.at[typo] !== undefined) continue;
+    const want = [];
+    for (let q = 0; q < view.length; q++) if (shelfWords(view[q].text).indexOf(t) >= 0) want.push(q);
+    if (want.length >= 1 && want.length <= 4) { fuzzyCase = { t, typo, want }; break; }
+  }
+  check(!!fuzzyCase, `a word only the shelf holds was transcribed away one edit ("${fuzzyCase && fuzzyCase.typo}" for "${fuzzyCase && fuzzyCase.t}")`);
+  const fzShelf = S.queryShelf('~' + fuzzyCase.typo, { limit: 200 });
+  check(norm(fzShelf.results.map((r) => r.p)) === norm(fuzzyCase.want),
+    `"~${fuzzyCase.typo}" finds the passages that hold "${fuzzyCase.t}" (${fzShelf.results.length} passage(s), the scan says ${fuzzyCase.want.length})`);
+  check(fzShelf.results.some((r) => r.why.some((w) => w === 'fuzzy: "' + fuzzyCase.typo + '" → ' + fuzzyCase.t + ' (1 edit)')),
+    `and the reader is told which word the shelf found: ${JSON.stringify(fzShelf.results.flatMap((r) => r.why).filter((w) => w.indexOf('fuzzy: ') === 0).slice(0, 1))}`);
+  check(S.queryShelf('~' + fuzzyCase.typo, { limit: 200 }).results.every((r) => !r.named),
+    'a word behind a ~ never counts as a word the reader typed, over the shelf either');
+
+  // a `/pattern/` still walks the shelf's own automaton — including the MIDDLE
+  // of a word, which no word list can answer
+  let patCase = null;
+  for (const t of shelf.terms) {
+    if (!/^[a-z]{9,}$/.test(t)) continue;
+    const frag = t.slice(2, 6);
+    if (shelf.terms.some((x) => x.indexOf(frag) === 0)) continue;   // the word list could answer this
+    const words = shelf.terms.filter((x) => x.indexOf(frag) >= 0);
+    if (words.length < 2) continue;
+    const want = new Set();
+    for (let q = 0; q < view.length; q++) if (shelfWords(view[q].text).some((x) => x.indexOf(frag) >= 0)) want.add(q);
+    if (want.size) { patCase = { frag, words, want }; break; }
+  }
+  check(!!patCase, `a mid-word pattern over the shelf's word list exists (/${patCase && patCase.frag}/ reaches ${patCase && patCase.words.length} word(s), none of them beginning with it)`);
+  const patShelf = S.queryShelf('/' + patCase.frag + '/', { limit: 200 });
+  check(norm(patShelf.results.map((r) => r.p)) === norm([...patCase.want]),
+    `"/${patCase.frag}/" answers with exactly the passages holding a word it reached (${patShelf.results.length} passage(s), the scan says ${patCase.want.size})`);
+  check(patShelf.counts.matched === patCase.words.length && patShelf.counts.reCapped === false,
+    `and it reports the ${patShelf.counts.matched} word(s) the walk reached`);
+  S.render(shownRaw, statusRaw, '/' + patCase.frag + '/');
+  check([...shownRaw.querySelectorAll('li.sr-shelf .sr-s mark')].length > 0,
+    `the shelf's snippet marks the words the pattern reached (${[...shownRaw.querySelectorAll('li.sr-shelf .sr-s mark')].length} mark(s))`);
+  const badPat = S.queryShelf('/x[/');
+  check(badPat.results.length === 0 && /not closed/.test(badPat.counts.reError),
+    `a pattern the shelf cannot read comes back with a reason, not a throw ("${badPat.counts.reError}")`);
+
+  // a title/heading hit outranks a body hit WITHIN the shelf
+  const tocByN = new Map(shelfDocRaw.toc.map((s) => [s.n, s.title]));
+  const workName = (shelf.docs[0].title + ' ' + shelf.docs[0].author + ' ' + shelf.docs[0].translator).toLowerCase();
+  let headTerm = null;
+  for (const s of shelfDocRaw.toc) {
+    const ws = (s.title.toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((x) => x.length >= 5 && workName.indexOf(x) < 0);
+    for (const t of ws) {
+      const r = S.queryShelf(t, { limit: 200 }).results;
+      const isHead = (x) => { const ti = tocByN.get(x.sec); return !!(ti && ti.toLowerCase().indexOf(t) >= 0); };
+      const hs = r.filter(isHead), bs = r.filter((x) => !isHead(x));
+      if (hs.length >= 1 && bs.length >= 2) { headTerm = { t, r, hs, bs }; break; }
+    }
+    if (headTerm) break;
+  }
+  check(!!headTerm, `a word in a section's TITLE also occurs in that section's body ("${headTerm && headTerm.t}")`);
+  if (headTerm) {
+    const lastHead = headTerm.r.map((x, i) => (headTerm.hs.includes(x) ? i : -1)).lastIndexOf(Math.max(...headTerm.r.map((x, i) => (headTerm.hs.includes(x) ? i : -1))));
+    const firstBody = headTerm.r.findIndex((x) => !headTerm.hs.includes(x));
+    check(firstBody > headTerm.hs.length - 1 && lastHead === headTerm.hs.length - 1,
+      `"${headTerm.t}": the ${headTerm.hs.length} passage(s) whose section TITLE holds it come before all ` +
+        `${headTerm.bs.length} that hold it only in their body (last title-hit row ${lastHead}, first body-only row ${firstBody})`);
+  }
+
+  // the shelf's cap is reported, never silent
+  const widest = shelf.terms.map((t, i) => [t, shelf.postings[i].length]).sort((a, b) => b[1] - a[1])[0];
+  // with no limit given the shelf keeps its own cap (24), which is the cap the
+  // PAGE renders through — the count it reports is the provider's own
+  const capShelf = S.queryShelf(widest[0]);
+  const capRender = S.render(shownRaw, statusRaw, widest[0]);
+  const capRows = [...shownRaw.querySelectorAll('li.sr-shelf')];
+  check(capShelf.counts.results > 24 && capShelf.counts.shown === 24 &&
+    capShelf.counts.dropped === capShelf.counts.results - 24 && capRows.length === 24,
+    `"${widest[0]}" matches ${capShelf.counts.results} passage(s), the page shows ${capRows.length} and says ` +
+      `${capShelf.counts.dropped} more (the provider's own count, not a silent truncation)`);
+  check(statusRaw.textContent.indexOf(capShelf.counts.dropped + ' passage') >= 0,
+    `the status line reports them: "${statusRaw.textContent.slice(0, 90)}"`);
+  check(capRender.results.length > 0, "and the pieces' group is unaffected by the shelf's cap");
+
+  /* ---- the empty shelf: no heading over an empty list ------------------- */
+  let postsOnly = null;
+  const shelfTermSet = new Set(shelf.terms);
+  for (const t of ['wetiko', 'picatrix', 'quareia', ...data.hints]) {
+    if (shelfTermSet.has(t) || shelf.terms.some((x) => x.indexOf(t) === 0)) continue;
+    if (S.query(t, { limit: 200 }).results.length > 0) { postsOnly = t; break; }
+  }
+  check(!!postsOnly, `a word the pieces use and the shelf does not exists ("${postsOnly}")`);
+  S.render(shownRaw, statusRaw, postsOnly);
+  check(shownRaw.querySelectorAll('li.sr-shelf').length === 0 && shownRaw.querySelectorAll('li.sr-grp').length === 0,
+    `"${postsOnly}" hits the pieces and not the shelf, so NO shelf heading is printed (${shownRaw.querySelectorAll('li.sr-shelf').length} passage row(s), ${shownRaw.querySelectorAll('li.sr-grp').length} heading(s))`);
+  check(/0 passages? in the shelf/.test(statusRaw.textContent),
+    `though the status line still says the group is there and empty: "${statusRaw.textContent.slice(0, 80)}"`);
+
+  /* ---- the facets: the pieces narrow, the shelf does not ---------------- */
+  const facetTerm = bothTerm;
+  const a = S.queryShelf(facetTerm, { limit: 200 }).results.map((r) => r.p);
+  const b = S.queryShelf(facetTerm, { series: 'frames', limit: 200 }).results.map((r) => r.p);
+  const piecesAll = S.query(facetTerm, { limit: 200 }).results.length;
+  const piecesSeries = S.query(facetTerm, { series: 'frames', limit: 200 }).results.length;
+  check(norm(a) === norm(b) && piecesSeries < piecesAll,
+    `the series facet narrows the PIECES (${piecesAll} -> ${piecesSeries}) and leaves the shelf's ${a.length} passage(s) untouched`);
+  S.render(shownRaw, statusRaw, facetTerm, { series: 'frames' });
+  const facetShelfRows = [...shownRaw.querySelectorAll('li.sr-shelf')].length;
+  check(facetShelfRows === Math.min(b.length, 24),
+    `and the rendered shelf group is the same ${facetShelfRows} passage row(s) with the facet set`);
+  S.render(shownRaw, statusRaw, facetTerm, { where: 'shelf' });
+  check(shownRaw.querySelectorAll('li.sr-shelf').length > 0 && shownRaw.querySelectorAll('li.sr:not(.sr-shelf)').length === 0,
+    'the where=shelf control shows the shelf alone');
+  S.render(shownRaw, statusRaw, facetTerm, { where: 'pieces' });
+  check(shownRaw.querySelectorAll('li.sr-shelf').length === 0 && shownRaw.querySelectorAll('li.sr:not(.sr-shelf)').length > 0,
+    'and where=pieces hides the shelf, leaving the pieces exactly as they were');
+  const w3 = new Window({ width: 1100, height: 900, url: 'https://blog.jaye.ch/search/?q=' + facetTerm + '&where=shelf' });
+  const d3 = w3.document;
+  let st3 = 'loading';
+  Object.defineProperty(d3, 'readyState', { get: () => st3, configurable: true });
+  d3.body.innerHTML = bodyHtml.replace(/<script(?![^>]*application\/json)[\s\S]*?<\/script>/g, '');
+  const S3w = new Function('window', 'document', 'performance', 'setTimeout', 'clearTimeout', 'console',
+    client + '\nreturn window.Search;')(w3, d3, w3.performance, w3.setTimeout.bind(w3), w3.clearTimeout.bind(w3), console);
+  st3 = 'interactive';
+  d3.dispatchEvent(new w3.Event('DOMContentLoaded'));
+  check(d3.getElementById('sf-where').value === 'shelf' && S3w.readUrl().where === 'shelf',
+    'the group filter rides in the URL and lands on the control (?where=shelf)');
+  S3w.loadDeep(deepRaw);
+  S3w.wire();      // what the page does when the fetched half lands: answer again
+  const shelfRowsUrl = d3.getElementById('sres').querySelectorAll('li.sr-shelf').length;
+  const pieceRowsUrl = [...d3.getElementById('sres').querySelectorAll('li.sr')].filter((li) => !li.classList.contains('sr-shelf')).length;
+  check(shelfRowsUrl > 0 && pieceRowsUrl === 0,
+    `and a linked ?where=shelf search opens with the shelf alone (${shelfRowsUrl} passage row(s), ${pieceRowsUrl} piece row(s))`);
+
+  /* ---- the shelf is not a seed for the pieces' graph, and the pieces'
+   *      ranking does not move when the shelf is present ------------------ */
+  const keptShelf = S._idx.shelf;
+  const withShelf = S.query('proclus', { limit: 200 }).results.map((r) => [data.docs[r.i].slug, r.score, r.why.join('|')]);
+  delete S._idx.shelf;
+  const withoutShelf = S.query('proclus', { limit: 200 }).results.map((r) => [data.docs[r.i].slug, r.score, r.why.join('|')]);
+  const noShelfRender = S.render(shownRaw, statusRaw, 'proclus');
+  check(JSON.stringify(withShelf) === JSON.stringify(withoutShelf),
+    `the pieces' ranking, order and reasons are IDENTICAL with and without the shelf's index (${withShelf.length} results, ` +
+      `every slug, score and reason compared)`);
+  check(noShelfRender.counts.graphOnlyDropped === S.query('proclus').counts.graphOnlyDropped,
+    'and the graph\'s own cap is unchanged by it');
+  // the graph's own answer, with and without the shelf's index in the page: a
+  // shelf passage is never a seed, so the derived facts cannot move
+  const gWithShelf = JSON.stringify(S.providers.graph('proclus', {}).counts);
+  delete S._idx.shelf;
+  const gWithoutShelf = JSON.stringify(S.providers.graph('proclus', {}).counts);
+  S._idx.shelf = keptShelf;
+  check(gWithShelf === gWithoutShelf,
+    `and the graph's own counts are identical with and without it (${gWithShelf}) — a passage is never a seed`);
+  // The pieces' own discipline, held to the arithmetic: a hit in a piece's title
+  // or heading weighs 2.6x a body hit, and a prefix hit 0.55x an exact one. Both
+  // are recomputed here from the shipped index (the idf is the posting list's
+  // length, exactly as the page reads it), so this FAILS if either weight is
+  // changed or dropped.
+  const nDocs = data.docs.length;
+  const lexOf = (t) => S.providers.lexical(t);
+  let titleWeight = null, prefixWeight = null;
+  for (let i = 0; i < data.lex.strong.length && !titleWeight; i += 3) {
+    const [ti, ...docs] = data.lex.strong[i];
+    const t = S._idx.terms[ti];
+    const idf = Math.log(1 + nDocs / data.lex.postings[ti].length);
+    for (const dd of docs) {
+      if ((deepRaw.lex[ti] || []).some((r) => r[0] === dd)) continue;   // a body hit too: not this rule
+      const row = lexOf(t).find((x) => x.i === dd);
+      if (row && Math.abs(row.score - idf * 2.6) < 1e-9) { titleWeight = { t, slug: data.docs[dd].slug }; break; }
+    }
+  }
+  check(!!titleWeight,
+    `a title/heading hit carries exactly the 2.6x weight it always had${titleWeight ? ` ("${titleWeight.t}" in ${titleWeight.slug})` : ' — no case found'}`);
+  for (let i = 0; i < S._idx.terms.length && !prefixWeight; i += 4) {
+    const t = S._idx.terms[i];
+    const lo = S._idx.terms.findIndex((x) => x.indexOf(t) === 0);
+    let hi = lo; while (hi < S._idx.terms.length && S._idx.terms[hi].indexOf(t) === 0) hi++;
+    if (hi - lo < 2 || S._idx.terms[lo + 1] === t) continue;
+    const ti = S._idx.at[S._idx.terms[lo + 1]];
+    const idf = Math.log(1 + nDocs / data.lex.postings[ti].length);
+    const row = lexOf(t).find((x) => Math.abs(x.score - idf * 0.55) < 1e-9 && !(deepRaw.lex[ti] || []).some((r) => r[0] === x.i));
+    if (row) prefixWeight = { t, word: S._idx.terms[lo + 1] };
+  }
+  check(!!prefixWeight,
+    `and a prefix hit exactly the 0.55x it had${prefixWeight ? ` ("${prefixWeight.t}" reaching "${prefixWeight.word}")` : ' — no case found'}`);
+  // and with the shelf taken out of the page entirely, the answer is the answer
+  // the page gave before the shelf existed
+  delete S._idx.shelf;
+  S.render(shownRaw, statusRaw, 'proclus');
+  check(shownRaw.querySelectorAll('li.sr-grp').length === 0 && shownRaw.querySelectorAll('li.sr-shelf').length === 0 &&
+    shownRaw.querySelectorAll('li.sr:not(.sr-shelf)').length > 0,
+    'with no shelf in the page the page answers exactly as it did before it existed (no heading, no passage, no error)');
+  S._idx.shelf = keptShelf;
+
+  /* ---- the shelf the build serves vs the shelf it refuses ---------------
+   *
+   * The index carries only the texts the build SERVES, and this is the proof,
+   * both ways: the build's OWN gate is asked to index a held-back text (it
+   * refuses, under the default gate), and then the same build is run with
+   * LIBRARY=1 — and the page, given that index, answers the query it could not
+   * answer before. FAILS IF the default index ever carries a text the site does
+   * not serve, or if the difference were in the search code rather than in the
+   * gate.
+   */
+  const servedSlugs = new Set(shelf.docs.map((x) => x.slug));
+  const refusals = [];
+  let heldSlug = null;
+  const shelfModule = require('../tools/library/shelf.mjs');
+  try {
+    const m = shelfModule;
+    const files = m.shelfFiles();
+    const held = m.TEXTS.filter((t) => !servedSlugs.has(t.slug));
+    // the harshest case: a text with a STORED EDITION that is still held back
+    const stored = held.find((t) => existsSync(join(ROOT, 'content', 'library', t.slug, 'source.txt')));
+    heldSlug = (stored || held[0] || {}).slug || null;
+    if (heldSlug) {
+      // the transcription-only text: read where the build reads it
+      const src = readFileSync(m.textSource(m.TEXTS.find((t) => t.slug === heldSlug), files), 'utf8');
+      const ws = (src.toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((w) => w.length >= 7);
+      const shelfTermSetAll = new Set(shelf.terms);
+      for (const w of ws) {
+        if (postTerms.has(w) || startsPostWord(w)) continue;
+        if (shelfTermSetAll.has(w) || shelf.terms.some((x) => x.indexOf(w) === 0)) continue;
+        if (S.query(w, { limit: 200 }).results.length) continue;
+        refusals.push(w);
+        if (refusals.length >= 3) break;
+      }
+    }
+  } catch (e) {
+    check(false, `the shelf module could not be read to pick a held-back word: ${e.message}`);
+  }
+  check(!!heldSlug && refusals.length > 0,
+    `a held-back text and words only it uses were found ("${heldSlug}": ${refusals.join(', ')})`);
+  const heldWord = refusals[0];
+  check(S.queryShelf(heldWord, { limit: 200 }).results.length === 0,
+    `a word only the HELD-BACK text uses returns no passage from the shelf (${S.queryShelf(heldWord).results.length})`);
+  check(!deepRaw.shelf.docs.some((x) => x.slug === heldSlug) && JSON.stringify(deepRaw).indexOf(heldWord) < 0,
+    `and the emitted index does not carry that text at all (${deepRaw.shelf.docs.length} text(s): ` +
+      `${deepRaw.shelf.docs.map((x) => x.slug).join(', ')})`);
+  // and the texts the page SEARCHES are exactly the texts the shelf PUBLISHES,
+  // read off the shelf's own flag rather than off dist: a result can therefore
+  // only ever point at a text the site means to serve. (Whether a page for it is
+  // in dist at this instant is another build's business — a concurrent LIBRARY=1
+  // preview writes them all, and the library's own smoke checks the pages.)
+  const publishedSlugs = shelfModule.publishedTexts().map((t) => t.slug).sort();
+  check(norm(publishedSlugs) === norm(shelf.docs.map((x) => x.slug)),
+    `the shelf the page searches is exactly the texts the shelf MODULE publishes ` +
+      `(${publishedSlugs.join(', ')})`);
+
+  // the two halves of the asymmetry, through the build's own CLI. It writes
+  // OUTSIDE dist: a test must not leave anything in the tree it is checking
+  const tmpIndex = join(osTmpdir(), 'search-smoke-shelf-index.json');
+  let defaultOut = null;
+  try {
+    defaultOut = execFileSync('node', [join('tools', 'build.mjs'), `--shelf-index=${tmpIndex}`, `--only=${heldSlug}`],
+      { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  } catch (e) { defaultOut = null; }
+  check(defaultOut === null && !existsSync(tmpIndex),
+    `the build REFUSES to index a text it does not serve (--only=${heldSlug} under the default gate: exit non-zero, nothing written)`);
+  let previewOk = false, preview = null;
+  try {
+    execFileSync('node', [join('tools', 'build.mjs'), `--shelf-index=${tmpIndex}`, `--only=${heldSlug}`],
+      { cwd: ROOT, encoding: 'utf8', env: { ...process.env, LIBRARY: '1' }, stdio: ['ignore', 'pipe', 'pipe'] });
+    preview = JSON.parse(readFileSync(tmpIndex, 'utf8'));
+    previewOk = true;
+  } catch (e) { previewOk = false; }
+  check(previewOk && preview.docs.length === 1 && preview.docs[0].slug === heldSlug,
+    `with LIBRARY=1 the SAME build indexes it (${previewOk ? preview.pass.length + ' passage(s)' : 'the build failed'})`);
+  if (previewOk) {
+    // a transcription-only text has no stored document: its anchors are the ids
+    // the page's own renderer emits, computed here from the source
+    const heldEntry = require('../tools/library/shelf.mjs').TEXTS.find((t) => t.slug === heldSlug);
+    const heldSrc = readFileSync(require('../tools/library/shelf.mjs').textSource(heldEntry, require('../tools/library/shelf.mjs').shelfFiles()), 'utf8');
+    const heldDoc = pagePreprocess(heldSrc, {});
+    const heldParts = pagePartition(heldDoc, 1800000);
+    const pageHeadIds = new Set();
+    heldParts.forEach((p2) => { for (const b of p2.blocks) if (b.type === 'heading') pageHeadIds.add(b.id); });
+    const heldAnchors = preview.pass.filter((r) => r[1] != null).map((r) => r[1]);
+    const badAnchor = heldAnchors.filter((a2) => !pageHeadIds.has(a2));
+    check(heldAnchors.length > 0 && badAnchor.length === 0,
+      `every anchor of a shelf-only text is a heading id its OWN page renders (${heldAnchors.length} anchor(s), ` +
+        `${badAnchor.length} not among the ${pageHeadIds.size} heading id(s); e.g. ${heldAnchors.slice(0, 3).join(', ')})`);
+    const paths = new Set(preview.pass.map((r) => r[6] || ''));
+    const wanted = new Set([''].concat(heldParts.map((_, i) => i === 0 ? '' : `/library/${heldSlug}/part-${i + 1}/`)));
+    check([...paths].every((x) => wanted.has(x)),
+      `and its page paths are the pages that text is emitted in (${heldParts.length} part(s); ${[...paths].filter(Boolean).length} passage(s) on a later part)`);
+    // NOW the same query, with the preview index installed in the same page
+    S.loadDeep(Object.assign({}, deepRaw, { shelf: preview }));
+    const previewHits = S.queryShelf(heldWord, { limit: 200 });
+    check(previewHits.results.length > 0,
+      `AND THE ASYMMETRY: with the LIBRARY=1 index the same word "${heldWord}" DOES return it ` +
+        `(${previewHits.results.length} passage(s) of ${preview.docs[0].slug})`);
+    const prevRow = previewHits.results[0];
+    check(prevRow.doc === 0 && typeof prevRow.text === 'string' && prevRow.text.toLowerCase().indexOf(heldWord) >= 0,
+      `and the passage it returns is that text's own, carrying the word (${prevRow.text.length} chars, anchor ${prevRow.anchor})`);
+    check(preview.pass.length > 1 && preview.words.postings.length > 0,
+      `the preview shelf carries the whole text's passages and its own word list (${preview.pass.length} passages, ${preview.words.postings.length} words)`);
+    S.loadDeep(deepRaw);      // back to the shelf the build actually serves
+    check(S.queryShelf(heldWord).results.length === 0 && S.query(bothTerm ? bothTerm : 'proclus').results.length > 0,
+      'and putting the served index back answers nothing for it again, while the pieces are untouched');
+  }
+  try { require('fs').unlinkSync(tmpIndex); } catch (e) { /* nothing to remove */ }
+
+  /* ---- a build that serves no library text at all -----------------------
+   *
+   * The other side of the same contract: with an EMPTY shelf the page must
+   * answer exactly as it did before the group existed — no heading, no passage,
+   * no count of a group the site does not have. (This is the state of every
+   * build before a text is published, and of a build whose shelf is held back.)
+   */
+  S.loadDeep(Object.assign({}, deepRaw, { shelf: { docs: [], pass: [], words: { dafsa: { s: '0', l: '', t: '' }, postings: [] } } }));
+  const emptyShelf = S.shelf();
+  const emptyRender = S.render(shownRaw, statusRaw, bothTerm);
+  check(!!emptyShelf && emptyShelf.n === 0 && emptyRender.results.length > 0,
+    'an EMPTY shelf decodes to a page that still answers the pieces ' +
+      `(${emptyRender.results.length} result(s), ${emptyShelf && emptyShelf.n} passage(s))`);
+  check(shownRaw.querySelectorAll('li.sr-grp').length === 0 && shownRaw.querySelectorAll('li.sr-shelf').length === 0,
+    'and prints no shelf heading and no passage row for a shelf that does not exist');
+  check(!/in the shelf/.test(statusRaw.textContent),
+    `and does not promise a group it cannot answer with: "${statusRaw.textContent.slice(0, 80)}"`);
+  check(S.queryShelf(bothTerm).counts.off === true && S.queryShelf(bothTerm).results.length === 0,
+    'the shelf provider says it has no shelf to search, and answers nothing rather than throwing');
+  S.loadDeep(deepRaw);
+  check(S.queryShelf(bothTerm).results.length > 0, 'putting the served index back answers again');
+}
+
+/* ---------- 7n. the list stops where the evidence stops -------------------
+ *
+ * A query's answer was mostly pieces that do not contain it: the fusion reaches
+ * pieces through the vectors and the graph ON PURPOSE, and at twenty-four rows
+ * they drowned the ones the words named. Measured on the page before this
+ * section existed: "wetiko" rendered 24 rows of which 6 contain the word,
+ * "proclus" 24 of which 7 — and the rest sat above and between them.
+ *
+ * The page now renders the split the engine already computed (`named`: an exact
+ * term hit — the query's own words are in the piece) and every assertion below
+ * recomputes its expectation from content/, never from the page's own claim. It
+ * would have failed before the split: the rows above the disclosure were not the
+ * pieces whose prose contains the word, and there was no disclosure at all.
+ *
+ * The three other ways to ask are asserted here too, because `named` is set by
+ * the LEXICAL pass and nothing else: a pattern's reached words and a phrase's
+ * own words name a piece; a fuzzy word NEVER does (the walk found a word the
+ * reader did not write); and the zero-result fallback must be split on the
+ * CORRECTED query, since that is the query the answer belongs to.
+ */
+console.log('== the answer stops where the words stop');
+{
+  const box = d.getElementById('sres');
+  const status = d.getElementById('sstatus');
+  const docAt = new Map(data.docs.map((x, i) => [x.slug, i]));
+  const slugOf = (li) => li.querySelector('a.sr-t').getAttribute('href').replace(/\?q=.*$/, '').replace(/^\/|\/$/g, '');
+  const pieceRows = () => [...box.querySelectorAll('li.sr')].filter((li) => !li.classList.contains('sr-shelf'));
+  const relRows = () => [...box.querySelectorAll('li.sr-rel')];
+  const tailBtn = () => box.querySelector('li.sr-tail button.sr-more');
+  const aboveOf = (rows) => {
+    const firstRel = rows.findIndex((li) => li.classList.contains('sr-rel'));
+    return firstRel < 0 ? rows : rows.slice(0, firstRel);
+  };
+  const holds = (slug, sub) => plain(sources[docAt.get(slug)]).toLowerCase().indexOf(sub) >= 0;
+
+  for (const q of ['wetiko', 'proclus']) {
+    const want = expectExact(q);                       // from content/, this run
+    const provider = S.query(q, { limit: 200 });
+    const res = S.render(box, status, q);
+    const rows = pieceRows();
+    const rel = relRows();
+    const above = aboveOf(rows);
+    const namedSlugs = above.map(slugOf);
+
+    /* 1. the counts are real: the rows above the disclosure ARE the pieces the
+     *    prose contains the word in — recomputed here, both directions */
+    if (want.size <= res.results.length) {
+      check(norm(new Set(namedSlugs)) === norm(want) && namedSlugs.length === want.size,
+        `"${q}": the ${namedSlugs.length} row(s) above the disclosure are exactly the ${want.size} piece(s) whose prose ` +
+          `contains it — ${norm(new Set(namedSlugs))}`);
+    } else {
+      check(namedSlugs.every((s) => want.has(s)),
+        `"${q}": every row above the disclosure is a piece whose prose contains it (${namedSlugs.length} of ${want.size})`);
+    }
+    check(namedSlugs.length < rows.length,
+      `"${q}": the page does not claim the whole list names it (${namedSlugs.length} name it, ${rows.length} rendered)`);
+
+    /* 2. nothing is lost: the two groups are the provider's own answer */
+    check(rows.length === Math.min(provider.results.length, 24) && rows.length === res.results.length,
+      `"${q}": named + related is the provider's whole answer, not a subset (${rows.length} row(s); the provider says ` +
+        `${provider.results.length})`);
+
+    /* 3. the tail is not the answer: no row above the disclosure is outside the
+     *    measured set, and every remaining row is a folded related one */
+    check(above.length > 0 && rel.length === rows.length - above.length &&
+      rows.slice(above.length).every((li) => li.classList.contains('sr-rel')),
+      `"${q}": all ${rel.length} related row(s) stand below the disclosure and nothing else does`);
+
+    /* 4. the disclosure works, and what it reveals is the measured remainder */
+    const b = tailBtn();
+    check(!!b && b.getAttribute('aria-expanded') === 'false' && rel.length > 0 && rel.every((li) => li.hidden),
+      `"${q}": the related rows start folded away behind one row ("${b ? b.textContent.trim() : 'no disclosure row'}")`);
+    check(!!b && b.textContent.trim() === rel.length + ' more are related — "' + q + '" is not in them',
+      `"${q}": the row states the count and what the tail is ("${b ? b.textContent.trim() : ''}")`);
+    if (b) b.dispatchEvent(new w.Event('click', { bubbles: true }));
+    check(relRows().every((li) => !li.hidden) && !!b && b.getAttribute('aria-expanded') === 'true',
+      `"${q}": clicking it reveals the ${relRows().length} related row(s)`);
+    const revealed = relRows().map(slugOf);
+    check(revealed.length === rel.length && revealed.every((s) => !want.has(s)),
+      `"${q}": and every revealed row is a piece the prose says does NOT contain it (${revealed.length} row(s))`);
+    if (b) b.dispatchEvent(new w.Event('click', { bubbles: true }));
+    check(relRows().every((li) => li.hidden) && rel.length > 0 && !!b && b.getAttribute('aria-expanded') === 'false',
+      `"${q}": and clicking again folds them back ("${b ? b.textContent.trim() : ''}")`);
+
+    /* 5. the status line counts the two groups, and the numbers are the groups */
+    const segs = status.textContent.replace(/^# /, '').split(' · ');
+    const pm = /^(\d+)(?: of (\d+))? pieces? name[s]? "(.*)"$/.exec(segs[0] || '');
+    const rm = /^(\d+) more (?:is|are) related$/.exec(segs[1] || '');
+    check(!!pm && !!rm && +pm[1] === namedSlugs.length && +rm[1] === rel.length && +pm[1] + +rm[1] === rows.length,
+      `"${q}": the status line states both counts and they are the two groups: "${status.textContent.split(' ms ·')[0]}"`);
+    check(!!pm && +pm[2] === provider.results.length,
+      `"${q}": and "of ${pm && pm[2]}" is the provider's own total (${provider.results.length})`);
+
+    /* 6. the order WITHIN each group is the provider's own: the split is a
+     *    LAYOUT of the answer, not a second ranking */
+    const wantNamed = res.results.filter((r) => r.named).map((r) => data.docs[r.i].slug);
+    const wantRel = res.results.filter((r) => !r.named).map((r) => data.docs[r.i].slug);
+    check(namedSlugs.join(' ') === wantNamed.join(' '),
+      `"${q}": the named rows keep the provider's own order — ${namedSlugs.join(' ')}`);
+    check(relRows().map(slugOf).join(' ') === wantRel.join(' '),
+      `"${q}": and the folded rows keep the order they were found in (${wantRel.length} row(s))`);
+
+    /* the shelf's heading, and where it now sits. The rows before it are the
+     * ones the query named and the disclosure row — nothing else. At ~64px a row
+     * and a ~900px screen, that is the difference between a heading in the first
+     * screen and one two screens down. */
+    const kidEls = [...box.children];
+    const grpAt = kidEls.findIndex((k) => k.classList.contains('sr-grp'));
+    if (grpAt >= 0) {
+      const visible = kidEls.slice(0, grpAt).filter((k) => !k.hidden).length;
+      check(visible === namedSlugs.length + 1,
+        `"${q}": ${visible} row(s) stand before the shelf's heading — the ${namedSlugs.length} it named and the disclosure row`);
+      console.log(`    "${q}": the shelf's heading is ${visible} row(s) down (~${visible * 64}px at ~64px a row, against ` +
+        `${rows.length} row(s) before the split); ${rel.length} row(s) folded`);
+    } else {
+      console.log(`    "${q}": no shelf passage answers it, so no heading; ${namedSlugs.length} row(s) named it, ` +
+        `${rel.length} folded, of ${rows.length} rendered`);
+    }
+  }
+
+  /* ---- the three other ways to ask -------------------------------------- */
+
+  // a PATTERN: the words the walk REACHED name a piece, and the page says so —
+  // every row above the disclosure holds the pattern's own word
+  S.render(box, status, '/wetiko/');
+  {
+    const rows = pieceRows();
+    const above = aboveOf(rows);
+    check(above.length > 0 && above.every((li) => holds(slugOf(li), 'wetiko')),
+      `a pattern: the ${above.length} row(s) above the disclosure all hold the word the pattern reached ` +
+        `(${above.map(slugOf).slice(0, 3).join(', ')})`);
+    check(relRows().length > 0 && relRows().every((li) => !holds(slugOf(li), 'wetiko')),
+      `a pattern: and none of the ${relRows().length} folded row(s) holds it`);
+    check(/ pieces match \/wetiko\//.test(status.textContent),
+      `a pattern: the status line says what matched ("${status.textContent.split(' ms ·')[0]}")`);
+    // its related rows are behind the same disclosure, with the pattern named in it
+    const b = tailBtn();
+    check(!!b && / — the pattern \/wetiko\/ reached no word of theirs$/.test(b.textContent.trim()),
+      `a pattern: the disclosure says the tail is the words the pattern did NOT reach ("${b ? b.textContent.trim() : ''}")`);
+  }
+
+  // a PHRASE: the phrase's own matches are NAMED — a piece that says the run says
+  // it — so the run's answer has nothing folded away behind it
+  {
+    const ph = '"the frame is a variable"';
+    const pres = S.query(ph, { limit: 200 });
+    const rr = S.render(box, status, ph);
+    check(pres.results.length > 0 && pres.results.every((r) => r.named) && rr.results.every((r) => r.named),
+      `a phrase: the ${pres.results.length} piece(s) that say the phrase are named, not related ` +
+        `(${pres.results.map((r) => data.docs[r.i].slug).join(', ')})`);
+    check(relRows().length === 0 && !tailBtn(),
+      'a phrase: so nothing is folded away behind a disclosure for it');
+    check(new RegExp('^# ' + pres.results.length + ' pieces name "the frame is a variable"').test(status.textContent),
+      `a phrase: and the status line names the run as the reader wrote it ("${status.textContent.split(' ms ·')[0]}")`);
+  }
+
+  // a FUZZY term: a piece the walk found does NOT contain the word as written, so
+  // it is RELATED — and when nothing names the query, the list is not folded
+  // away: a disclosure with no row above it would hide the whole answer
+  {
+    const fres = S.query('~proculus', { limit: 200 });
+    S.render(box, status, '~proculus');
+    check(fres.results.length > 0 && fres.results.every((r) => !r.named) && relRows().length === 0,
+      `fuzzy: none of the ${fres.results.length} row(s) the walk found is named — the word as written is in no piece`);
+    check(!tailBtn() && pieceRows().length === fres.results.length,
+      `fuzzy: nothing names the query, so nothing is folded away (${pieceRows().length} row(s) stand)`);
+    check(/ pieces · none names "proculus"/.test(status.textContent),
+      `fuzzy: the status line says so instead ("${status.textContent.split(' ms ·')[0]}")`);
+  }
+
+  // the PREFIX the box answers while a word is still being typed: it names
+  // nothing either, and folding the answer away mid-word is worse than crowding
+  {
+    S.render(box, status, 'procl');
+    check(!tailBtn() && pieceRows().length > 3,
+      `a prefix: "procl" names no piece, so nothing is folded (${pieceRows().length} row(s) stand)`);
+    check(/pieces · none names "procl"/.test(status.textContent),
+      `a prefix: and the status line says none names it ("${status.textContent.split(' ms ·')[0]}")`);
+  }
+
+  // the ZERO-RESULT FALLBACK: the split belongs to the CORRECTED query, because
+  // the reader's own words named nothing — that is what a fallback is
+  {
+    const typo = 'proculus';
+    const fb = S.query(typo, { limit: 200 });
+    const corrected = fb.counts.fallbackTo;
+    S.render(box, status, typo);
+    const above = aboveOf(pieceRows()).map(slugOf);
+    check(fb.counts.fallbackFrom === typo && !!corrected && norm(new Set(above)) === norm(expectExact(corrected)),
+      `fallback: "${typo}" is corrected to "${corrected}" and the rows above the disclosure are ITS pieces — ${norm(new Set(above))}`);
+    check(new RegExp('pieces? name[s]? "' + corrected + '"').test(status.textContent),
+      `fallback: and the status line names the corrected word, not the typo ("${status.textContent.split(' ms ·')[0]}")`);
+  }
+
+  // NEWEST FIRST: the reader has chosen an order over the ANSWER, so the list is
+  // not regrouped under it — the status still says how many name the query
+  {
+    S.render(box, status, 'proclus', { sort: 'new' });
+    const newest = S.query('proclus', { sort: 'new', limit: 200 }).results.map((r) => data.docs[r.i].slug);
+    check(!tailBtn() && relRows().length === 0,
+      `newest first: the reader's own order is not regrouped — no disclosure, ${pieceRows().length} row(s) stand`);
+    check(/^# \d+(?: of \d+)? pieces? name[s]? "proclus"/.test(status.textContent),
+      `newest first: and the status line still says how many name it ("${status.textContent.split(' ms ·')[0]}")`);
+    check(pieceRows().length > 0 && slugOf(pieceRows()[0]) === newest[0],
+      `newest first: and the first row is still the newest piece the provider returned (${newest[0]})`);
+  }
 }
 
 /* ---------- 8. garbage ---------- */
