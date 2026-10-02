@@ -24,3 +24,6 @@ content/headers/_qc/
 # python bytecode from the header tooling
 __pycache__/
 content/headers/*.png
+
+# Internal plans — the repo is public (keep them out of git)
+plans/
