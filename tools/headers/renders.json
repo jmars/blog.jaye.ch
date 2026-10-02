@@ -88,9 +88,9 @@
     "seed": 1692023323
   },
   "manufacturing-the-collapse": {
-    "emblem": "trapdoor above a cradle",
+    "emblem": "three stones stacked, toppling",
     "file": "content/headers/manufacturing-the-collapse.png",
-    "key": "de906eb3965c888b|sd_xl_base_1.0.safetensors|13|e313cfd97dde",
+    "key": "de906eb3965c888b|sd_xl_base_1.0.safetensors|13|e79848aaf5e0",
     "reroll": 1,
     "seconds": 24.0,
     "seed": 729905288
@@ -160,9 +160,9 @@
     "seed": 1640816962
   },
   "recovery-is-not-immunity": {
-    "emblem": "a drained and refilled vessel",
+    "emblem": "a jar filled to a marked line",
     "file": "content/headers/recovery-is-not-immunity.png",
-    "key": "43ed3c4f809d42c7|sd_xl_base_1.0.safetensors|13|0c7336ff551d",
+    "key": "43ed3c4f809d42c7|sd_xl_base_1.0.safetensors|13|3c7784cbee0b",
     "reroll": 1,
     "seconds": 24.0,
     "seed": 595223175
@@ -344,11 +344,11 @@
     "seed": 532871778
   },
   "the-label": {
-    "emblem": "A pasted label, mechanism beneath",
+    "emblem": "a branding iron",
     "file": "content/headers/the-label.png",
-    "key": "926a30d1fd9b31ae|sd_xl_base_1.0.safetensors|13|352050286cb1",
+    "key": "926a30d1fd9b31ae|sd_xl_base_1.0.safetensors|13|ac9783c634e8",
     "reroll": 1,
-    "seconds": 22.2,
+    "seconds": 24.0,
     "seed": 422273885
   },
   "the-ladder-of-light": {
@@ -440,11 +440,11 @@
     "seed": 977742718
   },
   "the-witch-and-the-debt": {
-    "emblem": "a tilted balance scale",
+    "emblem": "a heavy balance scale tipped down",
     "file": "content/headers/the-witch-and-the-debt.png",
-    "key": "5abe4460bad5e9f5|sd_xl_base_1.0.safetensors|13|f8def93c5c60",
+    "key": "5abe4460bad5e9f5|sd_xl_base_1.0.safetensors|13|692c4bbd6b56",
     "reroll": 1,
-    "seconds": 24.1,
+    "seconds": 24.0,
     "seed": 1802888542
   },
   "thought-reform": {

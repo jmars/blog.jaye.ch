@@ -16,20 +16,20 @@
     "seed": 2907319990
   },
   "recovery-is-not-immunity": {
-    "emblem": "a drained and refilled vessel",
-    "composition": "a single tall vessel centred in the wide frame, slightly left of centre, with a thin drain channel running from its base off the right edge; empty paper above and to the right",
+    "emblem": "a cracked clay jar",
+    "composition": "one heavy jar standing alone and slightly left of centre on a bare surface, the rest of the picture empty paper",
     "symbols": [
-      "the vessel drawn twice-over in outline: its current full profile and, just inside it, the ghost of the drained profile it was rescued from",
-      "a horizontal threshold line scored across the vessel's neck at the height the fill restores to",
-      "the drain channel as a single groove that exits and re-enters the vessel at the same two points — a loop, not a leak",
-      "a small tick mark at the base registering the fill level identical on both sides of the loop"
+      "a heavy rounded clay jar drawn as one solid black mass, with a jagged crack splitting its side from neck to base",
+      "a black shadow pooling under the jar so it rests on solid ground, not on water",
+      "nothing else: no mast, no sail, no water, no horizon, no second object"
     ],
-    "accent": "the ghost of the drained profile inside the vessel carries the red wash",
+    "accent": "the jagged crack down the jar",
     "input_hash": "43ed3c4f809d42c7",
     "model": "glm-5.3",
-    "prompt": "a clear ink drawing on white paper, a drawing of a drained and refilled vessel: a drained and refilled vessel, the vessel drawn twice-over in outline: its current full profile and, just inside it, the ghost of the drained profile it was rescued from, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the ghost of the drained profile inside the, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
+    "prompt": "a clear ink drawing on white paper, a drawing of a cracked clay jar: a cracked clay jar, a heavy rounded clay jar drawn as one solid black mass, with a jagged crack splitting its side from neck to base, a black shadow pooling under the jar so it rests on solid ground, not on water, nothing else: no mast, no sail, no water, no horizon, no second object, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the jagged crack down the jar, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
     "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion, centred, symmetrical, symmetry, mandala, radial symmetry, concentric ornament, crest, badge, logo, ornamental decoration, patterned, tiled, repeated motif, fine stippling, dense hatching, cross-hatching, etching texture, aged paper, stained parchment",
-    "seed": 595215256
+    "seed": 595215256,
+    "_hand_authored": "Rewritten 2026-10-02 (3rd pass). \"Vessel\" rendered as a boat; \"a jar filled to a marked line\" then rendered as several plain jars. The crack is the one detail that makes the jar unmistakably a single damaged object."
   },
   "what-actually-works": {
     "emblem": "a stepped threshold holding weight",
@@ -48,20 +48,20 @@
     "seed": 2237798859
   },
   "manufacturing-the-collapse": {
-    "emblem": "trapdoor above a cradle",
-    "composition": "A horizontal platform with a hinged drop-section occupies the centre-left of the wide frame; directly beneath the opening, suspended at the lower third, a shallow bowl-shaped cradle hangs from cords that run up and knot to the platform's own frame — the mechanism and the catch are one object. The right half of the frame is empty paper. The platform reads as a bold horizontal mass; the hanging cradle as a small, dense cluster below it.",
+    "emblem": "three stones stacked, toppling",
+    "composition": "a small stack of heavy stones standing off-centre on bare ground, the rest of the picture empty paper",
     "symbols": [
-      "a rectangular platform with one section drawn hinged and falling open, shown at a slight angle to read as a door mid-drop",
-      "the cradle below: a shallow curved bowl of hatched mass, sized exactly to the falling section — a fitted receptacle, not a safety net",
-      "two or three cords from the cradle tied to the underside of the platform itself, so the catcher and the cliff share one structure",
-      "a small trip-lever at the platform's edge: a short bar and notch, pure geometry, the only fine detail"
+      "three heavy rounded boulders piled in a stack, the top one slid off and resting on the ground beside the other two",
+      "each boulder a solid black rounded mass with a broken white highlight, no straight edges and no points",
+      "no triangles, no points, no ropes, no cords, no mast, no sail, no doors"
     ],
-    "accent": "the cradle's inner curve carries the red wash — the fitted catch, not the falling door",
+    "accent": "the boulder that has slid off",
     "input_hash": "de906eb3965c888b",
     "model": "glm-5.3",
-    "prompt": "a clear ink drawing on white paper, a drawing of trapdoor above a cradle: trapdoor above a cradle, a rectangular platform with one section drawn hinged and falling open, shown at a slight angle to read as a door mid-drop, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the cradle's inner curve carries the red wash, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
+    "prompt": "a clear ink drawing on white paper, a drawing of three stones stacked, toppling: three stones stacked, toppling, three heavy rounded boulders piled in a stack, the top one slid off and resting on the ground beside the other two, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the boulder that has slid off, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
     "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion, centred, symmetrical, symmetry, mandala, radial symmetry, concentric ornament, crest, badge, logo, ornamental decoration, patterned, tiled, repeated motif, fine stippling, dense hatching, cross-hatching, etching texture, aged paper, stained parchment",
-    "seed": 2877381017
+    "seed": 2877381017,
+    "_hand_authored": "Rewritten 2026-10-02 (5th pass). Two attempts at posts-and-a-hatch both rendered with triangular shapes that read as sails or tents; the post is about the same collapse run deliberately with two of three guardrails flipped, which a toppling stone stack carries without any pointed silhouette."
   },
   "sacred-science": {
     "emblem": "an hourglass, half-drained",
@@ -142,20 +142,20 @@
     "seed": 854555821
   },
   "the-label": {
-    "emblem": "A pasted label, mechanism beneath",
-    "composition": "A wide sheet with a small rectangular label pasted flat across the centre, its corners lifting very slightly; beneath and around it, the edges of a cut-away diagram show — a few lines escaping from under the paste on all sides, like a covered drawing. Most of the frame is empty paper above and below.",
+    "emblem": "a branding iron",
+    "composition": "one branding iron lying off-centre on a bare surface, the rest of the picture empty paper",
     "symbols": [
-      "a plain rectangle with softly dog-eared corners, flat and opaque, reading as a sticker or slip glued down over something",
-      "the covered diagram showing only at the margins: a broken loop and a small threshold arc emerging from under the label's left and right edges",
-      "three short pin-lines piercing the label near its top edge, as if tacked to the sheet",
-      "a single hairline crack running from one pin-hole toward the label's centre"
+      "a heavy iron branding iron: a long straight handle ending in a thick flat iron head, drawn as one solid black mass",
+      "the iron head is completely BLANK, flat and unmarked, with no letters and no design on it",
+      "no scene, no figures, no creatures, no buildings, no rocks, no tablets"
     ],
-    "accent": "The pasted rectangle itself carries the red wash — the one solid element in an otherwise black-line frame.",
+    "accent": "the hot iron head",
     "input_hash": "926a30d1fd9b31ae",
     "model": "glm-5.3",
-    "prompt": "a clear ink drawing on white paper, a drawing of a pasted label, mechanism beneath: a pasted label, mechanism beneath, a plain rectangle with softly dog-eared corners, flat and opaque, reading as a sticker or slip glued down over something, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the pasted rectangle itself carries the red wash, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
+    "prompt": "a clear ink drawing on white paper, a drawing of a branding iron: a branding iron, a heavy iron branding iron: a long straight handle ending in a thick flat iron head, drawn as one solid black mass, the iron head is completely BLANK, flat and unmarked, with no letters and no design on it, no scene, no figures, no creatures, no buildings, no rocks, no tablets, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the hot iron head, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
     "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion, centred, symmetrical, symmetry, mandala, radial symmetry, concentric ornament, crest, badge, logo, ornamental decoration, patterned, tiled, repeated motif, fine stippling, dense hatching, cross-hatching, etching texture, aged paper, stained parchment",
-    "seed": 422265966
+    "seed": 422265966,
+    "_hand_authored": "Rewritten 2026-10-02 (5th pass). A paper label, a paper tag and a stone tablet all failed (abstract, abstract, rocks). The post argues that a category can be a thing done TO people, which a branding iron states directly in an object with real mass."
   },
   "the-costume": {
     "emblem": "suitcase with false bottom",
@@ -267,20 +267,20 @@
     "seed": 2471817623
   },
   "the-witch-and-the-debt": {
-    "emblem": "a tilted balance scale",
-    "composition": "A heavy beam scale centred low in the frame, its beam tipped hard to one side; the tall upright and the loaded pan fill the lower right, empty space above the raised empty pan on the left.",
+    "emblem": "a heavy iron padlock",
+    "composition": "one large padlock standing alone and off-centre on a bare surface, the rest of the picture empty paper",
     "symbols": [
-      "A thick solid upright post on a broad trapezoid base, the whole stand built of heavy black mass",
-      "A deep beam, a solid tapered bar, pivoted off-centre so it leans steeply",
-      "The lowered pan hanging low, holding a single solid rounded stone that fills the bowl",
-      "The raised pan a shallow empty bowl lifted high, its chains drawn as three short thick strokes"
+      "a heavy black iron padlock drawn as one solid mass, its thick shackle closed through the top and a large keyhole on its face",
+      "a black shadow pooling beneath it so it rests on solid ground",
+      "nothing else: no landscape, no water, no horizon, no rocks, no shore, no scale"
     ],
-    "accent": "the stone in the lowered pan carries the red wash",
+    "accent": "a thin red line around the keyhole",
     "input_hash": "5abe4460bad5e9f5",
     "model": "glm-5.3",
-    "prompt": "a clear ink drawing on white paper, a drawing of a tilted balance scale: a tilted balance scale, a thick solid upright post on a broad trapezoid base, the whole stand built of heavy black mass, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the stone in the lowered pan carries the, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
+    "prompt": "a clear ink drawing on white paper, a drawing of a heavy iron padlock: a heavy iron padlock, a heavy black iron padlock drawn as one solid mass, its thick shackle closed through the top and a large keyhole on its face, a black shadow pooling beneath it so it rests on solid ground, nothing else: no landscape, no water, no horizon, no rocks, no shore, no scale, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on a thin red line around the keyhole, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
     "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion, centred, symmetrical, symmetry, mandala, radial symmetry, concentric ornament, crest, badge, logo, ornamental decoration, patterned, tiled, repeated motif, fine stippling, dense hatching, cross-hatching, etching texture, aged paper, stained parchment",
-    "seed": 3950364271
+    "seed": 3950364271,
+    "_hand_authored": "Rewritten 2026-10-02 (3rd pass). \"A tilted balance scale\" never rendered as a scale across two attempts (it came back as a boat with sails, then as a jug and bowls). The post is about hidden agency and a debt nobody can see, which a locked padlock carries directly — and it is an object the model draws as a single solid mass."
   },
   "the-ladder-of-light": {
     "emblem": "a ladder whose top rung is missing",
