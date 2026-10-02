@@ -1599,7 +1599,7 @@ const THEME_JS = `(function () {
 const THEME_HEAD = `<script>${THEME_JS}</script>`;
 
 /** Full self-contained document. */
-function page({ title, description, prompt, heroTitle, tagline, body, navCurrent, type = 'article', shareTitle, noindex = false, header, arrive }, navPosts) {
+function page({ title, description, prompt, heroTitle, tagline, body, navCurrent, type = 'article', shareTitle, noindex = false, header, arrive, head }, navPosts) {
   const designCss = stripComments(readFileSync(CSS, 'utf8'));
   const viz = vizAssets(body);
   const palette = paletteAssets(navPosts);
@@ -1643,6 +1643,7 @@ ${meta}
 <style>
 ${designCss}</style>
 ${viz ? `<style>\n${viz.css}</style>\n` : ''}<style>${stripComments(PAGE_CSS)}</style>
+${head || ''}
 </head>
 <body>
 ${DOSE}
@@ -3265,6 +3266,477 @@ function unreadableHtml(t, a) {
   );
 }
 
+/* ---------- the reader: the app, and the honest floor under it ---------- */
+
+/** The reader's own CSS. Small on purpose: the reading layer is design/blog.css
+ * (.prose), the palette comes from the design tokens, and this only adds what a
+ * page of a book needs that a blog post does not — the contents drawer, the page
+ * markers, the note slides, the print range. Emitted into the page's head (the
+ * one place a <style> belongs), stripped of comments like every other inlined
+ * stylesheet. */
+const READER_CSS = `
+.rd-section .wrap { max-width: 1240px; }
+.rd { font-family: var(--serif); color: var(--fg); }
+.rd.scale-1 { font-size: .86rem; }
+.rd.scale-2 { font-size: .93rem; }
+.rd.scale-3 { font-size: 1rem; }
+.rd.scale-4 { font-size: 1.08rem; }
+.rd.scale-5 { font-size: 1.16rem; }
+.rd.scale-6 { font-size: 1.26rem; }
+.rd-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.rd-bar {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  padding: 8px 0; margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--sans); font-size: 12px; color: var(--dim);
+}
+.rd-btn {
+  font: inherit; font-family: var(--sans); font-size: 12px; line-height: 1.4;
+  color: var(--fg); background: var(--bg2); border: 1px solid var(--line);
+  border-radius: 6px; padding: 3px 8px; cursor: pointer;
+}
+.rd-btn:hover { border-color: var(--dim); }
+.rd-btn[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.rd-btn:disabled { opacity: .45; cursor: default; }
+.rd-x { padding: 1px 6px; }
+.rd-views { display: flex; gap: 0; }
+.rd-views .rd-btn { border-radius: 0; }
+.rd-views .rd-btn:first-child { border-radius: 6px 0 0 6px; }
+.rd-views .rd-btn:last-child { border-radius: 0 6px 6px 0; margin-left: -1px; }
+.rd-search { display: flex; align-items: center; gap: 4px; }
+.rd-search input {
+  font: inherit; font-family: var(--sans); font-size: 12px;
+  color: var(--fg); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 6px; padding: 3px 7px; width: 11rem;
+}
+.rd-count, .rd-here { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+.rd-pager { display: flex; align-items: center; gap: 3px; }
+.rd-jump { width: 4.2rem !important; }
+.rd-bar-right { display: flex; gap: 4px; margin-left: auto; }
+.rd-cols { display: grid; grid-template-columns: 1fr; gap: 0 28px; align-items: start; }
+.rd-main { max-width: 44rem; outline: none; }
+.rd-flow { position: relative; }
+.rd-region, .rd-sec { padding: 0; border: 0; margin: 34px 0 18px; }
+.rd-region h2, .rd-sec h2 {
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--accent);
+}
+.rd-sec h2 { text-transform: none; letter-spacing: 0; font-size: 15px; }
+.rd-sec-n { font-family: var(--mono); color: var(--fg); }
+.rd-sec-page { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+.rd-p { margin-bottom: 0.9em; line-height: 1.62; color: var(--fg); }
+.rd-verse { display: block; padding-left: 1.4em; font-style: italic; }
+.rd-rh { font-family: var(--mono); font-size: 10px; color: var(--dim); border-top: 1px dashed var(--line); margin: 10px 0; padding-top: 2px; }
+.rd-pb {
+  font-family: var(--mono); font-size: 10px; color: var(--dim);
+  border: 1px solid var(--line); border-radius: 999px; padding: 1px 6px;
+  margin: 0 4px; vertical-align: super; white-space: nowrap;
+}
+.rd-pb-interp { border-style: dashed; }
+.rd-pb-refused { border-color: var(--accent); color: var(--accent); }
+.rd-ref a { font-family: var(--mono); font-size: .72em; color: var(--accent2); text-decoration: none; padding: 0 1px; }
+.rd-ref a:hover { color: var(--accent); }
+.rd-margin { display: none; }
+.rd-note { display: grid; grid-template-columns: 2rem 1fr; gap: 8px; margin-bottom: 14px; line-height: 1.55; }
+.rd-note-n { font-family: var(--mono); font-size: 11px; color: var(--dim); padding-top: .25em; }
+.rd-note-body { font-size: .93em; }
+.rd-note-back { font-family: var(--sans); font-size: 11px; }
+.rd-note-open { background: var(--bg2); }
+.rd-hit { background: rgba(164, 38, 44, .10); }
+.rd mark { background: var(--accent); color: var(--bg); }
+.rd-nav {
+  position: static; top: auto; z-index: auto; background: none; border: 0;
+  backdrop-filter: none; visibility: visible; transform: none;
+  font-family: var(--sans); font-size: 12.5px;
+}
+.rd-nav h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin: 16px 0 6px; }
+.rd-nav ul, .rd-nav ol { list-style: none; padding-left: 0; }
+.rd-nav li { margin: 0 0 3px; line-height: 1.35; }
+.rd-toc a { color: var(--fg); }
+.rd-toc .rd-cur > a, .rd-toc li.rd-cur a { color: var(--accent); font-weight: 600; }
+.rd-toc-page { font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
+.rd-marks li { display: flex; align-items: baseline; gap: 4px; }
+.rd-pages { display: flex; flex-wrap: wrap; gap: 3px; }
+.rd-pages a { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; color: var(--fg); }
+.rd-pages li.rd-cur a { background: var(--fg); color: var(--bg); }
+.rd-progress { margin: 4px 0 12px; }
+.rd-progress-track { height: 4px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.rd-progress-fill { height: 100%; background: var(--accent); }
+.rd-progress-label { font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
+.rd-nav-actions { display: flex; gap: 4px; }
+.rd-foot { font-family: var(--sans); font-size: 11.5px; color: var(--dim); margin-top: 34px; padding-top: 12px; border-top: 1px solid var(--line); }
+.rd-pop {
+  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+  width: min(38rem, 92vw); max-height: 45vh; overflow: auto;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .18); padding: 12px 14px; z-index: 60;
+  font-family: var(--serif); font-size: .95rem; line-height: 1.55;
+}
+.rd-pop-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-family: var(--sans); font-size: 12px; color: var(--dim); }
+.rd-pop-foot { display: flex; gap: 8px; align-items: baseline; margin-top: 10px; font-family: var(--sans); font-size: 11.5px; }
+.rd-cite, .rd-diff {
+  margin-top: 28px; padding: 16px; background: var(--bg2);
+  border: 1px solid var(--line); border-radius: 10px;
+  font-family: var(--sans); font-size: 13px;
+}
+.rd-cite h3, .rd-diff h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: 8px; }
+.rd-cite-line { font-family: var(--serif); font-size: 15px; }
+.rd-cite-url { font-family: var(--mono); font-size: 12px; }
+.rd-print-controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.rd-diff table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rd-diff th, .rd-diff td { text-align: left; vertical-align: top; padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.rd-diff code { font-family: var(--mono); font-size: 11.5px; }
+.rd-cls { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+.rd-why { color: var(--dim); max-width: 34rem; }
+.rd-dim, .rd .dim { color: var(--dim); font-size: 12px; }
+.rd-live { font-family: var(--sans); font-size: 11.5px; color: var(--dim); margin-top: 8px; min-height: 1em; }
+.rd-fb-toc { font-family: var(--sans); font-size: 12.5px; margin-bottom: 26px; }
+.rd-fb-toc ol { list-style: none; padding-left: 0; columns: 2; column-gap: 28px; }
+.rd-fb-toc li { break-inside: avoid; margin-bottom: 3px; }
+.rd-status { padding: 18px 0; }
+
+@media (min-width: 62em) {
+  .rd-bar { position: sticky; top: 52px; z-index: 45; }
+  .rd-cols { grid-template-columns: 17rem minmax(0, 1fr); }
+  .rd-nav { position: sticky; top: 96px; max-height: 78vh; overflow: auto; padding-right: 8px; }
+  .rd-notes-index { display: block; }
+}
+@media (max-width: 61.99em) {
+  .rd-nav {
+    position: fixed; inset: 0 auto 0 0; width: min(20rem, 86vw); padding: 16px;
+    background: var(--bg); border-right: 1px solid var(--line); z-index: 70;
+    overflow: auto; visibility: hidden; transform: translateX(-102%);
+  }
+  .rd-nav.rd-nav-open { visibility: visible; transform: none; }
+}
+/* Margin notes, wide viewports only. A FLOAT against the paragraph, not an
+   absolutely positioned box: the text then flows BESIDE the note, which is what
+   a margin note is. (Measured in a render: an absolutely positioned note lands
+   on top of the line it annotates — the position is taken against the
+   superscript, which is inline, so "next to it" is "on it".) A clear to the
+   right stacks two notes in one paragraph instead of overlapping them, and the
+   negative right margin is what carries the note out into the margin of the
+   grid column. The text column is narrower than the sweep of the note, so
+   nothing is hidden under it. */
+@media (min-width: 78em) {
+  .rd-flow, .rd-main { overflow: visible; }
+  .rd-margin {
+    display: block; float: right; clear: right;
+    width: 12rem; margin: 0.1rem -13.6rem 0.5rem 1.2rem;
+    font-family: var(--serif); font-size: .78rem; line-height: 1.34;
+    color: var(--dim); text-align: left; font-style: normal;
+  }
+}
+@media print {
+  .rd-bar, .rd-nav, .rd-pop, .rd-cite, .rd-diff, .rd-foot, .rd-live, #reader-fallback { display: none !important; }
+  .rd-cols { display: block; }
+  .rd-main { max-width: none; }
+  .rd-item.rd-out { display: none; }
+  .rd-margin, .rd-rh { display: none !important; }
+  .rd-flow { position: relative; padding-right: 3.4em; }
+  .rd-pb, .rd-pb-refused {
+    position: absolute; right: 0; border: 0; padding: 0; margin: 0;
+    font-size: 9pt; color: #000;
+  }
+  .rd-note { break-inside: avoid; }
+  .rd-p { color: #000; }
+}
+`;
+
+/** The boot script: the handful of things a DOM does that Elm cannot ask for —
+ * fetching the one document, scrolling, writing the fragment, keeping the stored
+ * position, and putting the server-rendered copy away once the app is up. Kept
+ * in the shell (not in the bundle) because every line of it is about THIS page:
+ * the app receives flags and ports and knows nothing about URLs or storage. */
+const READER_BOOT = `
+(function () {
+  var node = document.getElementById('reader-app');
+  var held = document.getElementById('reader-flags');
+  if (!node || !held || typeof Elm === 'undefined' || !Elm.Reader) { return; }
+  var flags = JSON.parse(held.textContent);
+  flags.hash = window.location.hash || '';
+  flags.stored = null;
+  try {
+    var kept = window.localStorage.getItem('library:' + flags.slug);
+    if (kept) { flags.stored = JSON.parse(kept); }
+  } catch (e) { flags.stored = null; }
+  var app = Elm.Reader.init({ node: node, flags: flags });
+  // Elm renders on an animation frame and runs port commands during the same
+  // update, so a jump or a focus asked for now names an element that is not in
+  // the DOM yet — the scroll waits one frame. (Measured: without this the app
+  // renders and never moves: the anchor is created after the port has fired.)
+  app.ports.requestDoc.subscribe(function (url) {
+    fetch(url, { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) { throw new Error('the document did not load'); }
+      return r.text();
+    }).then(function (text) {
+      app.ports.docReceived.send(text);
+    }).catch(function (e) {
+
+      app.ports.docFailed.send('failed');
+    });
+  });
+  var soon = function (fn) {
+    if (window.requestAnimationFrame) { window.requestAnimationFrame(fn); }
+    else { window.setTimeout(fn, 0); }
+  };
+  // the server-rendered copy carries the same anchors as the app, so it is
+  // taken out of the document once the app has rendered the book: two elements
+  // with one id is invalid, and the copy's are hidden anyway
+  var dropFallback = function () {
+    var fb = document.getElementById('reader-fallback');
+    if (fb && fb.parentNode) { fb.parentNode.removeChild(fb); }
+  };
+  app.ports.jumpTo.subscribe(function (id) {
+    soon(function () {
+      dropFallback();
+      var el = document.getElementById(id);
+      if (el && el.scrollIntoView) { el.scrollIntoView({ block: 'start' }); }
+    });
+  });
+  app.ports.focusOn.subscribe(function (id) {
+    soon(function () {
+      var el = document.getElementById(id);
+      if (el) { dropFallback(); }
+    if (el && el.focus) { el.focus(); }
+    });
+  });
+  app.ports.setHash.subscribe(function (h) {
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', '#' + h);
+    } else {
+      window.location.hash = h;
+    }
+  });
+  app.ports.persist.subscribe(function (value) {
+    try { window.localStorage.setItem('library:' + flags.slug, JSON.stringify(value)); } catch (e) {}
+  });
+  window.addEventListener('hashchange', function () {
+    app.ports.hashChanged.send(window.location.hash);
+  });
+  var fallback = document.getElementById('reader-fallback');
+  if (fallback) { fallback.hidden = true; }
+
+  // Where the reader is. Derived from the DOM on every scroll, not from an
+  // IntersectionObserver: the app renders on an animation frame, so at this
+  // point there is not one [data-rd-i] in the document to observe — MEASURED, the
+  // observer was created against an empty list and the position never moved, so
+  // the progress meter read 0% at page 16 and resume was dead. Reading the DOM
+  // each time is also self-healing: the marks are re-rendered on a view change,
+  // a range print and a search jump, and a subscription does not survive that.
+  //
+  // The rule: the position is the LAST flow item whose top is above 40% of the
+  // viewport — the one the reader is looking at. The marks are in document order,
+  // so the search is a bisection.
+  var lastSent = -1;
+  var report = function () {
+    var marks = node.querySelectorAll('[data-rd-i]');
+    if (!marks.length) { return; }
+    var y = (window.innerHeight || 800) * 0.4;
+    var lo = 0;
+    var hi = marks.length - 1;
+    var best = 0;
+    while (lo <= hi) {
+      var mid = (lo + hi) >> 1;
+      if (marks[mid].getBoundingClientRect().top <= y) { best = mid; lo = mid + 1; }
+      else { hi = mid - 1; }
+    }
+    var ix = Number(marks[best].getAttribute('data-rd-i'));
+    if (ix !== lastSent) {
+      lastSent = ix;
+      app.ports.scrolled.send(ix);
+    }
+  };
+  var wantReport = false;
+  var onScroll = function () {
+    if (wantReport) { return; }
+    wantReport = true;
+    soon(function () { wantReport = false; report(); });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  setTimeout(report, 0);
+
+  soon(function () { if (node.childNodes.length) { dropFallback(); } });
+})();
+`;
+
+/** The compiled reader, committed. The default build inlines this file and needs
+ * no Elm at all — the same contract design/blog.css has. READER=1 regenerates it
+ * from elm/src/Reader.elm through tools/build-reader.mjs (make -> strip ->
+ * gate-assert -> boot-assert -> write) and warns when the result differs from
+ * what is checked in, because a bundle that only exists in someone's working tree
+ * is not a contract. */
+const READER_BUNDLE = join(ROOT, 'tools', 'library', 'app.js');
+let readerBundleCache = null;
+function readerBundle() {
+  if (readerBundleCache) return readerBundleCache;
+  if (process.env.READER === '1') {
+    const before = existsSync(READER_BUNDLE) ? readFileSync(READER_BUNDLE, 'utf8') : null;
+    execFileSync(process.execPath, [join(ROOT, 'tools', 'build-reader.mjs')], { stdio: 'inherit' });
+    const after = readFileSync(READER_BUNDLE, 'utf8');
+    if (before !== null && before !== after) {
+      console.log('-----------------------------------------------------------------------');
+      console.log('WARNING: the regenerated reader differs from the committed tools/library/app.js.');
+      console.log('  The regenerated bundle is now in place — commit it:');
+      console.log('    git add tools/library/app.js');
+      console.log('-----------------------------------------------------------------------');
+    }
+  }
+  readerBundleCache = readFileSync(READER_BUNDLE, 'utf8');
+  return readerBundleCache;
+}
+
+/** The edition's bibliographic line, split into the fields a citation needs.
+ * Derived from the shelf entry's own `edition` string rather than written out
+ * again here: one place says what the edition is, and the reader quotes it. */
+function citationFields(t) {
+  const m = /\(([^:)]+):\s*([^,)]+),\s*(\d{4})\)/.exec(t.edition || '');
+  return {
+    author: t.author || '',
+    title: t.title || '',
+    translator: t.translator || '',
+    place: m ? m[1].trim() : '',
+    publisher: m ? m[2].trim() : '',
+    year: m ? m[3] : String(t.year || ''),
+  };
+}
+
+/** The complete contents list as real HTML: the regions the fragment grammar
+ * reserves, then every division with the printed page it opens on. The printed
+ * edition has no contents page (measured), so this is generated apparatus — and
+ * the page says so, because a generated list that does not admit it is generated
+ * is not honest about itself (§7 of the plan). */
+function readerTocHtml(doc) {
+  const items = [];
+  const regionLabel = (k) =>
+    k === 'front' ? 'The front matter' : k === 'notes' ? 'Notes' : 'The text';
+  for (const b of doc.blocks) {
+    if (b.t === 'region' && b.id) items.push({ id: b.id, label: regionLabel(b.kind), page: null });
+  }
+  for (const e of doc.toc) items.push({ id: e.id, label: `${e.n} \u00b7 ${e.title}`, page: e.page });
+  return (
+    `<nav class="rd-fb-toc" aria-label="Contents">` +
+    `<ol>` +
+    items
+      .map(
+        (i) =>
+          `<li><a href="#${i.id}">${esc(i.label)}</a>` +
+          (i.page ? ` <span class="dim">p.\u00a0${i.page}</span>` : '') +
+          `</li>`,
+      )
+      .join('') +
+    `</ol></nav>`
+  );
+}
+
+/** One division of the volume as plain HTML, from the served document: the
+ * blocks of the section, with its note references as links and its page markers
+ * where the volume has them. The words are the transcription's (no repair is
+ * applied anywhere on the page), so what a reader without scripts sees is exactly
+ * what the transcription holds. */
+function readerSectionHtml(doc, n) {
+  const out = [];
+  let on = false;
+  let run = [];
+  const flush = () => {
+    if (run.length) out.push(`<p${run[0].id || run[0].at ? ` id="${run[0].at || ''}"` : ''}>${run.map((r) => r.html).join('')}</p>`);
+    run = [];
+  };
+  for (const b of doc.blocks) {
+    if (b.t === 'region') {
+      if (on) break;
+      continue;
+    }
+    if (b.t === 'sec') {
+      if (on) break;
+      on = b.n === n;
+      if (on)
+        out.push(
+          `<h3 id="${b.id}">${b.n}.${b.page ? ` <span class="dim">p.\u00a0${b.page}</span>` : ''}</h3>`,
+        );
+      continue;
+    }
+    if (!on) continue;
+    switch (b.t) {
+      case 'p':
+        run.push({ at: b.at, html: esc(b.x) });
+        break;
+      case 'verse':
+        run.push({ at: b.at, html: esc(b.x).replace(/\n/g, '<br>') });
+        break;
+      case 'ref':
+        run.push({
+          html: `<sup><a id="${b.id || `r${b.n}`}" href="#n${b.n}">${b.n}</a></sup>`,
+        });
+        break;
+      case 'pb':
+        if (b.page != null)
+          out.push(
+            `<span class="rd-pb" id="${b.id}" data-page="${b.page}" title="Printed page ${b.page}">${b.page}</span>`,
+          );
+        else out.push(`<span class="rd-pb rd-pb-refused" title="This page marker could not be read as a number">&#10216;unnumbered page&#10217;</span>`);
+        break;
+      default:
+        break;
+    }
+  }
+  flush();
+  return out.join('\n');
+}
+
+/** The shell: provenance (elsewhere), the contents list, the first division, the
+ * app, and the floor under it. Order is deliberate — the app mounts first and the
+ * server-rendered copy is what a reader without scripts gets, and the app hides
+ * that copy once it is up (see the boot script), so nothing is shown twice. */
+function readerShell(t, doc, legacySection) {
+  const base = `/library/${t.slug}/`;
+  const flags = {
+    slug: t.slug,
+    url: `${base}t`,
+    base,
+    citation: citationFields(t),
+  };
+  const noscript =
+    `<noscript><p><b>This page reads without scripts.</b> Below is the edition's ` +
+    `own first section, with its note references and page markers, and then the whole ` +
+    `transcription of the volume in its printed order. The same text is also served as ` +
+    `<a href="${base}plain">one plain file</a>, which needs no scripts at all.</p></noscript>`;
+  const app =
+    `<div id="reader-app"></div>\n` +
+    `<script type="application/json" id="reader-flags">${JSON.stringify(flags)}</script>\n` +
+    `<script>\n${readerBundle()}\n</script>\n` +
+    `<script>\n${stripJsComments(READER_BOOT)}\n</script>\n`;
+  // the same leak gate runs over this copy as over every other rendered block:
+  // a page of a book legitimately holds sequences a comment would use, and the
+  // character reference keeps the reader's characters identical
+  const shown = gateSafeText(readerTocHtml(doc) + `<div class="prose">` + readerSectionHtml(doc, 1) + `</div>`, t.slug);
+  const fallback =
+    `<div id="reader-fallback">` +
+    shown +
+    `<p class="dim">Every word of the volume follows, exactly as the transcription has it; ` +
+    `the reader above shows the same text with the repairs recorded as rules, which is why ` +
+    `one page of this book can read two ways.</p>` +
+    legacySection +
+    `</div>`;
+  // The app comes FIRST and the server-rendered copy after it. Both carry the
+  // same anchors — that is the point of the copy, it is the same book — and with
+  // the copy first, `getElementById('s4')` returned the COPY, so a citation link
+  // scrolled to a hidden element while the app's own s4 sat further down the page
+  // (MEASURED: the id lookup wins on document order, and the smoke's scroll check
+  // caught it). The app first makes every anchor resolve to the rendering the
+  // reader is looking at, whether or not scripts have run.
+  return (
+    `<section class="rd-section"><div class="wrap">` +
+    `<h2>The reader</h2>` +
+    `<div class="hint"># the contents list the printed edition does not have, its first section, and the app</div>` +
+    app +
+    noscript +
+    fallback +
+    `</div></section>`
+  );
+}
+
 /** One text: its page, plus one page per part when it is too big to be one. */
 function libraryTextPages(t, navPosts, cited) {
   // The EDITION, if the repo stores one (content/library/<slug>/), and the shelf
@@ -3274,10 +3746,11 @@ function libraryTextPages(t, navPosts, cited) {
   const stored = hasEdition(t.slug);
   const src = readFileSync(stored ? editionPath(t.slug) : textSource(t, shelfFiles()), 'utf8');
   let lib = null;
+  let edoc = null;
   if (stored) {
-    const doc = extract(src, { entry: t, sha256: sha256(src) });
-    editionDocs.set(t.slug, doc);
-    lib = counts(doc);
+    edoc = extract(src, { entry: t, sha256: sha256(src) });
+    editionDocs.set(t.slug, edoc);
+    lib = counts(edoc);
   }
   const a = assess(src, t.lang);
   const base = `/library/${t.slug}/`;
@@ -3329,10 +3802,25 @@ function libraryTextPages(t, navPosts, cited) {
 
   if (parts.length === 1) {
     const hint = `# the transcription, unedited — ${stats.parasOut} paragraphs`;
-    const body =
-      section('Provenance', '# the edition, and what was done to it', prov) +
-      section('The text', hint, parts[0].html, { before: toc(parts[0].html) });
-    pages.push({ rel: `library/${t.slug}/index.html`, def: page({ body, navCurrent: base }) });
+    const transcription = section('The text', hint, parts[0].html, { before: toc(parts[0].html) });
+    // A text whose EDITION the repo stores gets the reader: the document beside
+    // the page is what the app renders, and the transcription below it is what a
+    // reader without scripts gets (the app puts it away once it is up). A text
+    // served from the shelf alone has no document, so it keeps the page it has.
+    const def = edoc
+      ? page({
+          body:
+            section('Provenance', '# the edition, and what was done to it', prov) +
+            readerShell(t, edoc, transcription),
+          navCurrent: base,
+          head: `<style>\n${stripComments(READER_CSS)}</style>`,
+        })
+      : page({
+          body:
+            section('Provenance', '# the edition, and what was done to it', prov) + transcription,
+          navCurrent: base,
+        });
+    pages.push({ rel: `library/${t.slug}/index.html`, def });
     return { urls, pages };
   }
 

@@ -2,6 +2,7 @@
 dist/
 elm-stuff/
 elm/ExtractCss.js
+elm/Reader.js
 screenshots/
 
 # Local, unpublished scope rules (specific names live here, not in the repo)
