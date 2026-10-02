@@ -82,6 +82,14 @@
    * nothing rather than a walk for a word the list cannot hold. */
   var FUZZY_MARK = /~{1,2}[a-z][a-z'-]*/g;
   var FUZZY_TILDES = /^~+/;
+  /* A phrase: a quoted run of words. The quotes are not decoration and not a
+   * word delimiter — the run between them is matched as ONE demand, and the
+   * words inside it are taken OUT of the ordinary OR-ed words, or the quotes
+   * would answer a question the reader did not ask. The match admits any
+   * characters around the words (a stopword may sit inside a quoted run; it is
+   * the reader's phrase and it is matched as written), which is also why the
+   * mark is greedy-lazy: a second quote opens the NEXT phrase. */
+  var PHRASE_MARK = /"([^"]*)"/g;
 
   /** A piece's rank: 1 when the query's words literally name it (an exact term
    * hit in its prose), 0 otherwise. A piece only the vectors called similar, or
@@ -128,9 +136,13 @@
    * rather than looked up, and leaving it in the ordinary words as well would
    * make the `~` a decoration: `~proclus` would be answered by the exact
    * lookups for `proclus` and the walk would decide nothing. No piece's prose
-   * contains a `~`, so this cannot take a word away from an ordinary query. */
+   * contains a `~`, so this cannot take a word away from an ordinary query.
+   *
+   * A word inside a quoted phrase is not ordinary either (see `phraseTerms`):
+   * the run between the quotes is ONE demand with an order, and its words are
+   * taken out of the loose ones by `stripPhrases` before this runs. */
   function tokenize(text, stop) {
-    var ws = String(text).toLowerCase().replace(FUZZY_MARK, ' ').match(WORD) || [];
+    var ws = stripPhrases(String(text), stop).toLowerCase().replace(FUZZY_MARK, ' ').match(WORD) || [];
     var out = [], i, w;
     for (i = 0; i < ws.length; i++) {
       w = ws[i];
@@ -152,6 +164,76 @@
     while ((m = FUZZY_MARK.exec(s))) {
       w = m[0].replace(FUZZY_TILDES, '');
       if (w.length >= 3 && !stop[w]) out.push({ q: w, k: m[0].length - w.length });
+    }
+    return out;
+  }
+
+  /* ---------- the query's phrases ------------------------------------------ */
+
+  /** The quoted runs, read off the RAW text, in the order they appear. A run
+   * becomes a SEQUENCE: every word of the run with its offset in the run's own
+   * token list — offsets count stopwords too, because the body's position
+   * stream counts them: "love of wisdom" is love@0, of@1, wisdom@2, and the
+   * match is wisdom at anchor+2, not anchor+1. A stopword inside a phrase is
+   * therefore PART OF THE PHRASE (the reader wrote it inside a demand that is
+   * matched as written) but never an anchor (no positions exist for a word the
+   * index does not hold); a repeated word is matched at every occurrence (the
+   * sequence keeps duplicates; only the MARKS deduplicate).
+   *
+   * A run with no recordable word at all (`""`, `"?!"`, "of the and") is not a
+   * phrase and not an error — it is dropped and reported. A run of ONE word is
+   * that word's exact positions, which the same matcher answers. A run holding
+   * a word the VOCABULARY does not carry cannot be matched; the matcher
+   * reports the word and answers nothing, which is the honest answer to a
+   * phrase the corpus cannot say. */
+  function phraseTerms(text, stop) {
+    var out = [], dropped = [], m;
+    PHRASE_MARK.lastIndex = 0;
+    while ((m = PHRASE_MARK.exec(String(text)))) {
+      var toks = m[1].toLowerCase().match(WORD) || [];
+      var seq = [];
+      for (var i = 0; i < toks.length; i++) {
+        if (toks[i].length >= 3 && !stop[toks[i]]) seq.push({ w: toks[i], off: i });
+      }
+      if (!seq.length) { dropped.push(m[1]); continue; }
+      var uniq = [];
+      for (var j = 0; j < seq.length; j++) if (uniq.indexOf(seq[j].w) < 0) uniq.push(seq[j].w);
+      out.push({ text: m[1], words: uniq, seq: seq });
+    }
+    return { phrases: out, dropped: dropped };
+  }
+
+  /** The query with its phrases lifted out. The runs' words are removed (a
+   * quoted word is part of a demand, not a loose OR-ed term); the quotes
+   * themselves are removed from the text entirely, so a phrase's words cannot
+   * come back as prefix hits through the back door. */
+  function stripPhrases(text, stop) {
+    if (String(text).indexOf('"') < 0) return String(text);
+    var ph = phraseTerms(text, stop);
+    var out = String(text);
+    for (var i = 0; i < ph.phrases.length; i++) {
+      var re = new RegExp('[a-z\'-]*' + escReWord(ph.phrases[i].text) + '[a-z\'-]*', 'gi');
+      out = out.replace(re, ' ');
+    }
+    out = out.replace(/"/g, ' ');
+    return out;
+  }
+
+  /** `escRe` for a phrase body: the phrase's own text may hold regex
+   * characters, and the strip builds a regex from it. */
+  function escReWord(s) {
+    return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  /** The words of every quoted run — for the MARKS, which show what the reader
+   * asked for however it was asked: a phrase's words are marked in the snippet
+   * and the title exactly as loose words are. */
+  function phraseWords(text, stop) {
+    var ph = phraseTerms(text, stop), out = [], i, j;
+    for (i = 0; i < ph.phrases.length; i++) {
+      for (j = 0; j < ph.phrases[i].words.length; j++) {
+        if (out.indexOf(ph.phrases[i].words[j]) < 0) out.push(ph.phrases[i].words[j]);
+      }
     }
     return out;
   }
@@ -401,7 +483,124 @@
       postings: data.lex.postings, strong: strong, docs: data.docs,
       vec: data.vec, vnorm: vnorm, graph: data.graph, source: source,
       dafsa: dafsa, hints: data.hints || [],
+      deepUrl: typeof data.deep === 'string' ? data.deep : '',
     };
+  }
+
+  /* ---------- the fetched half: body positions and passages --------------- */
+
+  /* The deep index is FETCHED, once, on the first query that needs it — an
+   * in-memory promise caches it, so a second query reuses the decode, and the
+   * browser's own HTTP cache makes a second visit cheap. Without it — before
+   * it lands, or when the fetch fails — the page searches EXACTLY as it did
+   * before this half existed: no phrases (a quoted run falls back to its words
+   * as ordinary terms, still OR-ed), no passage snippets, everything else
+   * untouched. A reader must never see a broken page because a fetch failed,
+   * so nothing waits on it and nothing throws through it. */
+  var deepPromise = null;
+
+  /** The facets' current values, read off the page's own controls — the
+   * re-render a landed fetch triggers must answer with the facets the reader
+   * set, not the defaults. */
+  function querySeries() {
+    var el = document.getElementById('sf-series');
+    return el ? el.value : '';
+  }
+  function querySort() {
+    var el = document.getElementById('sf-sort');
+    return el ? el.value : '';
+  }
+
+  function deepOf(idx) {
+    if (!idx.deepUrl || typeof fetch !== 'function') return null;
+    if (!deepPromise) {
+      deepPromise = fetch(idx.deepUrl, { credentials: 'same-origin' })
+        .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+        .then(function (raw) {
+          var dec = makeDeep(idx, raw);
+          idx.deep = dec;
+          // the query that ran while this was in flight answered on the words
+          // only and said so — now that the phrases can be matched, the page
+          // answers again, with the query the reader already typed
+          var box = document.getElementById('sres');
+          var status = document.getElementById('sstatus');
+          var input = document.getElementById('sq');
+          if (box && status && input && input.value.indexOf('"') >= 0) {
+            try { render(idx, box, status, input.value, { series: querySeries(), sort: querySort() }); } catch (e) { }
+          }
+          return dec;
+        })
+        .catch(function () {
+          deepPromise = null;   // a later query may retry; this one degrades
+          return null;
+        });
+    }
+    return deepPromise;
+  }
+
+  /** The decoded deep half. `lex` addresses a term's runs by the term's own
+   * index in the vocabulary (row count == vocabulary, empty rows included), so
+   * no second lookup structure is needed. BM25 needs three things the inline
+   * half does not carry: the BODY length of each piece (in tokens), which
+   * `len` holds, and the body term frequencies, which `runs` gives without
+   * decoding (a run's length IS its term's body frequency in that piece) — the
+   * third, the document frequency, is the posting list's own length as
+   * before. `k1` and `b` are BM25's usual calibration: k1=1.2 is the standard
+   * saturation point (a term's tenth occurrence adds much less than its
+   * first), b=0.75 the usual length normalisation (a piece half again as long
+   * is not half again as relevant); neither is tuned on this corpus, which is
+   * the point of using the standard values rather than inventing fit. */
+  var BM25_K1 = 1.2, BM25_B = 0.75;
+
+  function makeDeep(idx, raw) {
+    var pass = raw.pass, passAt = raw.passAt;
+    var n = idx.n;
+    var len = new Array(n);
+    var i, d;
+    // body length in tokens: every word of every passage (the stream counts
+    // them all, whatever their kind), which is the length BM25's normaliser
+    // wants — the same stream the positions are offsets into
+    for (d = 0; d < n; d++) {
+      var total = 0;
+      for (i = 0; i < pass[d].length; i++) {
+        total += ((pass[d][i].toLowerCase().match(WORD) || []).length);
+      }
+      len[d] = total;
+    }
+    var avg = 0;
+    for (d = 0; d < n; d++) avg += len[d];
+    avg = n ? avg / n : 1;
+    return { lex: raw.lex, pass: pass, passAt: passAt, len: len, avg: avg, k1: BM25_K1, b: BM25_B };
+  }
+
+  /** A term's positions in one piece, or null: [piece, first, delta, …] ->
+   * absolute stream positions. `max` bounds the work; undefined means all. */
+  function positionsOf(deep, ti, d, max) {
+    var row = deep.lex[ti];
+    if (!row) return null;
+    var out = null, take = max === undefined ? Infinity : max;
+    for (var r = 0; r < row.length; r++) {
+      var run = row[r];
+      if (run[0] !== d) continue;
+      out = [];
+      var p = 0, k;
+      for (k = 1; k < run.length && out.length < take; k++) {
+        p = k === 1 ? run[k] : p + run[k];
+        out.push(p);
+      }
+      return out;
+    }
+    return null;
+  }
+
+  /** BM25 for one term in one piece. The idf is the same one the whole page
+   * uses (the posting list's length IS the document frequency), so the two
+   * scorers cannot disagree about a word's rarity. */
+  function bm25(deep, idx, ti, d, tf) {
+    var df = idx.postings[ti].length;
+    var idf = Math.log(1 + (idx.n - df + 0.5) / (df + 0.5));
+    var dl = deep.len[d] || deep.avg;
+    return idf * (tf * (deep.k1 + 1)) / (tf + deep.k1 * (1 - deep.b + deep.b * (dl / deep.avg)));
   }
 
   function lowBound(arr, x) {
@@ -455,7 +654,9 @@
    * not. */
   function lexical(idx, text, opts, stats) {
     var toks = tokenize(text, idx.stop);
-    var score = {}, why = {}, named = {}, i, j;
+    var deep = idx.deep || null;
+    var score = {}, why = {}, named = {}, hitAt = {};
+    var i, j;
     var T = idx.terms.length;
     for (i = 0; i < toks.length; i++) {
       var t = toks[i];
@@ -468,7 +669,18 @@
         var st = idx.strong[hi];
         for (j = 0; j < post.length; j++) {
           var d = post[j];
-          score[d] = (score[d] || 0) + w * (st && st.indexOf(d) > 0 ? 2.6 : 1);
+          // BM25 for an exact body hit (k1=1.2, b=0.75, the standard
+          // calibration — see makeDeep); a prefix hit keeps the tf-idf weight
+          // it always had, because positions exist for terms, not for prefixes
+          var s = w * (st && st.indexOf(d) > 0 ? 2.6 : 1);
+          if (deep && exact) {
+            var pos = positionsOf(deep, hi, d, 64);
+            if (pos) s = bm25(deep, idx, hi, d, pos.length) * (st && st.indexOf(d) > 0 ? 2.6 : 1);
+            if (pos && pos.length) {
+              if (hitAt[d] === undefined || pos[0] < hitAt[d]) hitAt[d] = pos[0];
+            }
+          }
+          score[d] = (score[d] || 0) + s;
           if (exact) named[d] = 1;
           var r = why[d] || (why[d] = []);
           var label = (exact ? 'term: "' : 'prefix: "') + t + '"';
@@ -517,7 +729,7 @@
       if (stats) stats.ms = Math.round((now() - t0) * 10) / 10;
     }
     var out = [];
-    for (var key in score) out.push({ i: +key, score: score[key], why: why[key], named: !!named[key] });
+    for (var key in score) out.push({ i: +key, score: score[key], why: why[key], named: !!named[key], hitAt: hitAt[key] || null });
     return out;
   }
 
@@ -526,6 +738,60 @@
     var named = {}, i;
     for (i = 0; i < lex.length; i++) if (lex[i].named) named[lex[i].i] = 1;
     return named;
+  }
+
+  /* ---------- the phrases, matched on positions ----------------------------- */
+
+  /** One phrase, against the body positions: the phrase is its SEQUENCE of
+   * recordable words with their run offsets, and a piece holds the phrase when
+   * one anchor position P has every recorded word at exactly P+its offset —
+   * adjacency in the body's own token stream, where a stopword inside the run
+   * occupies the position it occupies in the phrase (that is what "matched as
+   * written" means for a positional index).
+   *
+   * The scan anchors on the SEQUENCE'S FIRST word (positions of a word are
+   * short; a phrase's candidate set is its first word's), and each anchor is
+   * tested against the rest with a binary search over each word's own
+   * positions — the standard positional intersection. It stops at the first
+   * hit (a phrase needs only to be shown once) and the position it found names
+   * the passage the snippet opens.
+   *
+   * A phrase with a word the VOCABULARY does not hold has no positions: it
+   * matches nothing and the word is reported. A phrase of ONE word is its
+   * exact term's positions — the same path, one anchor test — so one matcher,
+   * one reason string and one snippet rule answer every quoted run. */
+  function phraseMatch(deep, idx, phrase) {
+    var seq = phrase.seq;
+    for (var v = 0; v < seq.length; v++) {
+      if (idx.at[seq[v].w] === undefined) return { docs: {}, missing: seq[v].w };
+    }
+    var docs = {};
+    var row = deep.lex[idx.at[seq[0].w]];
+    for (var r = 0; r < (row ? row.length : 0); r++) {
+      var d = row[r][0];
+      var anchors = positionsOf(deep, idx.at[seq[0].w], d);
+      if (!anchors) continue;
+      // the other recorded words' positions in this piece, fetched once
+      var rest = [];
+      var dead = false;
+      for (var w = 1; w < seq.length; w++) {
+        var pos = positionsOf(deep, idx.at[seq[w].w], d);
+        if (!pos) { dead = true; break; }
+        rest.push(pos);
+      }
+      if (dead) continue;
+      for (var p = 0; p < anchors.length; p++) {
+        var at = anchors[p], ok = true;
+        for (var w2 = 1; w2 < seq.length; w2++) {
+          var want = at + seq[w2].off - seq[0].off;
+          var list = rest[w2 - 1];
+          var lo = lowBound(list, want);
+          if (lo >= list.length || list[lo] !== want) { ok = false; break; }
+        }
+        if (ok) { docs[d] = at; break; }
+      }
+    }
+    return { docs: docs, missing: null };
   }
 
   /* ---------- a pattern, walked over the automaton ------------------------- */
@@ -1163,10 +1429,11 @@
     var idx = S._idx;
     opts = opts || {};
     var t0 = now();
-    var counts = { terms: 0, results: 0, related: 0, same_series: 0, points_at: 0, near: 0, derived: 0, capped: false, rounds: 0, graphOnlyDropped: 0, ms: 0, pattern: '', matched: 0, reCapped: false, reError: '', fuzzy: 0, fuzzyWords: 0, fuzzyK: 0, fuzzyCapped: false, fuzzyMs: 0, fuzzyOff: false, sort: opts.sort || 'rel', suggest: null, fallbackFrom: '', fallbackTo: '' };
+    var counts = { terms: 0, results: 0, related: 0, same_series: 0, points_at: 0, near: 0, derived: 0, capped: false, rounds: 0, graphOnlyDropped: 0, ms: 0, pattern: '', matched: 0, reCapped: false, reError: '', fuzzy: 0, fuzzyWords: 0, fuzzyK: 0, fuzzyCapped: false, fuzzyMs: 0, fuzzyOff: false, sort: opts.sort || 'rel', suggest: null, fallbackFrom: '', fallbackTo: '', phrases: 0, phraseDocs: 0, phraseMiss: '', phraseDropped: false, phrasePending: false };
     if (!idx) return { results: [], counts: counts };
     var pat = patternOf(text);
-    var lex, vec, toks = [], fzs = [], fstats = {}, marks = null, i, key, mi;
+    var lex, vec, toks = [], fzs = [], phr = { phrases: [], dropped: [] }, fstats = {}, marks = null, i, key, mi;
+    var phraseKeep = null;   // piece -> first match position, when a phrase ran
     if (pat) {
       // a pattern is NOT tokenised: its punctuation is the query, and a word
       // list of what is left of it would answer a different question
@@ -1186,11 +1453,24 @@
     } else {
       toks = tokenize(text, idx.stop);
       fzs = fuzzyTerms(text, idx.stop);
+      phr = phraseTerms(text, idx.stop);
       counts.terms = toks.length;
       counts.fuzzy = fzs.length;
+      counts.phrases = phr.phrases.length;
+      // the phrase halves need the fetched positions; ask once here. A phrase
+      // whose words are ALL unknown to the vocabulary is unanswerable without
+      // any fetch, so it degrades to its words as ordinary terms
+      var phrKnown = phr.phrases.filter(function (p) {
+        return p.words.some(function (w) { return idx.at[w] !== undefined; });
+      });
+      counts.phrasePending = !!(phrKnown.length && !idx.deep);
+      if (phrKnown.length && !idx.deep && !S._deepAsked) {
+        S._deepAsked = true;
+        deepOf(idx);
+      }
       // a query of nothing but a fuzzy term is still a query: the walk is the
       // only signal it has, and the word list has no ordinary word to offer
-      if (!toks.length && !fzs.length) return { results: [], counts: counts };
+      if (!toks.length && !fzs.length && !phr.phrases.length) return { results: [], counts: counts };
       lex = lexical(idx, text, opts, fstats);
       vec = vector(idx, text, opts);
       counts.fuzzyWords = fstats.words;
@@ -1198,9 +1478,82 @@
       counts.fuzzyCapped = fstats.capped;
       counts.fuzzyMs = fstats.ms;
       counts.fuzzyOff = fstats.off;
+      // the phrases: each quoted run is one AND-ed demand over the positions.
+      // With the deep half present, a phrase NAMES the pieces its words are
+      // adjacent in — a piece no phrase named is out of the answer however
+      // many of its words it holds, the loose words order what is left, and a
+      // piece only a phrase found is in the answer on the phrase's own weight.
+      // Without the deep half the tokeniser kept the quoted words out of the
+      // loose ones, so they are folded back in as plain terms here: the page
+      // still answers, on the words, and the line above the results says the
+      // phrase is still loading rather than pretending the words were loose.
+      if (idx.deep && phrKnown.length) {
+        var phDocs = [], phMissed = null;
+        for (var pi = 0; pi < phrKnown.length; pi++) {
+          var pm = phraseMatch(idx.deep, idx, phrKnown[pi]);
+          if (pm.missing && !phMissed) phMissed = pm.missing;
+          phDocs.push(pm.docs);
+        }
+        counts.phraseMiss = phMissed || '';
+        var keep = {};   // piece -> the FIRST position a phrase matched at
+        for (var pd in phDocs[0]) {
+          var all = true;
+          for (var ki = 1; ki < phDocs.length; ki++) {
+            if (phDocs[ki][pd] === undefined) { all = false; break; }
+          }
+          if (all) keep[pd] = phDocs[0][pd];
+        }
+        counts.phraseDocs = Object.keys(keep).length;
+        phraseKeep = keep;
+        var lexBy = {};
+        for (var li = 0; li < lex.length; li++) lexBy[lex[li].i] = lex[li];
+        var merged = [];
+        for (var kd in keep) {
+          var di = +kd;
+          var row = lexBy[di] || { i: di, score: 0, why: [], named: false, hitAt: null };
+          var weight = 0;
+          var whyAdd = [];
+          for (var pj = 0; pj < phrKnown.length; pj++) {
+            if (phDocs[pj][kd] === undefined) continue;
+            var wsum = 0;
+            for (var wi = 0; wi < phrKnown[pj].words.length; wi++) {
+              var wti = idx.at[phrKnown[pj].words[wi]];
+              if (wti !== undefined) wsum += idfOfIndex(idx, wti);
+            }
+            weight += wsum;
+            whyAdd.push('phrase: "' + phrKnown[pj].text + '"');
+          }
+          row.score += weight;
+          row.named = true;
+          row.hitAt = keep[kd];
+          for (var wa = 0; wa < whyAdd.length; wa++) {
+            if (row.why.indexOf(whyAdd[wa]) < 0 && row.why.length < 6) row.why.push(whyAdd[wa]);
+          }
+          merged.push(row);
+        }
+        lex = merged;
+      } else if (phr.phrases.length && !idx.deep) {
+        var back = [];
+        for (var bi = 0; bi < phr.phrases.length; bi++) {
+          for (var bj = 0; bj < phr.phrases[bi].words.length; bj++) {
+            var bw = phr.phrases[bi].words[bj];
+            if (idx.at[bw] !== undefined && back.indexOf(bw) < 0) back.push(bw);
+          }
+        }
+        if (back.length && (!toks.length || back.some(function (w) { return toks.indexOf(w) < 0; }))) {
+          lex = lexical(idx, back.join(' '), opts, fstats);
+        }
+        counts.phraseDropped = true;
+      }
     }
     var m = {}, why = {}, named = namedSet(lex), maxL = 0, maxV = 0;
-    for (i = 0; i < lex.length; i++) if (lex[i].score > maxL) maxL = lex[i].score;
+    var hitAt = {};   // piece -> the earliest body position a query word sat at
+    for (i = 0; i < lex.length; i++) {
+      if (lex[i].score > maxL) maxL = lex[i].score;
+      if (lex[i].hitAt && (hitAt[lex[i].i] === undefined || lex[i].hitAt < hitAt[lex[i].i])) {
+        hitAt[lex[i].i] = lex[i].hitAt;
+      }
+    }
     for (i = 0; i < vec.length; i++) if (vec[i].score > maxV) maxV = vec[i].score;
     for (i = 0; i < lex.length; i++) {
       m[lex[i].i] = (m[lex[i].i] || 0) + (maxL ? W_LEX * (lex[i].score / maxL) : 0);
@@ -1244,7 +1597,16 @@
     }
     counts.graphOnlyDropped = graphOnlyDropped;
     var all = [];
-    for (key in m) if (allowed(idx, +key, opts)) all.push({ i: +key, score: m[key], why: why[key] || [] });
+    for (key in m) if (allowed(idx, +key, opts)) {
+      all.push({ i: +key, score: m[key], why: why[key] || [], hitAt: hitAt[key] !== undefined ? hitAt[key] : null });
+    }
+    // a phrase is a demand on the ANSWER, not a boost to the words: with the
+    // deep half present, the pieces a phrase named are the whole of the answer
+    // — the loose words, the vectors and the graph order and enrich what is
+    // left, and nothing else enters
+    if (phraseKeep) {
+      all = all.filter(function (r) { return phraseKeep[r.i] !== undefined; });
+    }
     all.sort(function (a, b) { return tier(named, b.i) - tier(named, a.i) || b.score - a.score || a.i - b.i; });
     // The other order the page offers: newest first, over the SAME results —
     // the mode reorders the answer, it does not select a different one. The
@@ -1308,47 +1670,78 @@
     return html.replace(re, function (w) { return '<mark>' + w + '</mark>'; });
   }
 
-  /** A snippet with every word the query reaches marked, drawn from the piece's
-   * own summary, headings and opening passage — the page says so, because the
-   * full text of fifty-eight pieces is not in the page.
+  /** A snippet with every word the query reaches marked. Two sources, in order:
+   * the PASSAGE the match sat in, when the fetched half is there and a body
+   * position named one (the passage is windowed when it is enormous and the
+   * elision is marked); otherwise the piece's own summary, headings and
+   * opening passage — the fallback the page always had, unchanged.
    *
    * A heading the query reaches is the sharpest line to show, joined to the
-   * piece's own summary for context; otherwise the summary (a sentence about the
-   * piece); the opening is the last resort. A result the graph alone put here
-   * matches nothing in any of them, and shows the summary like any other. */
-  function snippet(idx, i, toks, marks) {
+   * piece's own summary for context; otherwise the summary (a sentence about
+   * the piece); the opening is the last resort. A result the graph alone put
+   * here matches nothing in any of them, and shows the summary like any other. */
+  var SNIPPET_MAX = 300;
+
+  function snippet(idx, i, toks, marks, at) {
     var d = idx.docs[i], heads = d.heads || [], summary = d.summary || '', lede = d.lede || '';
+    if (idx.deep && at !== undefined && at !== null && idx.deep.pass[i]) {
+      var bounds = idx.deep.passAt[i];
+      var p = 0, k;
+      for (k = 0; k < bounds.length; k++) if (bounds[k] <= at) p = k;
+      var text = idx.deep.pass[i][p] || '';
+      if (text) {
+        if (text.length > SNIPPET_MAX) {
+          // window around the FIRST query word the passage holds, not the
+          // passage head: the passage can be very long (they are paragraphs,
+          // some several thousand characters) and the reader's word may sit
+          // deep in it
+          var find = -1, t;
+          for (t = 0; t < toks.length; t++) {
+            var at2 = text.toLowerCase().indexOf(toks[t]);
+            if (at2 >= 0 && (find < 0 || at2 < find)) find = at2;
+          }
+          if (find < 0) find = 0;
+          var start = find > 110 ? find - 110 : 0;
+          text = (start ? '…' : '') + text.slice(start, start + SNIPPET_MAX - 20) + '…';
+        }
+        return markText(esc(text), toks, marks);
+      }
+    }
     var hitHead = '', h, t;
     for (h = 0; h < heads.length && !hitHead; h++) {
       for (t = 0; t < toks.length; t++) {
         if (heads[h].toLowerCase().indexOf(toks[t]) >= 0) { hitHead = heads[h]; break; }
       }
     }
-    var text = hitHead && summary ? hitHead + ' — ' + summary : (hitHead || summary || lede);
-    if (text.length > 260) {
+    var text2 = hitHead && summary ? hitHead + ' — ' + summary : (hitHead || summary || lede);
+    if (text2.length > 260) {
       var p0 = -1;
       for (t = 0; t < toks.length; t++) {
-        var p = text.toLowerCase().indexOf(toks[t]);
-        if (p >= 0 && (p0 < 0 || p < p0)) p0 = p;
+        var pp = text2.toLowerCase().indexOf(toks[t]);
+        if (pp >= 0 && (p0 < 0 || pp < p0)) p0 = pp;
       }
-      var start = p0 > 90 ? p0 - 90 : 0;
-      text = (start ? '…' : '') + text.slice(start, start + 250) + '…';
-      if (start) text = text.replace(/^\S+\s/, '…');
+      var start2 = p0 > 90 ? p0 - 90 : 0;
+      text2 = (start2 ? '…' : '') + text2.slice(start2, start2 + 250) + '…';
+      if (start2) text2 = text2.replace(/^\S+\s/, '…');
     }
-    var html = esc(text);
+    var html = esc(text2);
     return markText(html, toks, marks);
   }
 
   /** A result line. The title is marked by the SAME rule the snippet is: a
    * result the query's words reached should say so where the reader looks
-   * first, not only in the passage under it. */
-  function resultHtml(idx, r, toks, marks) {
+   * first, not only in the passage under it. The link carries the query, so
+   * the piece the reader opens marks the words it was found by — the snippet
+   * already showed WHERE, this is the same answer continued on the page
+   * itself. */
+  function resultHtml(idx, r, toks, marks, text) {
     var d = idx.docs[r.i];
+    var link = '/' + esc(d.slug) + '/' + (text ? '?q=' + encodeURIComponent(text) : '');
     return '<li class="sr">' +
-      '<a class="sr-t" href="/' + esc(d.slug) + '/">' + markText(esc(d.title), toks, marks) + '</a>' +
+      '<a class="sr-t" href="' + link + '">' + markText(esc(d.title), toks, marks) + '</a>' +
       '<div class="sr-m">' + esc(d.series || 'unfiled') + ' · ' + esc(d.kind || '') + ' · ' + esc(d.date || '') +
       '<span class="sr-sc">' + r.score.toFixed(2) + '</span></div>' +
-      '<p class="sr-s">' + snippet(idx, r.i, toks, marks) + '</p>' +
+      '<p class="sr-s">' + snippet(idx, r.i, toks, marks, r.hitAt) + '</p>' +
       '<ul class="sr-w">' + r.why.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' +
       '</li>';
   }
@@ -1356,6 +1749,9 @@
   function render(idx, box, status, text, opts) {
     var res = query(text, opts || {});
     var c = res.counts;
+    // the words the MARKS show: a phrase's own words included, quoted or not
+    var mkToks = c.pattern ? [] : tokenize(text, idx.stop).concat(
+      c.phrases ? phraseWords(text, idx.stop) : []);
     var toks = c.pattern ? [] : tokenize(text, idx.stop);
     if (!res.results.length) {
       var msg;
@@ -1369,6 +1765,12 @@
         : 'No word in the list is within ' + c.fuzzyK + (c.fuzzyK === 1 ? ' edit' : ' edits') +
           ' of a word you marked. Two tildes widen it to two.';
       else msg = 'Type a word — the pieces are searched by their words, their vectors and their links.';
+      if (c.phrases && !c.pattern) {
+        // a phrase that matched nothing is SAID, with its own text, rather
+        // than padded out with its words' separate hits
+        if (c.phraseMiss) msg = 'No piece says that phrase — the word "' + c.phraseMiss + '" is not one the pieces use at all.';
+        else if (!c.phraseDocs) msg = 'No piece has those words next to each other, in that order.';
+      }
       box.innerHTML = '<li class="sr-none">' + esc(msg) + '</li>' +
         (idx.hints.length && !toks.length && !c.pattern
           ? '<li class="sr-hint">Try: ' + idx.hints.map(function (h) {
@@ -1376,7 +1778,7 @@
             }).join(' ') + '</li>'
           : '');
     } else {
-      box.innerHTML = res.results.map(function (r) { return resultHtml(idx, r, toks, res.marks); }).join('');
+      box.innerHTML = res.results.map(function (r) { return resultHtml(idx, r, mkToks, res.marks, text); }).join('');
     }
     var shown = res.results.length;
     var sug = c.suggest;
@@ -1408,6 +1810,11 @@
                 (c.fuzzyCapped ? ' (the list stops at ' + FUZZY_CAP + ')' : '')) + ' · '
           : '') +
         (c.sort === 'new' ? 'newest first · ' : '') +
+        (c.phrasePending ? 'the phrases are still loading — these results are the words only · ' : '') +
+        (c.phrases
+          ? (c.phraseDocs + ' piece' + (c.phraseDocs === 1 ? '' : 's') + ' say the phrase' +
+            (c.phrases > 1 ? 's' : '') + (c.phraseMiss ? ' (the word "' + esc(c.phraseMiss) + '" is in no piece)' : '') + ' · ')
+          : '') +
         'the graph rules fired: ' +
         c.related + ' shared-citation, ' + c.points_at + ' link, ' + c.same_series + ' same-series, ' + c.near + ' two-hop' +
         (c.graphOnlyDropped
@@ -1418,6 +1825,7 @@
     if (head && note) status.innerHTML = head + ' · ' + note;
     else if (head) status.textContent = head;
     else if (note) status.innerHTML = '# nothing was found for that · ' + note;
+    else if (c.phrasePending) status.textContent = '# the phrases are still loading — these results are the words only';
     else status.textContent = '';
     return res;
   }
@@ -1658,6 +2066,11 @@
     if (!el) return null;
     try { S.init(JSON.parse(el.textContent)); } catch (e) { return null; }
     wire();
+    // The fetched half starts loading as soon as the page does: the first
+    // query should usually find it already there, and a reader who never
+    // searches has paid for a request that may still be in the browser's cache
+    // by the time they do. Nothing waits on it and nothing breaks without it.
+    deepOf(S._idx);
     return S._idx;
   }
 
@@ -1688,6 +2101,41 @@
         return { terms: [], capped: false, error: e.message };
       }
     },
+    /** The pieces a quoted phrase's words are ADJACENT in — the phrase path
+     * into the positions, exposed so a test can hold it against a brute-force
+     * adjacency scan of the pieces' own text. With no fetched half the answer
+     * is empty and `off` says why: the same honest degradation the page shows. */
+    matchPhrase: function (text) {
+      var idx = S._idx;
+      if (!idx) return { docs: [], off: true };
+      var ph = phraseTerms(text, idx.stop);
+      if (!ph.phrases.length) return { docs: [], off: false };
+      if (!idx.deep) return { docs: [], off: true };
+      var pm = phraseMatch(idx.deep, idx, ph.phrases[0]);
+      var out = [];
+      for (var d in pm.docs) out.push({ i: +d, at: pm.docs[d] });
+      out.sort(function (a, b) { return a.i - b.i; });
+      return { docs: out, off: false, missing: pm.missing };
+    },
+    /** The fetched half, for a test to install before the fetch lands (or in
+     * place of one): the same decode the page runs on the fetched bytes. */
+    loadDeep: function (raw) {
+      var idx = S._idx;
+      if (!idx) return null;
+      idx.deep = makeDeep(idx, raw);
+      return idx.deep;
+    },
+    /** The passage a stream position sits in, and the passage itself — the
+     * join the snippet uses, exposed so a test can check it against the
+     * piece's own paragraphs. */
+    passageAt: function (i, at) {
+      var idx = S._idx;
+      if (!idx || !idx.deep) return null;
+      var bounds = idx.deep.passAt[i] || [];
+      var p = 0;
+      for (var k = 0; k < bounds.length; k++) if (bounds[k] <= at) p = k;
+      return { p: p, text: (idx.deep.pass[i] || [])[p] || '' };
+    },
     query: function (text, opts) { return query(text, opts); },
     /** The words within `k` edits of a word, off the automaton — the fuzzy
      * path into the index, exposed so a test can hold it against a plain scan of
@@ -1708,6 +2156,7 @@
       return prefixWalk(idx.dafsa, String(prefix).toLowerCase(), cap === undefined ? COMPLETE_CAP : cap);
     },
     snippet: function (i, text) { return snippet(S._idx, i, tokenize(text, S._idx.stop)); },
+    _deepAsked: false,
     render: function (box, status, text, opts) { return render(S._idx, box, status, text, opts || {}); },
     readUrl: readUrl,
     writeUrl: writeUrl,

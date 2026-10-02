@@ -766,6 +766,491 @@ if (typo) {
     'the fallback runs once — the second query is not itself corrected');
 }
 
+/* ---------- 7g. the phrases, against a brute-force adjacency scan of the prose ---- */
+
+/**
+ * A quoted run is matched by POSITIONS, and the positions were made by the
+ * build from the pieces' passages — so the DEFINITION of "these words stand
+ * next to each other, in this order" is computable here from content/ with no
+ * reference to anything the build emitted: for each piece, take the body, make
+ * the passage streams exactly as index-deep does (every word advances the
+ * stream; only vocabulary words are recorded), and ask whether the phrase's
+ * recorded words all sit at anchor+offset for one anchor. That is a THIRD
+ * implementation of the rule (the smoke's own `plain`, the deep module's, and
+ * this scan) — the test can fail, and a disagreement names the piece.
+ *
+ * The cases cover what the phrase semantics claim: a phrase occurring
+ * verbatim; the same words NOT adjacent (must not match); a phrase broken by a
+ * paragraph boundary (two passages are two streams — a phrase does not cross);
+ * a one-word phrase; a phrase several pieces say; a phrase nothing says; a
+ * phrase with an apostrophe/hyphen word; a phrase inside a heading (a heading
+ * is a passage, so it is found); a phrase with a stopword inside it (the
+ * stopword occupies its stream position); a phrase with a word the pieces
+ * never use (answered with nothing, and the word reported).
+ */
+console.log('== the phrases (differential: the positions vs a brute-force adjacency scan of content/)');
+
+// the deep half, loaded the way the page loads it: from the emitted file
+const DEEP_FILE = join(ROOT, 'dist', 'search', 'deep');
+let deepRaw = null;
+try { deepRaw = JSON.parse(readFileSync(DEEP_FILE, 'utf8')); } catch (e) { deepRaw = null; }
+check(!!deepRaw, 'the fetched half was emitted and parses as the page will parse it');
+// installed the way the page installs it once its fetch lands; every section
+// above this one ran WITHOUT it, which is the degradation half of the claim,
+// and every section below runs with it
+if (deepRaw) S.loadDeep(deepRaw);
+
+/** the body-passages and stream of one piece, per the rule index-deep states */
+function pieceStream(src) {
+  const lines = String(src).split('\n');
+  const at = lines.findIndex((l) => /^---\s*$/.test(l));
+  const body = at < 0 ? String(src) : lines.slice(at + 1).join('\n');
+  const passages = [];
+  let para = [];
+  const flush = () => {
+    if (!para.length) return;
+    const t = plain(para.join(' '));
+    if (t) passages.push(t);
+    para = [];
+  };
+  for (const line of body.split('\n')) {
+    if (/^\s*$/.test(line)) flush();
+    else if (/^\s{0,3}#{1,6}\s/.test(line)) { flush(); const t = plain(line); if (t) passages.push(t); }
+    else if (/^\s*\[\^/.test(line)) flush();
+    else para.push(line);
+  }
+  flush();
+  const passAt = [];
+  const hits = new Map();   // word -> [stream position, …] (vocabulary words only)
+  let pos = 0;
+  for (const p of passages) {
+    passAt.push(pos);
+    const ws = p.toLowerCase().match(/[a-z][a-z'-]+/g) || [];
+    for (const w of ws) {
+      if (w.length >= 3 && !STOP.has(w) && termAt.has(w)) {
+        if (!hits.has(w)) hits.set(w, []);
+        hits.get(w).push(pos);
+      }
+      pos++;
+    }
+  }
+  return { passages, passAt, hits };
+}
+const streams = sources.map(pieceStream);
+
+/** the brute-force oracle: does this piece hold the phrase? */
+function brutePhrase(ph) {
+  const seq = [];
+  const toks = ph.toLowerCase().match(/[a-z][a-z'-]+/g) || [];
+  for (let i = 0; i < toks.length; i++) {
+    if (toks[i].length >= 3 && !STOP.has(toks[i])) seq.push({ w: toks[i], off: i });
+  }
+  const out = new Set();
+  if (!seq.length) return out;
+  for (const w of seq) if (!termAt.has(w.w)) return out;   // a word no piece uses: nothing matches
+  for (let i = 0; i < posts.length; i++) {
+    const h = streams[i].hits;
+    let ok = false;
+    for (const a of (h.get(seq[0].w) || [])) {
+      let all = true;
+      for (let k = 1; k < seq.length; k++) {
+        if (!(h.get(seq[k].w) || []).includes(a + seq[k].off - seq[0].off)) { all = false; break; }
+      }
+      if (all) { ok = true; break; }
+    }
+    if (ok) out.add(posts[i].slug);
+  }
+  return out;
+}
+
+if (deepRaw) {
+  // the phrases to test: built from the corpus, never written down
+  //  - a verbatim phrase: two adjacent recorded words from some piece's stream
+  //  - a NOT-adjacent pair: the same words, in the same piece, never adjacent
+  //  - across a paragraph break: the LAST word of one passage and the FIRST of
+  //    the next — adjacent in no stream, because streams break at passages
+  //  - a heading phrase: two adjacent words of a heading passage
+  //  - a stopword inside: three words whose middle one is a stopword
+  //  - a hyphen/apostrophe word: a recorded word with `'` or `-` inside
+  //  - a one-word phrase; a nothing-says phrase; an unknown-word phrase
+  const cases = [];
+  {
+    let verbatim = null, notAdj = null, across = null, heading = null, stopIn = null, hyphen = null, multi = null;
+    for (let i = 0; i < posts.length && !(verbatim && notAdj && across && heading && stopIn && hyphen); i++) {
+      const st = streams[i];
+      for (let p = 0; p < st.passages.length && !(verbatim && notAdj && across && heading && stopIn && hyphen); p++) {
+        const ws = st.passages[p].toLowerCase().match(/[a-z][a-z'-]+/g) || [];
+        // raw adjacency: two words at CONSECUTIVE positions of the passage's
+        // own word list, both recordable — the phrase they spell is one the
+        // stream genuinely holds next to each other
+        const rec = (w) => w.length >= 3 && !STOP.has(w) && termAt.has(w);
+        for (let k = 0; k + 1 < ws.length; k++) {
+          if (!rec(ws[k]) || !rec(ws[k + 1])) continue;
+          if (!verbatim && ws[k].length >= 4 && ws[k + 1].length >= 4 && ws[k] !== ws[k + 1]) {
+            verbatim = { ph: ws[k] + ' ' + ws[k + 1], expect: brutePhrase(ws[k] + ' ' + ws[k + 1]), note: 'verbatim, from ' + posts[i].slug };
+          }
+          if (!heading && st.passages[p].length < 60) {
+            heading = { ph: ws[k] + ' ' + ws[k + 1], expect: brutePhrase(ws[k] + ' ' + ws[k + 1]), note: 'in a heading passage of ' + posts[i].slug };
+          }
+          if (!hyphen && (ws[k].includes('-') || ws[k].includes("'")) && ws[k + 1].length >= 4) {
+            hyphen = { ph: ws[k] + ' ' + ws[k + 1], expect: brutePhrase(ws[k] + ' ' + ws[k + 1]), note: 'with an apostrophe/hyphen word, from ' + posts[i].slug };
+          }
+        }
+        // a stopword between two recorded words, in the passage's own text
+        if (!stopIn) {
+          for (let k = 0; k + 2 < ws.length; k++) {
+            if (STOP.has(ws[k + 1]) && ws[k].length >= 4 && ws[k + 2].length >= 4 && termAt.has(ws[k]) && termAt.has(ws[k + 2])) {
+              stopIn = { ph: ws[k] + ' ' + ws[k + 1] + ' ' + ws[k + 2], expect: brutePhrase(ws[k] + ' ' + ws[k + 1] + ' ' + ws[k + 2]), note: 'stopword inside, from ' + posts[i].slug };
+              break;
+            }
+          }
+        }
+      }
+      // words in the same piece, never adjacent anywhere in it
+      if (!notAdj && verbatim) {
+        const [wa, wb] = verbatim.ph.split(' ');
+        const h = st.hits;
+        const A = h.get(wa) || [], B = new Set(h.get(wb) || []);
+        if (A.length && B.size && !A.some((a) => B.has(a + 1))) {
+          notAdj = { ph: verbatim.ph, expect: brutePhrase(verbatim.ph), note: 'same words, never adjacent in ' + posts[i].slug };
+        }
+      }
+      // the last word of one passage and the first of the next
+      if (!across) {
+        for (let p = 0; p + 1 < st.passages.length; p++) {
+          const a = (streams[i].passages[p].toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((w) => w.length >= 3 && !STOP.has(w) && termAt.has(w));
+          const b = (streams[i].passages[p + 1].toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((w) => w.length >= 3 && !STOP.has(w) && termAt.has(w));
+          if (a.length && b.length && a[a.length - 1].length >= 4 && b[0].length >= 4) {
+            const ph = a[a.length - 1] + ' ' + b[0];
+            const want = brutePhrase(ph);
+            // it must be a phrase that WOULD match if the break were not there:
+            // the same two words adjacent somewhere in the corpus
+            across = { ph, expect: want, note: 'across a paragraph break of ' + posts[i].slug };
+            break;
+          }
+        }
+      }
+    }
+    if (verbatim) cases.push(verbatim);
+    if (notAdj) cases.push(notAdj);
+    if (across) cases.push(across);
+    if (heading) cases.push(heading);
+    if (stopIn) cases.push(stopIn);
+    if (hyphen) cases.push(hyphen);
+    // a one-word phrase: the rare exact term the corpus names
+    cases.push({ ph: 'wetiko', expect: brutePhrase('wetiko'), note: 'one word' });
+    // a phrase several pieces say: the first two-word phrase whose oracle has 2+ pieces
+    for (const c of cases) if (!multi && c.expect.size >= 2) { multi = c; break; }
+    check(!!multi, `a phrase several pieces say was found among the cases (${cases.filter((c) => c.expect.size >= 2).length} of them reach 2+ pieces)`);
+    // a phrase nothing says: two real words that are never adjacent anywhere
+    let none = null;
+    outer:
+    for (const a of ['proclus', 'wetiko', 'theurgy', 'picatrix', 'quareia']) {
+      for (const b of ['proclus', 'wetiko', 'theurgy', 'picatrix', 'quareia']) {
+        if (a === b) continue;
+        if (brutePhrase(a + ' ' + b).size === 0) { none = { ph: a + ' ' + b, expect: new Set(), note: 'nothing says it' }; break outer; }
+      }
+    }
+    if (none) cases.push(none);
+    // a phrase with a word the pieces never use
+    cases.push({ ph: 'proculus flibbertigibbet', expect: brutePhrase('proculus flibbertigibbet'), note: 'a word no piece uses' });
+
+    let phDisagreements = 0, phTested = 0;
+    // FAILS IF: the emitted positions disagree with the scan on any phrase's
+    // piece set — a wrong join, a wrong offset, or a stream that counts words
+    // differently than the passages do
+    for (const c of cases) {
+      const got = new Set(S.matchPhrase('"' + c.ph + '"').docs.map((x) => data.docs[x.i].slug));
+      phTested++;
+      if (norm(got) !== norm(c.expect)) {
+        phDisagreements++;
+        check(false, `"${c.ph}" (${c.note}): positions said ${norm(got)}, the scan says ${norm(c.expect)}`);
+      }
+    }
+    check(phTested === cases.length && phDisagreements === 0,
+      `${phTested} phrase(s) matched, ${phDisagreements} disagreement(s) with the adjacency scan of content/`);
+    // the case the whole oracle rests on: a verbatim phrase found, and the
+    // same words never adjacent NOT found
+    const v = cases.find((c) => c.note.startsWith('verbatim'));
+    check(!!v && v.expect.size > 0, `the verbatim phrase "${v && v.ph}" matches at least one piece (${v && norm(v.expect)})`);
+    const na = cases.find((c) => c.note.startsWith('same words'));
+    check(!!na, 'a same-words-never-adjacent case was built');
+    if (na) {
+      const got = new Set(S.matchPhrase('"' + na.ph + '"').docs.map((x) => data.docs[x.i].slug));
+      check(!got.has(na.note.split(' ').pop()) || got.size === na.expect.size,
+        `words that occur but never adjacent do not match by adjacency alone (${norm(got)})`);
+    }
+  }
+
+  /* the phrase THROUGH the query: the reason, the filter, the loose words */
+  {
+    // a phrase whose oracle is non-empty: the page must answer with those
+    // pieces carrying the phrase reason, and NOTHING outside the oracle's set
+    let c = null;
+    for (const x of [cases[0], ...cases]) if (x && x.expect.size > 0) { c = x; break; }
+    check(!!c, 'a phrase with hits was found to query with');
+    if (c) {
+      const r = S.query('"' + c.ph + '"', { limit: 200 });
+      const got = new Set(slugs(r.results));
+      check([...c.expect].every((s) => got.has(s)),
+        `"${c.ph}" through the query reaches every piece the scan names (${norm(c.expect)})`);
+      const withWhy = r.results.filter((x) => x.why.some((w2) => w2 === 'phrase: "' + c.ph + '"'));
+      check(withWhy.length === r.results.length,
+        `every result carries the phrase reason (${withWhy.length} of ${r.results.length})`);
+      check(norm(got) === norm(c.expect),
+        `and nothing outside the phrase's own pieces (${got.size} results, the scan says ${c.expect.size})`);
+    }
+    // the zero case is SAID, not padded
+    const noneCase = cases.find((x) => x.note === 'nothing says it');
+    if (noneCase) {
+      const r = S.query('"' + noneCase.ph + '"');
+      check(r.results.length === 0,
+        `"${noneCase.ph}" answers nothing (${r.results.length} results)`);
+      S.render(d.getElementById('sres'), d.getElementById('sstatus'), '"' + noneCase.ph + '"');
+      check(/next to each other/.test(d.getElementById('sres').textContent),
+        `and the page SAYS why: "${d.getElementById('sres').textContent.trim().slice(0, 90)}"`);
+    }
+    // a phrase combined with loose words: the phrase narrows, the words do not
+    // widen it past the phrase's pieces
+    if (c && c.expect.size > 0) {
+      const word = [...c.expect][0];
+      const term = tokens[posts.findIndex((p) => p.slug === word)].find((t) => t.length >= 5) || 'proclus';
+      const both = S.query('"' + c.ph + '" ' + term, { limit: 200 });
+      const gotBoth = new Set(slugs(both.results));
+      check([...c.expect].every((s) => gotBoth.has(s)),
+        `"${c.ph}" + a loose word keeps every piece the phrase named (${norm(c.expect)})`);
+    }
+    // a phrase + a fuzzy term: the walk still runs (its words are counted and
+    // timed), but there is no fuzzy ADJACENCY — a fuzzy term's hits are loose
+    // words, subject to the phrase's demand like any other. That is the
+    // documented combination behaviour, asserted as a claim.
+    const fz = S.query('"cosmos of persons" ~proculs', { limit: 200 });
+    check(fz.counts.fuzzy === 1 && fz.counts.fuzzyWords > 0 && fz.counts.phrases === 1,
+      `a fuzzy term beside a phrase still walks (${fz.counts.fuzzyWords} word(s) within its budget); adjacency is never fuzzy`);
+    // a phrase + a /pattern/: the pattern syntax takes the WHOLE query, so a
+    // slash-wrapped fragment beside a phrase is not a pattern at all — the
+    // slashes go and the words inside become ordinary loose terms beside the
+    // phrase. Stated plainly so the behaviour is a claim, not an accident.
+    const pat = S.query('/proclus/ "cosmos of persons"', { limit: 200 });
+    check(pat.counts.pattern === '' && pat.counts.phrases === 1,
+      'a /pattern/ beside a phrase is not a pattern query: the slashes drop and the words are loose terms (documented)');
+  }
+}
+
+/* ---------- 7h. the deep half itself: positions, passages, the join ---------- */
+
+if (deepRaw) {
+  console.log('== the fetched half (positions, passages, the join)');
+  S.loadDeep(deepRaw);
+  check(!!S._idx.deep && S._idx.deep.lex.length === terms.length,
+    `a row for every term of the vocabulary (${S._idx.deep.lex.length} rows, ${terms.length} terms)`);
+  // every position decodes into the passage the stream says it is in, and the
+  // passage CONTAINS the word: FAILS IF the delta encoding is wrong, the join
+  // is off by one, or the passages stored are not the passages indexed
+  let checked = 0, badJoin = 0, badContain = 0;
+  for (let ti = 0; ti < terms.length; ti += 331) {
+    const row = deepRaw.lex[ti];
+    for (const run of row || []) {
+      const d2 = run[0];
+      let pos = 0;
+      for (let k = 1; k < run.length && checked < 400; k++) {
+        pos = k === 1 ? run[k] : pos + run[k];
+        const at = S.passageAt(d2, pos);
+        checked++;
+        if (!at || !at.text) { badJoin++; continue; }
+        if (!at.text.toLowerCase().includes(terms[ti])) badContain++;
+      }
+      if (checked >= 400) break;
+    }
+    if (checked >= 400) break;
+  }
+  check(checked > 100 && badJoin === 0, `${checked} position(s) decoded, each resolves to a passage (${badJoin} did not)`);
+  check(badContain === 0, `and each passage CONTAINS its term (${badContain} did not)`);
+
+  // the SNIPPET oracle: for a set of (query, piece) pairs, the passage the
+  // result shows is the passage the positions say the hit is in — both sides
+  // computed here from content/
+  const pairs = [];
+  for (let i = 0; i < posts.length && pairs.length < 6; i += 9) {
+    const t = tokens[i].find((w) => w.length >= 6 && (deepRaw.lex[termAt.get(w)] || []).some((r) => r[0] === i));
+    if (!t) continue;
+    pairs.push([t, i]);
+  }
+  let snTested = 0, snBad = 0;
+  const snWhy = [];
+  for (const [t, i] of pairs) {
+    const r = S.query(t, { limit: 200 });
+    const hit = r.results.find((x) => x.i === i);
+    if (!hit || hit.hitAt === null || hit.hitAt === undefined) { snBad++; snWhy.push([t, posts[i].slug, 'no hitAt']); continue; }
+    const at = S.passageAt(i, hit.hitAt);
+    // the passage the stream (computed from content/) says position hitAt is in
+    const st = streams[i];
+    let p = 0;
+    for (let k = 0; k < st.passAt.length; k++) if (st.passAt[k] <= hit.hitAt) p = k;
+    snTested++;
+    // the shown snippet must come from THAT passage and CONTAIN the word
+    S.render(d.getElementById('sres'), d.getElementById('sstatus'), t);
+    const row2 = [...d.getElementById('sres').querySelectorAll('li.sr')].find((li) => li.querySelector('a.sr-t').getAttribute('href').startsWith('/' + posts[i].slug + '/'));
+    const shown = row2 ? row2.querySelector('.sr-s').textContent : '';
+    if (!shown.toLowerCase().includes(t) || !st.passages[p].toLowerCase().includes(t)) { snBad++; snWhy.push([t, posts[i].slug, 'shown misses the word']); }
+    if (at.p !== p) { snBad++; snWhy.push([t, posts[i].slug, 'passage ' + at.p + ' != stream passage ' + p]); }
+  }
+  check(snTested === pairs.length && snBad === 0,
+    `${snTested} (query, piece) pair(s): the snippet is the passage the positions say, and contains the word (${snBad} bad${snWhy.length ? ': ' + JSON.stringify(snWhy.slice(0, 3)) : ''})`);
+}
+
+/* ---------- 7i. degradation: the fetched half withheld ------------------- */
+
+// The page's contract: with the fetched index unavailable, every behaviour the
+// page had BEFORE it still works, and the phrase says it is pending. This
+// runs AFTER the deep half was installed, so it must be taken away again —
+// and everything already asserted above was asserted with it present, which is
+// the other half of the claim.
+console.log('== degradation: the page without the fetched half');
+{
+  const keptDeep = S._idx.deep;
+  delete S._idx.deep;
+  // a plain query answers exactly as it always did — same pieces, same reasons
+  const withDeep = keptDeep ? null : null;
+  const plain1 = S.query('proclus', { limit: 200 });
+  check(plain1.results.length > 0 && plain1.results.every((r) => !r.why.some((w) => w.indexOf('phrase: ') === 0)),
+    'a plain query answers without the fetched half, no phrase reasons appear');
+  // a phrase degrades to its words as ordinary terms and SAYS so
+  const ph = S.query('"the frame is a variable"');
+  check(ph.counts.phraseDropped === true && ph.results.length > 0,
+    `a phrase without the fetched half falls back to its words (${ph.results.length} results)`);
+  S.render(d.getElementById('sres'), d.getElementById('sstatus'), '"the frame is a variable"');
+  check(/still loading/.test(d.getElementById('sstatus').textContent),
+    `and the line above the results says the phrase is still loading ("${d.getElementById('sstatus').textContent.slice(0, 80)}")`);
+  // the fuzzy walk, the pattern, the graph are untouched
+  check(S.matchFuzzy('proculs', 1).words.length === 1, 'the fuzzy walk still runs without the fetched half');
+  check(S.matchPattern('urgy').terms.length > 0, 'the pattern walk still runs without the fetched half');
+  const g2 = S.query('wetiko');
+  check(g2.counts.derived > 0, 'the graph rules still fire without the fetched half');
+  if (deepRaw) S.loadDeep(deepRaw);   // put it back for the sections below
+}
+
+/* ---------- 7j. BM25: literal outranks fuzzy-only and graph-only ---------- */
+
+console.log('== ranking (BM25, and the literal/fuzzy/graph discipline)');
+{
+  // FAILS IF: two identical runs rank differently (the score is not stable),
+  // or a fuzzy-only or graph-only result outranks a literal one
+  const a1 = slugs(S.query('proclus', { limit: 200 }).results);
+  const a2 = slugs(S.query('proclus', { limit: 200 }).results);
+  check(norm(a1) === norm(a2), `the ranking is stable across runs (${a1.length} results, identical order)`);
+  const mixed = S.query('wetiko ~proculus', { limit: 200 });
+  const isLit = (r) => r.why.some((w) => w.indexOf('term: ') === 0);
+  const litRows = mixed.results.filter(isLit);
+  const nonLit = mixed.results.filter((r) => !isLit(r));
+  check(litRows.length > 0 && nonLit.length > 0, `"wetiko ~proculus" answers both kinds (${litRows.length} literal, ${nonLit.length} not)`);
+  const lastLit = mixed.results.map(isLit).lastIndexOf(true);
+  const firstNon = mixed.results.map(isLit).indexOf(false);
+  check(firstNon > lastLit,
+    `every literal result outranks every fuzzy/graph-only one (last literal at ${lastLit}, first other at ${firstNon})`);
+  // and a piece whose PROSE holds the word outranks vector-similar pieces:
+  // the same derived expectation the rare-term section uses
+  for (const t of RARE) {
+    const expected = expectExact(t);
+    if (!expected.size) continue;
+    const r = S.query(t, { limit: 200 });
+    const top = slugs(r.results).slice(0, expected.size);
+    check(norm(top) === norm(expected),
+      `"${t}": the top ${expected.size} are still exactly the pieces whose prose contains it — ${norm(top)}`);
+  }
+}
+
+/* ---------- 7k. the arrival marks, on a built post page ------------------ */
+
+console.log('== the arrival marks (a post page opened with ?q=)');
+{
+  const postHtml = readFileSync(join(ROOT, 'dist', 'proclus-theology-of-plato', 'index.html'), 'utf8');
+  const arriveScript = [...postHtml.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+    .map((m) => m[1]).find((s) => s.includes('qbar'));
+  check(!!arriveScript, 'a post page carries the arrival script');
+  if (arriveScript) {
+    // a post whose prose holds a rare term, found from the corpus
+    const pi = posts.findIndex((p) => p.slug === 'proclus-theology-of-plato');
+    check(pi >= 0, 'a piece with the rare term exists');
+    if (pi >= 0) {
+      const phtml = postHtml;
+      const w5 = new Window({ width: 1100, height: 900, url: 'https://blog.jaye.ch/proclus-theology-of-plato/?q=proclus' });
+      const d5 = w5.document;
+      let st5 = 'loading';
+      Object.defineProperty(d5, 'readyState', { get: () => st5, configurable: true });
+      d5.body.innerHTML = phtml.match(/<body>([\s\S]*)<script/)[1];
+      // the expectation is counted BEFORE the script runs — the marker REPLACES
+      // the text nodes it marks, so counting after would count the marks' own
+      // nodes and nothing else
+      const textNodes = [];
+      (function collect(node) {
+        for (let c = node.firstChild; c; c = c.nextSibling) {
+          if (c.nodeType === 3) textNodes.push(c);
+          else if (c.nodeType === 1 && c.nodeName !== 'SCRIPT' && c.nodeName !== 'STYLE' && c.nodeName !== 'MARK') collect(c);
+        }
+      })(d5.querySelector('.prose'));
+      const qre = /\bproclus[a-z'-]*/gi;
+      let wantMarks = 0;
+      for (const tn of textNodes) wantMarks += (tn.nodeValue.match(qre) || []).length;
+      new Function('window', 'document', 'setTimeout', 'clearTimeout', 'console', arriveScript)(
+        w5, d5, w5.setTimeout.bind(w5), w5.clearTimeout.bind(w5), console);
+      st5 = 'interactive';
+      d5.dispatchEvent(new w5.Event('DOMContentLoaded'));
+      const marks = d5.querySelectorAll('.prose mark');
+      check(marks.length === wantMarks && wantMarks > 0,
+        `?q=proclus marks every occurrence in the prose (${marks.length} marks, ${wantMarks} in the page's own text nodes)`);
+      check([...marks].every((m2) => /^proclus[a-z'-]*$/i.test(m2.textContent)),
+        'and every mark is a whole word the query asked for');
+      const bar = d5.querySelector('.qbar');
+      check(!!bar && bar.getAttribute('role') === 'status',
+        `the bar is there and is a status region (${bar && bar.getAttribute('role')})`);
+      check(new RegExp('found ' + marks.length + ' match').test(bar.textContent),
+        `and it counts the matches aloud ("${bar.textContent.trim().slice(0, 60)}")`);
+      const btns = [...bar.querySelectorAll('button')];
+      check(btns.length === 3 && btns.map((b) => b.getAttribute('aria-label')).join(',').includes('next'),
+        'the bar walks the matches: previous, next, close');
+      btns[1].click();
+      check(d5.querySelectorAll('mark.q-on').length === 1 && /2 \/ /.test(bar.textContent),
+        'next moves the current match and says which one it is on');
+      // a query the page does not hold says so
+      const w6 = new Window({ width: 1100, height: 900, url: 'https://blog.jaye.ch/proclus-theology-of-plato/?q=flibbertigibbet' });
+      const d6 = w6.document;
+      let st6 = 'loading';
+      Object.defineProperty(d6, 'readyState', { get: () => st6, configurable: true });
+      d6.body.innerHTML = phtml.match(/<body>([\s\S]*)<script/)[1];
+      new Function('window', 'document', 'setTimeout', 'clearTimeout', 'console', arriveScript)(
+        w6, d6, w6.setTimeout.bind(w6), w6.clearTimeout.bind(w6), console);
+      st6 = 'interactive';
+      d6.dispatchEvent(new w6.Event('DOMContentLoaded'));
+      check(/no match for/.test(d6.querySelector('.qbar').textContent),
+        `a query the page does not hold SAYS so ("${d6.querySelector('.qbar').textContent.trim().slice(0, 60)}")`);
+      // with no ?q= at all, nothing is marked and no bar appears
+      const w7 = new Window({ width: 1100, height: 900, url: 'https://blog.jaye.ch/proclus-theology-of-plato/' });
+      const d7 = w7.document;
+      let st7 = 'loading';
+      Object.defineProperty(d7, 'readyState', { get: () => st7, configurable: true });
+      d7.body.innerHTML = phtml.match(/<body>([\s\S]*)<script/)[1];
+      new Function('window', 'document', 'setTimeout', 'clearTimeout', 'console', arriveScript)(
+        w7, d7, w7.setTimeout.bind(w7), w7.clearTimeout.bind(w7), console);
+      st7 = 'interactive';
+      d7.dispatchEvent(new w7.Event('DOMContentLoaded'));
+      check(d7.querySelectorAll('.prose mark').length === 0 && !d7.querySelector('.qbar'),
+        'a plain visit marks nothing and shows no bar');
+    }
+  }
+}
+
+/* ---------- 7l. the deep file on the wire ------------------------------- */
+
+{
+  console.log('== the fetched half on the wire');
+  const raw = readFileSync(DEEP_FILE, 'utf8');
+  const gz = gzipSync(raw, { level: 9 }).length;
+  console.log(`  the fetched half: ${Buffer.byteLength(raw)} bytes raw, ${gz} gzipped (the server encodes on the wire)`);
+  check(Buffer.byteLength(raw) < 4 * 1024 * 1024,
+    `the fetched half is one file, ${Math.round(gz / 1024)} KB gzipped — the page itself stays as it was`);
+}
+
 /* ---------- 8. garbage ---------- */
 
 console.log('== garbage');
@@ -829,7 +1314,7 @@ check(w.location.search === '?q=proclus', `typing set the URL state (${w.locatio
 const items = box.querySelectorAll('li.sr');
 check(items.length > 1, `typing filled the result list (${items.length} results)`);
 const firstLink = items[0].querySelector('a.sr-t');
-check(/^\/[a-z0-9-]+\/$/.test(firstLink.getAttribute('href')), `a result links to a piece (${firstLink.getAttribute('href')})`);
+check(/^\/[a-z0-9-]+\/(\?q=.*)?$/.test(firstLink.getAttribute('href')), `a result links to a piece (${firstLink.getAttribute('href')})`);
 check(items[0].querySelectorAll('.sr-s mark').length > 0, 'the snippet marks the query\'s word');
 check(items[0].querySelectorAll('.sr-w li').length > 0, `the reasons render as badges (${items[0].querySelectorAll('.sr-w li').length})`);
 check(/the graph rules fired/.test(status.textContent), `the status line reports the rules: "${status.textContent}"`);
@@ -893,7 +1378,10 @@ console.log('== every page\'s own prompt runs');
     let st3 = 'loading';
     Object.defineProperty(d3, 'readyState', { get: () => st3, configurable: true });
     d3.body.innerHTML = html.match(/<body>([\s\S]*)<script/)[1];
-    const pel = html.slice(html.lastIndexOf('<script>') + 8, html.lastIndexOf('</script>'));
+    // the command line is found by what it is, not by where it sits — a page
+    // may carry more than one inline script after the palette
+    const pel = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+      .map((s) => s[1]).find((s) => s.includes('palette-out'));
     try {
       new Function('window', 'document', 'setTimeout', 'clearTimeout', 'console',
         pel)(w3, d3, w3.setTimeout.bind(w3), w3.clearTimeout.bind(w3), console);
@@ -1148,8 +1636,12 @@ function freshSearch(url) {
     sortSel.dispatchEvent(new w3.Event('change', { bubbles: true }));
     check(w3.location.search.indexOf('sort=new') >= 0, `the order rides in the URL (${w3.location.search})`);
     const shownHrefs = [...box.querySelectorAll('li.sr a.sr-t')].map((a) => a.getAttribute('href'));
-    check(shownHrefs.length > 0 && shownHrefs[0] === '/' + nSlugs[0] + '/',
+    // the deep link carries the query; strip it for the comparison
+    const shownSlugs = shownHrefs.map((h) => h.replace(/\?q=.*$/, ''));
+    check(shownSlugs.length > 0 && shownSlugs[0] === '/' + nSlugs[0] + '/',
       `the page shows the newest piece first (${shownHrefs[0]})`);
+    check(shownHrefs.every((h) => decodeURIComponent((h.match(/\?q=(.*)$/) || [])[1] || '') === orderQ),
+      `and every result's link carries the query, so the piece marks the words it was found by`);
     sortSel.value = '';
     sortSel.dispatchEvent(new w3.Event('change', { bubbles: true }));
     check(w3.location.search.indexOf('sort') < 0, 'going back to relevance drops it from the URL');

@@ -152,7 +152,7 @@ Two guards enforce the boundary, so it does not depend on anyone remembering:
       headers/<slug>.webp         the og:image card, one per post that has a
                                   header render (the only non-page asset
                                   dist/ carries; see "Header art" below)
-      headers/banner/<slug>.webp  the 1024x1024 banner, copied only for
+      headers/banner/<slug>.webp  the 1536x640 banner, copied only for
                                   HEADERS_INLINE=0 builds (see below)
       feed.xml / sitemap.xml / robots.txt
                                   discovery files, published posts only
