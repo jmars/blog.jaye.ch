@@ -5,7 +5,7 @@
     "file": "Porphyry-Taylor-Select-Works-1823.txt",
     "sha256": "8aa0167ea2e6a4a943440e7092e74caecf7b9e170bf159ffcb15b1a0b728747f",
     "why": "Taylor's Select Works of Porphyry (1823) carries the same translation of the same treatise",
-    "shelf": "/home/jaye/thework/work-text"
+    "shelf": "work-text"
   },
   "generated": "2026-10-02T21:12:11Z",
   "mergesNothing": "Nothing here has been merged. To accept a reading, give the damaged word a `reading` rule with this replace in the text’s own rules file and build: every rule must fire at least once or the build fails. A `notFound` is not a reading: the word stays visible under the base policy.",

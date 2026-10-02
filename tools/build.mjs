@@ -189,8 +189,8 @@ const GATE_PATTERNS = [
   [/\btools\/(?:build|viz|check-scope)[\w./-]*/, 'internal path', 'hard'],
   [/\bposts\.json\b|\bcontinuity\.md\b|\blog\.css\b/, 'internal file name', 'hard'],
   // a home path. `~` or `/home/<user>/` — the user is NOT one character: MEASURED,
-  // the old pattern's `[a-z]` matched `/home/j/…` and MISSED `/home/jaye/…`, so a
-  // real absolute path could ship while the gate stayed green.
+  // the old pattern's `[a-z]` matched a SINGLE-character home and MISSED a longer
+  // one, so a real absolute path could ship while the gate stayed green.
   [/(?:^|["'\s(])(?:~|\/home\/[\w.-]+)\/[\w./-]+/, 'local filesystem path', 'hard'],
   [/\b[\w.-]+\.(?:txt|mjs|json)\b(?=[\s"',.)]|$)/, 'source-file name', 'hard'],
   // file-size / extraction-mechanics claims — PHRASES, so pages only

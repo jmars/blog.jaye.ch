@@ -60,7 +60,7 @@
  * LIBRARY_PARALLEL (a shelf filename), LIBRARY_SHELF.
  */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, basename } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   extract,
@@ -1085,7 +1085,7 @@ async function main() {
         'recorded reading, not a silent replacement.',
       policy: { rule: prepared.policy.rule, damage: prepared.policy.damage },
       parallel: parallel
-        ? { file: parallel.file, shelf: SHELF, sha256: parallel.sha256, why: parallel.why }
+        ? { file: parallel.file, shelf: basename(SHELF), sha256: parallel.sha256, why: parallel.why }
         : null,
       residue: {
         leftVisible: prepared.leftWords,

@@ -59,6 +59,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { homedir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { TEXTS } from './shelf.mjs';
 import { LIBRARY_DIR, derivsPath, pageSignals, sha256 } from './extract.mjs';
@@ -67,7 +68,7 @@ import { LIBRARY_DIR, derivsPath, pageSignals, sha256 } from './extract.mjs';
  * holds one directory per item; the default is the host path they were fetched
  * to. Neither is needed to BUILD (the artifact is committed); both are needed to
  * DERIVE, which is a deliberate one-time act. */
-export const DERIVS_ROOT = process.env.LIBRARY_DERIVS || '/home/jaye/thework/work-derivs';
+export const DERIVS_ROOT = process.env.LIBRARY_DERIVS || join(homedir(), 'thework', 'work-derivs');
 
 
 /** The two files this tool reads, found by their suffixes inside the item's own
@@ -556,7 +557,7 @@ if (invokedDirectly) {
         '  Reads the item\'s own djvu.xml and page_numbers.json once, checks the leaf model against the\n' +
         '  edition stored in this repo, and writes content/library/<slug>/derivs.json. --check re-derives\n' +
         '  and compares with the committed artifact instead of writing it.\n' +
-        '  The derivatives are looked for under $LIBRARY_DERIVS (default /home/jaye/thework/work-derivs).',
+        '  The derivatives are looked for under $LIBRARY_DERIVS (default: the fetcher\'s work-derivs directory).',
     );
     process.exit(2);
   }

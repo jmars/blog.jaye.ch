@@ -95,7 +95,7 @@
  */
 import { readFileSync, writeFileSync, existsSync, mkdtempSync, rmSync, copyFileSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { tmpdir } from 'node:os';
+import { tmpdir, homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import {
@@ -898,7 +898,7 @@ section('every page boundary stands on a leaf, and the three signals are reconci
      * and it fails if a derivative with a different shape is ever adopted. */
     const facts = ITEM_FACTS[model.item];
     check(!!facts, `the item's inventory is pinned in code (${model.item})`);
-    const direct = derivativeFiles(join(process.env.LIBRARY_DERIVS || '/home/jaye/thework/work-derivs', model.item));
+    const direct = derivativeFiles(join(process.env.LIBRARY_DERIVS || join(homedir(), 'thework', 'work-derivs'), model.item));
     if (!direct) {
       check(
         model.totals.objects === facts.objects &&

@@ -35,8 +35,8 @@
  *      the alignment is confident (a minimum score and a minimum share of the
  *      window matched); otherwise the entry is a `notFound` that says why.
  *
- * WHERE THE PARALLEL IS READ FROM. From the SHELF — `/home/jaye/thework/work-text`
- * (`LIBRARY_SHELF`), the same directory the shelf's own scans are read from,
+ * WHERE THE PARALLEL IS READ FROM. From the SHELF (`LIBRARY_SHELF`), the same
+ * directory the shelf's own scans are read from,
  * resolved through `shelfFile` so the name is never guessed. The parallel is NOT
  * copied into the repo: it is a 600 KB scan of another book, and the repo's
  * business is the derivation, not a second copy of a primary source.
@@ -49,7 +49,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, basename } from 'node:path';
 import { SHELF, TEXTS, shelfFiles, shelfFile } from './shelf.mjs';
 import {
   extract,
@@ -369,7 +369,7 @@ async function main() {
   const payload = {
     slug,
     tool: 'a parallel-edition derivation: it reads the same translation in another volume and proposes the reading it finds',
-    parallel: { file: par.name, sha256: par.sha256, why: par.why, shelf: SHELF },
+    parallel: { file: par.name, sha256: par.sha256, why: par.why, shelf: basename(SHELF) },
     generated: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
     mergesNothing:
       'Nothing here has been merged. To accept a reading, give the damaged word a `reading` rule with this ' +

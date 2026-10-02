@@ -43,10 +43,11 @@
  */
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { homedir } from 'node:os';
 
 /** Where the scans live. Internal, and read-only: the shelf is not this repo.
  * Overridable so a build can be pointed at another copy. */
-export const SHELF = process.env.LIBRARY_SHELF || '/home/jaye/thework/work-text';
+export const SHELF = process.env.LIBRARY_SHELF || join(homedir(), 'thework', 'work-text');
 
 /** The text files actually present, so a filename is never guessed. */
 export function shelfFiles() {
