@@ -86,8 +86,14 @@ for (const [name, got, want] of cases) {
 /* ---------- the shelf ---------- */
 
 if (!existsSync(LIB)) {
-  console.error(`library-smoke: no built library under dist/. Build first: SKIP_CSS=1 ./build.sh`);
-  process.exit(1);
+  // The library is HELD BACK by default (LIBRARY=1 in tools/build.mjs): its
+  // transcriptions are not yet worth reading, so nothing is emitted and there is
+  // nothing to check. That is a skip, not a failure — the module, the shelf and
+  // the checks below all still run when the switch is on, and a test that failed
+  // here would make the default build look broken.
+  console.log('library-smoke: the library is held back (LIBRARY=1 builds it) — nothing to check');
+  console.log('library-smoke: PASSED (skipped)');
+  process.exit(0);
 }
 const files = shelfFiles();
 const srcOf = (t) => readFileSync(textSource(t, files), 'utf8');

@@ -70,6 +70,23 @@ const PREVIEW = process.env.PREVIEW === '1';
 // copy — would make every social card a broken image.
 const HEADERS_INLINE = process.env.HEADERS_INLINE !== '0';
 
+/** The library — the public-domain root texts — is BUILT but NOT PUBLISHED.
+ *
+ * The pages are correct as transcriptions, and the review measured their
+ * provenance against the volumes' own title pages. What they are not is
+ * READABLE: the scans carry long-s confusions, negation signs standing where
+ * the print has none, and running heads read as body text. Putting a text up in
+ * that state says more than it should — a library entry looks like the site
+ * vouches for what is on the page, and an unreadable page is worse than an
+ * absent one. So the shelf is behind this switch (LIBRARY=1 builds it), the
+ * module, the tests and the review all stand, and the work of cleaning the
+ * texts can happen without the output being public in the meantime.
+ *
+ * When the texts are worth reading, set LIBRARY=1: the pages, the nav entry,
+ * the sitemap addresses and the command-line entries all come back together,
+ * because every one of them reads this constant. */
+const LIBRARY = process.env.LIBRARY === '1';
+
 /** Canonical origin. Every absolute URL the build emits (og:url, canonical,
  * feed, sitemap, robots) is derived from this one constant. */
 const BASE = 'https://blog.jaye.ch';
@@ -215,7 +232,7 @@ function nav(current, navPosts) {
     here('/timeline/', "what's new") +
     here('/map/', 'the map') +
     here('/search/', 'search') +
-    here('/library/', 'library') +
+    (LIBRARY ? here('/library/', 'library') : '') +
     SERIES.map(dropdown).join('') +
     // The reader-facing theme control. Its visible word IS the current mode
     // (auto → light → dark → auto), so the state is never carried by colour
@@ -1456,7 +1473,7 @@ function paletteAssets(navPosts) {
   data.pages.push({ slug: 'timeline', title: "What's new", series: '', kind: 'page' });
   data.pages.push({ slug: 'map', title: 'The map', series: '', kind: 'page' });
   data.pages.push({ slug: 'search', title: 'Search', series: '', kind: 'page' });
-  data.pages.push({ slug: 'library', title: 'The library', series: '', kind: 'page' });
+  if (LIBRARY) data.pages.push({ slug: 'library', title: 'The library', series: '', kind: 'page' });
   // The shelf itself, as command-line entries: a text page's own masthead prints
   // `cat library/<slug>`, and a printed command that does not run is worse than
   // no command line (the same rule the other pages' prompts follow). The slug
@@ -2034,11 +2051,11 @@ function build404(navPosts) {
     `<div class="prose">` +
     `<p>Every address on this site is one of the pages below — the summary, ` +
     `<a href="/timeline/">what's new</a>, <a href="/map/">the map</a>, ` +
-    `<a href="/search/">the search</a>, <a href="/library/">the library</a>, or a post in one of ` +
+    `<a href="/search/">the search</a>, or a post in one of ` +
     `its ${NUM_WORD[seriesCount] || seriesCount} series. ` +
     `There is no other content, and nothing was ` +
     `deleted to hide it.</p>` +
-    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li><li><a href="/search/">The search — every piece, by words, vectors and links</a></li><li><a href="/library/">The library — the public-domain root texts the readings rest on</a></li>${links}</ul>` +
+    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li><li><a href="/search/">The search — every piece, by words, vectors and links</a></li>${links}</ul>` +
     `<p>If you followed a link from somewhere else, the link is stale; the pieces ` +
     `above are current.</p>` +
     `</div></div></section>`;
@@ -3399,7 +3416,7 @@ function sitemapXml(posts, extra = []) {
     { loc: `${BASE}/timeline/`, lastmod: newest },
     { loc: `${BASE}/map/`, lastmod: newest },
     { loc: `${BASE}/search/`, lastmod: newest },
-    { loc: `${BASE}/library/`, lastmod: newest },
+    ...(LIBRARY ? [{ loc: `${BASE}/library/`, lastmod: newest }] : []),
     ...extra.map((rel) => ({ loc: `${BASE}${rel}`, lastmod: newest })),
     ...posts.map((p) => ({ loc: `${BASE}/${p.slug}/`, lastmod: p.date })),
   ]
@@ -4131,10 +4148,18 @@ written.push({
 });
 written.push({ rel: 'map/index.html', html: writePage('map/index.html', buildMap(navPosts), navPosts) });
 written.push({ rel: 'search/index.html', html: writePage('search/index.html', buildSearch(navPosts), navPosts) });
-const library = libraryPages(navPosts);
-written.push({ rel: 'library/index.html', html: writePage('library/index.html', buildLibraryIndex(), navPosts) });
-for (const { rel, def } of library.pages) written.push({ rel, html: writePage(rel, def, navPosts) });
-log(`library: ${library.pages.length} page(s) for ${TEXTS.length} text(s), ${library.urls.length} address(es) in the sitemap`);
+// The library is behind LIBRARY=1 (see the constant): its transcriptions are not
+// yet worth reading, and an unreadable page published is worse than one held
+// back. Nothing is emitted, and nothing points at it — nav, sitemap, the command
+// line and the 404 all read the same switch.
+const library = LIBRARY ? libraryPages(navPosts) : { pages: [], urls: [] };
+if (LIBRARY) {
+  written.push({ rel: 'library/index.html', html: writePage('library/index.html', buildLibraryIndex(), navPosts) });
+  for (const { rel, def } of library.pages) written.push({ rel, html: writePage(rel, def, navPosts) });
+  log(`library: ${library.pages.length} page(s) for ${TEXTS.length} text(s), ${library.urls.length} address(es) in the sitemap`);
+} else {
+  log(`library: held back (set LIBRARY=1 to build it: ${TEXTS.length} texts on the shelf)`);
+}
 
 const writtenFiles = [];
 const writeDiscovery = (rel, text) => { writeFile(rel, text); writtenFiles.push({ rel, text }); };
