@@ -461,10 +461,10 @@
       "note": "the print reads \"the other\""
     },
     {
-      "find": "TvfnnrK_",
-      "replace": "tubs",
+      "find": "the TvfnnrK_ With Hnmpr",
+      "replace": "descend through the Moon. With Homer,",
       "class": "reading",
-      "note": "the print reads \"tubs\""
+      "note": "SUPERSEDES a WRONG recorded reading. The rule it replaces read \"TvfnnrK_\" -> \"tubs\", which took the word from the FOLLOWING line (\"likewise, there are two tubs,\") — a whole lost line was replaced by a word the next line already has. The 1823 parallel reads \"the Sun and Moon are the gates of souls, which ascend through the Sun, and descend through the Moon. With Homer, likewise, there are two tubs,\" (lines 9750-9752), so the block is \"descend through the Moon. With Homer,\". The parallel tool had DERIVED \"Moon.\" and recorded verdict DISAGREE against \"tubs\"; that disagreement was never acted on."
     },
     {
       "find": "Blesrjn£3",
@@ -759,6 +759,12 @@
       "replace": " ",
       "class": "reading",
       "note": "the same class as the rule above, for a _ standing alone between two words: \"petitioner. _ Thus\" where the print has \"petitioner. Thus\" (1823 parallel:9925). One occurrence. Spaced on both sides, so the 55 _ that stand inside words are untouched."
+    },
+    {
+      "find": ".oLsouls",
+      "replace": "souls",
+      "class": "reading",
+      "note": "the print reads \"souls\": the \".oL\" is OCR debris standing before the word (the line opens the page after the running head \"ON THE CAVE OF THE NYMPHS 35\"), and the 1823 parallel reads \"of souls, which ascend through the Sun, and\" (line 9750)."
     },
     {
       "find": "-1i\"^lHi.n*-iL",

@@ -163,22 +163,46 @@ const xesc = (s) => esc(s).replaceAll("'", '&apos;');
  * known; midnight UTC is the conventional stand-in, not a measured time. */
 const rfc822 = (date) => new Date(`${date}T00:00:00Z`).toUTCString();
 
+/**
+ * WHAT THE GATE LOOKS FOR, AND WHY SOME RULES ARE MARKED `prose`.
+ *
+ * A rendered PAGE is the blog's own chrome and prose, so a phrase like "the
+ * extract" or "the brief" there is workshop vocabulary and a leak.
+ *
+ * A rendered DATA FILE is a BOOK'S OWN TEXT — the shelf's passages, a document, a
+ * feed. MEASURED: the phrase "the extract" occurs in the books themselves ("the
+ * whole of the extract likewise is the result of...", "the extract from Zosimus"),
+ * and `252KB` turned up inside OCR debris. A phrase rule cannot tell the blog's
+ * vocabulary from a 19th-century author's, so on a data file it is a false
+ * positive by construction.
+ *
+ * So the rules are split by what they can legitimately mean. `hard` rules — a
+ * path, an internal filename, a source-file extension — name the blog's
+ * construction and can NEVER be a printed book's text; they run everywhere. The
+ * `prose` rules run on pages, where they are leaks, and are skipped on data files,
+ * where they are the book speaking. Only the paths-and-filenames half can be
+ * checked everywhere, and that is the honest half to rely on.
+ */
 const GATE_PATTERNS = [
-  // internal filenames and paths (a reader has none of these)
-  [/\b(?:build|check-scope|extract-css|viz-smoke|viz-shots)\.(?:mjs|sh)\b/, 'internal script name'],
-  [/\btools\/(?:build|viz|check-scope)[\w./-]*/, 'internal path'],
-  [/\bposts\.json\b|\bcontinuity\.md\b|\bblog\.css\b/, 'internal file name'],
-  [/(?:^|["'\s(])(?:~|\/home\/[a-z])\/[\w./-]+/, 'local filesystem path'],
-  [/\b[\w.-]+\.(?:txt|mjs|json)\b(?=[\s"',.)]|$)/, 'source-file name'],
-  // file-size / extraction-mechanics claims
-  [/\b\d[\d,]{2,}\s*(?:bytes|KB|MB)\b/i, 'file size'],
-  [/\b\d[\d,]{3,}\s+characters\b/, 'character count'],
-  [/\bno newline\b|\bwhitespace[- ]collaps|\bjumbled page order\b|\bwatermark-delimited\b|\bthe scan\b|\bthe extract\b/i, 'extraction mechanics'],
-  // authoring references
-  [/\bthe brief\b|\bthe reading list\b|\bthe manifest\b|\bthe plumbing\b|\bthe build\b(?!\s+in\b)|\bthe corpus\b/i, 'authoring reference'],
-  // a comment delimiter that reached emitted code
-  [/\/\*\s*[-=]*\s*[a-z]/i, 'source comment in emitted code'],
-  [/^\s*\/\/\s/m, 'source comment in emitted code'],
+  // internal filenames and paths (a reader has none of these) — HARD
+  [/\b(?:build|check-scope|extract-css|viz-smoke|viz-shots)\.(?:mjs|sh)\b/, 'internal script name', 'hard'],
+  [/\btools\/(?:build|viz|check-scope)[\w./-]*/, 'internal path', 'hard'],
+  [/\bposts\.json\b|\bcontinuity\.md\b|\blog\.css\b/, 'internal file name', 'hard'],
+  // a home path. `~` or `/home/<user>/` — the user is NOT one character: MEASURED,
+  // the old pattern's `[a-z]` matched `/home/j/…` and MISSED `/home/jaye/…`, so a
+  // real absolute path could ship while the gate stayed green.
+  [/(?:^|["'\s(])(?:~|\/home\/[\w.-]+)\/[\w./-]+/, 'local filesystem path', 'hard'],
+  [/\b[\w.-]+\.(?:txt|mjs|json)\b(?=[\s"',.)]|$)/, 'source-file name', 'hard'],
+  // file-size / extraction-mechanics claims — PHRASES, so pages only
+  [/\b\d[\d,]{2,}\s*(?:bytes|KB|MB)\b/i, 'file size', 'prose'],
+  [/\b\d[\d,]{3,}\s+characters\b/, 'character count', 'prose'],
+  [/\bno newline\b|\bwhitespace[- ]collaps|\bjumbled page order\b|\bwatermark-delimited\b|\bthe scan\b|\bthe extract\b/i, 'extraction mechanics', 'prose'],
+  // authoring references — PHRASES, so pages only ("the manifest" is ordinary
+  // English in a religious book)
+  [/\bthe brief\b|\bthe reading list\b|\bthe manifest\b|\bthe plumbing\b|\bthe build\b(?!\s+in\b)|\bthe corpus\b/i, 'authoring reference', 'prose'],
+  // a comment delimiter that reached emitted code — CODE, so not in a data file
+  [/\/\*\s*[-=]*\s*[a-z]/i, 'source comment in emitted code', 'comment'],
+  [/^\s*\/\/\s/m, 'source comment in emitted code', 'comment'],
 ];
 
 /** Every PUBLISHED post must carry a valid `date` (YYYY-MM-DD): the timeline,
@@ -5627,7 +5651,7 @@ function gateSafeText(html, what) {
  * "scan". Where a legitimate use exists it is named in `allowed` or the pattern
  * is narrowed until it cannot match it. Fail loudly rather than warn: a leak
  * that ships is not recoverable by later noticing it. */
-function checkWorkshop(html) {
+function checkWorkshop(html, opts = {}) {
   // Legitimate uses the tight patterns above could still catch, by exact text.
   const allowed = [
     'the build in', 'the build of', // ordinary prose, not the build process
@@ -5645,7 +5669,11 @@ function checkWorkshop(html) {
   // word glued to a data URI ('...base64,AAthe brief' would hide 'the brief').
   const scanned = html.replace(/(data:[\w.+-]+\/[\w.+-]+;base64,)[A-Za-z0-9+/=]{32,}(?=["')\s<])/g, '$1<binary>');
   const problems = [];
-  for (const [re, what] of GATE_PATTERNS) {
+  for (const [re, what, kind] of GATE_PATTERNS) {
+    // On a DATA FILE, the phrase rules are the book speaking, not the blog: skip
+    // every rule that is not `hard` — a path, an internal filename, a source-file
+    // extension, none of which a printed book can contain.
+    if (kind !== 'hard' && opts.data) continue;
     for (const m of scanned.matchAll(new RegExp(re, re.flags.includes('g') ? re.flags : re.flags + 'g'))) {
       const at = m.index;
       const window = scanned.slice(Math.max(0, at - 60), at + 60).replace(/\s+/g, ' ');
@@ -5662,8 +5690,14 @@ function checkWorkshopAll(written, files) {
   for (const { rel, html } of written) {
     for (const p of checkWorkshop(html)) problems.push(`${rel}:${p}`);
   }
+  /* EVERYTHING IN `files` IS A DATA FILE, not a page: `written` holds the pages,
+   * `files` holds the feed, the sitemap, robots and the fetched search index.
+   * So the `data` flag is a fact about the list, not a guess from a filename —
+   * and that matters, because the one that fails is `search/deep`, which is
+   * EXTENSIONLESS on purpose (a `.json`-looking name reaching emitted text trips
+   * the gate itself). A name test missed it; the list cannot. */
   for (const { rel, text } of files) {
-    for (const p of checkWorkshop(text)) problems.push(`${rel}:${p}`);
+    for (const p of checkWorkshop(text, { data: true })) problems.push(`${rel}:${p}`);
   }
   if (problems.length) {
     throw new Error(
