@@ -397,9 +397,15 @@ section('a recorded reading renders, and damage with no reading renders marked')
     `the ${left.length} word(s) the policy leaves visible are shown with their damage marked ` +
       `(${left.slice(0, 3).join(', ')})`,
   );
+  // The fixture is the document's OWN residue, not a hard-coded token: the word
+  // that carries no recorded reading changes as readings are merged (MEASURED:
+  // `that_jgthe` was one until `that_jg_the` -> `that is the` was recorded, and
+  // the two page artefacts are what remain). Asserting the document's own list
+  // keeps the check honest as the rules grow.
   check(
-    reading.includes('that_jgthe'),
-    'and a word with no recorded reading is shown AS THE TRANSCRIPTION HAS IT ("that_jgthe")',
+    left.length > 0 && left.every((w) => reading.includes(w)),
+    `and every word with no recorded reading is shown AS THE TRANSCRIPTION HAS IT ` +
+      `(${left.join(', ')})`,
   );
 
   /* (3) THE TRANSCRIPTION VIEW IS NOT MARKED: it is the verbatim text, and a mark

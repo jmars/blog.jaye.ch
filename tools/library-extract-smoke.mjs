@@ -341,11 +341,17 @@ section('the rules are the file\'s, every one of them fires, and a dead rule fai
     `the document's own hit counts are the ones recomputed here (${doc.corrections.map((c) => c.hits).join(', ').slice(0, 60)}…)`,
   );
   const repeated = edits.filter((_, i) => myHits[i] > 1);
+  // The list is asserted to MATCH the recomputed one, whatever its length: a
+  // rule set in which no rule fires twice is legitimate (a longer rule can
+  // consume the characters a shorter one would have counted twice — MEASURED:
+  // adding `that_jg_the` -> `that is the` before `_the` -> `the` took `_the`
+  // from two hits to one). The old assertion required a non-empty list, which
+  // was an assumption about this rule set rather than about the mechanism.
   check(
-    repeated.length > 0 &&
-      JSON.stringify(doc.correctionsMeta.repeated.map((r) => r.find)) === JSON.stringify(repeated.map((r) => r.find)),
-    `the rules that fire more than once are named as such ` +
-      `(${repeated.map((r, k) => `${JSON.stringify(r.find)} ×${myHits[edits.indexOf(r)]}`).join(', ')})`,
+    JSON.stringify(doc.correctionsMeta.repeated.map((r) => r.find)) === JSON.stringify(repeated.map((r) => r.find)),
+    `the rules that fire more than once are named as such (${repeated.length} such rule(s)` +
+      (repeated.length ? `: ${repeated.map((r) => `${JSON.stringify(r.find)} ×${myHits[edits.indexOf(r)]}`).join(', ')}` : '') +
+      `)`,
   );
   const byClass = (k) => edits.filter((c) => c.cls === k).length;
   check(
