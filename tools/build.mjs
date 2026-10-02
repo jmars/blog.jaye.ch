@@ -65,8 +65,13 @@ import {
   checkAnchors,
   checkEdits,
   anchorPath,
+  diffDocs,
+  summariseDiff,
+  loadDerivs,
+  readEdition,
   sha256,
 } from './library/extract.mjs';
+import { agreementRows, printAgreement } from './library/derive.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -3197,6 +3202,57 @@ function editionHtml(t, lib) {
       `travel as rules rather than as a second text, so the difference between the two is a list ` +
       `anyone can read against the words that are served.</p>`,
   );
+  /* THE PAGE MODEL, from measured counts (plan §4.6, phase 4). What the page
+   * numbers now rest on is the volume's own leaves, and the page the leaves add
+   * to what the text could read is the one case where the two modes differ about
+   * a number — so it is stated, not left to be inferred from a lighter marker. */
+  const leaf = lib.leaf && lib.leaf.model ? lib.leaf : null;
+  if (leaf) {
+    const n = leaf.model;
+    p.push(
+      `<p><b>The pages are placed on the volume’s own leaves.</b> Every page marker above stands on the ` +
+        `leaf of the volume it was printed on, so a citation by printed page names the leaf as well as the ` +
+        `number, and a page ends where the volume’s page ends rather than where a paragraph did. ` +
+        `${n.leaves} leaves are accounted for: ${n.withText} of them carry a page of this transcription, ` +
+        `${n.numbered} carry a printed number — ${n.detected} of those read from the leaf itself and ` +
+        `${n.interpolated} filled in from the leaves on either side of it — and ${n.leaves - n.numbered} ` +
+        `carry none at all, which is what the front and the back of a book look like. Every numbered leaf ` +
+        `sits at the same distance from its printed page (${Math.abs(n.offset)} leaves — a constant, which is ` +
+        `what lets a leaf confirm a page number instead of the number being taken on trust). The volume’s own ` +
+        `heads and bare folios ` +
+        `read the ${lib.pages.detected} printed numbers this document shows` +
+        (n.agreed != null
+          ? `; the leaves’ own page numbering reads ${n.numbered}, and on all ${n.agreed} pages the two both ` +
+            `have they are the same page`
+          : '') +
+        (n.textOnly
+          ? `; on ${n.textOnly} leaf/leaves the transcription reads a number the leaves’ own numbering does not ` +
+            `have, and the transcription’s reading is the one shown`
+          : '') +
+        (n.leafOnly
+          ? `; on ${n.leafOnly} leaf/leaves the leaves’ numbering has one that nothing on the leaf reads, and ` +
+            `no number is shown for them`
+          : '') +
+        (n.disagreed
+          ? `; on ${n.disagreed} page(s) the two sources give different numbers — the transcription’s own ` +
+            `reading is the one shown, and the difference is a finding about one of the two rather than ` +
+            `something to average away`
+          : '') +
+        `. ` +
+        (leaf.reread
+          ? `${leaf.reread} page the arithmetic of the text alone had refused is confirmed by its leaf and ` +
+            `carries its number here: a folio printed at the foot of a leaf whose own division opens on it, ` +
+            `which the text’s rule could not place because the leaf before it carries no text and so no marker. `
+          : '') +
+        (leaf.structural
+          ? `${leaf.structural} page boundary stands where a leaf begins with no number shown, because ` +
+            `nothing on that leaf reads as one: the page whose running head the transcription does not have is ` +
+            `named by its leaf and left unnumbered rather than given a number from the leaves around it. `
+          : '') +
+        `${lib.pages.refused} page marker(s) the transcription itself carries remain UNNUMBERED, and the ` +
+        `volume’s own words for them stand beside the marker.</p>`,
+    );
+  }
   p.push(
     `<p><b>The contents list is generated.</b> The printed volume has no contents page — nothing ` +
       `stands between its title page and its first division — so the ${lib.sections} entries above ` +
@@ -4806,6 +4862,63 @@ writeDiscovery('feed.xml', feedXml(livePosts));
 writeDiscovery('sitemap.xml', sitemapXml(livePosts, library.urls));
 writeDiscovery('robots.txt', robotsTxt());
 
+/**
+ * THE PAGE MODEL, AS THE BUILD STATES IT (plan §4.6, phase 4).
+ *
+ * Phase 4 re-derives the PAGE MODEL, not the text: the document is the same
+ * document, and what changed is that every page boundary now names the LEAF it
+ * belongs to and that the three signals about each page have been reconciled.
+ * This prints, for the one text that has a leaf model:
+ *
+ *   - what the model IS (from the artifact's own counts: leaves, leaves with
+ *     text, leaves carrying a printed number and in what state, the leaf→page
+ *     offset);
+ *   - the AGREEMENT TABLE, one row per leaf of the numbered span: what the item's
+ *     page-number pass has, what the transcription reads, and the verdict. A
+ *     `disagree` row is a finding about one of the two sources and is never merged
+ *     into the other;
+ *   - the DIFF against the txt-mode page model: every difference, so the change
+ *     from phase 1 to phase 4 is accounted for rather than asserted;
+ *   - every FINDING the extraction recorded about a page (a marker that does not
+ *     stand at its leaf's first line, a reading the leaf re-read, a boundary the
+ *     transcription carries nothing for).
+ */
+function logPageModel(t, doc, src) {
+  const model = loadDerivs(t.slug, sha256(src));
+  if (!model) {
+    log(
+      `library: ${t.slug}: the page model rests on the volume's own running heads and bare folios alone — ` +
+        `no leaf model is stored for this text. Build one from the item's own derivatives with ` +
+        `node tools/library/derive.mjs ${t.slug}`,
+    );
+    return;
+  }
+  const s = model.totals;
+  log(
+    `library: ${t.slug}: leaf-accurate page model — ${s.leaves} leaf/leaves, ${s.withText} of them carrying ` +
+      `text, ${s.numbered} carrying a printed number (${s.detected} detected on the leaf, ${s.interpolated} ` +
+      `filled in from the leaf sequence) and ${s.refused} carrying none; every numbered leaf sits at the same ` +
+      `leaf→page offset (${s.offset})`,
+  );
+  log(`library: ${t.slug}: the agreement table — the item's page-number pass against the volume's own heads:`);
+  printAgreement(agreementRows(model), (line) => log(`library: ${line.trimEnd()}`));
+  const a = model.agreement;
+  log(
+    `library:   ${a.agree} page(s) both sources agree on, ${a.textOnly} the transcription reads and the item's pass ` +
+      `does not, ${a.refusedAgree} reading(s) the stride rule refused that the leaf confirms, ${a.refusedDisagree} ` +
+      `it refuses and the leaf does not, ${a.leafOnly} the item's pass numbers with nothing read on the leaf (NOT ` +
+      `served as a number), ${a.refusedOnly} refused with nothing to confirm them, ${a.unread} neither has, ` +
+      `${a.disagree} disagreement(s)`,
+  );
+  // the diff against the txt-mode page model: the same text read with the leaf
+  // model and without it, difference by difference
+  const txt = extract(src, { entry: t, sha256: sha256(src), leaf: false });
+  const diff = diffDocs(txt, doc);
+  log(`library: ${t.slug}: against the txt-mode page model (reading the text with no leaves): ${diff.length} difference(s)`);
+  for (const line of summariseDiff(diff)) log(`library:   ${line}`);
+  for (const f of doc.findings) log(`library:   finding: ${f}`);
+}
+
 /* ---------- the stored editions: the document, the plain text, the anchors ----------
  *
  * A text whose edition the repo stores gets two more files beside its page: the
@@ -4853,6 +4966,7 @@ if (LIBRARY) {
     const pinned = checkAnchors(doc);
     if (pinned.pinned) anchorsPinned++;
     const c = counts(doc);
+    logPageModel(t, doc, readEdition(t.slug));
     writeDiscovery(`library/${t.slug}/t`, serialiseDoc(doc));
     writeDiscovery(`library/${t.slug}/plain`, plainText(doc, t));
     log(

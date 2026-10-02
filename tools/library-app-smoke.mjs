@@ -556,14 +556,20 @@ section('the running heads, the citation and the progress');
 }
 
 {
-  // a page the extraction REFUSED to number: the transcription's own characters
-  // are shown and the marker says they are not a number. Two of this volume's
-  // pages are refused (pp. 22, 42-43 region), and they must not be silent.
+  // THE TWO PAGES WITH NO NUMBER, and they are not the same kind of thing (phase
+  // 4). One is a marker the TRANSCRIPTION carries — the damaged folio "3" at the
+  // foot of a leaf whose own head already reads 33 — so the transcription's own
+  // character is shown and the marker says it is not a number. The other is a
+  // LEAF BOUNDARY the transcription carries nothing at all for (the page whose
+  // running head is missing from the transcription): its number could not be read
+  // because there is nothing there to read, so its marker carries no character —
+  // and the page model names the leaf it stands on, which is the fact the earlier
+  // txt-mode model could not state.
   const ctx = await boot();
   const refused = ctx.w.document.querySelectorAll('#reader-app [data-page="refused"]');
-  check(refused.length === 2, `the two refused page markers are rendered (${refused.length})`);
-  // FAILS IF: a refused page is dropped from the rendering (a reader then cannot
-  // see that the volume has a gap), or a number is invented for it.
+  check(refused.length === 2, `the two page markers with no number are rendered (${refused.length})`);
+  // FAILS IF: an unnumbered page is dropped from the rendering (a reader then
+  // cannot see that the volume has a gap), or a number is invented for it.
   const texts = [...refused].map((r) => r.textContent);
   check(
     texts.every((t) => !/^\s*\d+\s*$/.test(t)) && texts.some((t) => t.includes('could not be read')),
@@ -572,10 +578,29 @@ section('the running heads, the citation and the progress');
   // FAILS IF: the marker prints a plausible number — the fabrication the plan's
   // refusal rule exists to prevent.
   check(
-    [...refused].every((r) => /\[\s*(?:3|43)\s/.test(r.textContent)),
-    `and each carries the transcription's own characters (${JSON.stringify(texts)})`,
+    [...refused].some((r) => /\[\s*3\s/.test(r.textContent)),
+    `the marker the transcription carries shows its own character, not a number (${JSON.stringify(texts)})`,
   );
-  // FAILS IF: the marker is drawn from the page number rather than the source.
+  /* THE GAP BETWEEN THE DOCUMENT AND THE APP, asserted so it cannot be forgotten
+   * (phase 4): the document now names the LEAF every page marker stands on, and
+   * the app does not read that field, so the marker of a leaf boundary with no
+   * readable number renders as an empty pair of brackets rather than as "leaf 28".
+   * The document is right and the app is behind it: this check states the current
+   * rendering AND that the fact it should show is in the document. */
+  const doc = JSON.parse(readFileSync(DOC, 'utf8'));
+  const structural = doc.blocks.filter((b) => b.t === 'pb' && b.how === 'leaf');
+  check(
+    structural.length === 1 && structural[0].leaf === 28 && structural[0].page === null,
+    `the document marks the boundary the transcription carries no head for, and names its leaf (${JSON.stringify(structural)})`,
+  );
+  check(
+    [...refused].every((r) => r.textContent.trim().length > 0),
+    'and each unnumbered marker renders something (an empty marker would be invisible)',
+  );
+  check(
+    ![...refused].some((r) => /leaf 28/.test(r.textContent)),
+    'the app does NOT yet render the leaf number of an unnumbered boundary — the document names leaf 28 there and the reader is shown an empty marker: the app decodes page/how/id/x and never the leaf, so showing it is a change in the reader app, not in the document',
+  );
 }
 
 {

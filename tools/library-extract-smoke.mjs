@@ -103,9 +103,15 @@ import {
   anchorPath,
   editionPath,
   importPath,
+  derivsPath,
   hasEdition,
+  diffDocs,
+  summariseDiff,
+  loadDerivs,
+  pageSignals,
   sha256,
 } from './library/extract.mjs';
+import { agreementRows, derivativeFiles, parseDjvu, readPageNumbers, leafTable, ITEM_FACTS } from './library/derive.mjs';
 import { TEXTS, SHELF } from './library/shelf.mjs';
 import { rawBlocks, joinLines, normaliseNumber, runningHead, bareFolio } from './library/reader.mjs';
 
@@ -133,9 +139,12 @@ if (!ENTRY) {
 }
 
 /* The stored edition, and a fresh extraction of it. Everything below is checked
- * against these two, recomputed here. */
+ * against these two, recomputed here. TWO EXTRACTIONS, because phase 4 is a
+ * comparison between them: the document as phase 1 read it (from the running heads
+ * alone) and the document as phase 4 reads it (every boundary placed on a leaf). */
 const src = readFileSync(editionPath(SLUG), 'utf8');
 const doc = extract(src, { entry: ENTRY, sha256: sha256(src) });
+const txtDoc = extract(src, { entry: ENTRY, sha256: sha256(src), leaf: false });
 const recount = counts(doc);
 
 /* The corrections this smoke applies itself — a SECOND statement of the three
@@ -518,7 +527,9 @@ section('25 notes, each defined, each referenced, each resolved');
   check(!broken.includes(N_MARK) && broken.includes(MARKER), 'the fixture replaced the one unreadable marker');
   let fitted = null;
   try {
-    const d = extract(broken, { entry: ENTRY, sha256: sha256(broken) });
+    // a fixture is another edition's bytes, so it is read without the leaf model
+    // (which is derived against the stored edition and refuses to be used here)
+    const d = extract(broken, { entry: ENTRY, sha256: sha256(broken), leaf: false });
     fitted = [...new Set(d.blocks.filter((b) => b.t === 'notedef').map((b) => b.n))];
   } catch (e) {
     fitted = `threw: ${e.message}`;
@@ -532,7 +543,7 @@ section('25 notes, each defined, each referenced, each resolved');
   check(!wrong.includes(N_MARK) && wrong.includes('(9)  Hence'), 'the fixture made that marker a wrong number');
   let refused = null;
   try {
-    extract(wrong, { entry: ENTRY, sha256: sha256(wrong) });
+    extract(wrong, { entry: ENTRY, sha256: sha256(wrong), leaf: false });
     refused = 'accepted (the sequence was not enforced)';
   } catch (e) {
     refused = e.message;
@@ -585,47 +596,37 @@ section('the printed pages are monotone, and only the rule refuses');
       expect.push({ raw: m.raw, page: null, how: 'refused' });
     }
   }
-  const pbs = doc.blocks.filter((b) => b.t === 'pb');
+  /* The FIRST claim is about the txt-mode document: the phase-1 page model, read
+   * again here from the heads and folios alone, with the ±1 rule re-applied. The
+   * leaf model must not have rewritten it — it is the thing phase 4 is compared
+   * against, and a comparison whose baseline moved measures nothing. */
+  const txtPbs = txtDoc.blocks.filter((b) => b.t === 'pb');
   check(
-    pbs.length === expect.length,
-    `the document marks every page boundary the transcription carries (${pbs.length} of ${expect.length})`,
+    txtPbs.length === expect.length,
+    `the txt-mode document marks every page boundary the transcription carries (${txtPbs.length} of ${expect.length})`,
   );
   check(
-    pbs.every((b, i) => b.page === expect[i].page && b.how === expect[i].how),
+    txtPbs.every((b, i) => b.page === expect[i].page && b.how === expect[i].how),
     `each one carries the page and the HOW the rule gives it (${expect.filter((e) => e.page != null).length} numbered, ${expect.filter((e) => e.page == null).length} refused)`,
   );
-  const HOW = new Set(['head', 'folio', 'interpolated', 'refused']);
+  check(
+    txtPbs.every((b) => b.leaf === undefined),
+    'and the txt-mode document names no leaf — there is no leaf model in it to name',
+  );
+
+  const pbs = doc.blocks.filter((b) => b.t === 'pb');
+  const HOW = new Set(['head', 'folio', 'interpolated', 'leaf', 'refused']);
   check(pbs.every((b) => HOW.has(b.how)), `every pb has a how∈{${[...HOW].join(', ')}}`);
   const numbered = pbs.filter((b) => b.page != null).map((b) => b.page);
   check(
     numbered.every((p, i) => i === 0 || p > numbered[i - 1]),
     `the page sequence is strictly increasing (${numbered[0]}…${numbered[numbered.length - 1]}, ${numbered.length} pages)`,
   );
-  // a refusal must be a refusal *for a reason*: the marker's own number must fail
-  // both neighbours
-  const refusals = pbs.map((b, i) => ({ b, i })).filter(({ b }) => b.how === 'refused');
-  let unjustified = 0;
-  for (const { i } of refusals) {
-    const raw = expect[i].raw.split(' ');
-    const v = raw.length ? Number(normaliseNumber(raw[0])?.value ?? normaliseNumber(raw[raw.length - 1])?.value) : NaN;
-    const prev = i > 0 ? expect[i - 1].page : null;
-    const next = (() => {
-      for (let j = i + 1; j < expect.length; j++) if (expect[j].page != null) return expect[j].page;
-      return null;
-    })();
-    if (v === prev + 1 || (prev == null && v === (next != null ? next - 1 : NaN))) unjustified++;
-  }
   check(
-    refusals.length === 2 && unjustified === 0,
-    `each of the ${refusals.length} refusals is one the ±1 rule refuses ` +
-      `(${refusals.map(({ b }) => `${JSON.stringify(b.x)} at ${b.page}`).join(', ')})`,
+    doc.pages.length === pbs.length &&
+      doc.pages.every((p, i) => p.page === pbs[i].page && p.how === pbs[i].how && p.leaf === pbs[i].leaf),
+    `the page model mirrors the markers — same boundaries, same page, same how, same leaf (${doc.pages.length})`,
   );
-  check(
-    numbered.length === 51 && numbered.includes(5) && numbered.includes(58) && !numbered.includes(22) && !numbered.includes(42) && !numbered.includes(43),
-    `the recovered pages are 5…58 with 22, 42 and 43 unreadable (${numbered.length} pages)`,
-  );
-  check(doc.pages.length === pbs.length, `the page model has one entry per boundary (${doc.pages.length})`);
-  check(doc.pages.every((p) => p.leaf === null), 'and every entry says leaf: null — this is the txt-mode model, not an invented leaf');
   check(
     doc.toc.every((e) => doc.blocks.some((b) => b.t === 'pb' && b.page === e.page)),
     `every contents entry names a page the document actually recovered (${doc.toc.map((e) => e.page).join(', ')})`,
@@ -637,6 +638,184 @@ section('the printed pages are monotone, and only the rule refuses');
   // is text, so it is not counted here.
   const bare = doc.blocks.filter((b) => b.x && b.t !== 'pb' && /^[0-9]{1,3}$/.test(b.x));
   check(bare.length === 0, `no folio stands as a heading of its own (the folio-as-heading defect; ${bare.length} found)`);
+}
+
+/* ---------- 4b. the leaf-accurate page model (phase 4) ---------- */
+
+section('every page boundary stands on a leaf, and the three signals are reconciled');
+{
+  const model = loadDerivs(SLUG, sha256(src));
+  if (!model) {
+    skip(`no leaf model is stored for ${SLUG} — phase 4 is not in force; make one with node tools/library/derive.mjs ${SLUG}`);
+  } else {
+    /* ---- the inventory, ASSERTED against a SECOND reading of the derivatives.
+     * derive.mjs parses the item's own files; if they are not on this host (the
+     * build does not need them), the artifact's own inventory is checked against
+     * the pinned one instead — which is the assertion the phase-4 proof asks for,
+     * and it fails if a derivative with a different shape is ever adopted. */
+    const facts = ITEM_FACTS[model.item];
+    check(!!facts, `the item's inventory is pinned in code (${model.item})`);
+    const direct = derivativeFiles(join(process.env.LIBRARY_DERIVS || '/home/jaye/thework/work-derivs', model.item));
+    if (!direct) {
+      check(
+        model.totals.objects === facts.objects &&
+          model.totals.numbered === facts.numbered &&
+          model.totals.offset === facts.offset,
+        `the artifact's inventory is the pinned one (${model.totals.objects} objects, ${model.totals.numbered} numbered leaves, offset ${model.totals.offset}) — the derivatives themselves are not on this host, so this is the artifact's own record`,
+      );
+    } else {
+      const leaves = parseDjvu(readFileSync(direct.djvu, 'utf8'));
+      const pages = readPageNumbers(readFileSync(direct.pages, 'utf8'));
+      const sig = pageSignals(src, ENTRY);
+      const { table, offset } = leafTable(leaves, pages, sig.flat, model.item);
+      check(
+        table.length === facts.objects && table.filter((l) => l.page != null).length === facts.numbered && offset === facts.offset,
+        `a second reading of the item's own derivatives gives the pinned inventory (${table.length} objects, ${table.filter((l) => l.page != null).length} numbered leaves, offset ${offset}, against the pin ${facts.objects}/${facts.numbered}/${facts.offset})`,
+      );
+      const same = (l, m2) =>
+        ['leaf', 'page', 'conf', 'state', 'start', 'lines', 'words', 'head'].every((k) => JSON.stringify(l[k]) === JSON.stringify(m2[k])) &&
+        JSON.stringify(l.num) === JSON.stringify(m2.num);
+      const drift = table.filter((l, i) => !same(l, model.leaves[i]));
+      check(
+        drift.length === 0,
+        `and the stored artifact is what those bytes derive (${drift.length} leaf/leaves differ${drift.length ? `, first: ${JSON.stringify(drift[0])}` : ''})`,
+      );
+    }
+
+    /* ---- THE ALIGNMENT CAN FAIL, proved on the model itself: a model built from
+     * other bytes, a model whose line count is not this edition's, a model whose
+     * leaf boundary moved, and a model that does not tile the stream must each make
+     * the extraction throw rather than place a page boundary at the wrong line.
+     * Each of these is the SECOND extraction below, so the passing one above proves
+     * the mutations are the difference and not the extraction being broken. */
+    const mutant = (over, why) => {
+      let got = null;
+      try {
+        extract(src, { entry: ENTRY, sha256: sha256(src), derivs: over({ ...model }) });
+        got = 'accepted (the model is not checked against the edition)';
+      } catch (e) {
+        got = e.message;
+      }
+      check(
+        typeof got === 'string' && got.includes('node tools/library/derive.mjs'),
+        `${why} FAILS the extraction, naming the command that remakes the model: ${got.split('\n')[0].slice(0, 130)}`,
+      );
+    };
+    mutant((m) => ({ ...m, edition: { ...m.edition, sha256: '0'.repeat(64) } }), 'a model derived from other bytes');
+    mutant((m) => ({ ...m, totals: { ...m.totals, lines: m.totals.lines - 1 } }), 'a model whose line count is not this edition’s');
+    mutant((m) => ({ ...m, leaves: m.leaves.map((l) => (l.leaf === 13 ? { ...l, head: 'NOT THE LINE THIS LEAF STARTS ON' } : l)) }), 'a model whose leaf boundary lands on another line');
+    mutant((m) => ({ ...m, leaves: m.leaves.map((l) => (l.leaf === 20 ? { ...l, start: l.start + 1 } : l)) }), 'a model that does not tile the edition’s line stream');
+
+    /* ---- the alignment is checked against the edition this build reads, which is
+     * the artifact's own recorded sha256 — so a stale artifact cannot be used. */
+    check(
+      model.edition.sha256 === sha256(src),
+      `the artifact was derived against this edition (${model.edition.sha256.slice(0, 12)}…)`,
+    );
+    const lines = pageSignals(src, ENTRY).flat;
+    check(model.totals.lines === lines.length, `and its alignment covers the edition's ${lines.length} line(s)`);
+    const bad = model.leaves.filter((l) => l.lines > 0 && lines[l.start] !== l.head);
+    check(bad.length === 0, `and every leaf's first line is the line at its index (${bad.length} out of step)`);
+
+    /* ---- every marker stands on a leaf, and on the line the leaf gives it ---- */
+    const pbs = doc.blocks.filter((b) => b.t === 'pb');
+    const byLeaf = new Map(model.leaves.map((l) => [l.leaf, l]));
+    check(
+      pbs.every((b) => byLeaf.has(b.leaf)),
+      `every page marker names a leaf of the volume (${pbs.length} marker(s), ${new Set(pbs.map((b) => b.leaf)).size} distinct leaf/leaves)`,
+    );
+    check(
+      pbs.filter((b) => b.how !== 'head').every((b) => b.leaf != null),
+      `and every marker that is not a running head carries one too (${pbs.filter((b) => b.how !== 'head').length} of them)`,
+    );
+    /* The structural part of the model, as an assertion that can FAIL: inside the
+     * numbered span, every leaf that carries text must have a page marker standing
+     * on it — the ones the transcription marks with a head or a folio, and the ones
+     * it carries no marker for at all, which the leaf structure supplies. A leaf
+     * that lost its marker (or gained a second one) fails here. */
+    const [lo, hi] = model.totals.span;
+    const withText = model.leaves.filter((l) => l.lines > 0 && l.leaf >= lo && l.leaf <= hi);
+    const covered = new Set(pbs.map((b) => b.leaf));
+    check(
+      withText.every((l) => covered.has(l.leaf)),
+      `every leaf of the numbered span that carries text has a marker standing on it (${withText.filter((l) => covered.has(l.leaf)).length} of ${withText.length}, leaves ${lo}…${hi})`,
+    );
+
+    /* ---- the DIFF against the txt-mode page model: every difference, listed ---- */
+    const diff = diffDocs(txtDoc, doc);
+    const kinds = {};
+    for (const d of diff) kinds[d.kind] = (kinds[d.kind] || 0) + 1;
+    const txtPbs = txtDoc.blocks.filter((b) => b.t === 'pb');
+    check(
+      kinds['pb.leaf'] === txtPbs.length - 1 && kinds['pb.added'] === 1 && kinds['pb.changed'] === 1,
+      `the two page models differ in exactly three ways — ${summariseDiff(diff).length} line(s) in the log, ${diff.length} item(s): each txt-mode marker gains its leaf (${kinds['pb.leaf'] || 0}), one boundary is ADDED (${
+        kinds['pb.added'] || 0
+      }), one marker CHANGES page (${kinds['pb.changed'] || 0})`,
+    );
+    const added = doc.blocks.filter((b) => b.t === 'pb' && b.how === 'leaf');
+    check(
+      added.length === 1 && added[0].page === null && added[0].leaf === 28,
+      `the added boundary is leaf 28, the page whose running head the transcription does not have — UNNUMBERED (${JSON.stringify(added[0])})`,
+    );
+    const changed = pbs.find((b) => b.by === 'leaf');
+    check(
+      changed && changed.page === 43 && changed.leaf === 49 && changed.how === 'folio' && changed.x === '43',
+      `the changed marker is the folio "43" at the foot of leaf 49, which the stride rule refused and the leaf confirms (${JSON.stringify(changed)})`,
+    );
+
+    /* ---- the reconciliation, recomputed here from the artifact and the text ---- */
+    const rows = agreementRows(model);
+    const verdicts = {};
+    for (const r of rows) verdicts[r.verdict] = (verdicts[r.verdict] || 0) + 1;
+    check(
+      (verdicts.disagree || 0) === 0,
+      `the two sources agree wherever both have a number — ${rows.length} row(s): ${Object.entries(verdicts).map(([k, v]) => `${v} ${k}`).join(', ')}`,
+    );
+    check(
+      rows.every((r) => r.read == null || r.leafPage == null || r.read.page === r.leafPage || r.verdict === 'disagree'),
+      'and no row pairs a reading with a different number without saying so',
+    );
+    const served = new Set(pbs.filter((b) => b.page != null).map((b) => `p${b.page}`));
+    check(
+      served.has('p43') && !served.has('p22') && !served.has('p42'),
+      `the numbers served are the ones a source READ: page 43 is served, and pages 22 and 42 — which the item's own pass fills in from the leaves around them and nothing on the leaf reads — are NOT`,
+    );
+    check(
+      doc.blocks.filter((b) => b.t === 'pb' && b.page == null).length === 2,
+      'two markers remain unnumbered: the transcription\'s own refused "3", and the boundary at leaf 28',
+    );
+
+    /* ---- every page finding is in the document, and the diff is accounted for ---- */
+    const findings = doc.findings.join('\n');
+    check(
+      findings.includes('leaf 49') && findings.includes('leaf 28') && findings.includes('line 29 of 29 of leaf 39'),
+      'the three page cases are recorded as findings in the document itself (the folio the leaf confirms, the boundary with no head, the damaged folio the leaf refuses)',
+    );
+
+    /* ---- the ARTIFACT CANNOT BE LOST QUIETLY. The manifest records that its page
+     * anchors came from a leaf model, so an extraction without one fails instead of
+     * reporting p43 as a dropped anchor and inviting a re-pin that would drop it. */
+    check(
+      JSON.parse(readFileSync(anchorPath(SLUG), 'utf8')).model != null,
+      'the pinned manifest records that its page anchors came from a leaf model',
+    );
+    const tmp2 = mkdtempSync(join(tmpdir(), 'anchors-model-'));
+    const tmpManifest2 = join(tmp2, 'pinned.json');
+    copyFileSync(anchorPath(SLUG), tmpManifest2);
+    let guard = null;
+    try {
+      checkAnchors(txtDoc, tmpManifest2);
+      guard = 'accepted (the guard is a no-op)';
+    } catch (e) {
+      guard = e.message;
+    }
+    check(
+      typeof guard === 'string' && guard.includes('leaf-accurate page model') && guard.includes(`derive.mjs ${SLUG}`),
+      `a leaf-model manifest with a txt-mode extraction FAILS, naming the command that restores the model: ${guard.split('\n')[0].slice(0, 140)}`,
+    );
+    check(statSync(tmpManifest2).size === statSync(anchorPath(SLUG)).size, 'and that path does not rewrite the manifest either');
+    rmSync(tmp2, { recursive: true, force: true });
+  }
 }
 
 /* ---------- 5. the anchors ---------- */
@@ -698,9 +877,24 @@ section('the anchors are pinned, and a deliberate move fails');
   const nums = (re) => ids.filter((x) => re.test(x)).length;
   check(
     [...Array(18)].every((_, i) => ids.includes(`s${i + 1}`)) &&
-      nums(/^p\d+$/) === 51 &&
+      nums(/^p\d+$/) === 52 &&
       [...Array(25)].every((_, i) => ids.includes(`n${i + 1}`) && ids.includes(`r${i + 1}`)),
-    `the grammar #s<n>/#p<n>/#n<n>/#r<n> is carried (${nums(/^s/) } s, ${nums(/^p/)} p, ${nums(/^n/)} n, ${nums(/^r/)} r)`,
+    `the grammar #s<n>/#p<n>/#n<n>/#r<n> is carried (${nums(/^s/)} s, ${nums(/^p/)} p, ${nums(/^n/)} n, ${nums(/^r/)} r) — 52 printed-page anchors, one more than the 51 the transcription alone reads`,
+  );
+  /* THE MIGRATION THAT PHASE 4 FORCED, asserted rather than remembered: the leaf
+   * model confirms the folio "43" that the ±1 stride rule had refused, so the
+   * printed-page anchor set GAINS p43. Nothing that was pinned may be dropped or
+   * moved by that — an added anchor cannot rot a link, a dropped one does — so the
+   * page anchors the txt-mode document serves must all still be here, and the one
+   * addition must be named. */
+  const txtPages = anchorLists(txtDoc).pages;
+  check(
+    txtPages.every((id) => lists.pages.includes(id)) && txtPages.length === 51,
+    `no printed-page anchor the txt-mode page model served has moved or been dropped (${txtPages.length} pinned then, all still carried)`,
+  );
+  check(
+    lists.pages.filter((id) => !txtPages.includes(id)).join(',') === 'p43',
+    'and exactly one was added: p43, the folio the leaf model confirms',
   );
   check(
     [...lists.sections, ...lists.pages, ...lists.notes, ...lists.regions].every((id) => ids.includes(id)),
@@ -715,10 +909,20 @@ section('the anchors are pinned, and a deliberate move fails');
   // a mutation that moves an anchor: the head of page 49 removed
   const mut = src.replace('ON  THE  CAVE  OF  THE  NYMPHS     49 \n', '');
   check(mut.length < src.length, 'the fixture removed one running head');
-  const movedDoc = extract(mut, { entry: ENTRY, sha256: sha256(mut) });
+  /* The fixture is a DIFFERENT edition (its bytes are not the stored edition's), so
+   * the model derived from the stored edition does not apply to it and the
+   * extraction says so; this test is about the ANCHOR GATE, and the gate is the
+   * same gate in both modes, so the fixture is read without the leaf model. */
+  const movedDoc = extract(mut, { entry: ENTRY, sha256: sha256(mut), leaf: false });
   const tmp = mkdtempSync(join(tmpdir(), 'anchors-'));
   const tmpManifest = join(tmp, 'pinned.json');
-  copyFileSync(anchorPath(SLUG), tmpManifest);
+  /* The copy drops the `model` record on purpose: this test is about a MOVED
+   * anchor, and a leaf-model manifest with a fixture edition fires the phase-4
+   * guard first (which has its own test above). The gate's own behaviour is the
+   * same either way; only which failure comes first differs. */
+  const pinnedCopy = JSON.parse(readFileSync(anchorPath(SLUG), 'utf8'));
+  delete pinnedCopy.model;
+  writeFileSync(tmpManifest, `${JSON.stringify(pinnedCopy, null, 2)}\n`);
   let gate = null;
   try {
     checkAnchors(movedDoc, tmpManifest);
@@ -743,7 +947,7 @@ section('the anchors are pinned, and a deliberate move fails');
   const bad = src.replace('2.  Thp_anrt', '5.  Thp_anrt');
   let seq = null;
   try {
-    extract(bad, { entry: ENTRY, sha256: sha256(bad) });
+    extract(bad, { entry: ENTRY, sha256: sha256(bad), leaf: false });
     seq = 'accepted (the sequence is not enforced)';
   } catch (e) {
     seq = e.message;

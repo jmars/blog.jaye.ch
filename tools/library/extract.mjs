@@ -1,15 +1,17 @@
 /**
- * tools/library/extract.mjs — the library's document extractor (plan §4, phase 1).
+ * tools/library/extract.mjs — the library's document extractor (plan §4, phase 1;
+ * the leaf-accurate page model, phase 4).
  *
  * A scanned printed edition is a STRUCTURED object: it has printed pages with
  * numbers, divisions with numbers, notes attached to passages, and page
  * furniture. The `_djvu.txt` derivative throws that structure away and the
  * reader that renders it inherits the loss. This module RE-DERIVES the
  * structure from the transcription and emits it as a document the reader can
- * navigate, cite and search — in txt-mode, with no dependency on the archive's
- * derivatives, so it works on the transcription alone.
+ * navigate, cite and search — from the transcription ALONE when there is nothing
+ * else, and with the volume's own leaves behind the page model when the repo
+ * stores a derivation of them (decision 6).
  *
- * FIVE DECISIONS, and why they are these decisions:
+ * SIX DECISIONS, and why they are these decisions:
  *
  * 1. PAGINATION COMES FIRST, BEFORE ANYTHING IS READ AS A HEADING (§4.2). A
  *    running head carries the printed page number inline; so does a bare folio
@@ -55,6 +57,26 @@
  *    never the shelf (the shelf is touched only by `--import`, below, which
  *    refuses to overwrite a changed edition). The library is still held back
  *    from the site by `LIBRARY=1`; storing an edition does not publish it.
+ *
+ * 6. THE PAGE MODEL RESTS ON THE VOLUME'S OWN LEAVES WHEN THEY CAN BE HAD (§4.6,
+ *    phase 4). A running head says what a page number IS; it does not say where
+ *    one page ends and the next begins, and it cannot speak for a page whose head
+ *    the transcription lost. The leaves do. `tools/library/derive.mjs` reads the
+ *    item's own page files ONCE and stores, beside the edition,
+ *    `content/library/<slug>/derivs.json`: the leaf table, the line index at which
+ *    each leaf begins, and the inventory of the bytes it was derived from. This
+ *    module then places every page marker ON a leaf, and reconciles the three
+ *    signals about a page — the item's own page-number pass, the leaf a marker
+ *    stands on, and the transcription's own heads and folios — REPORTING every
+ *    disagreement rather than merging it (the table and the diff print at build).
+ *    Two things follow that the text alone cannot do: a number the ±1 stride rule
+ *    refused is re-read where the leaf it stands on is that page (`by: "leaf"` on
+ *    the marker), and a leaf boundary the transcription carries no marker for at
+ *    all is marked with its leaf and NO number (`how: "leaf"`) instead of being
+ *    invisible. What is SERVED is still only what a source read: a number nothing
+ *    on the leaf reads is never invented for it. The artifact is derived, not
+ *    fetched, so the build needs neither the item's files nor the network — and an
+ *    extraction that has no model says so instead of quietly reading in txt mode.
  */
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -80,9 +102,94 @@ export const ANCHOR_DIR = join(ROOT, 'tools', 'library', 'anchors');
 
 export const editionPath = (slug) => join(LIBRARY_DIR, slug, 'source.txt');
 export const importPath = (slug) => join(LIBRARY_DIR, slug, 'import.json');
+export const derivsPath = (slug) => join(LIBRARY_DIR, slug, 'derivs.json');
 export const anchorPath = (slug) => join(ANCHOR_DIR, `${slug}.json`);
 export const hasEdition = (slug) => existsSync(editionPath(slug));
 export const readEdition = (slug) => readFileSync(editionPath(slug), 'utf8');
+
+/**
+ * THE DERIVED PAGE MODEL, if this repo stores one (phase 4, plan §4.6).
+ *
+ * `content/library/<slug>/derivs.json` is what `tools/library/derive.mjs` writes
+ * from the archive item's own `_djvu.xml` and `_page_numbers.json`: the leaf
+ * table, the alignment to this edition's line stream, and the inventory of the
+ * bytes it was derived from. Those derivatives are 942 KB on a host path; this
+ * artifact is the few kilobytes of it a document can be built from, and it is
+ * the only one of the two the build is allowed to need (`LIBRARY_DERIVS` is read
+ * by the deriving tool, never by the build).
+ *
+ * A model derived against OTHER BYTES than the edition being extracted is
+ * refused rather than used: the leaf boundaries are line positions, and a changed
+ * edition moves every one of them. The refusal names the command that makes a new
+ * one, because the artifact is derived, not hand-written.
+ */
+export function loadDerivs(slug, edition = null) {
+  const file = derivsPath(slug);
+  if (!existsSync(file)) return null;
+  let model;
+  try {
+    model = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (e) {
+    throw new Error(`library: ${slug}: the derived page model is not valid JSON — ${e.message}`);
+  }
+  if (edition != null && model.edition && model.edition.sha256 !== edition) {
+    throw new Error(
+      `library: ${slug}: the derived page model was built from other bytes than the edition this repo ` +
+        `stores (model: ${model.edition.sha256.slice(0, 12)}…, edition: ${edition.slice(0, 12)}…) — every leaf ` +
+        `boundary in it is a line position of the edition it was derived against, so it cannot be used here.\n` +
+        `  Make a new one deliberately: node tools/library/derive.mjs ${slug}`,
+    );
+  }
+  return model;
+}
+
+/**
+ * Everything the page pass reads, and the index space a leaf boundary lives in.
+ *
+ * The LEAF model's coordinates are line indices of the whole file, so the line
+ * stream here INCLUDES the library stamp the extractor drops (a leaf boundary is
+ * a line of the file whether or not it is text). `markerKeyAt` maps such an index
+ * to the key the emission pass uses, so a leaf boundary and a running head name
+ * the same line.
+ */
+export function pageSignals(src, entry) {
+  const cfg = TEXT_RULES[entry.slug] || {};
+  const all = rawBlocks(src);
+  const flat = [];
+  for (const block of all) for (const line of block) flat.push(line);
+
+  /* 1. The library's stamp is not text (plan §4.5): recorded, then dropped. */
+  let drop = 0;
+  const dropped = [];
+  for (const want of cfg.stamp || []) {
+    const got = all[drop] ? all[drop].join(' ') : null;
+    if (got !== want) {
+      throw new Error(
+        `library: ${entry.slug}: the library stamp is not where it was measured ` +
+          `(wanted block ${JSON.stringify(want)}, found ${JSON.stringify(got)}) — ` +
+          `the transcription has changed shape and the extraction must be re-read, not patched`,
+      );
+    }
+    dropped.push(all[drop][0]);
+    drop++;
+  }
+  const lines = all.slice(drop);
+  const keys = [];
+  const base = [];
+  let run = 0;
+  for (let bi = 0; bi < lines.length; bi++) {
+    base.push(drop + run);
+    for (let li = 0; li < lines[bi].length; li++) keys.push(`${bi}:${li}`);
+    run += lines[bi].length;
+  }
+  const at = (bi, li) => base[bi] + li;
+  const markerKeyAt = (index) => (index >= drop && index - drop < keys.length ? keys[index - drop] : null);
+
+  /* 2. Page furniture, consumed before anything is read as a heading (§4.2). */
+  const { markers, junk } = scan(lines, cfg, at);
+  reconcile(markers);
+  return { cfg, all, lines, drop, dropped, flat, flatLines: flat.length, markers, junk, markerKeyAt, at };
+}
 
 /** The sha256 of a text, as the document records it: the served edition is
  * identified by its bytes, so a reader can say which text this document is of. */
@@ -314,14 +421,17 @@ function fitMarker(token, expected) {
 }
 
 /** Every line of the transcription, in reading order, with the furniture the
- * pagination pass takes out of it. */
-function scan(lines, cfg) {
+ * pagination pass takes out of it. `at` gives each marker the index of its line
+ * in the WHOLE line stream of the edition, which is the index space a leaf
+ * boundary is measured in (§4.6, phase 4). */
+function scan(lines, cfg, at) {
   const markers = new Map();
   const junk = new Set();
   for (let bi = 0; bi < lines.length; bi++) {
     for (let li = 0; li < lines[bi].length; li++) {
       const line = lines[bi][li];
       const key = `${bi}:${li}`;
+      const index = at(bi, li);
       const head = runningHead(line, cfg.head);
       if (head) {
         const n = normaliseNumber(head.num);
@@ -330,12 +440,13 @@ function scan(lines, cfg) {
           raw: line,
           value: n ? n.value : null,
           plain: n ? n.plain : false,
+          at: index,
         });
         continue;
       }
       const folio = bareFolio(line);
       if (folio) {
-        markers.set(key, { kind: 'folio', raw: line, value: folio.value, plain: folio.plain });
+        markers.set(key, { kind: 'folio', raw: line, value: folio.value, plain: folio.plain, at: index });
         continue;
       }
       if (isFurnitureJunk(line)) junk.add(key);
@@ -504,11 +615,170 @@ export function checkFrontMatter(doc) {
 }
 
 /**
+ * THE LEAF MODEL, ALIGNED TO THIS EDITION (phase 4, plan §4.6).
+ *
+ * The derived artifact gives each leaf the index of its first line in the line
+ * stream of the edition it was derived against. This checks that the alignment
+ * still holds — the edition's byte length is checked by `loadDerivs`, and here its
+ * line stream is checked leaf by leaf: the leaves must TILE the stream (no gap, no
+ * overlap) and every leaf's recorded first line must BE the line at that index.
+ * Any of those failing means the boundary positions are wrong, which is a failure
+ * the build must not paper over: it throws, and it says which leaf is out of step.
+ */
+function alignLeaves(sig, model, meta) {
+  if (!model.leaves || !model.totals) {
+    throw new Error(`library: ${meta.entry.slug}: the derived page model has no leaf table — it is not one`);
+  }
+  if (model.edition && meta.sha256 && model.edition.sha256 !== meta.sha256) {
+    throw new Error(
+      `library: ${meta.entry.slug}: the derived page model was built from other bytes than this edition\n` +
+        `  Make a new one deliberately: node tools/library/derive.mjs ${meta.entry.slug}`,
+    );
+  }
+  const flat = sig.flat;
+  if (model.totals.lines !== flat.length) {
+    throw new Error(
+      `library: ${meta.entry.slug}: the derived page model indexes ${model.totals.lines} line(s) and this edition has ` +
+        `${flat.length} — the model was derived against another edition, and its leaf boundaries point at lines that ` +
+        `are not these lines:\n  node tools/library/derive.mjs ${meta.entry.slug}`,
+    );
+  }
+  let at = 0;
+  const byLeaf = new Map();
+  const lineLeaf = [];
+  for (const lf of model.leaves) {
+    if (lf.start !== at) {
+      throw new Error(
+        `library: ${meta.entry.slug}: the leaf model does not tile the edition — leaf ${lf.leaf} starts at line ` +
+          `${lf.start} where the leaves before it end at ${at}:\n  node tools/library/derive.mjs ${meta.entry.slug}`,
+      );
+    }
+    byLeaf.set(lf.leaf, lf);
+    for (let i = 0; i < lf.lines; i++) lineLeaf[lf.start + i] = lf.leaf;
+    if (lf.lines > 0 && flat[lf.start] !== lf.head) {
+      throw new Error(
+        `library: ${meta.entry.slug}: leaf ${lf.leaf}'s boundary does not land where the model says — the model's ` +
+          `first line for it is ${JSON.stringify(lf.head)} and this edition's line ${lf.start} is ` +
+          `${JSON.stringify(flat[lf.start])}:\n  node tools/library/derive.mjs ${meta.entry.slug}`,
+      );
+    }
+    at += lf.lines;
+  }
+  if (at !== flat.length) {
+    throw new Error(
+      `library: ${meta.entry.slug}: the leaf model covers ${at} of the edition's ${flat.length} line(s):\n` +
+        `  node tools/library/derive.mjs ${meta.entry.slug}`,
+    );
+  }
+  return { model, byLeaf, lineLeaf, keyAt: sig.markerKeyAt, span: model.totals.span };
+}
+
+/**
+ * THE THREE SIGNALS, RECONCILED (plan §4.2), and every disagreement reported.
+ *
+ *  1. the item's own page-number pass, per leaf (in the derived artifact);
+ *  2. the LEAF a marker in the text stands on, measured by aligning the two line
+ *     streams — this is what makes a page boundary structural rather than inferred;
+ *  3. the transcription's own running heads and bare folios (read above).
+ *
+ * The third signal decides what is SERVED: a number no source read is never
+ * invented. The second decides two things the text alone cannot:
+ *
+ *   - a marker the ±1 stride rule of `reconcile` REFUSED is re-read when its own
+ *     reading is the page its leaf carries. The stride rule refuses a marker whose
+ *     neighbours do not supply the step; a leaf supplies the step by construction,
+ *     and where the two agree the refusal was arithmetic about a missing marker,
+ *     not a disagreement about the print. (MEASURED on this volume: the folio "43"
+ *     at the foot of leaf 49, refused because leaf 48 is blank in the
+ *     transcription and carries no marker for page 42.)
+ *   - a leaf boundary the transcription does not mark AT ALL gets a marker that
+ *     carries its leaf and NO page number. It is emitted with `how: "leaf"`, which
+ *     is exactly what it is: a page boundary established structurally, whose
+ *     printed number could not be read.
+ *
+ * Nothing is merged silently: every case above and every marker that does not
+ * stand at its leaf's own first line goes into the document's `findings`.
+ */
+function applyLeaves(markers, leaves, findings) {
+  const ordered = [...markers.values()].sort((a, b) => a.at - b.at);
+  for (const m of ordered) {
+    m.leaf = m.at < leaves.lineLeaf.length ? leaves.lineLeaf[m.at] ?? null : null;
+    const lf = m.leaf == null ? null : leaves.byLeaf.get(m.leaf);
+    if (!lf) continue;
+    m.leafAt = m.at - lf.start;
+    if (m.value == null || m.page != null) continue;
+    if (lf.page == null || lf.page !== m.value) continue;
+    m.page = lf.page;
+    m.how = m.kind === 'head' ? 'head' : 'folio';
+    m.reRead = true;
+    findings.push(
+      `page ${m.page}: the transcription reads ${JSON.stringify(m.raw)} at line ${m.leafAt + 1} of ${lf.lines} of ` +
+        `leaf ${lf.leaf} — the leaf's own page — and the ±1 stride rule had refused it because the marker before it ` +
+        `is not the page before it. The leaf supplies the step the text alone could not, so the reading stands.`,
+    );
+  }
+  for (const m of ordered) {
+    if (m.leafAt === undefined || m.leafAt === 0) continue;
+    const lf = leaves.byLeaf.get(m.leaf);
+    const where =
+      `stands at line ${m.leafAt + 1} of ${lf.lines} of leaf ${lf.leaf} — the foot of the leaf — ` +
+      `and not at its first line`;
+    findings.push(
+      m.page == null
+        ? `a page marker (${JSON.stringify(m.raw)}) ${where}. Its leaf's own head reads page ${lf.page}, ` +
+          `so this is a second, damaged reading of a folio the leaf already has, and it is refused.`
+        : `page ${m.page} (${JSON.stringify(m.raw)}) ${where}, which is where this volume prints the folio of a ` +
+          `page whose division opens on it; the leaf is that page, so the reading stands where it is printed.`,
+    );
+  }
+  /* 3. The leaf boundaries the transcription carries no marker for at all. Only
+   * the numbered span: outside it the model has no page to place, and a boundary
+   * marker with nothing on either side of it is furniture of our own making. */
+  const accepted = ordered.filter((m) => m.page != null && m.leaf != null);
+  if (!accepted.length) return;
+  const lo = Math.min(...accepted.map((m) => m.leaf));
+  const hi = Math.max(...accepted.map((m) => m.leaf));
+  const marked = new Set(ordered.map((m) => m.leaf).filter((n) => n != null));
+  for (const lf of leaves.model.leaves) {
+    if (lf.leaf < lo || lf.leaf > hi || lf.lines === 0 || marked.has(lf.leaf)) continue;
+    const key = leaves.keyAt(lf.start);
+    if (!key) continue;
+    markers.set(key, {
+      kind: 'leaf',
+      raw: null,
+      value: null,
+      page: null,
+      how: 'leaf',
+      at: lf.start,
+      leaf: lf.leaf,
+      leafAt: 0,
+    });
+    marked.add(lf.leaf);
+    findings.push(
+      `leaf ${lf.leaf}: the transcription carries no running head for this leaf at all, and nothing on it reads as ` +
+        `a page number, so the boundary stands here UNNUMBERED` +
+        (lf.page == null
+          ? ' (the leaf index has no number for it either)'
+          : ` (the leaf index fills in ${lf.page} from the leaves around it, which is a number nothing on the leaf ` +
+            `reads, and it is NOT served as one)`) +
+        `.`,
+    );
+  }
+}
+
+/**
  * Extract one stored edition into the served document (plan §4.1).
  *
  * `meta` is the shelf entry (`{slug, lang, item}`) plus the sha256 of the
  * transcription this document was built from. The return value is exactly the
  * document that is emitted at `/library/<slug>/t`.
+ *
+ * A LEAF-ACCURATE PAGE MODEL IS USED WHEN THE REPO STORES ONE (phase 4, §4.6):
+ * `meta.derivs` is the model (or `null` to read the text without it, which is
+ * what the diff between the two modes is made of). When it is absent the stored
+ * artifact is loaded if there is one, and when there is none the document is the
+ * txt-mode one: the shelf's other texts have no derivatives, and a text whose page
+ * model rests only on its own running heads is honest, just less accurate.
  */
 export function extract(src, meta) {
   const entry = meta.entry;
@@ -519,26 +789,18 @@ export function extract(src, meta) {
    * to the reading view. The list's order is the file's order (plan §7). */
   const { edits } = loadEdits(entry.slug);
   const openers = edits.filter((c) => c.cls === 'opener');
-  const lines = rawBlocks(src);
 
   /* 1. The library's stamp is not text (plan §4.5): recorded, then dropped. */
-  const stamp = cfg.stamp || [];
-  const dropped = [];
-  for (const want of stamp) {
-    const got = lines.length ? lines[0].join(' ') : null;
-    if (got !== want) {
-      throw new Error(
-        `library: ${entry.slug}: the library stamp is not where it was measured ` +
-          `(wanted block ${JSON.stringify(want)}, found ${JSON.stringify(got)}) — ` +
-          `the transcription has changed shape and the extraction must be re-read, not patched`,
-      );
-    }
-    dropped.push(lines.shift()[0]);
-  }
+  const sig = pageSignals(src, entry);
+  const { lines, markers, junk, dropped } = sig;
 
-  /* 2. Page furniture, consumed before anything is read as a heading (§4.2). */
-  const { markers, junk } = scan(lines, cfg);
-  reconcile(markers);
+  /* 2. Page furniture, consumed before anything is read as a heading (§4.2).
+   * `reconcile` has already given every marker the page the TRANSCRIPTION's own
+   * readings support; step 2b then reads the leaves. */
+  const leafModel = meta.derivs !== undefined ? meta.derivs : meta.leaf === false ? null : loadDerivs(entry.slug, meta.sha256);
+  const leaves = leafModel ? alignLeaves(sig, leafModel, meta) : null;
+  const pageFindings = [];
+  if (leaves) applyLeaves(markers, leaves, pageFindings);
 
   /* 3. The document, in one pass over the lines. */
   const out = [];
@@ -674,11 +936,23 @@ export function extract(src, meta) {
           t: 'pb',
           page: mark.page,
           how: mark.how,
+          // the LEAF the marker stands on (phase 4): a page boundary is only
+          // honest if the leaf it belongs to is named, and a HONEST model is
+          // what the reading view turns into "leaf N" where no number was read
+          ...(leafModel ? { leaf: mark.leaf } : {}),
+          // a number the stride rule had refused, accepted because the leaf it
+          // stands on is that page: the document says so on the marker itself,
+          // so provenance can count them without reading the findings
+          ...(mark.reRead ? { by: 'leaf' } : {}),
           // a bare folio IS its own text (no head words to carry it); the head's
           // words are in the `rh` block above, so the number is not repeated
           ...(mark.kind === 'folio' ? { x: line } : {}),
         });
-        continue;
+        // A LEAF BOUNDARY the transcription marks nothing on is a marker and
+        // NOT a line of furniture: the line it opens is the page's first line of
+        // text and is emitted below like any other (dropping it would lose the
+        // page's opening words — a silent loss this document does not allow).
+        if (mark.kind !== 'leaf') continue;
       }
       if (junk.has(key)) {
         flush();
@@ -954,11 +1228,49 @@ export function extract(src, meta) {
     corrections[i].hits = r.hits;
   });
 
+  /* 7d. What the LEAF MODEL found is a finding like any other, and the document
+   * keeps it: every page marker that does not stand at its leaf's own boundary,
+   * every marker the leaf re-read, and every boundary the transcription carries
+   * no marker for. The build prints them, so the difference between the txt-mode
+   * page model and the leaf-accurate one is accounted for one case at a time. */
+  findings.push(...pageFindings);
+
   const doc = {
     slug: entry.slug,
     lang: entry.lang || 'en',
-    source: { item: entry.item || null, sha256: meta.sha256 },
-    pages: [...markers.values()].map((m) => ({ leaf: null, page: m.page })),
+    source: {
+      item: entry.item || null,
+      sha256: meta.sha256,
+      // what the page model rests on, named in the document itself: the leaves
+      // when there is a leaf model, and nothing but the transcription otherwise
+      ...(leafModel
+        ? {
+            leaves: {
+              item: leafModel.item,
+              leaves: leafModel.totals.leaves,
+              withText: leafModel.totals.withText,
+              numbered: leafModel.totals.numbered,
+              detected: leafModel.totals.detected,
+              interpolated: leafModel.totals.interpolated,
+              offset: leafModel.totals.offset,
+              // the cross-check's own outcome, so a page that says what the
+              // provenance claims can be checked against it (the disagreeing
+              // pages, if any, are named — never merged into the text's reading)
+              agreed: leafModel.agreement ? leafModel.agreement.agree : null,
+              textOnly: leafModel.agreement ? leafModel.agreement.textOnly : null,
+              leafOnly: leafModel.agreement ? leafModel.agreement.leafOnly : null,
+              disagreed: leafModel.agreement ? leafModel.agreement.disagree : null,
+            },
+          }
+        : {}),
+    },
+    // the page model, in the order the markers stand in the text. A LEAF-ACCURATE
+    // model names the leaf each boundary belongs to and says HOW the page was
+    // read; the txt-mode model has no leaves to name (which is what `leaf: null`
+    // says — not an invented one).
+    pages: [...markers.values()]
+      .sort((a, b) => a.at - b.at)
+      .map((m) => (leafModel ? { leaf: m.leaf ?? null, page: m.page, how: m.how } : { leaf: null, page: m.page })),
     toc,
     blocks: out,
     corrections,
@@ -1095,6 +1407,22 @@ export function counts(doc) {
     classes[c.cls] = (classes[c.cls] || 0) + 1;
     hits[c.cls] = (hits[c.cls] || 0) + (c.hits || 0);
   }
+  /* The LEAF-ACCURATE page model, counted from what the document itself carries:
+   * how many boundaries name the leaf they stand on, how many of those stand AT
+   * the leaf's first line, how many are boundaries the transcription marks nothing
+   * on, and what the leaf index has for the pages the text could not read. */
+  const pb = doc.blocks.filter((b) => b.t === 'pb');
+  const leaf = {
+    model: doc.source && doc.source.leaves ? doc.source.leaves : null,
+    boundaries: pb.length,
+    named: pb.filter((b) => b.leaf != null).length,
+    structural: pb.filter((b) => b.how === 'leaf').length,
+    numbered: pb.filter((b) => b.page != null).length,
+    unnumbered: pb.filter((b) => b.page == null).length,
+    reread: pb.filter((b) => b.by === 'leaf').length,
+    leaves: new Set(pb.map((b) => b.leaf).filter((n) => n != null)).size,
+    modelLeaves: doc.source && doc.source.leaves ? doc.source.leaves.leaves : null,
+  };
   return {
     blocks: doc.blocks.length,
     byType,
@@ -1103,11 +1431,144 @@ export function counts(doc) {
     notes: doc.blocks.filter((b) => b.t === 'notedef').map((b) => b.n).filter((n, i, a) => a.indexOf(n) === i).length,
     refs: doc.blocks.filter((b) => b.t === 'ref').length,
     pages,
+    leaf,
     corrections: classes,
     correctionHits: hits,
     damagedTitles: doc.toc.filter((t) => t.damaged).map((t) => t.n),
     correctionsMeta: doc.correctionsMeta || null,
   };
+}
+
+/**
+ * THE DIFF BETWEEN THE TWO PAGE MODELS (plan §4.6, the acceptance test).
+ *
+ * Phase 4 does not rewrite the document: it re-derives the PAGE MODEL. So the
+ * difference between the txt-mode document and the leaf-accurate one must be
+ * exactly the page model and nothing else — and this function is what says so,
+ * item by item, so the build can print every difference and the smoke can assert
+ * that the list is the whole of it. The two documents are taken as a parameter
+ * rather than the files, because the point is to compare the two READINGS of one
+ * edition, not two builds of it.
+ *
+ * Each difference is `{kind, what}`: `kind` is the place in the document, `what`
+ * the difference itself. Anything the diff cannot pair up is a difference too —
+ * an unexplained one, which is the failure this test exists to catch.
+ */
+export function diffDocs(txt, leaf) {
+  const out = [];
+  const nonMarker = (doc) => doc.blocks.filter((b) => b.t !== 'pb').map((b) => JSON.stringify(b));
+  const a = nonMarker(txt);
+  const b = nonMarker(leaf);
+  if (a.length !== b.length) {
+    out.push({ kind: 'text', what: `the two documents carry ${a.length} and ${b.length} non-marker block(s)` });
+  }
+  for (let i = 0; i < Math.min(a.length, b.length); i++) {
+    if (a[i] !== b[i]) {
+      out.push({
+        kind: 'text',
+        what: `block ${i} of the text differs: ${a[i].slice(0, 60)}… against ${b[i].slice(0, 60)}…`,
+      });
+      break;
+    }
+  }
+  const pbTxt = txt.blocks.filter((x) => x.t === 'pb');
+  const pbLeaf = leaf.blocks.filter((x) => x.t === 'pb');
+  let i = 0;
+  let j = 0;
+  while (i < pbTxt.length || j < pbLeaf.length) {
+    const t = pbTxt[i];
+    const l = pbLeaf[j];
+    const same = t && l && t.page === l.page && t.how === l.how;
+    if (same) {
+      if (t.leaf !== l.leaf || (l.leaf != null && t.leaf == null)) {
+        out.push({ kind: 'pb.leaf', what: `page ${t.page == null ? '—' : t.page}: the marker gains leaf ${l.leaf}` });
+      }
+      i++;
+      j++;
+      continue;
+    }
+    if (l && t && l.how === 'leaf' && l.page == null) {
+      out.push({
+        kind: 'pb.added',
+        what: `leaf ${l.leaf}: a page boundary the transcription carries no marker for, added UNNUMBERED (how: leaf)`,
+      });
+      j++;
+      continue;
+    }
+    if (t && l) {
+      out.push({
+        kind: 'pb.changed',
+        what:
+          `a marker of the transcription (${JSON.stringify(t.x ?? '')}) was ${t.how} at page ${t.page == null ? '—' : t.page} ` +
+          `and is ${l.how} at page ${l.page == null ? '—' : l.page} on leaf ${l.leaf}`,
+      });
+      i++;
+      j++;
+      continue;
+    }
+    out.push({
+      kind: l ? 'pb.added' : 'pb.dropped',
+      what: l ? `a marker the transcription does not carry (leaf ${l.leaf})` : `a marker the leaf model lost (page ${t.page})`,
+    });
+    if (l) j++;
+    else i++;
+  }
+  /* The page model (`pages[]`) is the marker list — the same boundaries, in the
+   * same order, with the number and the how and nothing else — so it is checked
+   * to MIRROR the markers in both documents rather than diffed entry by entry.
+   * Diffing it by index would report the leaf-28 insertion as 36 shifted entries,
+   * which is a fact about the comparison, not about the page model. What the model
+   * changed is said in one place: it gains a leaf on every entry, and it gains the
+   * entry for the boundary the markers gained. */
+  const mirror = (doc) => {
+    const pbs = doc.blocks.filter((x) => x.t === 'pb');
+    const pages = doc.pages || [];
+    if (pages.length !== pbs.length) return `carries ${pages.length} page model entr(y/ies) for ${pbs.length} marker(s)`;
+    for (let k = 0; k < pages.length; k++) {
+      if (pages[k].page !== pbs[k].page) return `names page ${pages[k].page == null ? '—' : pages[k].page} for the marker at ${pbs[k].page == null ? '—' : pbs[k].page}`;
+      if (pages[k].how !== undefined && pages[k].how !== pbs[k].how) return `says "${pages[k].how}" for a marker its own block says is "${pbs[k].how}"`;
+      if ((pages[k].leaf ?? null) !== (pbs[k].leaf ?? null)) return `names leaf ${pages[k].leaf ?? '—'} for a marker its own block puts on leaf ${pbs[k].leaf ?? '—'}`;
+    }
+    return null;
+  };
+  for (const [name, doc] of [['the txt-mode document', txt], ['the leaf-accurate document', leaf]]) {
+    const bad = mirror(doc);
+    if (bad) out.push({ kind: 'pages', what: `${name} ${bad} — the page model is not the marker list` });
+  }
+  const leafGains = (leaf.pages || []).filter((p, k) => p.leaf != null && (txt.pages[k] || {}).leaf !== p.leaf).length;
+  if (leafGains) {
+    out.push({
+      kind: 'pages.leaf',
+      what: `every entry of the page model names the leaf its marker stands on (${leafGains} of ${(leaf.pages || []).length})`,
+    });
+  }
+  return out;
+}
+
+/**
+ * THE SAME DIFF, AS THE BUILD LOG SAYS IT.
+ *
+ * The full list is 108 items for this volume, and 106 of them are one rule applied
+ * 106 times ("the marker gains its leaf"). Printing all of them would bury the two
+ * that are not that rule — which are the entire point of the exercise. So the log
+ * gets the count per kind, a SHORT sample of the repeated kind, and every item of
+ * a kind that is a change rather than an addition. The smoke asserts the FULL
+ * list, item by item, against an independently derived expectation: the log is for
+ * a human, the smoke is for the claim.
+ */
+export function summariseDiff(diff) {
+  const byKind = new Map();
+  for (const d of diff) byKind.set(d.kind, [...(byKind.get(d.kind) || []), d.what]);
+  const lines = [];
+  for (const [kind, items] of byKind) {
+    const uniform = items.every((w) => /gains leaf \d+$/.test(w));
+    if (uniform && items.length > 3) {
+      lines.push(`${items.length} marker(s)/entr(ies): ${kind} — each gains the leaf it stands on, e.g. ${items[0]}`);
+    } else {
+      for (const w of items) lines.push(`${kind}: ${w}`);
+    }
+  }
+  return lines;
 }
 
 /* ---------- the two emitted files ---------- */
@@ -1203,17 +1664,38 @@ export function anchorHash(lists) {
  *
  * There is no bypass. The only deliberate way through is to delete the pinned
  * file and rebuild — which is a decision someone has to make on purpose.
+ *
+ * PHASE 4 ADDED ONE GUARD TO THAT. The manifest also records WHEN the page
+ * anchors came from a leaf model, because the derivation can be absent while the
+ * manifest stays: the text would then be read in txt mode, its page anchors would
+ * be the 51 the transcription alone reads, and the gate would report p43 as
+ * DROPPED and — this is the trap — instruct the reader to delete the manifest and
+ * re-pin. Following that instruction would drop a page the volume prints and the
+ * leaf model confirmed, silently, with the gate's own blessing. So a manifest
+ * built from a leaf model fails, with the model named, when the extraction has
+ * none: the artifact is stored in the repo, and the fix is to restore it.
  */
 export function checkAnchors(doc, file = anchorPath(doc.slug)) {
   const lists = anchorLists(doc);
   const hash = anchorHash(lists);
-  const want = { slug: doc.slug, ...lists, hash };
+  const leafModel = doc.source && doc.source.leaves ? doc.source.leaves : null;
+  const want = { slug: doc.slug, ...lists, hash, ...(leafModel ? { model: { leaves: leafModel.leaves, numbered: leafModel.numbered } } : {}) };
   if (!existsSync(file)) {
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, `${JSON.stringify(want, null, 2)}\n`);
     return { pinned: true, ...want };
   }
   const have = JSON.parse(readFileSync(file, 'utf8'));
+  if (have.model && !leafModel) {
+    throw new Error(
+      `library: ${doc.slug}: the pinned anchors were built from the leaf-accurate page model and this extraction ` +
+        `has none — it is reading the text in txt mode, where the page anchors are only what the running heads ` +
+        `alone read, so re-pinning from here would DROP the pages the leaves confirm.\n` +
+        `  The model is not fetched at build time and is not on the shelf: it is derived once, from the item's own ` +
+        `page files, and stored beside the edition.\n` +
+        `  Restore it: node tools/library/derive.mjs ${doc.slug}`,
+    );
+  }
   if (have.hash === hash) return { pinned: false, ...have };
   const moved = [];
   for (const k of ['regions', 'sections', 'pages', 'notes']) {
