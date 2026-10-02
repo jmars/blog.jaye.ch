@@ -45,6 +45,13 @@
  *   node tools/build.mjs            (run from the repo root)
  *   PREVIEW=1 node tools/build.mjs  build drafts too — LOCAL PREVIEW ONLY,
  *                                   never deploy a preview build
+ *
+ * DEPLOY WITH ./tools/deploy.sh, NOT with a hand-typed rsync. This build starts
+ * by removing dist/ (`rmSync` below), and more than one agent can build at once,
+ * so rsyncing dist/ directly is a race: on 2026-10-02 a concurrent build wiped
+ * dist/ mid-transfer and --delete removed the remote index.html, and the home
+ * page served a 404 until a fresh build was pushed. tools/deploy.sh freezes a
+ * copy first, refuses a dist/ without index.html, and verifies the site after.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync, copyFileSync } from 'node:fs';
@@ -773,6 +780,21 @@ const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 .sres .sr-grp { margin: 26px 0 0; padding: 10px 0 6px; border-top: 2px solid var(--line);
   font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--accent2); }
+/* The row the pieces the query did NOT name stand behind — the disclosure. It is
+   a divider and a count, not a result: no link, no score, and it says in words
+   how many rows it opens. A button, so it is focusable and Enter or Space opens
+   it; the marker turns with the state (text, not a shape, so it reads the same
+   in either palette). The related rows keep the result's own rule, dashed, so
+   the group they belong to is visible when they are open. */
+.sres .sr-tail { margin: 10px 0 0; border-top: 1px solid var(--line); }
+.sres .sr-more { display: block; width: 100%; text-align: left; background: none; border: 0;
+  padding: 10px 0; font-size: 12px; line-height: 1.4; font-family: var(--mono);
+  color: var(--accent2); cursor: pointer; }
+.sres .sr-more::before { content: "▸ "; color: var(--dim); }
+.sres .sr-more[aria-expanded="true"]::before { content: "▾ "; }
+.sres .sr-more:hover, .sres .sr-more:focus { color: var(--accent); }
+.sres .sr-more:focus { outline: 1px solid var(--accent); outline-offset: 2px; }
+.sres .sr-rel { border-top: 1px dashed var(--line); }
 /* A shelf result is a CITATION: the edition and the division are the link, the
    passage is quoted under it. It is styled as prose rather than as a card —
    the passage is the thing, and the score sits with the edition line. */
@@ -2934,6 +2956,11 @@ function buildSearch(navPosts) {
   const deepBytes = Buffer.byteLength(deepJson);
   const deepGz = gzipSync(deepJson, { level: 9 }).length;
   writeFile('search/deep', deepJson);
+  // …and through the workshop leak gate like every other emitted file. It was
+  // the one file that skipped it, and it is the one file that now carries the
+  // shelf's prose: a reader must never see how the blog is built, in the data
+  // half no less than on the page.
+  gatedFiles.push({ rel: 'search/deep', text: deepJson });
   log(
     `search deep half: ${totals.deepRows} positioned term rows, ${totals.deepPositions} body positions, ` +
       `${totals.deepPassages} passages (longest ${totals.deepLongest} chars) — ${deepBytes} bytes raw, ` +
@@ -3428,6 +3455,10 @@ const LIBRARY_MAX_BYTES = 1800000;
  * same bytes would be two chances to disagree about the same book. */
 const editionDocs = new Map();
 
+/** Files the build writes that are neither pages nor discovery files, but must
+ * pass the workshop leak gate all the same (the fetched search half). */
+const gatedFiles = [];
+
 /** Which readings cite each text.
  *
  * The SAME derivation the map is drawn from — `citations()` over the catalogue
@@ -3600,9 +3631,16 @@ function editionHtml(t, lib) {
       `views, so the repairs can be checked against the transcription word by word. ` +
       `<b>The policy is: a recorded reading is substituted, and where none is the transcription’s own ` +
       `characters stay.</b> The reading view therefore shows the print’s word where one is recorded and ` +
-      `the transcription’s damage where none is — ${m.leftVisible} distinct damaged word(s) of the body ` +
-      `are shown with the damage still in them, marked so a reader can see that it is damage and not a ` +
-      `typo by the author, and named in the reader’s repairs list under “damaged words left visible”. ` +
+      `the transcription’s damage where none is, and that surviving damage is counted in TWO classes, ` +
+      `stated apart because they are different things: ` +
+      `<b>${m.leftWordCount} damaged word(s)</b> no rule resolved, shown with the damage still in them and ` +
+      `named in the reader’s repairs list under “damaged words left visible”, and ` +
+      `<b>${m.leftMarkerCount} standalone marker(s)</b> — one or more damage characters standing as their ` +
+      `own token BETWEEN words (a lost space, or the scanner’s debris) — which are NOT words and are not ` +
+      `counted as any. Between them they account for every one of the ` +
+      `${m.leftDamageChars} damage character(s) the reading view still shows, over the text the reading ` +
+      `view renders (the note definitions and the unlabelled paragraphs included). ` +
+      `Every one is marked, so a reader can see that it is damage and not a typo by the author. ` +
       `Where a reading is not determinable from this transcription, a rule records that decision ` +
       `(${cls.review} rule(s), action “leave”) instead of deleting the marker and saying nothing, and a ` +
       `damaged word no rule names is left the same way. The damage set the marking uses was MEASURED on ` +
@@ -5463,13 +5501,15 @@ if (LIBRARY_ON) {
      * what a reader's reading view IS. */
     const report = checkEdits(doc);
     const policy = doc.correctionsMeta || {};
-    const leftVisible = policy.leftVisible != null ? policy.leftVisible : '?';
+    const leftWords = policy.leftWordCount != null ? policy.leftWordCount : '?';
+    const leftMarkers = policy.leftMarkerCount != null ? policy.leftMarkerCount : '?';
     log(
       `library: ${t.slug}: ${report.length} correction rule(s) — ` +
         `${EDIT_CLASSES.map((k) => `${report.filter((r) => r.cls === k).length} ${k}`).join(', ')} — ` +
         `every one of them fires; ${report.reduce((a, r) => a + r.hits, 0)} application(s) in the served text; ` +
         `policy substitute-if-known-else-leave: ${(policy.readings || {}).occurrences} reading(s) applied, ` +
-        `${leftVisible} damaged word(s) left visible`,
+        `${leftWords} damaged word(s) and ${leftMarkers} standalone marker(s) left visible, ` +
+        `accounting for all ${policy.leftDamageChars} damage character(s) the reading view shows`,
     );
     const grouped = EDIT_CLASSES;
     for (const cls of grouped) {
@@ -5634,7 +5674,7 @@ function checkWorkshopAll(written, files) {
 }
 
 checkLinks(written, manifest);
-checkWorkshopAll(written, writtenFiles);
+checkWorkshopAll(written, writtenFiles.concat(gatedFiles));
 if (PREVIEW) {
   console.log(
     '***********************************************************************\n' +
