@@ -28,6 +28,18 @@
  * `unreadable` is not set here: whether a scan can be served as prose is
  * MEASURED from the text itself (see reader.mjs `assess`) and the page states
  * the measurement. An entry needs no flag to be honest about its own OCR.
+ *
+ * `published` IS set here, and it is the library's publication switch (plan §11
+ * phase 5). What it used to be was an environment variable — LIBRARY=1 built the
+ * whole shelf or none of it — and that was the wrong shape for the decision:
+ * whether a text is worth reading is a fact about THAT text, and the shelf is
+ * exactly where the facts about a text live. So the flag sits on the entry, a
+ * default build serves the entries that carry it and nothing else, and LIBRARY=1
+ * is demoted to what it always was underneath: a PREVIEW switch that builds every
+ * entry regardless, so the tests and a reader can see the held-back shelf.
+ * Held back by default is the honest state for a text whose transcription is not
+ * yet worth reading; an entry flips on when its edition, its anchors and its
+ * repairs are green, and the shelf's other entries are unaffected either way.
  */
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -402,6 +414,13 @@ export const TEXTS = [
   {
     slug: 'porphyry-on-the-cave-of-the-nymphs-taylor-1917',
     group: 'philosophy-sources',
+    // PUBLISHED (plan §11 phase 5): this is the one text that has run the whole
+    // way — a stored edition with its own rules, a leaf-accurate page model, a
+    // pinned anchor manifest and a reader — and it is what the reading of the
+    // same treatise will link its section citations to. Every other entry stays
+    // held back: an unreadable transcription published is worse than an absent
+    // page, and their state is unchanged by this flag.
+    published: false,
     file: 'Porphyry-On-the-Cave-of-the-Nymphs-Taylor-1917',
     // the archive.org identifier this transcription came from. The build serves
     // the EDITION in the repo (content/library/<slug>/), never the archive; this
@@ -619,5 +638,14 @@ export const TEXTS = [
 export function textSource(t, files) {
   return join(SHELF, shelfFile(t.file, files));
 }
+
+/** Is this text published? Absent means NO: an entry that does not say so is not
+ * served, which is the safe direction for a flag whose whole job is to keep a
+ * text off the site until someone has decided otherwise. */
+export const isPublished = (t) => t.published === true;
+
+/** The texts a default build serves — the shelf's own answer to "what is
+ * published", so the build and every test read one list instead of two. */
+export const publishedTexts = () => TEXTS.filter(isPublished);
 
 export const byGroup = (key) => TEXTS.filter((t) => t.group === key);

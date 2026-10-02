@@ -280,7 +280,7 @@ That is why the fourth question needs one more cut: **a reading is public and ar
 
 [^pertains]: Porphyry, section 14, Taylor's translation, 1917 printing. The parentheses are the printing's; "daemons" is spelled as the 1917 printing spells it, where the 1823 printing has "demons".
 
-[^witnesses]: Porphyry, sections 11 and 14. The Parmenides reference is section 11, Taylor's translation, 1917 printing, where the sentence is followed by the title of the treatise, which the printing encloses in quotation marks. The Pherecydes reference is section 14 and is quoted from the 1823 printing, which carries the whole list, where the 1917 printing breaks after "recesses".
+[^witnesses]: Porphyry, sections section 11 and section 14. The Parmenides reference is section 11, Taylor's translation, 1917 printing, where the sentence is followed by the title of the treatise, which the printing encloses in quotation marks. The Pherecydes reference is section 14 and is quoted from the 1823 printing, which carries the whole list, where the 1917 printing breaks after "recesses".
 
 [^bowls]: Porphyry, section 6, Taylor's translation, 1917 printing. The distinction Porphyry draws is between the jars' composition — "fictile, i.e., consists of baked earth" — and the stone of the ones in the cave.
 
