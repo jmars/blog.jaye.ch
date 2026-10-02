@@ -7,7 +7,7 @@
     "why": "Taylor's Select Works of Porphyry (1823) carries the same translation of the same treatise",
     "shelf": "/home/jaye/thework/work-text"
   },
-  "generated": "2026-10-02T13:44:26Z",
+  "generated": "2026-10-02T21:12:11Z",
   "mergesNothing": "Nothing here has been merged. To accept a reading, give the damaged word a `reading` rule with this replace in the text’s own rules file and build: every rule must fire at least once or the build fails. A `notFound` is not a reading: the word stays visible under the base policy.",
   "policy": {
     "rule": "substitute-if-known-else-leave",
@@ -25,29 +25,21 @@
     "checkedAgainstRecorded": true
   },
   "reconcile": {
-    "agree": 36,
-    "proposedNew": 10,
+    "agree": 43,
+    "proposedNew": 7,
     "notFound": 54,
     "disagree": [
       {
         "find": ".^and",
-        "recorded": "obscure, and",
+        "recorded": "obscure, (and",
         "via": "inside the rule \"obscure .^and\"",
         "derived": "[and",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:8727",
         "verdict": "DISAGREE"
       },
       {
-        "find": "regions^",
-        "recorded": "regions",
-        "via": "the rule for the whole token",
-        "derived": "regions,",
-        "where": "Porphyry-Taylor-Select-Works-1823.txt:8729",
-        "verdict": "DISAGREE"
-      },
-      {
         "find": "rites}",
-        "recorded": "rites",
+        "recorded": "rites)",
         "via": "the rule for the whole token",
         "derived": "rites]",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:8731",
@@ -87,7 +79,7 @@
       },
       {
         "find": "h_qney_combs_?__",
-        "recorded": "honeycombs.",
+        "recorded": "honeycombs?",
         "via": "the rule for the whole token",
         "derived": "honey-combs?",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9025",
@@ -95,7 +87,7 @@
       },
       {
         "find": "{into",
-        "recorded": "into",
+        "recorded": "(into",
         "via": "the rule for the whole token",
         "derived": "[into",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9041",
@@ -126,14 +118,6 @@
         "verdict": "DISAGREE"
       },
       {
-        "find": "TvfnnrK_",
-        "recorded": "tubs",
-        "via": "the rule for the whole token",
-        "derived": "Moon.",
-        "where": "Porphyry-Taylor-Select-Works-1823.txt:9751",
-        "verdict": "DISAGREE"
-      },
-      {
         "find": "anc^",
         "recorded": "and",
         "via": "the rule for the whole token",
@@ -142,35 +126,19 @@
         "verdict": "DISAGREE"
       },
       {
+        "find": "that_jg_the",
+        "recorded": "that is the",
+        "via": "the rule for the whole token",
+        "derived": "revert",
+        "where": "Porphyry-Taylor-Select-Works-1823.txt:9858",
+        "verdict": "DISAGREE"
+      },
+      {
         "find": "cavern^",
-        "recorded": "cavern",
+        "recorded": "cavern.",
         "via": "the rule for the whole token",
         "derived": "“‘",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:8530",
-        "verdict": "DISAGREE"
-      },
-      {
-        "find": "t^\"f^li^rva.J",
-        "recorded": "of Minerva",
-        "via": "the rule for the whole token",
-        "derived": "Minerva;",
-        "where": "Porphyry-Taylor-Select-Works-1823.txt:9895",
-        "verdict": "DISAGREE"
-      },
-      {
-        "find": "therefore^",
-        "recorded": "therefore",
-        "via": "the rule for the whole token",
-        "derived": "therefore,",
-        "where": "Porphyry-Taylor-Select-Works-1823.txt:9916",
-        "verdict": "DISAGREE"
-      },
-      {
-        "find": "fjpjjnsjtpfjL^",
-        "recorded": "deposited",
-        "via": "the rule for the whole token",
-        "derived": "deposited.",
-        "where": "Porphyry-Taylor-Select-Works-1823.txt:9936",
         "verdict": "DISAGREE"
       }
     ],
@@ -225,11 +193,11 @@
       },
       {
         "find": "an/l",
-        "recorded": "(no rule names this word)",
+        "recorded": "and",
         "via": "the rule for the whole token",
         "derived": "and",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:8693",
-        "verdict": "new"
+        "verdict": "agree"
       },
       {
         "find": "jQhe^ajricients,",
@@ -265,7 +233,7 @@
       },
       {
         "find": ".^and",
-        "recorded": "obscure, and",
+        "recorded": "obscure, (and",
         "via": "inside the rule \"obscure .^and\"",
         "derived": "[and",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:8727",
@@ -281,15 +249,15 @@
       },
       {
         "find": "regions^",
-        "recorded": "regions",
+        "recorded": "regions,",
         "via": "the rule for the whole token",
         "derived": "regions,",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:8729",
-        "verdict": "DISAGREE"
+        "verdict": "agree"
       },
       {
         "find": "rites}",
-        "recorded": "rites",
+        "recorded": "rites)",
         "via": "the rule for the whole token",
         "derived": "rites]",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:8731",
@@ -489,7 +457,7 @@
       },
       {
         "find": "were/the",
-        "recorded": "(no rule names this word)",
+        "recorded": "were, the",
         "via": "the rule for the whole token",
         "derived": null,
         "where": null,
@@ -513,7 +481,7 @@
       },
       {
         "find": "h_qney_combs_?__",
-        "recorded": "honeycombs.",
+        "recorded": "honeycombs?",
         "via": "the rule for the whole token",
         "derived": "honey-combs?",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9025",
@@ -553,7 +521,7 @@
       },
       {
         "find": "{into",
-        "recorded": "into",
+        "recorded": "(into",
         "via": "the rule for the whole token",
         "derived": "[into",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9041",
@@ -721,11 +689,11 @@
       },
       {
         "find": "Bo/>a,",
-        "recorded": "(no rule names this word)",
+        "recorded": "Boga,",
         "via": "the rule for the whole token",
         "derived": "Boga,",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9706",
-        "verdict": "new"
+        "verdict": "agree"
       },
       {
         "find": "conse^",
@@ -801,11 +769,11 @@
       },
       {
         "find": "TvfnnrK_",
-        "recorded": "tubs",
-        "via": "the rule for the whole token",
+        "recorded": "descend through the Moon. With Homer,",
+        "via": "inside the rule \"the TvfnnrK_ With Hnmpr\"",
         "derived": "Moon.",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9751",
-        "verdict": "DISAGREE"
+        "verdict": "agree"
       },
       {
         "find": "Blesrjn£3",
@@ -833,11 +801,11 @@
       },
       {
         "find": "that_jg_the",
-        "recorded": "(no rule names this word)",
+        "recorded": "that is the",
         "via": "the rule for the whole token",
         "derived": "revert",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9858",
-        "verdict": "new"
+        "verdict": "DISAGREE"
       },
       {
         "find": "th^jpjpjpj^hejcavfir\",",
@@ -849,7 +817,7 @@
       },
       {
         "find": "cavern^",
-        "recorded": "cavern",
+        "recorded": "cavern.",
         "via": "the rule for the whole token",
         "derived": "“‘",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:8530",
@@ -897,11 +865,11 @@
       },
       {
         "find": "t^\"f^li^rva.J",
-        "recorded": "of Minerva",
+        "recorded": "of Minerva;",
         "via": "the rule for the whole token",
         "derived": "Minerva;",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9895",
-        "verdict": "DISAGREE"
+        "verdict": "agree"
       },
       {
         "find": "uniY.ej£e_",
@@ -977,11 +945,11 @@
       },
       {
         "find": "therefore^",
-        "recorded": "therefore",
+        "recorded": "therefore,",
         "via": "the rule for the whole token",
         "derived": "therefore,",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9916",
-        "verdict": "DISAGREE"
+        "verdict": "agree"
       },
       {
         "find": "naturally_jever-flourIsKing,",
@@ -1009,7 +977,7 @@
       },
       {
         "find": "ajid_ajifonls_aj*^^",
-        "recorded": "(no rule names this word)",
+        "recorded": "and affords a friendly branch to the suppliant",
         "via": "the rule for the whole token",
         "derived": null,
         "where": null,
@@ -1033,11 +1001,11 @@
       },
       {
         "find": "fjpjjnsjtpfjL^",
-        "recorded": "deposited",
+        "recorded": "deposited.",
         "via": "the rule for the whole token",
         "derived": "deposited.",
         "where": "Porphyry-Taylor-Select-Works-1823.txt:9936",
-        "verdict": "DISAGREE"
+        "verdict": "agree"
       },
       {
         "find": "\\he",

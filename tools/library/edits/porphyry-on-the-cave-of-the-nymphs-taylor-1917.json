@@ -126,9 +126,9 @@
     },
     {
       "find": "obscure .^and",
-      "replace": "obscure, and",
+      "replace": "obscure, (and",
       "class": "reading",
-      "note": "the print reads \"obscure, and its very bottom is darkness itself\"; unique to its site, where the shorter \"^and\" also matched a glue"
+      "note": "the \".\" is the comma and the \"^\" the opening parenthesis of Taylor's aside: the 1823 parallel reads \"parts are obscure, [and its very bottom is darkness itself].\" (:8727), and this edition sets that aside as a parenthesis — its own close stands as the literal \") .\" three lines below. The print reads \"obscure, (and\"; the earlier \"obscure, and\" dropped the bracket."
     },
     {
       "find": "Persians,^",
@@ -138,15 +138,15 @@
     },
     {
       "find": "regions^",
-      "replace": "regions",
+      "replace": "regions,",
       "class": "reading",
-      "note": "stray marker at the word's edge; the printed word is \"regions\""
+      "note": "the marker stands at the word's edge where the 1823 parallel reads \"into the sublunary regions, and its regression\" (:8729); the print has the comma, so the reading keeps it. (Was recorded \"regions\", dropping a mark the parallel shows — the same shape the same file records as \"Caves,\" for \"Cayes^\" and \"Gods,\" for \"Gods7\"."
     },
     {
       "find": "rites}",
-      "replace": "rites",
+      "replace": "rites)",
       "class": "reading",
-      "note": "stray marker at the word's edge; the printed word is \"rites\""
+      "note": "the } is an unreadable BRACKET: the 1823 parallel reads \"the arcane sacred rites] in a place\" (:8731), and this edition sets Taylor's brackets as parentheses (the run's own OPENING bracket stands as a literal \"(\" earlier in the same sentence, and \"darkness itself).\" closes the same construction above). The print has the closing bracket; the reading keeps it as \")\"."
     },
     {
       "find": "fabric^tSdJfcUUMitb£a'y",
@@ -276,9 +276,9 @@
     },
     {
       "find": "h_qney_combs_?__",
-      "replace": "honeycombs.",
+      "replace": "honeycombs?",
       "class": "reading",
-      "note": "the print reads \"honeycombs.\""
+      "note": "the print reads \"honeycombs?\" — the transcription's own \"?\" is literal print punctuation standing at the end of the token, and the 1823 parallel reads \"but with honey-combs? For in these\" (:9025). The earlier \"honeycombs.\" turned the question into a statement."
     },
     {
       "find": "^utrefactiojn1_and",
@@ -306,9 +306,9 @@
     },
     {
       "find": "{into",
-      "replace": "into",
+      "replace": "(into",
       "class": "reading",
-      "note": "stray marker at the word's edge; the printed word is \"into\""
+      "note": "the { is an unreadable BRACKET opening Taylor's aside \"[into the same mysteries]\": the 1823 parallel reads \"Other initiators [into the same mysteries] employ fire\" (:9041), and this edition sets it as a parenthesis — the run's own CLOSING bracket stands as a literal \")\" at the end of the same phrase (\"the same mysteries)\"). The print reads \"(into\"."
     },
     {
       "find": "jt_i§_a_symbol",
@@ -486,9 +486,9 @@
     },
     {
       "find": "cavern^",
-      "replace": "cavern",
+      "replace": "cavern.",
       "class": "reading",
-      "note": "stray marker at the word's edge; the printed word is \"cavern\""
+      "note": "end of the paragraph, where the 1823 parallel reads \"flourishes on the summit of the cavern.\" (:9881). The marker stands for the full stop; the earlier \"cavern\" dropped it."
     },
     {
       "find": "fren£e._.an",
@@ -522,9 +522,9 @@
     },
     {
       "find": "t^\"f^li^rva.J",
-      "replace": "of Minerva",
+      "replace": "of Minerva;",
       "class": "reading",
-      "note": "the print reads \"of Minerva\""
+      "note": "the print reads \"of Minerva;\" — the 1823 parallel reads \"For the olive is the plant of Minerva; and Minerva is wisdom\" (:9895); the earlier \"of Minerva\" dropped the semicolon."
     },
     {
       "find": "uniY.ej£e_",
@@ -582,9 +582,9 @@
     },
     {
       "find": "therefore^",
-      "replace": "therefore",
+      "replace": "therefore,",
       "class": "reading",
-      "note": "stray marker at the word's edge; the printed word is \"therefore\""
+      "note": "the marker stands for the comma: the 1823 parallel reads \"The olive, therefore, being naturally ever-flourishing\" (:9916). The earlier \"therefore\" dropped it."
     },
     {
       "find": "naturally_jever-flourIsKing",
@@ -611,10 +611,10 @@
       "note": "the print reads \"by which\" (the 1823 parallel edition:9786-9787); this find is unique to its site, where the shorter \"^s\" left a stray letter"
     },
     {
-      "find": "fjpjjnsjtpfjL^",
-      "replace": "deposited",
+      "find": "hp- fjpjjnsjtpfjL^",
+      "replace": "be deposited.",
       "class": "reading",
-      "note": "the print reads \"be deposited\" (the 1823 parallel edition:9936); NOT \"dismissed\""
+      "note": "the print reads \"be deposited.\" — the 1823 parallel reads \"all external possessions must be deposited.\" (:9936). The span covers BOTH damaged tokens (\"hp-\" = \"be\", \"fjpjjnsjtpfjL^\" = \"deposited.\"); the earlier rule repaired only the second and left \"hp-\" damaged beside it."
     },
     {
       "find": "\\he",
