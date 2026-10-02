@@ -288,6 +288,117 @@ export function partition(doc, maxBytes) {
   return parts;
 }
 
+/* ---------- the document's text primitives ----------
+ *
+ * `tools/library/extract.mjs` builds the SERVED document (the plan's §4) out of
+ * the same transcription this reader renders. The document needs the same
+ * answers to two questions — what is a line, and what is a printed number — so
+ * they are answered here, once, where the reader can see them: a second answer
+ * would let the page and the document disagree about the text they share.
+ */
+
+/** One source line as the document holds it: trimmed, and the transcription's
+ * runs of spaces (it writes TWO between words) collapsed to one. */
+export function collapseLine(line) {
+  return line.replace(/\s+/g, ' ').trim();
+}
+
+/** The source split into blocks on blank lines, each block an array of
+ * `collapseLine`d lines — the same boundary `preprocess` uses, kept as lines
+ * because page furniture (a running head, a bare folio) is a LINE and has to be
+ * taken out of a block before the block's prose is joined. */
+export function rawBlocks(src) {
+  const text = src.replace(/\r\n?/g, '\n').replace(/^\uFEFF/, '');
+  return text
+    .split(BLOCK_SEP)
+    .map((b) => b.split('\n').map(collapseLine).filter((l) => l !== ''))
+    .filter((ls) => ls.length > 0);
+}
+
+/** The transcription's digit confusions, MEASURED on these volumes and named by
+ * the plan: `io`→10, `II`→11, `i`/`l`→1, `o`→0, `S`→5. A character table that
+ * yields exactly that set — "io" reads "10", "II" reads "11" — rather than five
+ * special cases, so a sixth confusion is one line, not one branch. */
+const CONFUSION = new Map([
+  ['i', '1'], ['I', '1'], ['l', '1'], ['L', '1'],
+  ['o', '0'], ['O', '0'],
+  ['s', '5'], ['S', '5'],
+]);
+
+/** Read a token as a printed number, or null when it is not one.
+ *
+ * `plain` says the token was ALREADY all digits: a plain token is a reading of
+ * the print, a confused one ("io", "II") is an INTERPRETATION of it, and only
+ * the second needs the arithmetic around it to be checked before it is
+ * believed (see `extract.mjs`, the ±1 stride rule). */
+export function normaliseNumber(token) {
+  if (!token) return null;
+  if (/^\d+$/.test(token)) return { value: Number(token), plain: true };
+  let out = '';
+  for (const c of token) {
+    if (c >= '0' && c <= '9') out += c;
+    else if (CONFUSION.has(c)) out += CONFUSION.get(c);
+    else return null;
+  }
+  return out === '' ? null : { value: Number(out), plain: false };
+}
+
+/** The correction rules as a text transform (§4.1: `{find, repl, cls, note}`).
+ * Literal, left to right, every occurrence — the rules are a list the reader can
+ * read, not a regex language, so what the diff view shows is what runs. */
+export function applyCorrections(text, corrections) {
+  let out = text;
+  for (const c of corrections) {
+    if (!c || !c.find || c.find === c.repl) continue;
+    if (out.includes(c.find)) out = out.split(c.find).join(c.repl);
+  }
+  return out;
+}
+
+/** Page furniture that is not a word: the printer's ornament, the scan's debris
+ * ("- • 7 *^", "T**5", "--", "__", a lone "q"). Short, and carrying no word of
+ * two or more letters. It is kept in the document as an `rh` block and claims no
+ * page: a mark with no readable number is not a page number. */
+export function isFurnitureJunk(line) {
+  if (line.length > 12 || /[A-Za-z]{2}/.test(line)) return false;
+  // a line of nothing but digits is not debris: it is either a folio (taken by
+  // `bareFolio` before this) or the edition's own text — the imprint's year on a
+  // title page, a catalogue's year on a library card. Suppressing those would
+  // suppress the print.
+  return /[^0-9\s]/.test(line);
+}
+
+/** A running head, and the number it carries.
+ *
+ * The shape is the one the 1917 Porphyry is MEASURED to have: the head's own
+ * words with the printed page number inline — verso "6 ON THE CAVE OF THE
+ * NYMPHS", recto "ON THE CAVE OF THE NYMPHS 7". `OH` is accepted for `ON`
+ * because page 48 of that volume transcribed it so. Returns `{num, side}` —
+ * `num` is the raw token, which the caller reads with `normaliseNumber`. */
+export function runningHead(line, words = 'ON THE CAVE OF THE NYMPHS') {
+  const phrase = words.split(' ');
+  const toks = line.split(' ');
+  if (toks.length !== phrase.length + 1) return null;
+  const phraseAt = (i) =>
+    phrase.every((w, k) => {
+      const t = toks[i + k];
+      // the one measured OCR variant inside the head's words
+      return t === w || (k === 0 && w === 'ON' && t === 'OH');
+    });
+  if (phraseAt(0)) return { num: toks[toks.length - 1], side: 'right' };
+  if (phraseAt(1)) return { num: toks[0], side: 'left' };
+  return null;
+}
+
+/** A bare folio: a line that is nothing but a printed page number, the head's
+ * own words lost. At most three characters — `ARABIC` above draws the same
+ * bound on a numeral, and a four-digit line at a page head is the imprint's
+ * year ("1917" on the title page) rather than a page. */
+export function bareFolio(line) {
+  if (line.length > 3) return null;
+  return normaliseNumber(line);
+}
+
 /** Fill blocks into pages of at most `maxBytes` at PARAGRAPH boundaries — never
  * mid-paragraph, and never by dropping a block. */
 function fill(blocks, maxBytes, title = '') {

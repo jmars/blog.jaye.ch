@@ -403,6 +403,10 @@ export const TEXTS = [
     slug: 'porphyry-on-the-cave-of-the-nymphs-taylor-1917',
     group: 'philosophy-sources',
     file: 'Porphyry-On-the-Cave-of-the-Nymphs-Taylor-1917',
+    // the archive.org identifier this transcription came from. The build serves
+    // the EDITION in the repo (content/library/<slug>/), never the archive; this
+    // names where the edition's transcription came from, for provenance.
+    item: 'onthecaveoftheny00porpuoft',
     title: 'On the Cave of the Nymphs',
     author: 'Porphyry',
     translator: 'Thomas Taylor',

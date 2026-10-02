@@ -204,11 +204,16 @@ const BANNED = [
   [/^\s*\/\/\s/m, 'a line comment in emitted code'],
 ];
 {
+  // EVERY emitted file under dist/library/, not only the pages: MEASURED, the
+  // walk here used to read `index.html` only and so never scanned the library's
+  // data files — the document a text serves beside its page, and its plain text
+  // (plan §5/§8, the smoke-walk bug). Those are emitted text like any other, so
+  // the gate that reads this list must see them.
   const pages = [];
   const walk = (d) => {
     for (const e of readdirSync(d, { withFileTypes: true })) {
       if (e.isDirectory()) walk(join(d, e.name));
-      else if (e.name === 'index.html') pages.push(join(d, e.name));
+      else pages.push(join(d, e.name));
     }
   };
   walk(LIB);
@@ -226,7 +231,7 @@ const BANNED = [
       if (m) bad.push(`${rel}: ${what}: ${JSON.stringify(html.slice(Math.max(0, m.index - 40), m.index + 40))}`);
     }
   }
-  check(pages.length > 40, `scanned ${pages.length} built library page(s)`);
+  check(pages.length > 40, `scanned ${pages.length} emitted file(s) under dist/library/ (pages and the data files a text serves)`);
   check(bad.length === 0, `no page carries an internal path, a source filename or workshop wording${bad.length ? `\n       ${bad.slice(0, 6).join('\n       ')}` : ''}`);
   check(empty === 0, `no page has an empty paragraph (${empty})`);
   check(threeNewlines === 0, `no text region has a run of three or more newlines (${threeNewlines})`);

@@ -55,6 +55,17 @@ import { execFileSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
 import { GROUPS, TEXTS, MODERN_EDITIONS, shelfFiles, textSource } from './library/shelf.mjs';
 import { preprocess, renderBlocks, partition, assess, countParagraphs } from './library/reader.mjs';
+import {
+  hasEdition,
+  editionPath,
+  extract,
+  counts,
+  serialiseDoc,
+  plainText,
+  checkAnchors,
+  anchorPath,
+  sha256,
+} from './library/extract.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -1479,8 +1490,15 @@ function paletteAssets(navPosts) {
   // no command line (the same rule the other pages' prompts follow). The slug
   // carries the section, so `go()` opens the right URL; the shared series key
   // makes `ls library` list the shelf.
-  for (const t of TEXTS) {
-    data.pages.push({ slug: `library/${t.slug}`, title: t.title, series: 'library', kind: 'page' });
+  // behind the same switch as the pages themselves: with the library held back
+  // there is no /library/<slug>/ to open, so an entry for one is a command that
+  // cannot run — and MEASURED, this loop put all 38 shelf titles into every
+  // page's palette data in a default build, which is a trace of the library on
+  // the site the switch exists to keep it off.
+  if (LIBRARY) {
+    for (const t of TEXTS) {
+      data.pages.push({ slug: `library/${t.slug}`, title: t.title, series: 'library', kind: 'page' });
+    }
   }
   const html =
     `<div class="palette" id="palette" role="dialog" aria-label="command line" ` +
@@ -3070,6 +3088,11 @@ function feedXml(posts) {
  * served as parts. Nothing is ever split mid-paragraph. */
 const LIBRARY_MAX_BYTES = 1800000;
 
+/** The extracted DOCUMENT of a stored edition, by slug, so the text's page and
+ * the document it serves are built from ONE extraction: two extractions of the
+ * same bytes would be two chances to disagree about the same book. */
+const editionDocs = new Map();
+
 /** Which readings cite each text.
  *
  * The SAME derivation the map is drawn from — `citations()` over the catalogue
@@ -3116,7 +3139,40 @@ function measureDamage(src, doc) {
   return { notSign, longS, fConfusions, folios, headings: heads.length };
 }
 
-function provenanceHtml(t, cited, stats, a, dmg) {
+/** What the EDITION adds over the raw transcription, for a text the repo stores a
+ * stored edition of (tools/library/extract.mjs): the document beside the page,
+ * what was measured while it was extracted, and what could NOT be read. Required
+ * for the same reason the rest of the provenance is: a generated contents list
+ * that does not say it is generated is not honest about itself (§7 of the plan),
+ * and a refused page marker is a finding, not something to hide behind a
+ * plausible number. */
+function editionHtml(t, lib) {
+  const p = [];
+  p.push(
+    `<p><b>The edition this page carries.</b> The same text is served here as an ` +
+      `edition rather than only as prose: <a href="/library/${t.slug}/t">the document</a> holds its ` +
+      `${lib.sections} numbered sections, the ${lib.pages.detected} printed page numbers recovered ` +
+      `from the volume’s own running heads and bare folios, its ${lib.notes} notes with every ` +
+      `reference resolved, and <a href="/library/${t.slug}/plain">the whole text as one plain ` +
+      `file</a> for reading without scripts and for citing. The words are the transcription above, ` +
+      `uncorrected; the repairs travel as rules rather than as a second text, so the difference is ` +
+      `a list anyone can read against the words that are served.</p>`,
+  );
+  p.push(
+    `<p><b>What the edition could not read.</b> ` +
+      (lib.pages.refused
+        ? `${lib.pages.refused} page marker(s) of this volume stand where a number cannot be read ` +
+          `and are carried as unnumbered rather than guessed at, and `
+        : 'Every page marker it found could be read, and ') +
+      `the transcription carries ${lib.corrections.ocr} damaged word(s) in the body whose letters ` +
+      `are lost — those are left exactly as the transcription has them, with the repair rules ` +
+      `drafted and the damage counted, because inventing a letter is worse than showing the ` +
+      `damage. The contents list is generated: the printed edition has no contents page.</p>`,
+  );
+  return p.join('');
+}
+
+function provenanceHtml(t, cited, stats, a, dmg, edition) {
   const p = [];
   p.push(`<p><b>Edition.</b> ${esc(t.edition)}</p>`);
   if (stats) {
@@ -3172,6 +3228,7 @@ function provenanceHtml(t, cited, stats, a, dmg) {
         `not of the edition and not of this reader.</p>`,
     );
   }
+  if (edition) p.push(editionHtml(t, edition));
   if (t.note) p.push(`<p><b>Note on this volume.</b> ${esc(t.note)}</p>`);
   if (cited.length) {
     const links = cited.map((x) => `<a href="/${x.slug}/">${esc(titleOf(x))}</a>`).join(', ');
@@ -3210,8 +3267,18 @@ function unreadableHtml(t, a) {
 
 /** One text: its page, plus one page per part when it is too big to be one. */
 function libraryTextPages(t, navPosts, cited) {
-  const files = shelfFiles();
-  const src = readFileSync(textSource(t, files), 'utf8');
+  // The EDITION, if the repo stores one (content/library/<slug>/), and the shelf
+  // only otherwise. That is the whole point of storing it: the text this page
+  // serves is the text in this repository, and the shelf is not needed to build
+  // it — see the module header of tools/library/extract.mjs.
+  const stored = hasEdition(t.slug);
+  const src = readFileSync(stored ? editionPath(t.slug) : textSource(t, shelfFiles()), 'utf8');
+  let lib = null;
+  if (stored) {
+    const doc = extract(src, { entry: t, sha256: sha256(src) });
+    editionDocs.set(t.slug, doc);
+    lib = counts(doc);
+  }
   const a = assess(src, t.lang);
   const base = `/library/${t.slug}/`;
   const title = esc(t.title);
@@ -3256,7 +3323,7 @@ function libraryTextPages(t, navPosts, cited) {
     headings: p.blocks.filter((b) => b.type === 'heading').length,
   }));
 
-  const prov = provenanceHtml(t, cited, stats, a, measureDamage(src, doc));
+  const prov = provenanceHtml(t, cited, stats, a, measureDamage(src, doc), lib);
   const urls = [base];
   const pages = [];
 
@@ -4166,6 +4233,41 @@ const writeDiscovery = (rel, text) => { writeFile(rel, text); writtenFiles.push(
 writeDiscovery('feed.xml', feedXml(livePosts));
 writeDiscovery('sitemap.xml', sitemapXml(livePosts, library.urls));
 writeDiscovery('robots.txt', robotsTxt());
+
+/* ---------- the stored editions: the document, the plain text, the anchors ----------
+ *
+ * A text whose edition the repo stores gets two more files beside its page: the
+ * DOCUMENT (its sections, printed pages, notes and rules — the extensionless
+ * name is deliberate: it is data, not a file anyone opens by name) and the whole
+ * text as one plain file for reading without scripts and for citing. Both are
+ * written through `writeDiscovery`, so the workshop-leak gate scans them exactly
+ * as it scans every other emitted file.
+ *
+ * The anchor gate runs BEFORE anything is written: it hashes the sections, pages
+ * and notes into a manifest in the repo, and a build that moves one of them
+ * fails, because a link that already exists would rot. */
+if (LIBRARY) {
+  let anchorsPinned = 0;
+  for (const t of TEXTS) {
+    const doc = editionDocs.get(t.slug);
+    if (!doc) continue;
+    const pinned = checkAnchors(doc);
+    if (pinned.pinned) anchorsPinned++;
+    const c = counts(doc);
+    writeDiscovery(`library/${t.slug}/t`, serialiseDoc(doc));
+    writeDiscovery(`library/${t.slug}/plain`, plainText(doc, t));
+    log(
+      `library: ${t.slug}: document ${c.blocks} block(s) — ${c.sections} sections, ` +
+        `${c.notes} notes, ${c.pages.detected} page number(s) read (${c.pages.folio} from a bare folio), ` +
+        `${c.pages.refused} refused, ${c.pages.interpolated} interpolated; ` +
+        `anchors pinned at tools/library/anchors/${t.slug}.json` +
+        (pinned.pinned ? ' (written now)' : ''),
+    );
+  }
+  if (anchorsPinned) {
+    log(`library: ${anchorsPinned} anchor manifest(s) written — commit them: they are the promise that a citation keeps resolving`);
+  }
+}
 log(
   `discovery files list ${livePosts.length} published post(s)` +
     (PREVIEW && livePosts.length !== manifest.posts.length
