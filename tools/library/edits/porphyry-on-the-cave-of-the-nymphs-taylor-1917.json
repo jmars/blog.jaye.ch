@@ -719,6 +719,30 @@
       "note": "the print reads \"however, it\" here; derived from the parallel edition's own sentence (the 1823 parallel edition:8697 \"Since, however, it is continually flowing, and is of\")"
     },
     {
+      "find": "an/l",
+      "replace": "and",
+      "class": "reading",
+      "note": "the print reads \"and\": the transcription shattered the d into \"/\" plus a stray \"l\". Decided by the 1823 parallel, which reads \"and\" at the aligned passage."
+    },
+    {
+      "find": "were/the",
+      "replace": "were, the",
+      "class": "reading",
+      "note": "the damage character / stands where the print has a comma: \"as it were, the vestment\". Decided by the 1823 parallel (\"as it were, the vestment of the celestial Gods\")."
+    },
+    {
+      "find": "Bo/>a,",
+      "replace": "Boga,",
+      "class": "reading",
+      "note": "SUPERSEDES the recorded LEAVE for \"Bo/>a\": the 1823 parallel reads \"the word Boreas is derived from Boga, which signifies nutriment\" — the two damage characters stand for letters lost in the etymon, and the print has \"Boga\"."
+    },
+    {
+      "find": "ajid_ajifonls_aj*^^",
+      "replace": "and affords a friendly branch to the suppliant",
+      "class": "reading",
+      "note": "SUPERSEDES the recorded LEAVE. The run stands between the anchors \"crowns-\" and \"petitioner\", and the 1823 parallel reads \"and affords a friendly branch to the suppliant petitioner\" — so the replacement carries the WHOLE slot between the anchors. A half repair (the earlier pass proposed only \"and affords a friendly\") would be worse than the leave: it yields a sentence that reads as the author's error."
+    },
+    {
       "find": "-1i\"^lHi.n*-iL",
       "action": "leave",
       "class": "review",
@@ -729,18 +753,6 @@
       "action": "leave",
       "class": "review",
       "note": "LEAVE: same page artefact as the rule above; not determinable"
-    },
-    {
-      "find": "Bo/>a",
-      "action": "leave",
-      "class": "review",
-      "note": "LEAVE: a Greek word the transcription mangled; not determinable from the transcription"
-    },
-    {
-      "find": "ajid_ajifonls_aj*^^",
-      "action": "leave",
-      "class": "review",
-      "note": "LEAVE: the print lost WORDS, not a character (\"and affords a friendly branch to the suppliant petitioner\", the 1823 parallel edition:9040+); a rule that supplied them would be a second text"
     }
   ]
 }
