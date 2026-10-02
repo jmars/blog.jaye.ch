@@ -202,9 +202,18 @@ section('the divisions run 1…18, with distinct titles (recomputed)');
     doc.blocks[notesAt + 1] && doc.blocks[notesAt + 1].x === 'Notes',
     `the notes region opens at the print's own Notes division (${JSON.stringify((doc.blocks[notesAt + 1] || {}).x)})`,
   );
+  // The boundary is the COLOPHON — the first block after note (25)'s own
+  // paragraph — not the plan's `FROM THE GREEK OF PORPHYRY`, which occurs once in
+  // the edition and on the title page, which OCRs as "From the Greeh of
+  // Porphyry", so the rule never fired. This assertion used to encode the wrong
+  // rule; it encodes the corrected one.
   check(
-    doc.blocks[adsAt + 1] && doc.blocks[adsAt + 1].x === 'FROM THE GREEK OF PORPHYRY',
-    `the advertisements open at the catalogue's head (${JSON.stringify((doc.blocks[adsAt + 1] || {}).x)})`,
+    doc.blocks[adsAt + 1] && /^PRINTED IN GREAT BRITAIN/.test(doc.blocks[adsAt + 1].x),
+    `the advertisements open at the colophon (${JSON.stringify((doc.blocks[adsAt + 1] || {}).x)})`,
+  );
+  check(
+    doc.blocks.filter((b) => b.t === 'notedef' && b.n === 25).length === 1,
+    'and the note before it did not swallow the colophon',
   );
 }
 
@@ -382,6 +391,47 @@ section('the printed pages are monotone, and only the rule refuses');
 }
 
 /* ---------- 5. the anchors ---------- */
+
+section('the notes and the adverts are not the body');
+{
+  // The review found three symptoms of ONE region bug: the ads boundary never
+  // fired (the plan's rule matched a phrase the title page OCRs differently), so
+  // note (25) swallowed the colophon and the catalogue's opening, and the notes
+  // and the adverts claimed section-18 paragraph anchors.
+  const regions = doc.blocks.filter((b) => b.t === 'region').map((b) => b.kind);
+  check(regions.join(' ') === 'front body notes ads',
+    `the volume's four regions are all present, in order (${regions.join(' ')})`);
+
+  let region = null, outside = 0, verseOutside = 0;
+  for (const b of doc.blocks) {
+    if (b.t === 'region') region = b.kind;
+    else if (b.at && region !== 'body') outside++;
+    if (b.t === 'verse' && region !== 'body') verseOutside++;
+  }
+  check(outside === 0, `no block outside the body claims a paragraph anchor (${outside} found)`);
+  check(verseOutside === 0, `no verse block outside the body (${verseOutside} found)`);
+
+  const n25 = doc.blocks.filter((b) => b.t === 'notedef' && b.n === 25);
+  check(n25.length === 1 && /The anger of the Gods/.test(n25[0].x),
+    `note 25 is its own paragraph, not the colophon and the catalogue (${n25.length} block(s))`);
+
+  // The library is HELD BACK by default (LIBRARY=1 builds it): a check needing
+  // the emitted files skips rather than failing, so the default tree is green and
+  // the assertions run whenever the library is built.
+  const plainPath = join(ROOT, 'dist', 'library', SLUG, 'plain');
+  if (!existsSync(plainPath)) {
+    check(true, 'the plain text is not built (LIBRARY=1 builds it) — skipped');
+  } else {
+    const plain = readFileSync(plainPath, 'utf8');
+    const inPlain = (plain.match(/\(note /g) || []).length;
+    check(inPlain === 25,
+      `the plain text carries all 25 note references (${inPlain}; it dropped every one before)`);
+  }
+
+  const manifest = JSON.parse(readFileSync(anchorPath(SLUG), 'utf8'));
+  check(Array.isArray(manifest.refs) && manifest.refs.length === 25,
+    `the pinned manifest covers the return anchors too (${manifest.refs && manifest.refs.length} r<n>)`);
+}
 
 section('the anchors are pinned, and a deliberate move fails');
 {

@@ -100,7 +100,13 @@ const TEXT_RULES = {
     head: 'ON THE CAVE OF THE NYMPHS',
     // the University of Toronto ownership stamp, five blocks, before the book
     stamp: ['PA', '4397', 'E5', '08', '1917'],
-    divisions: { notes: 'Notes', ads: 'FROM THE GREEK OF PORPHYRY' },
+    // The ads boundary is the COLOPHON — the first block after note (25)'s own
+    // paragraph — not the plan's `FROM THE GREEK OF PORPHYRY`, which is vacuous:
+    // that phrase occurs exactly once in the edition, on the title page, and the
+    // title page OCRs as "From the Greeh of Porphyry", so the rule never fired
+    // and the note-continuation swallowed the colophon and the catalogue's
+    // opening seven blocks as note (25)'s own text.
+    divisions: { notes: 'Notes', ads: 'PRINTED IN GREAT BRITAIN' },
     openers: [
       {
         find: 'I i. What',
@@ -314,7 +320,11 @@ export function extract(src, meta) {
   };
   const start = (kind, line, { sameParagraph }) => {
     if (!sameParagraph) par++;
-    cur = { kind, lines: [line], par, sec: secN };
+    // `sec` runs on past the body (secN is only bumped by an opener), so a block
+    // must carry whether it is IN the body: the notes and ads regions were
+    // claiming section-18 paragraph anchors, which would have made a #s18-77
+    // citation land on a catalogue blurb.
+    cur = { kind, lines: [line], par, sec: secN, inBody: region === 'body' };
   };
 
   /** Emit a joined text block, with its note references as `ref` blocks. */
@@ -322,12 +332,12 @@ export function extract(src, meta) {
     const note = block.note || null;
     // a note's own paragraphs are the note, quoted or not: a quotation inside a
     // note is part of the note (the edition sets it inside the note's paragraph)
-    if (block.kind === 'verse' && !note) {
+    if (block.kind === 'verse' && !note && block.inBody) {
       // verse keeps its lines; a reference inside a verse line splits the verse
       let held = [];
       const emitVerse = () => {
         if (!held.length) return;
-        push({ t: 'verse', x: held.join('\n'), ...(block.sec ? { at: anchorOf(block) } : {}) });
+        push({ t: 'verse', x: held.join('\n'), ...(block.sec && block.inBody ? { at: anchorOf(block) } : {}) });
         held = [];
       };
       for (const line of block.lines) {
@@ -352,7 +362,7 @@ export function extract(src, meta) {
           t: note ? 'notedef' : 'p',
           x: run.x,
           ...(note ? { n: note.n, ...(note.lang ? { lang: note.lang } : {}) } : {}),
-          ...(block.sec && !note ? { at: anchorOf(block) } : {}),
+          ...(block.sec && block.inBody && !note ? { at: anchorOf(block) } : {}),
         });
     }
   }
@@ -392,7 +402,7 @@ export function extract(src, meta) {
         t: 'ref',
         n: fit.value,
         x: text.slice(m.index, end),
-        ...(block.sec ? { at: anchorOf(block) } : {}),
+        ...(block.sec && block.inBody ? { at: anchorOf(block) } : {}),
       });
       expectedRef = fit.value + 1;
       at = end;
@@ -434,14 +444,20 @@ export function extract(src, meta) {
         flush();
         push({ t: 'region', kind: 'notes', id: 'snotes' });
         region = 'notes';
+        par = 0;
         curNote = null;
         start('p', line, { sameParagraph: false });
         continue;
       }
-      if (line === (cfg.divisions || {}).ads) {
+      // The ads boundary is a PREFIX test: the colophon line carries OCR runs of
+      // spaces and runs on ('PRINTED IN GREAT BRITAIN BY NEILL AND CO., LTD.,
+      // EDINBURGH.'), so an equality test never fires.
+      const adsRule = (cfg.divisions || {}).ads;
+      if (adsRule && (line === adsRule || line.startsWith(adsRule))) {
         flush();
         push({ t: 'region', kind: 'ads' });
         region = 'ads';
+        par = 0;
         curNote = null;
         start('p', line, { sameParagraph: false });
         continue;
@@ -864,7 +880,12 @@ export function plainText(doc, entry) {
       case 'rh':
         break; // furniture: its page number is the [pN] above
       case 'ref':
-        break; // its words stand in the sentence the reference separates
+        // its words stand in the sentence the reference separates, and the
+        // reference is its OWN block — dropping it here lost all 25 markers
+        // from the citation of record, so a reader of /plain could not see
+        // that a note existed anywhere in the book.
+        lines.push(b.x);
+        break;
       case 'p':
       case 'verse':
       case 'notedef':
@@ -890,6 +911,10 @@ export function anchorLists(doc) {
     sections: uniq(doc.blocks.filter((b) => b.t === 'sec').map((b) => b.id)),
     pages: uniq(doc.blocks.filter((b) => b.t === 'pb' && b.page != null).map((b) => `p${b.page}`)),
     notes: uniq(doc.blocks.filter((b) => b.t === 'notedef').map((b) => `n${b.n}`)),
+    // the RETURN anchors are served too (#r<n>, the plan's own grammar), so they
+    // must be pinned: they were materialised in the document but left out of the
+    // hash, so a moved reference fired nothing.
+    refs: uniq(doc.blocks.filter((b) => b.t === 'ref').map((b) => `r${b.n}`)),
   };
 }
 
@@ -899,6 +924,7 @@ export function anchorHash(lists) {
     sections: lists.sections,
     pages: lists.pages,
     notes: lists.notes,
+    refs: lists.refs,
   });
   return createHash('sha256').update(canonical).digest('hex');
 }
