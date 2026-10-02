@@ -63,6 +63,7 @@ import {
   serialiseDoc,
   plainText,
   checkAnchors,
+  checkEdits,
   anchorPath,
   sha256,
 } from './library/extract.mjs';
@@ -3085,6 +3086,14 @@ function feedXml(posts) {
 
 /* ---------- the library: the public-domain root texts ---------- */
 
+/** The one sentence a contents list shows in place of a title the transcription
+ * damaged and the rules cannot read. It is stated in the list rather than repaired:
+ * inventing a title is inventing a reading, and a reader who is deciding whether
+ * to read on is owed the difference. The reader app carries the same sentence
+ * (elm/src/Reader.elm), and the app smoke asserts it is the same one. */
+const DAMAGED_TITLE = '[the opening words are damaged in this transcription]';
+
+
 /** A single library page is capped at ~1.8 MB of prose; a text over it is
  * served as parts. Nothing is ever split mid-paragraph. */
 const LIBRARY_MAX_BYTES = 1800000;
@@ -3146,29 +3155,80 @@ function measureDamage(src, doc) {
  * for the same reason the rest of the provenance is: a generated contents list
  * that does not say it is generated is not honest about itself (§7 of the plan),
  * and a refused page marker is a finding, not something to hide behind a
- * plausible number. */
+ * plausible number.
+ *
+ * Every count is MEASURED on the document that is served.
+ */
+/**
+ * The edition's provenance (plan §7): every number in it MEASURED on the document
+ * that is served, and none of them a description. It states
+ *
+ *   - that this is a transcription of a named edition, and that the transcription
+ *     is uncorrected while the reading view is produced by rules;
+ *   - the pagination: how many printed page numbers were READ, how many came from
+ *     a bare folio (the head's words are gone), how many were interpolated
+ *     between two numbered leaves, and how many markers were REFUSED a number;
+ *   - that the contents list is generated, because the print has none, and that a
+ *     title the transcription damaged beyond repair is stated as a gap;
+ *   - the notes: every one defined and every reference resolved;
+ *   - the correction classes and their counts, and how many times the rules fire
+ *     in the served text, each rule inspectable in the reader's own repairs list.
+ *
+ * No internal name, path or file size is printed: the counts are of the text, and
+ * the text is what a reader can check them against.
+ */
 function editionHtml(t, lib) {
+  const m = lib.correctionsMeta || {};
+  const cls = m.classes || {};
+  const hits = m.hits || {};
+  const damagedTitles = m.damagedTitles || [];
   const p = [];
   p.push(
     `<p><b>The edition this page carries.</b> The same text is served here as an ` +
       `edition rather than only as prose: <a href="/library/${t.slug}/t">the document</a> holds its ` +
       `${lib.sections} numbered sections, the ${lib.pages.detected} printed page numbers recovered ` +
-      `from the volume’s own running heads and bare folios, its ${lib.notes} notes with every ` +
-      `reference resolved, and <a href="/library/${t.slug}/plain">the whole text as one plain ` +
-      `file</a> for reading without scripts and for citing. The words are the transcription above, ` +
-      `uncorrected; the repairs travel as rules rather than as a second text, so the difference is ` +
-      `a list anyone can read against the words that are served.</p>`,
+      `from the volume’s own running heads and bare folios — ${lib.pages.folio} of them from a bare ` +
+      `folio whose head’s words are gone, ${lib.pages.interpolated} interpolated between two ` +
+      `numbered leaves, and ${lib.pages.refused} marker(s) left UNNUMBERED because no number could ` +
+      `be read there — its ${lib.notes} notes, every one of them defined with each of its ` +
+      `${lib.refs} references resolved in both directions, and ` +
+      `<a href="/library/${t.slug}/plain">the whole text as one plain file</a> for reading without ` +
+      `scripts and for citing. The words served are the transcription, uncorrected; the repairs ` +
+      `travel as rules rather than as a second text, so the difference between the two is a list ` +
+      `anyone can read against the words that are served.</p>`,
   );
   p.push(
-    `<p><b>What the edition could not read.</b> ` +
-      (lib.pages.refused
-        ? `${lib.pages.refused} page marker(s) of this volume stand where a number cannot be read ` +
-          `and are carried as unnumbered rather than guessed at, and `
-        : 'Every page marker it found could be read, and ') +
-      `the transcription carries ${lib.corrections.ocr} damaged word(s) in the body whose letters ` +
-      `are lost — those are left exactly as the transcription has them, with the repair rules ` +
-      `drafted and the damage counted, because inventing a letter is worse than showing the ` +
-      `damage. The contents list is generated: the printed edition has no contents page.</p>`,
+    `<p><b>The contents list is generated.</b> The printed volume has no contents page — nothing ` +
+      `stands between its title page and its first division — so the ${lib.sections} entries above ` +
+      `are generated from the divisions the edition itself makes, each titled with its own opening ` +
+      `words and each carrying the printed page it opens on. ` +
+      (damagedTitles.length
+        ? `The opening words of ${damagedTitles.length} of those divisions are damaged in the ` +
+          `transcription by more than the repairs can restore, and those entries state the gap ` +
+          `instead of showing damaged words as a title: the transcription’s own words stand beside ` +
+          `the entry, and no title is invented for it.`
+        : `No division’s opening words are damaged in the transcription, so every title above is the ` +
+          `division’s own words.`) +
+      `</p>`,
+  );
+  p.push(
+    `<p><b>The repairs, as rules.</b> Every repair the reading view makes is a recorded rule applied ` +
+      `to the transcription’s own words — ${cls.opener} for the divisions, ` +
+      `${cls.digit} for the numbers and note markers the transcription wrote through an OCR digit ` +
+      `confusion, and ${cls.ocr} for the words whose letters were lost — ` +
+      `${Object.values(hits).reduce((a, b) => a + b, 0)} applications of those rules in this text, ` +
+      `each rule firing at least once (a rule that fires nowhere is caught before this page is ` +
+      `produced, not shipped as machinery nothing reads). The reader’s own list of repairs shows each rule, the words it ` +
+      `changes, why, and how many times it fires — that list IS the difference between the two ` +
+      `views, so the repairs can be checked against the transcription word by word. What the rules ` +
+      `do NOT reach is counted too: ${m.damagedWords} distinct words of the body carry a character ` +
+      `the transcription uses where a letter was lost. ${m.repairedWords} of those words have a rule ` +
+      `naming the word, which removes that character. The other ${m.unrepairedWords} are named by no ` +
+      `rule at all: the character that damages them is removed where a wider rule reaches it, and ` +
+      `the letters they lost stand exactly as the transcription has them — no rule invents a letter, ` +
+      `because inventing one is worse than showing the damage. The rules remove characters; they never ` +
+      `guess a reading, except in the division openers, where the print’s own number is stated and ` +
+      `the rule says so.</p>`,
   );
   return p.join('');
 }
@@ -3178,9 +3238,12 @@ function provenanceHtml(t, cited, stats, a, dmg, edition) {
   p.push(`<p><b>Edition.</b> ${esc(t.edition)}</p>`);
   if (stats) {
     p.push(
-      `<p><b>What was done to the text.</b> This is an unedited transcription of the printed edition ` +
-        `named above: nothing has been corrected against the print, modernised, or removed. The only ` +
-        `things done to it are mechanical, and these are all of them — paragraphs break where the ` +
+      `<p><b>What was done to the text.</b> This paragraph is the MECHANICAL work, which changes ` +
+        `presentation and never a byte: what the text is corrected by is the recorded rule list, ` +
+        `described under "the repairs, as rules" below and inspectable in full in the reader's own ` +
+        `repairs panel. Nothing here is corrected against the print or modernised — the rules repair ` +
+        `the transcription's damage, they do not edit the edition, and the transcription view shows ` +
+        `the pages with no rule applied. The mechanical work, and these are all of it — paragraphs break where the ` +
         `print leaves a blank line (${stats.parasIn} read, ${stats.parasOut} written, the same count); ` +
         `hard line breaks inside a paragraph are joined into one line, and runs of spaces collapsed to ` +
         `one; a word broken across a line break is rejoined, its hyphen taken as the printer’s break ` +
@@ -3355,6 +3418,7 @@ const READER_CSS = `
 .rd-toc a { color: var(--fg); }
 .rd-toc .rd-cur > a, .rd-toc li.rd-cur a { color: var(--accent); font-weight: 600; }
 .rd-toc-page { font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
+.rd-toc-raw { font-size: 11px; color: var(--dim); margin-top: 2px; }
 .rd-marks li { display: flex; align-items: baseline; gap: 4px; }
 .rd-pages { display: flex; flex-wrap: wrap; gap: 3px; }
 .rd-pages a { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; color: var(--fg); }
@@ -3387,6 +3451,7 @@ const READER_CSS = `
 .rd-diff th, .rd-diff td { text-align: left; vertical-align: top; padding: 4px 6px; border-bottom: 1px solid var(--line); }
 .rd-diff code { font-family: var(--mono); font-size: 11.5px; }
 .rd-cls { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+.rd-hits { font-family: var(--mono); font-size: 11px; color: var(--dim); text-align: right !important; }
 .rd-why { color: var(--dim); max-width: 34rem; }
 .rd-dim, .rd .dim { color: var(--dim); font-size: 12px; }
 .rd-live { font-family: var(--sans); font-size: 11.5px; color: var(--dim); margin-top: 8px; min-height: 1em; }
@@ -3606,7 +3671,16 @@ function citationFields(t) {
  * reserves, then every division with the printed page it opens on. The printed
  * edition has no contents page (measured), so this is generated apparatus — and
  * the page says so, because a generated list that does not admit it is generated
- * is not honest about itself (§7 of the plan). */
+ * is not honest about itself (§7 of the plan).
+ *
+ * The titles are the GENERATED titles (see `extract`): the division's own opening
+ * words with the recorded repairs applied, because a contents list is exactly the
+ * surface a reader uses to decide whether to read on and damaged words there cost
+ * a section. A title the transcription damaged and the rules cannot read is NOT
+ * shown as a title: the entry states the gap and carries the transcription's own
+ * words beside it, so nothing is hidden and nothing is invented. MEASURED: two of
+ * this volume's eighteen titles are in that state (§2, §9) and §11, whose opener
+ * the rules READ, is not. */
 function readerTocHtml(doc) {
   const items = [];
   const regionLabel = (k) =>
@@ -3614,7 +3688,16 @@ function readerTocHtml(doc) {
   for (const b of doc.blocks) {
     if (b.t === 'region' && b.id) items.push({ id: b.id, label: regionLabel(b.kind), page: null });
   }
-  for (const e of doc.toc) items.push({ id: e.id, label: `${e.n} \u00b7 ${e.title}`, page: e.page });
+  for (const e of doc.toc) {
+    items.push({
+      id: e.id,
+      label: e.damaged ? `${e.n} \u00b7 ${DAMAGED_TITLE}` : `${e.n} \u00b7 ${e.title}`,
+      asides: e.damaged
+        ? [`<span class="dim">the transcription reads \u201c${esc(e.raw)}\u201d</span>`]
+        : [],
+      page: e.page,
+    });
+  }
   return (
     `<nav class="rd-fb-toc" aria-label="Contents">` +
     `<ol>` +
@@ -3623,6 +3706,7 @@ function readerTocHtml(doc) {
         (i) =>
           `<li><a href="#${i.id}">${esc(i.label)}</a>` +
           (i.page ? ` <span class="dim">p.\u00a0${i.page}</span>` : '') +
+          ((i.asides || []).length ? ` ${i.asides.join(' ')}` : '') +
           `</li>`,
       )
       .join('') +
@@ -4739,6 +4823,33 @@ if (LIBRARY) {
   for (const t of TEXTS) {
     const doc = editionDocs.get(t.slug);
     if (!doc) continue;
+    /* THE ACCEPTANCE RULE (plan §7): every rule must fire at least once in the
+     * served text, or the build stops here and names it. The hit table is
+     * printed in full — one line per rule, with the fields it fires in — because
+     * a table that is only checked is a table nobody reviews, and the rules are
+     * what a reader's reading view IS. */
+    const report = checkEdits(doc);
+    log(
+      `library: ${t.slug}: ${report.length} correction rule(s) — ` +
+        `${['opener', 'digit', 'ocr'].map((k) => `${report.filter((r) => r.cls === k).length} ${k}`).join(', ')} — ` +
+        `every one of them fires; ${report.reduce((a, r) => a + r.hits, 0)} application(s) in the served text`,
+    );
+    const grouped = ['opener', 'digit', 'ocr'];
+    for (const cls of grouped) {
+      for (const r of report.filter((x) => x.cls === cls)) {
+        log(
+          `library:   ${cls.padEnd(6)} ${String(r.hits).padStart(2)} hit${r.hits === 1 ? ' ' : 's'} ` +
+            `in ${r.kinds.join('/')}  ${JSON.stringify(r.find)} → ${JSON.stringify(r.repl)}` +
+            (r.hits > 1 ? '   (fires more than once: a rule that matches more than intended is named here)' : ''),
+        );
+      }
+    }
+    if (doc.correctionsMeta.damagedTitles.length) {
+      log(
+        `library:   title(s) the transcription damaged and the rules cannot read: ` +
+          `${doc.correctionsMeta.damagedTitles.join(', ')} — stated in the contents list and in the provenance, not invented`,
+      );
+    }
     const pinned = checkAnchors(doc);
     if (pinned.pinned) anchorsPinned++;
     const c = counts(doc);

@@ -1231,48 +1231,92 @@ tocItems m =
                             (\b ->
                                 case b of
                                     BRegion kind (Just rid) ->
-                                        Just ( rid, regionLabel kind, Nothing )
+                                        Just { id = rid, label = regionLabel kind, page = Nothing, damagedWords = Nothing }
 
                                     _ ->
                                         Nothing
                             )
 
                 sections =
-                    -- the contents list is the same text as the reading: its
-                    -- titles are the divisions' opening words, so they take the
-                    -- same repairs (the transcription view keeps them verbatim)
+                    -- The contents list is generated apparatus (the print has no
+                    -- contents page), so it exists to be read, and it carries the
+                    -- GENERATED title — the division's opening words with the
+                    -- recorded repairs applied — because damaged words on the one
+                    -- line a reader uses to decide whether to read on cost a
+                    -- section. The transcription view shows `raw`: the same words
+                    -- with no rule applied, which is the transcription's own
+                    -- title, and the difference between the two views in one line.
+                    --
+                    -- A title the repairs could not restore is not shown at all:
+                    -- both views state the gap, and the transcription's own words
+                    -- stand beside the statement in a dim span. Neither view
+                    -- invents a title.
                     List.map
                         (\t ->
-                            ( t.id
-                            , String.fromInt t.n
-                                ++ " · "
-                                ++ (if m.view == Reading then
-                                        Doc.applyCorrections doc.corrections t.title
+                            { id = t.id
+                            , label =
+                                String.fromInt t.n
+                                    ++ " · "
+                                    ++ (if t.damaged then
+                                            damagedTitle
 
-                                    else
-                                        t.title
-                                   )
-                            , t.page
-                            )
+                                        else if m.view == Reading then
+                                            t.title
+
+                                        else
+                                            t.raw
+                                       )
+                            , page = t.page
+                            , damagedWords =
+                                if t.damaged then
+                                    Just t.raw
+
+                                else
+                                    Nothing
+                            }
                         )
                         doc.toc
             in
             List.map (tocLink cur) (regions ++ sections)
 
 
-tocLink : Maybe String -> ( String, String, Maybe Int ) -> Html Msg
-tocLink cur ( aid, label, page ) =
-    li [ class (if cur == Just aid then "rd-cur" else "") ]
-        [ a [ href ("#" ++ aid), Ev.on "click" (D.succeed (GoAnchor aid)) ]
-            [ text label
-            , case page of
+{-| One row of the contents list. The regions have no page and no damaged words;
+the divisions carry both. -}
+type alias TocItem =
+    { id : String, label : String, page : Maybe Int, damagedWords : Maybe String }
+
+
+tocLink : Maybe String -> TocItem -> Html Msg
+tocLink cur item =
+    li [ class (if cur == Just item.id then "rd-cur" else "") ]
+        [ a [ href ("#" ++ item.id), Ev.on "click" (D.succeed (GoAnchor item.id)) ]
+            [ text item.label
+            , case item.page of
                 Just p ->
                     span [ class "rd-toc-page" ] [ text (" p. " ++ String.fromInt p) ]
 
                 Nothing ->
                     text ""
             ]
+        , case item.damagedWords of
+            Just words_ ->
+                -- the transcription's own words, so the reader can see what the
+                -- title would have been without being offered it as one
+                div [ class "rd-toc-raw" ] [ text ("the transcription reads “" ++ words_ ++ "”") ]
+
+            Nothing ->
+                text ""
         ]
+
+
+{-| The one sentence the contents list shows in place of a title the
+transcription damaged and the repairs cannot restore. It is stated, never
+repaired: inventing a title is inventing a reading. The shell carries the same
+sentence (tools/build.mjs), and the app smoke asserts they are the same one.
+-}
+damagedTitle : String
+damagedTitle =
+    "[the opening words are damaged in this transcription]"
 
 
 regionLabel : String -> String
@@ -1726,16 +1770,11 @@ rulesPanel m =
         let
             rules =
                 docRules m
-
-            hitsFor r =
-                m.entries
-                    |> List.filter (\e -> isProse e.item && String.contains r.find (shownText m e.item))
-                    |> List.length
         in
         aside [ class "rd-diff", attribute "aria-label" "The repairs, as rules" ]
             [ h3 [] [ text "The repairs, as rules" ]
             , p [ class "rd-dim" ]
-                [ text "The transcription is served exactly as it stands. These rules are the repairs the reading applies on top of it, and this list is the difference between the two views: nothing here is written into the text." ]
+                [ text "The transcription is served exactly as it stands. These rules are the repairs the reading applies on top of it, and this list is the difference between the two views: nothing here is written into the text. The number beside each rule is how many times it fires in this text — counted when the document was built, in the order the rules are applied, so a rule cannot claim a repair it does not make." ]
             , if List.isEmpty rules then
                 p [] [ text "No repairs are recorded for this text." ]
 
@@ -1746,6 +1785,7 @@ rulesPanel m =
                             [ th [] [ text "class" ]
                             , th [] [ text "the transcription" ]
                             , th [] [ text "the reading" ]
+                            , th [] [ text "fires" ]
                             , th [] [ text "why" ]
                             ]
                         ]
@@ -1756,7 +1796,8 @@ rulesPanel m =
                                     [ td [] [ span [ class "rd-cls" ] [ text r.cls ] ]
                                     , td [] [ code [] [ text r.find ] ]
                                     , td [] [ code [] [ text r.repl ] ]
-                                    , td [ class "rd-why" ] [ text (r.note ++ " — " ++ String.fromInt (hitsFor r) ++ " block(s)") ]
+                                    , td [ class "rd-hits" ] [ text (String.fromInt r.hits) ]
+                                    , td [ class "rd-why" ] [ text r.note ]
                                     ]
                             )
                             rules

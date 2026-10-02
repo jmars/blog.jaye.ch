@@ -44,7 +44,11 @@
  *    marker keeps its own text, and a note reference keeps the words the print
  *    has ("(note i)") beside the number it resolves to. Corrections travel as
  *    RULES, never as a second text, so the transcription is always inspectable
- *    and the diff view is the rule list itself.
+ *    and the diff view is the rule list itself. The rules are the REVIEWED list
+ *    in `tools/library/edits/<slug>.json` (§7) — the artifact a human reads —
+ *    and every one of them must fire at least once in the served text or the
+ *    build fails (`checkEdits`, called by the build): a rule that matches
+ *    nothing is unreviewed machinery.
  *
  * 5. THE EDITION LIVES IN THE REPO. `content/library/<slug>/source.txt` is the
  *    transcription as imported, once, from the shelf; the build reads that and
@@ -85,15 +89,17 @@ export const readEdition = (slug) => readFileSync(editionPath(slug), 'utf8');
 export const sha256 = (text) => createHash('sha256').update(text).digest('hex');
 
 /**
- * The per-text rules. Everything here is a MEASURED fact about one edition, not
- * a policy: which words the running head carries, which blocks the library's own
- * stamp occupies (the stamp is not text at all — plan §4.5 — so it is recorded
- * and dropped, never served), and the repairs the section openers need.
+ * The per-text facts that are not rules. Everything here is a MEASURED property
+ * of one edition, not a policy and not a repair: which words the running head
+ * carries, which blocks the library's own stamp occupies (the stamp is not text
+ * at all — plan §4.5 — so it is recorded and dropped, never served), and where
+ * the volume's divisions begin.
  *
- * The draft corrections for phase 1 live here rather than in the plan's
- * `tools/library/edits/<slug>.json` because phase 3 is the phase that puts the
- * human-reviewed rules in that file; the opener repairs are three known
- * readings and belong with the text's other measured facts until then.
+ * The REPAIRS are not here. They are in `tools/library/edits/<slug>.json` — the
+ * reviewed rule list (plan §7), one file per text, loaded by `loadEdits` and
+ * shipped inside the document exactly as the plans says: corrections travel as
+ * rules, never as a second text, so the transcription stays inspectable and the
+ * diff view is the rule list itself.
  */
 const TEXT_RULES = {
   'porphyry-on-the-cave-of-the-nymphs-taylor-1917': {
@@ -107,28 +113,175 @@ const TEXT_RULES = {
     // and the note-continuation swallowed the colophon and the catalogue's
     // opening seven blocks as note (25)'s own text.
     divisions: { notes: 'Notes', ads: 'PRINTED IN GREAT BRITAIN' },
-    openers: [
-      {
-        find: 'I i. What',
-        repl: '1. What',
-        cls: 'opener',
-        note: 'The print reads "1."; the transcription has the numeral twice over, as a roman I and a lower-case i.',
-      },
-      {
-        find: "'3. After",
-        repl: '3. After',
-        cls: 'opener',
-        note: 'A stray opening quote stands before the section number, where the print has a paragraph indent.',
-      },
-      {
-        find: 'n.^Tb,eologists',
-        repl: '11. Theologists',
-        cls: 'opener',
-        note: 'Section 11 of the print; the transcription damaged the numeral and the division ran into the paragraph before it.',
-      },
-    ],
   },
 };
+
+/* ---------- the edits: the reviewed rules, and what they do ---------- */
+
+/** Where a text's rules live, and where a review pass leaves its proposals. Both
+ * are in the repo: the rules that produce the reading view must be reconstructible
+ * from the repository, and a proposal a human has not merged must never be. */
+export const EDITS_DIR = join(ROOT, 'tools', 'library', 'edits');
+export const editsPath = (slug) => join(EDITS_DIR, `${slug}.json`);
+export const proposedPath = (slug) => join(EDITS_DIR, `${slug}.proposed.json`);
+
+/** The classes a rule may carry, IN THE ORDER THE PIPELINE NEEDS THEM. The order
+ * is load-bearing, not decorative: `opener` rules repair the division numbers,
+ * and the extraction cannot find a section until they are applied; `digit` rules
+ * repair printed numbers and note markers, each pinned to the line it was read
+ * from; `ocr` rules touch a word's letters and come last, so they can never
+ * consume a number or a division before the pass that needs it has run. A file
+ * whose classes are not grouped in this order is rejected at load rather than
+ * silently applied out of order. */
+export const EDIT_CLASSES = ['opener', 'digit', 'ocr', 'review'];
+const classRank = (cls) => {
+  const i = EDIT_CLASSES.indexOf(cls);
+  if (i < 0) throw new Error(`library: the correction class "${cls}" is not one of ${EDIT_CLASSES.join(', ')}`);
+  return i;
+};
+
+/**
+ * The reviewed rules for one text (plan §7). The file is
+ * `{find, replace, class, note}` — the plan's shape, and the artifact a human
+ * reads — and it is normalised here to the document's own contract
+ * (`{find, repl, cls, note}`), which is what the reader app decodes and what the
+ * diff view renders. ONE spelling would be simpler; two are what the plan asks
+ * for, and the mapping is this one function so the two cannot drift.
+ *
+ * Validation is deliberately strict: a rule with no `note` is a rule nobody can
+ * review, a class outside the pipeline's four is a class nothing applies, two
+ * rules that share a `find` are one of them unreachable, and classes out of
+ * pipeline order would run a repair before the pass that needs it.
+ *
+ * A text with no edits file gets no rules, which is what the other 37 texts on
+ * the shelf have: their pages are the transcription, and no reading view is
+ * claimed for them.
+ */
+export function loadEdits(slug) {
+  const file = editsPath(slug);
+  if (!existsSync(file)) return { edits: [], meta: null };
+  let raw;
+  try {
+    raw = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (e) {
+    throw new Error(`library: ${slug}: the edits file is not valid JSON — ${e.message}`);
+  }
+  if (raw.slug !== slug) {
+    throw new Error(`library: ${slug}: the edits file names "${raw.slug}" — a rule list that names another text is a rule list for another text`);
+  }
+  if (!Array.isArray(raw.edits) || raw.edits.length === 0) {
+    throw new Error(`library: ${slug}: the edits file carries no rules`);
+  }
+  let rank = -1;
+  const seen = new Map();
+  const edits = raw.edits.map((e, i) => {
+    const where = `the edits file's rule ${i + 1}`;
+    for (const k of ['find', 'replace', 'class', 'note']) {
+      if (typeof e[k] !== 'string' || e[k] === '') {
+        throw new Error(`library: ${slug}: ${where} has no ${k} — a rule without one is not reviewable`);
+      }
+    }
+    if (e.find === e.replace) {
+      throw new Error(`library: ${slug}: ${where} ("${e.find}") replaces the text with itself — it is not a correction`);
+    }
+    const r = classRank(e.class);
+    if (r < rank) {
+      throw new Error(
+        `library: ${slug}: ${where} ("${e.find}") is class "${e.class}", which is out of pipeline order — ` +
+          `the classes must be grouped ${EDIT_CLASSES.join(' → ')}, because an opener is what lets the ` +
+          `extraction find a section and an ocr rule may consume the characters a later class needs`,
+      );
+    }
+    rank = r;
+    if (seen.has(e.find)) {
+      throw new Error(
+        `library: ${slug}: ${where} and rule ${seen.get(e.find)} both match "${e.find}" — the later one ` +
+          `can never fire (the earlier already replaced every occurrence), so one of them is unreviewed machinery`,
+      );
+    }
+    seen.set(e.find, i + 1);
+    return { find: e.find, repl: e.replace, cls: e.class, note: e.note };
+  });
+  return { edits, meta: { classes: raw.classes || {}, order: raw.order || null } };
+}
+
+/**
+ * Apply a rule list to one text, in order, every occurrence — the reader app's
+ * own `applyCorrections` (`elm/src/Reader/Document.elm:114`), with the hits
+ * counted as they happen.
+ *
+ * The count is the number of occurrences AT THE MOMENT the rule is applied, and
+ * that is the only count that means anything when order decides: a rule whose
+ * `find` an earlier rule has already replaced fires zero times, and this is how
+ * that is SEEN rather than assumed away — the phase-1 draft carried three such
+ * rules (`qreneratioi^and` and `that_jg_the`, subsumed by `^and` and `_the` with
+ * an identical result, and `n.^Tb,eologists`, which the opener rule that runs
+ * first has already repaired).
+ */
+export function applyEditsCounted(text, rules, onHit) {
+  let out = text;
+  for (let i = 0; i < rules.length; i++) {
+    const f = rules[i].find;
+    if (!f || f === rules[i].repl) continue;
+    const parts = out.split(f);
+    if (parts.length === 1) continue;
+    if (onHit) onHit(i, parts.length - 1);
+    out = parts.join(rules[i].repl);
+  }
+  return out;
+}
+
+/**
+ * The hit table: every rule, and how many times it fires in the document's own
+ * text fields, corrected in order, one field at a time.
+ *
+ * The DOMAIN is the document's own fields — every block's text, in document
+ * order — because that is the text the reading view passes to its rule engine
+ * (`Doc.applyCorrections` is applied per block and per inline run). Counting over
+ * the source file instead would count a rule on a line the document never serves
+ * as one string (the extractor joins hard-wrapped lines first), and the whole
+ * point of the count is that it is the count the READER's application produces.
+ */
+export function editReport(blocks, corrections) {
+  const rules = corrections.map((c) => ({ find: c.find, repl: c.repl }));
+  const hits = rules.map(() => 0);
+  const kinds = rules.map(() => new Set());
+  for (const b of blocks) {
+    if (typeof b.x !== 'string') continue;
+    applyEditsCounted(b.x, rules, (i, n) => {
+      hits[i] += n;
+      kinds[i].add(b.t);
+    });
+  }
+  return corrections.map((c, i) => ({ ...c, hits: hits[i], kinds: [...kinds[i]] }));
+}
+
+/**
+ * THE ACCEPTANCE RULE (plan §7): every rule must fire at least once, or the build
+ * fails and names it. "A rule that matches nothing is unreviewed machinery" — it
+ * is either dead (an earlier rule already did its work, or its `find` was never
+ * in the text) or wrong (a rule written for something the transcription does not
+ * have), and either way it claims a repair that does not happen.
+ *
+ * The build calls this (tools/build.mjs); it is not asserted inside `extract`,
+ * because `extract` is also run over MUTATED fixtures by the extractor's smoke —
+ * a fixture that removes the text a rule matches must be free to test something
+ * else without the rule gate firing first.
+ */
+export function checkEdits(doc) {
+  const report = editReport(doc.blocks, doc.corrections);
+  const dead = report.filter((r) => r.hits === 0);
+  if (dead.length) {
+    throw new Error(
+      `library: ${doc.slug}: ${dead.length} correction rule(s) match nothing in the served text — ` +
+        `a rule that matches nothing is unreviewed machinery:\n` +
+        dead.map((r) => `  ${r.cls}  ${JSON.stringify(r.find)} → ${JSON.stringify(r.repl)}  ${r.note}`).join('\n') +
+        `\n  Fix the rules file (tools/library/edits/${doc.slug}.json): delete a rule an earlier rule ` +
+        `has already done the work of, or correct a rule whose find is not in this transcription.`,
+    );
+  }
+  return report;
+}
 
 /** A section opener at the start of a line, with the transcription's stray
  * quote before the number. The number must then fit the sequence (below). */
@@ -259,6 +412,97 @@ export function sectionTitle(text) {
   return words.length > cut ? `${title}…` : title;
 }
 
+/** The characters a transcription uses where the print has a letter or a mark
+ * the scan could not carry. This is the DAMAGE census the extractor counts by —
+ * the classes it knows, and the only ones it treats as damage. (Not a global
+ * regex: `.test` on a global regex carries `lastIndex` between calls, which is
+ * how a census comes to count every second word.) */
+const DAMAGE = /[\^_|\\*+=~{}[\]@$%#<>¬£±»«]/;
+
+/** A word of the transcription that carries a character the census marks as
+ * damage: a word whose letters were lost. A reader cannot tell such a word from
+ * an English one, and the reading view's `ocr` rules only REMOVE the character —
+ * their own note says the lost letter is not guessed, so the word stays wrong.
+ * A word that mixes letters with digits is the census's other damaged class: no
+ * character can be removed from it without inventing a letter or leaving one. */
+export function wordDamaged(word) {
+  const bare = word
+    .replace(/^[.,;:?!()"'\u201c\u201d\[]+/, '')
+    .replace(/[.,;:?!()"\u201c\u201d\]|\\]+$/, '');
+  if (bare === '' || !/[A-Za-z]/.test(bare)) return false;
+  return DAMAGE.test(bare) || /[A-Za-z]\d|\d[A-Za-z]/.test(bare);
+}
+
+/** Cut a section title down to the words the cap keeps, before ellipsising — so a
+ * damage test can be asked about exactly the words the title SHOWS, not about the
+ * opening words it did not use. */
+function titleWords(text) {
+  return sectionTitle(text).replace(/…$/, '').split(' ').filter((w) => w !== '');
+}
+
+/**
+ * Is a derived title still damaged AFTER the rules have been applied?
+ *
+ * The answer has to distinguish two things a naive census does not: a word whose
+ * damage a rule READS — the section-11 opener `n.^Tb,eologists` → `11.
+ * Theologists` is a rule that states what the print says, and the title it
+ * produces is readable — from a word whose damage a rule only STRIPS. So a word
+ * counts as still damaged when the census marks it and NO reading rule (any class
+ * other than `ocr`) touches it. Words that would remain damaged after every rule
+ * has run are counted too, so the test cannot be defeated by a rule that strips a
+ * marked character and leaves one behind.
+ *
+ * MEASURED on this edition: sections 2 and 9 are still damaged (`Thpanrt'p'rii'c:`
+ * and `ajgyejbpjthe` for §2, `rpmntq` for §9); section 11 is repaired by its
+ * opener rule and is not flagged. A title is never invented to hide either case.
+ */
+export function titleDamage(rawTitle, correctedTitle, rules) {
+  const readings = rules.filter((r) => r.cls !== 'ocr');
+  const stripped = titleWords(rawTitle).filter(
+    (w) => wordDamaged(w) && !readings.some((r) => r.find === w || w.includes(r.find)),
+  );
+  const left = titleWords(correctedTitle).filter(wordDamaged);
+  return { damaged: stripped.length > 0 || left.length > 0, words: [...new Set([...stripped, ...left])] };
+}
+
+/** The text of the FRONT-MATTER REGION: the block run between the front mark and
+ * the body's first division, plus the dropped blocks (the library's stamp is not
+ * served but is front matter by any reading). */
+export function frontMatterText(doc) {
+  const body = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'body');
+  const from = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'front');
+  return [
+    ...(doc.dropped || []).map((d) => d.x),
+    ...doc.blocks.slice(from, body < 0 ? doc.blocks.length : body).map((b) => b.x || ''),
+  ].join(' ');
+}
+
+/**
+ * THE POLICY'S ONE EXCEPTION (plan §7), as an assertion that can fail.
+ *
+ * The title page's "From the Greeh of Porphyry" is CITED AS EVIDENCE by the
+ * reading itself (content/porphyry-cave-of-the-nymphs.md): the reading's argument
+ * rests on the print's spoiled reading, so a rule that repaired it in the served
+ * text would destroy the evidence it points at. The transcription view preserves
+ * it by construction — and NO rule may touch the front-matter region at all. A
+ * rule added later that reaches into the title page fails here rather than
+ * silently repairing the evidence.
+ */
+export function checkFrontMatter(doc) {
+  const front = frontMatterText(doc);
+  const into = (doc.corrections || []).filter((c) => c.find && front.includes(c.find));
+  if (into.length) {
+    throw new Error(
+      `library: ${doc.slug}: ${into.length} correction rule(s) match inside the front-matter region — ` +
+        `the front matter is the print's title page, and one of its readings is cited as evidence by a ` +
+        `reading that uses this text:\n` +
+        into.map((c) => `  ${c.cls}  ${JSON.stringify(c.find)}`).join('\n') +
+        `\n  The title page is preserved by construction and no correction may touch it (plan §7).`,
+    );
+  }
+  return front;
+}
+
 /**
  * Extract one stored edition into the served document (plan §4.1).
  *
@@ -269,7 +513,12 @@ export function sectionTitle(text) {
 export function extract(src, meta) {
   const entry = meta.entry;
   const cfg = TEXT_RULES[entry.slug] || {};
-  const openers = cfg.openers || [];
+  /* The rules come from the reviewed edits file, not from this module, and the
+   * whole list is loaded before anything is read: the extraction NEEDS the
+   * `opener` class to find a section at all, and the document ships every rule
+   * to the reading view. The list's order is the file's order (plan §7). */
+  const { edits } = loadEdits(entry.slug);
+  const openers = edits.filter((c) => c.cls === 'opener');
   const lines = rawBlocks(src);
 
   /* 1. The library's stamp is not text (plan §4.5): recorded, then dropped. */
@@ -304,7 +553,6 @@ export function extract(src, meta) {
   let expectedSec = 1;
   let expectedNote = 1;
   let expectedRef = 1;
-  const openerCorrections = openers.filter((c) => c.cls === 'opener');
 
   const push = (b) => out.push(b);
   // the front matter: the book's own front, served but marked (§4.5). Its
@@ -627,18 +875,55 @@ export function extract(src, meta) {
     );
   }
 
-  /* 6. The table of contents: generated, from the divisions the edition itself
-   * makes, each entry carrying the section's own opening words. */
+  /* 6. The rules the reading view applies — the reviewed list, in the file's own
+   * order. They are loaded above (the extraction needs the `opener` class), and
+   * they are shipped with the document exactly as plan §7 says: corrections travel
+   * as RULES, never as a second text, so the transcription above stays verbatim
+   * and the diff view is this list. */
+  const corrections = edits;
+
+  /* 6a. THE POLICY'S ONE EXCEPTION, ASSERTED (§7) — the assertion itself is
+   * `checkFrontMatter` below, so the smoke can call the same code over a fixture
+   * instead of re-stating it. */
+  checkFrontMatter({ slug: entry.slug, blocks: out, dropped: dropped.map((x) => ({ x })), corrections });
+
+  /* 7. The table of contents: generated, from the divisions the edition itself
+   * makes, each entry carrying the section's own opening words.
+   *
+   * The TITLE is generated apparatus — the 1917 print has no contents page — and
+   * it is derived from the CORRECTED opening words (option (a) of the phase-3
+   * brief, not (b)): the title is built from the same words, with the same rules,
+   * in the same order, as the reading view applies to that same line, so the
+   * contents list and the reading cannot disagree about the sentence a reader
+   * meets first. Deriving it from the whole corrected view instead would mean the
+   * client deriving apparatus from text it has already rendered, for no gain.
+   *
+   * Every entry also carries the RAW derivation (`raw`) — the title the
+   * transcription's own damaged words give — because that is what the
+   * transcription view must show and what the review diffs against. A title still
+   * damaged after correction is marked `damaged` and the entry names the words: it
+   * is NEVER repaired by inventing a reading. */
   const toc = [];
   for (let i = 0; i < out.length; i++) {
     const b = out[i];
     if (b.t !== 'sec') continue;
     const body = out.slice(i + 1).find((x) => x.t === 'p' || x.t === 'verse');
-    const opening = body ? applyCorrections(body.x.split('\n')[0], openerCorrections) : '';
+    const line = body ? body.x.split('\n')[0] : '';
+    // `raw` is the title with NO rule applied — the transcription's own words,
+    // which is what the transcription view must show; `title` is the same words
+    // through the full rule list, which is what the reading view applies.
+    const rawTitle = sectionTitle(line.replace(OPENER, ''));
+    const title = sectionTitle(applyCorrections(line, corrections).replace(OPENER, ''));
+    const harm = titleDamage(rawTitle, title, corrections);
     toc.push({
       id: b.id,
       n: b.n,
-      title: sectionTitle(opening.replace(OPENER, '')),
+      title,
+      raw: rawTitle,
+      // a title the transcription damaged beyond what the rules can read: the
+      // contents list says so instead of showing damaged words as a title, and the
+      // words themselves stand in `raw` for the reader and the review
+      ...(harm.damaged ? { damaged: true, damagedWords: harm.words } : {}),
       page: b.page,
     });
   }
@@ -647,18 +932,27 @@ export function extract(src, meta) {
     throw new Error(`library: ${entry.slug}: two sections derive the same title — the titles must distinguish them`);
   }
 
-  /* 7. The draft corrections (phase 1: a draft; the human review is phase 3).
-   * The OCR rules are generated from the transcription's own damaged words, and
-   * they remove only characters that are not letters — no reading of the lost
-   * letters is attempted, and the ones no mechanical rule can touch are counted
-   * rather than guessed at. */
+  /* 7b. The damage the rules do NOT reach, measured rather than described: the
+   * words of the body the census marks as damaged, and how many of them the rules
+   * repair (one rule per distinct damaged word — the rule list is generated from
+   * exactly this census, so the two counts are the two halves of one picture). A
+   * word whose damage no rule can reach — a numeral standing inside a word
+   * ("ever7it"), where removing the character invents a letter — is COUNTED, not
+   * guessed at, and the count is stated in provenance. */
   const bodyText = out
     .filter((b) => (b.t === 'p' || b.t === 'verse') && b.at && /^s\d/.test(b.at))
     .map((b) => b.x.replace(/\n/g, ' '))
     .join(' ');
-  const { rules: ocrRules, unrepaired } = draftOcrRules(bodyText);
-  const digitRules = digitRulesOf(markers, refs, defs);
-  const corrections = [...openers, ...digitRules, ...ocrRules];
+  const census = damageCensus(bodyText, corrections.map((c) => c.find));
+
+  /* 7c. The hit table: every rule, and how many times it fires in the text the
+   * reading view is given. It is measured here, shipped with each rule, and the
+   * build FAILS on a rule that fires zero times (`checkEdits`, called by the
+   * build — the acceptance rule of plan §7). */
+  const report = editReport(out, corrections);
+  report.forEach((r, i) => {
+    corrections[i].hits = r.hits;
+  });
 
   const doc = {
     slug: entry.slug,
@@ -668,21 +962,37 @@ export function extract(src, meta) {
     toc,
     blocks: out,
     corrections,
-    correctionsDraft: {
-      draft: true,
-      opener: openers.length,
-      digit: digitRules.length,
-      ocr: ocrRules.length,
-      unrepaired,
+    correctionsMeta: {
+      reviewed: true,
+      order: 'the order this list gives them, first to last, applied to every occurrence one text block at a time',
+      classes: Object.fromEntries(
+        ['opener', 'digit', 'ocr'].map((k) => [k, corrections.filter((c) => c.cls === k).length]),
+      ),
+      hits: Object.fromEntries(
+        ['opener', 'digit', 'ocr'].map((k) => [
+          k,
+          corrections.filter((c) => c.cls === k).reduce((a, c) => a + c.hits, 0),
+        ]),
+      ),
+      repeated: report.filter((r) => r.hits > 1).map((r) => ({ cls: r.cls, find: r.find, hits: r.hits })),
+      damagedWords: census.damaged,
+      repairedWords: census.repaired,
+      unrepairedWords: census.unrepaired,
+      unrepairedList: census.words,
+      damagedTitles: toc.filter((t) => t.damaged).map((t) => t.n),
       note:
-        'Draft correction rules for review. The transcription above is verbatim and uncorrected; ' +
-        'these are the rules a reading view would apply, and every one of them must match the ' +
-        'transcription before it is approved. The "opener" repairs are known readings required for ' +
-        'the divisions to run in order. The "digit" rules are the measured OCR number confusions, ' +
-        'each pinned to the printed line it was read from — they apply to that line, not to letters. ' +
-        'The "ocr" rules remove characters that are not letters from a damaged word and attempt no ' +
-        'reading of what was lost; words whose damage no mechanical rule can reach are counted in ' +
-        '"unrepaired" and left for the reviewer.',
+        'The reading view of this text is produced by these rules and nothing else: the transcription ' +
+        'served here is verbatim and uncorrected, and each rule is applied to it in this order. Every ' +
+        'rule fires at least once in the served text, and one that fires nowhere is caught before ' +
+        'this document is served, because a rule that matches nothing is machinery nothing read. ' +
+        'The "opener" rules are ' +
+        'readings the print requires for its divisions to run in order. The "digit" rules are the ' +
+        'printed numbers and note markers the transcription wrote through an OCR confusion, each ' +
+        'pinned to the line or marker it was read from. The "ocr" rules remove a character that is ' +
+        'not a letter from a word whose letters were lost, and they offer no reading of what was ' +
+        'lost: the words the rules cannot reach are counted and left as the transcription has them. ' +
+        'A section title the rules still leave damaged is marked, with the words named, rather than ' +
+        'repaired by a guess.',
     },
     dropped: dropped.map((x) => ({ x, why: 'the library stamp, not text' })),
     findings,
@@ -725,94 +1035,43 @@ export function latinLang(text) {
   return words.filter((w) => LATIN_INFLECTION.test(w)).length >= 4;
 }
 
-/** The characters a transcription uses where the print has a letter or a mark
- * the scan could not carry. Only these are stripped by the draft rules. */
-const DAMAGE = /[\^_|\\*+=~{}[\]@$%#<>¬£±»«]/g;
-
-/** Draft OCR rules from the transcription's damaged words: each rule removes the
- * damage characters from one word and leaves the letters exactly as they are.
+/**
+ * The census of the transcription's damaged words, counted on the text the
+ * reading view is given and split by whether a rule reaches them. It is a
+ * PARTITION, so the three counts add up and the provenance cannot tell a story
+ * the numbers do not support:
  *
- * Two counts come back. `rules` is what a reading view would apply. `unrepaired`
- * counts the damaged words NO mechanical rule can reach — a NUMERAL standing
- * inside a word ("ever7it", "_d^scfi5mga"), where removing the character would
- * invent a letter and leaving it leaves the word wrong either way. Those are
- * counted so the reviewer knows how much of the damage is left, and they are not
- * turned into rules: a rule that guessed would be worse than the damage. */
-export function draftOcrRules(text) {
-  const rules = [];
+ *   `damaged`    distinct WORDS of the body — a word being a token with a letter
+ *                in it, not the scan's debris — that carry a character the census
+ *                marks as damage;
+ *   `repaired`   of those, the ones a rule NAMES — its `find` is the whole word,
+ *                so the rule is a statement about that word;
+ *   `unrepaired` the rest. A rule that only reaches part of the word may still
+ *                remove the character that damaged it (`^and` repairs the opening
+ *                of `qreneratioi^and`), so "unrepaired" means exactly this and no
+ *                more: no rule names the word, and the letters it lost are left
+ *                as the transcription has them.
+ *
+ * The unrepaired words are counted, named in the build log, and never turned into
+ * a rule: a rule that guessed would be worse than the damage.
+ */
+export function damageCensus(text, finds) {
+  const rules = new Set(finds || []);
   const seen = new Set();
   const unrepaired = new Set();
   for (const rawTok of text.split(/\s+/)) {
     const tok = rawTok.replace(/^[.,;:?!()"'„“”\[]+/, '').replace(/[.,;:?!()"“”\]|\\]+$/, '');
-    if (tok === '' || !/[A-Za-z]/.test(tok)) continue;
-    if (!DAMAGE.test(tok)) {
-      if (/[A-Za-z]\d|\d[A-Za-z]/.test(tok)) unrepaired.add(tok);
-      DAMAGE.lastIndex = 0;
-      continue;
-    }
-    DAMAGE.lastIndex = 0;
-    const clean = tok.replace(DAMAGE, '');
-    if (seen.has(tok)) continue;
+    if (tok === '' || !/[A-Za-z]/.test(tok)) continue; // a word, not the scan's debris
+    if (seen.has(tok) || !DAMAGE.test(tok)) continue;
     seen.add(tok);
-    if (!/[A-Za-z]/.test(clean)) {
-      unrepaired.add(tok);
-      continue;
-    }
-    rules.push({
-      find: tok,
-      repl: clean,
-      cls: 'ocr',
-      note: 'Draft: a character that is not a letter is removed here; the lost letters are not guessed.',
-    });
+    if (!rules.has(tok)) unrepaired.add(tok);
   }
-  return { rules, unrepaired: unrepaired.size };
-}
-
-/** The digit rules actually USED by the extraction, each pinned to the printed
- * line it was read from so that applying it can only touch that line. A rule the
- * extraction never needed is not emitted: it would be machinery nothing read — so
- * `l`→1 and `S`→5, which this edition does not use, are in the normaliser's
- * table and NOT in the rule list. */
-function digitRulesOf(markers, refs, defs) {
-  const rules = [];
-  const push = (find, repl, note) => rules.push({ find, repl, cls: 'digit', note });
-  for (const m of markers.values()) {
-    if (m.value == null || m.plain) continue;
-    const toks = m.raw.split(' ');
-    const repl =
-      m.kind === 'head'
-        ? toks
-            .map((t, i) => {
-              const n = normaliseNumber(t);
-              const isNumber = i === 0 || i === toks.length - 1;
-              return isNumber && n && !n.plain ? String(m.value) : t;
-            })
-            .join(' ')
-        : String(m.value);
-    push(
-      m.raw,
-      repl,
-      `The printed page number ${m.value}: this head line's number read through an OCR digit ` +
-        `confusion. It applies to this line, not to the running text.`,
-    );
-  }
-  for (const r of refs) {
-    if (r.how === 'read') continue;
-    push(
-      `(note ${r.token})`,
-      `(note ${r.n})`,
-      `The note this reference points at; the transcription's own characters stand beside it.`,
-    );
-  }
-  for (const d of defs) {
-    if (d.how === 'read') continue;
-    push(
-      `(${d.token})`,
-      `(${d.n})`,
-      `The note this definition belongs to, read from the marker's position in the sequence.`,
-    );
-  }
-  return rules;
+  return {
+    damaged: seen.size,
+    repaired: seen.size - unrepaired.size,
+    unrepaired: unrepaired.size,
+    words: [...unrepaired],
+  };
 }
 
 /** What the document holds, for provenance and for the smoke test. */
@@ -831,7 +1090,11 @@ export function counts(doc) {
   }
   const regions = doc.blocks.filter((b) => b.t === 'region').map((b) => b.kind);
   const classes = {};
-  for (const c of doc.corrections) classes[c.cls] = (classes[c.cls] || 0) + 1;
+  const hits = {};
+  for (const c of doc.corrections) {
+    classes[c.cls] = (classes[c.cls] || 0) + 1;
+    hits[c.cls] = (hits[c.cls] || 0) + (c.hits || 0);
+  }
   return {
     blocks: doc.blocks.length,
     byType,
@@ -841,6 +1104,9 @@ export function counts(doc) {
     refs: doc.blocks.filter((b) => b.t === 'ref').length,
     pages,
     corrections: classes,
+    correctionHits: hits,
+    damagedTitles: doc.toc.filter((t) => t.damaged).map((t) => t.n),
+    correctionsMeta: doc.correctionsMeta || null,
   };
 }
 

@@ -50,6 +50,25 @@
  *     file is missing, stale, carries an internal path or a size claim, has no
  *     extension-cheating name problem, or grows past the cap. Skipped, loudly,
  *     when the library is not built (LIBRARY=1).
+ *  6b. THE RULES FILE IS THE DOCUMENT'S RULES, AND EVERY ONE OF THEM FIRES
+ *     (phase 3, plan §7). The rules file is read here, its order and its classes
+ *     are checked against the pipeline's own order, and every rule's hit count is
+ *     RECOMPUTED over the document's own text fields — never read off the
+ *     document. Then: the document's own `hits` must equal the recomputation; a
+ *     rule ADDED to a copy and matching nothing must make `checkEdits` fail and be
+ *     named; a rule whose find stands in the front-matter region must make the
+ *     extraction fail (so the title page the reading cites as evidence cannot be
+ *     quietly repaired); and the rules that fire more than once must be the ones
+ *     the document names.
+ *  6c. THE SECTION TITLES ARE THE READING'S OWN WORDS (phase 3, plan §11). Each
+ *     title is recomputed here — from the section's opening words, with the file's
+ *     rules applied — and must equal the document's. The raw title (no rule
+ *     applied) must equal the document's `raw`. The titles the transcription
+ *     damaged past repair must be exactly the ones whose damaged words no reading
+ *     rule touches, must be marked rather than invented, and a section whose
+ *     damage a reading rule READS (§11's opener) must come out readable and
+ *     unmarked. Fails if a title is derived from the raw words, if a still-damaged
+ *     title ships unmarked, or if a readable one is marked damaged.
  *  7. THE EDITION IN THE REPO IS THE SHELF FILE, AND A CHANGED SHELF FILE CANNOT
  *     OVERWRITE IT. The stored edition's sha256 is compared with the shelf's when
  *     the shelf is present, and the importer is run against a MODIFIED copy of
@@ -69,6 +88,13 @@ import { execFileSync } from 'node:child_process';
 import {
   extract,
   counts,
+  checkEdits,
+  checkFrontMatter,
+  frontMatterText,
+  editsPath,
+  sectionTitle,
+  titleDamage,
+  loadEdits,
   serialiseDoc,
   plainText,
   anchorLists,
@@ -214,6 +240,229 @@ section('the divisions run 1…18, with distinct titles (recomputed)');
   check(
     doc.blocks.filter((b) => b.t === 'notedef' && b.n === 25).length === 1,
     'and the note before it did not swallow the colophon',
+  );
+}
+
+/* ---------- 2b. the rules file, and the acceptance rule (phase 3) ---------- */
+
+section('the rules are the file\'s, every one of them fires, and a dead rule fails');
+{
+  const file = JSON.parse(readFileSync(editsPath(SLUG), 'utf8'));
+  const edits = loadEdits(SLUG).edits;
+  check(
+    Array.isArray(file.edits) && file.edits.length === edits.length && edits.length > 0,
+    `the rules file loads and carries ${edits.length} rule(s)`,
+  );
+  check(
+    file.edits.every((e) => ['find', 'replace', 'class', 'note'].every((k) => typeof e[k] === 'string' && e[k] !== '')),
+    'every rule in the file has a find, a replace, a class and a note — a rule without a note is not reviewable',
+  );
+  // the file's shape is the PLAN's ({find, replace, class}), the document's is the
+  // app's contract ({find, repl, cls}); the mapping is checked here so the two
+  // cannot drift apart silently
+  check(
+    edits.every((c, i) => c.find === file.edits[i].find && c.repl === file.edits[i].replace && c.cls === file.edits[i].class && c.note === file.edits[i].note),
+    'the document\'s rules are the file\'s rules, in the file\'s order, field for field',
+  );
+  const ORDER = ['opener', 'digit', 'ocr'];
+  const ranks = edits.map((c) => ORDER.indexOf(c.cls));
+  check(
+    ranks.every((r) => r >= 0) && ranks.every((r, i) => i === 0 || r >= ranks[i - 1]),
+    `the classes are grouped in the pipeline's order (${ORDER.join(' → ')}): ${[...new Set(edits.map((c) => c.cls))].join(', ')}`,
+  );
+  check(
+    edits.every((c) => c.find !== c.repl),
+    'no rule replaces a text with itself',
+  );
+  check(new Set(edits.map((c) => c.find)).size === edits.length, 'no two rules share a find');
+
+  // the document's rules are the extraction's rules — not a second list
+  check(
+    doc.corrections.length === edits.length &&
+      doc.corrections.every((c, i) => c.find === edits[i].find && c.repl === edits[i].repl && c.cls === edits[i].cls),
+    `the document ships the file's rules and no others (${doc.corrections.length})`,
+  );
+
+  // THE HIT COUNT, RECOMPUTED HERE: each rule applied in order to every text field
+  // of the document, one field at a time, counting what each one actually changes.
+  const myHits = edits.map(() => 0);
+  for (const b of doc.blocks) {
+    if (typeof b.x !== 'string') continue;
+    let text = b.x;
+    edits.forEach((r, i) => {
+      const parts = text.split(r.find);
+      if (parts.length > 1) {
+        myHits[i] += parts.length - 1;
+        text = parts.join(r.repl);
+      }
+    });
+  }
+  const dead = edits.filter((_, i) => myHits[i] === 0);
+  check(
+    dead.length === 0,
+    `every rule fires at least once in the served text (${edits.length} rules, ` +
+      `${myHits.reduce((a, b) => a + b, 0)} applications)${dead.length ? `: ${dead.map((d) => JSON.stringify(d.find)).join(', ')}` : ''}`,
+  );
+  check(
+    doc.corrections.every((c, i) => c.hits === myHits[i]),
+    `the document's own hit counts are the ones recomputed here (${doc.corrections.map((c) => c.hits).join(', ').slice(0, 60)}…)`,
+  );
+  const repeated = edits.filter((_, i) => myHits[i] > 1);
+  check(
+    repeated.length > 0 &&
+      JSON.stringify(doc.correctionsMeta.repeated.map((r) => r.find)) === JSON.stringify(repeated.map((r) => r.find)),
+    `the rules that fire more than once are named as such ` +
+      `(${repeated.map((r, k) => `${JSON.stringify(r.find)} ×${myHits[edits.indexOf(r)]}`).join(', ')})`,
+  );
+  const byClass = (k) => edits.filter((c) => c.cls === k).length;
+  check(
+    Object.entries(doc.correctionsMeta.classes).every(([k, v]) => byClass(k) === v) &&
+      Object.entries(doc.correctionsMeta.hits).every(([k, v]) => edits.filter((c) => c.cls === k).reduce((a, r, i) => a + myHits[edits.indexOf(r)], 0) === v),
+    `the class and hit totals the document states are the recomputed ones ` +
+      `(${Object.entries(doc.correctionsMeta.classes).map(([k, v]) => `${v} ${k}`).join(', ')}; ` +
+      `${Object.entries(doc.correctionsMeta.hits).map(([k, v]) => `${v} ${k}`).join(', ')} applications)`,
+  );
+
+  // THE ASYMMETRY: the gate must fail on a rule that matches nothing, and name it
+  let gate = null;
+  try {
+    checkEdits(doc);
+    gate = 'passed (the gate is a no-op)';
+  } catch (e) {
+    gate = `threw: ${e.message}`;
+  }
+  check(gate === 'passed (the gate is a no-op)', `the real rule set passes the acceptance gate: ${gate.slice(0, 40)}`);
+  const withDead = {
+    ...doc,
+    blocks: doc.blocks,
+    corrections: [...doc.corrections, { find: 'nothing-in-this-text-matches-this', repl: 'x', cls: 'ocr', note: 'a fixture, added deliberately' }],
+  };
+  let fired = null;
+  try {
+    checkEdits(withDead);
+    fired = 'accepted (the gate is a no-op)';
+  } catch (e) {
+    fired = e.message;
+  }
+  check(
+    typeof fired === 'string' && fired.includes('unreviewed machinery') && fired.includes('nothing-in-this-text-matches-this'),
+    `a rule that matches nothing FAILS the gate and is named: ${fired.split('\n')[0].slice(0, 120)}`,
+  );
+}
+
+/* ---------- 2c. the front matter is preserved by construction ---------- */
+
+section('no rule touches the front-matter region');
+{
+  // the region recomputed here AND asserted by the extractor itself
+  const front = frontMatterText(doc);
+  check(
+    front.includes('From the Greeh of Porphyry'),
+    'the front matter still carries the reading the title page is cited for ' +
+      '("From the Greeh of Porphyry" — the thing the transcription\'s own damage is evidence of)',
+  );
+  const into = doc.corrections.filter((c) => front.includes(c.find));
+  check(into.length === 0, `and no rule's find occurs in it (${into.length} found${into.length ? `: ${into.map((c) => JSON.stringify(c.find)).join(', ')}` : ''})`);
+  let real = null;
+  try {
+    checkFrontMatter(doc);
+    real = 'accepted (the assertion is a no-op)';
+  } catch (e) {
+    real = `threw: ${e.message}`;
+  }
+  check(
+    real === 'accepted (the assertion is a no-op)',
+    `the extractor's own front-matter assertion accepts this edition: ${real.slice(0, 60)}`,
+  );
+  // THE ASYMMETRY, through the extractor's OWN code: the same assertion over a
+  // rule that would repair the evidence must fail and name the rule. A fixture
+  // that re-stated the assertion would prove only that the fixture can count.
+  let bad = null;
+  try {
+    checkFrontMatter({
+      ...doc,
+      corrections: [
+        ...doc.corrections,
+        { find: 'From the Greeh of Porphyry', repl: 'From the Greek of Porphyry', cls: 'ocr', note: 'a fixture: this would repair the evidence the reading cites' },
+      ],
+    });
+    bad = 'accepted (the assertion is a no-op)';
+  } catch (e) {
+    bad = e.message;
+  }
+  check(
+    typeof bad === 'string' && bad.includes('preserved by construction') && bad.includes('From the Greeh of Porphyry'),
+    `and a rule that would repair the evidence is refused by that same code: ${bad.split('\n')[0].slice(0, 120)}`,
+  );
+}
+
+/* ---------- 2d. the titles are the reading's own words ---------- */
+
+section('the section titles are the reading view\'s words, and a damaged one is marked');
+{
+  const edits = loadEdits(SLUG).edits;
+  const apply = (t) => edits.reduce((acc, r) => (acc.includes(r.find) ? acc.split(r.find).join(r.repl) : acc), t);
+  const OPENER = /^['\u2018]?(\d{1,2})\.\s/;
+  const mine = [];
+  for (let i = 0; i < doc.blocks.length; i++) {
+    const b = doc.blocks[i];
+    if (b.t !== 'sec') continue;
+    const body = doc.blocks.slice(i + 1).find((x) => x.t === 'p' || x.t === 'verse');
+    const line = body ? body.x.split('\n')[0] : '';
+    mine.push({
+      n: b.n,
+      title: sectionTitle(apply(line).replace(OPENER, '')),
+      raw: sectionTitle(line.replace(OPENER, '')),
+    });
+  }
+  check(
+    mine.length === doc.toc.length && mine.every((m, i) => m.title === doc.toc[i].title && m.n === doc.toc[i].n),
+    `every title is the section's opening words with the rules applied, recomputed here ` +
+      `(${mine.filter((m) => m.title !== doc.toc[m.n - 1].title).length} disagreement(s) of ${mine.length})`,
+  );
+  check(
+    mine.every((m, i) => m.raw === doc.toc[i].raw),
+    'and every `raw` title is the same words with NO rule applied (the transcription view\'s title)',
+  );
+  // the flag is a measured statement, recomputed here: a damaged word that no
+  // READING rule (opener/digit) touches. An ocr rule only removes characters.
+  const readings = edits.filter((c) => c.cls !== 'ocr');
+  const census = (w) => /[\^_|\\*+=~{}[\]@$%#<>¬£±»«]/.test(w);
+  const mineDamaged = mine.filter((m) => {
+    const words = m.raw.replace(/…$/, '').split(' ');
+    return words.some((w) => {
+      const bare = w.replace(/^[.,;:?!()"'\u201c\u201d\[]+/, '').replace(/[.,;:?!()"\u201c\u201d\]|\\]+$/, '');
+      return bare !== '' && /[A-Za-z]/.test(bare) && census(bare) && !readings.some((r) => r.find === bare || bare.includes(r.find));
+    });
+  });
+  const docDamaged = doc.toc.filter((t) => t.damaged).map((t) => t.n);
+  check(
+    JSON.stringify(mineDamaged.map((m) => m.n)) === JSON.stringify(docDamaged),
+    `the titles marked damaged are exactly the ones whose damaged words no READING rule repairs ` +
+      `(recomputed: ${mineDamaged.map((m) => `§${m.n}`).join(', ')}; the document marks ${docDamaged.map((n) => `§${n}`).join(', ')})`,
+  );
+  check(
+    docDamaged.length > 0 && doc.toc.filter((t) => t.damaged).every((t) => t.damagedWords.length > 0),
+    `each marked title names the transcription's own damaged words, so the mark is evidence and not a shrug ` +
+      `(${doc.toc.filter((t) => t.damaged).map((t) => `§${t.n}: ${t.damagedWords.join(' ')}`).join('; ')})`,
+  );
+  // §11: its opener's damage is a READING (the rule states the print's number), so
+  // its title must come out readable and unmarked — the other side of the flag
+  const s11 = doc.toc.find((t) => t.n === 11);
+  check(
+    !s11.damaged && /^Theologists therefore assert/.test(s11.title) && /^\S*[\^_]\S*/.test(s11.raw),
+    `§11's title is repaired by its opener rule and NOT marked — the raw form still carries the damage ` +
+      `(${JSON.stringify(s11.raw)} → ${JSON.stringify(s11.title)})`,
+  );
+  const s2 = doc.toc.find((t) => t.n === 2);
+  check(
+    s2.damaged === true && /[\^_]/.test(s2.raw) && doc.toc.every((t) => t.title !== s2.raw),
+    `§2's title is marked damaged, and the damaged words are NOT shipped as a title ` +
+      `(${JSON.stringify(s2.title)})`,
+  );
+  check(
+    doc.toc.every((t) => t.title.length > 0 && t.raw.length > 0),
+    'and no title is emptied: the flagged entries still carry the reading and the transcription',
   );
 }
 
@@ -633,8 +882,9 @@ section('measured');
   );
   console.log(`  blocks by type: ${Object.entries(recount.byType).map(([k, v]) => `${v} ${k}`).join(', ')}`);
   console.log(
-    `  draft corrections: ${Object.entries(recount.corrections).map(([k, v]) => `${v} ${k}`).join(', ')}` +
-      `, ${doc.correctionsDraft.unrepaired} damaged word(s) no rule can reach`,
+    `  corrections: ${Object.entries(recount.corrections).map(([k, v]) => `${v} ${k}`).join(', ')}` +
+      `, every one firing (${Object.entries(recount.correctionHits).map(([k, v]) => `${v} ${k}`).join(', ')} application(s))` +
+      `, ${doc.correctionsMeta.unrepairedWords} damaged word(s) no rule names`,
   );
   console.log(`  regions: ${recount.regions.join(' → ')}`);
   console.log(

@@ -61,12 +61,31 @@ type alias Page =
     { leaf : Maybe Int, page : Maybe Int }
 
 
+{-| One division in the generated contents list.
+
+  - `title` is the division's own opening words with the recorded repairs applied
+    — the title the READING view shows, and the one the shell serves.
+  - `raw` is the same words with no rule applied: the transcription's own title,
+    which is what the TRANSCRIPTION view shows. The two are the two views of one
+    line, so the contents list itself demonstrates the difference the whole reader
+    is built on.
+  - `damaged` marks a title the transcription damaged by more than the repairs
+    can restore. It is never repaired by inventing a reading: the list states the
+    gap (`damagedTitle`) and `raw` carries the words.
+-}
 type alias TocEntry =
-    { id : String, n : Int, title : String, page : Maybe Int }
+    { id : String, n : Int, title : String, raw : String, damaged : Bool, page : Maybe Int }
 
 
+{-| One recorded repair. `hits` is MEASURED when the document is built — how many
+times the rule fires in the served text, in the order the rules are applied — and
+it is carried here so the repairs list shows what each rule actually does instead
+of recomputing it in the view (a view that re-derives the count is a second
+answer to a question the document already answers). Every rule fires at least
+once: the build fails on one that does not.
+-}
 type alias Correction =
-    { find : String, repl : String, cls : String, note : String }
+    { find : String, repl : String, cls : String, note : String, hits : Int }
 
 
 type Block
@@ -163,20 +182,25 @@ page =
 
 tocEntry : D.Decoder TocEntry
 tocEntry =
-    D.map4 TocEntry
+    D.map6 TocEntry
         (D.field "id" D.string)
         (D.field "n" D.int)
         (D.field "title" D.string)
+        -- a document built before the title fix carries neither field: the raw
+        -- title is then the title, and nothing is claimed to be damaged
+        (D.oneOf [ D.field "raw" D.string, D.field "title" D.string ])
+        (D.oneOf [ D.field "damaged" D.bool, D.succeed False ])
         (D.maybe (D.field "page" D.int))
 
 
 correction : D.Decoder Correction
 correction =
-    D.map4 Correction
+    D.map5 Correction
         (D.field "find" D.string)
         (D.field "repl" D.string)
         (D.field "cls" D.string)
         (D.field "note" D.string)
+        (D.oneOf [ D.field "hits" D.int, D.succeed 0 ])
 
 
 block : D.Decoder Block

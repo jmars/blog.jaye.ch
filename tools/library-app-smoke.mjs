@@ -340,6 +340,132 @@ section('reading and transcription');
   }
 }
 
+/* ---------- 7b. the contents list, and the titles that could not be repaired ---------- */
+
+section('the contents list: a damaged title is stated, not shipped');
+{
+  const DOCJSON = JSON.parse(docText);
+  const marked = DOCJSON.toc.filter((t) => t.damaged);
+  // recomputed from the served document, not read off the app
+  const DAMAGED = '[the opening words are damaged in this transcription]';
+  const ctx = await boot();
+  const toc = ctx.w.document.querySelector('#reader-app .rd-toc');
+  check(!!toc, 'the contents list is rendered');
+  const labels = [...toc.querySelectorAll('a')].map((a) => a.textContent);
+  const raw = marked.map((t) => t.raw);
+  check(
+    marked.length > 0 && raw.every((r) => r.includes('^') || r.includes('_')),
+    `the document marks ${marked.length} title(s) damaged, and each carries the transcription's damaged words ` +
+      `(${marked.map((t) => `§${t.n}`).join(', ')})`,
+  );
+  // the LABELS are the titles: the damaged words may stand beside an entry as its
+  // evidence, but they must never BE the entry
+  check(
+    labels.every((l) => !raw.some((r) => l.includes(r))),
+    `no damaged title is offered as a title in the reading view (${JSON.stringify(raw.map((r) => r.slice(0, 24)))})`,
+  );
+  check(
+    labels.filter((l) => l.includes(DAMAGED)).length === marked.length,
+    `and each marked division's entry states the gap instead (${labels.filter((l) => l.includes(DAMAGED)).length} of ${marked.length})`,
+  );
+  check(
+    raw.every((r) => toc.textContent.includes(`the transcription reads “${r}”`)),
+    'and each entry carries those words beside the statement, so nothing is hidden',
+  );
+  // §11 is the counter-case: its damage is repaired by a READING rule (the
+  // opener states the print's number), so its title must be shown, not flagged
+  const s11 = DOCJSON.toc.find((t) => t.n === 11);
+  check(
+    !s11.damaged && toc.textContent.includes(s11.title) && toc.textContent.includes(DAMAGED),
+    `§11's title is shown (its opener rule reads the print's own words) while the flagged entries state the gap ` +
+      `(${JSON.stringify(s11.title)})`,
+  );
+  // the transcription view shows the transcription's own title words, and keeps
+  // the flag: neither view offers damaged words as a title
+  const toggle = ctx.byText('#reader-app .rd-views button', 'transcription');
+  ctx.click(toggle);
+  await settle();
+  const toc2 = ctx.w.document.querySelector('#reader-app .rd-toc');
+  const clean = DOCJSON.toc.filter((t) => !t.damaged);
+  check(
+    clean.every((t) => toc2.textContent.includes(t.raw)),
+    `the transcription view derives every undamaged title from the transcription's own words ` +
+      `(${clean.length} checked)`,
+  );
+  check(
+    [...toc2.querySelectorAll('a')].filter((a) => a.textContent.includes(DAMAGED)).length === marked.length,
+    `and the flagged entries state the gap in the transcription view too (${marked.length})`,
+  );
+  // FAILS IF: the title is derived from the raw words in the reading view (the
+  // defect this section exists for), or a damaged title is quietly shipped.
+}
+
+/* ---------- 7c. the repairs list, with the measured hit counts ---------- */
+
+section('the repairs list is the rule list, with its measured hits');
+{
+  const DOCJSON = JSON.parse(docText);
+  const ctx = await boot();
+  const btn = ctx.byText('#reader-app .rd-bar button', 'repairs');
+  check(!!btn, 'the repairs control is there');
+  if (btn) {
+    ctx.click(btn);
+    await settle();
+    const panel = ctx.w.document.querySelector('#reader-app .rd-diff');
+    check(!!panel, 'and it opens the rule list');
+    // FAILS IF: the panel is not rendered, or the toggle is not wired.
+    const rows = [...panel.querySelectorAll('tbody tr')];
+    check(
+      rows.length === DOCJSON.corrections.length,
+      `every rule is listed, and no others (${rows.length} of ${DOCJSON.corrections.length})`,
+    );
+    // FAILS IF: the list is filtered, truncated or derived from something else.
+    const tbl = rows.map((tr) => {
+      const td = tr.querySelectorAll('td');
+      return { cls: td[0].textContent.trim(), find: td[1].textContent, repl: td[2].textContent, hits: td[3].textContent.trim(), why: td[4].textContent };
+    });
+    check(
+      tbl.every((r, i) => r.find === DOCJSON.corrections[i].find && r.repl === DOCJSON.corrections[i].repl && r.cls === DOCJSON.corrections[i].cls),
+      'each row is the document\'s own rule, in the document\'s order',
+    );
+    // the hit count is the DOCUMENT's measurement, recomputed here from the
+    // document: a rule applied in order to every block, counting what it changes
+    const mine = DOCJSON.corrections.map(() => 0);
+    for (const b of DOCJSON.blocks) {
+      if (typeof b.x !== 'string') continue;
+      let text = b.x;
+      DOCJSON.corrections.forEach((r, i) => {
+        const parts = text.split(r.find);
+        if (parts.length > 1) {
+          mine[i] += parts.length - 1;
+          text = parts.join(r.repl);
+        }
+      });
+    }
+    check(
+      tbl.every((r, i) => r.hits === String(mine[i])) && rows.length > 0,
+      `and each row's count is the number of times that rule fires, recomputed from the served document ` +
+        `(${tbl.filter((r, i) => r.hits === String(mine[i])).length} of ${tbl.length}; max ${Math.max(...mine)})`,
+    );
+    // FAILS IF: the count is re-derived in the view from the wrong text (a rule
+    // shown as firing twice when it fires once), or any rule shows 0 — which the
+    // build would not have let through.
+    check(
+      tbl.every((r) => r.hits !== '0'),
+      `no rule is listed as firing zero times (the build refuses that)`,
+    );
+    check(
+      tbl.filter((r) => r.hits !== '1').length === DOCJSON.correctionsMeta.repeated.length,
+      `the rules that fire more than once are the ${DOCJSON.correctionsMeta.repeated.length} the document names ` +
+        `(${DOCJSON.correctionsMeta.repeated.map((r) => `${JSON.stringify(r.find)} ×${r.hits}`).join(', ')})`,
+    );
+    check(
+      tbl.every((r) => r.why.length > 0),
+      'and every rule says why it is there — a rule with no reason is not reviewable',
+    );
+  }
+}
+
 /* ---------- 8. the keys ---------- */
 
 section('keyboard');
