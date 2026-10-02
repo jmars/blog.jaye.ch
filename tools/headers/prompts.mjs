@@ -235,6 +235,7 @@ function compose(brief) {
     [/\bwide\s+frame\b/gi, 'square frame'],
     [/\bwide\s+empt(?:y|iness)\b/gi, 'empty'],
     [/\bwide\s+(arc|sheet|field|plate|band|sweep)\b/gi, '$1'],
+    [/\bwide-/gi, 'broad-'],          // keep the compound: wide-mouthed -> broad-mouthed
     [/\bwide\b/gi, ''],
   ];
   // ICON SUPPRESSION. A centred, isolated, symmetrical object on an empty field
@@ -257,7 +258,13 @@ function compose(brief) {
     [/\bcentered\b/gi, 'off-centre'],
   ];
   const clean = (s) => {
-    let t = String(s ?? '').replace(MEDIUM, '');
+    // Brief fields are prose: they start with a capital and sometimes end with a
+    // full stop, which reads inside a comma-separated prompt as separate sentences
+    // ('a drawing of A held empty frame:'). Normalise the casing here.
+    let t = String(s ?? '').trim()
+      .replace(/^(A|An|The)\s+/, (m) => m.toLowerCase())
+      .replace(/^([A-Z])(?=[a-z])/, (m) => m.toLowerCase())
+      .replace(/[.]+$/, '').replace(MEDIUM, '');
     for (const [re, to] of WIDE) t = t.replace(re, to);
     for (const [re, to] of PLACEMENT) t = t.replace(re, to);
     return t.replace(/\s{2,}/g, ' ').replace(/\s+([,.;])/g, '$1').trim();

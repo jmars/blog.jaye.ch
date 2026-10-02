@@ -2,7 +2,7 @@
   "a-cosmos-of-persons": {
     "emblem": "a ring of many figures",
     "file": "content/headers/a-cosmos-of-persons.png",
-    "key": "28b928dab56fa1cc|sd_xl_base_1.0.safetensors|13|6bc1c8cc351f",
+    "key": "28b928dab56fa1cc|sd_xl_base_1.0.safetensors|13|d852878d3968",
     "reroll": 1,
     "seconds": 22.0,
     "seed": 1762459769
@@ -10,239 +10,239 @@
   "after-the-room": {
     "emblem": "a door standing half-open",
     "file": "content/headers/after-the-room.png",
-    "key": "183ed240727407ef|sd_xl_base_1.0.safetensors|13|708bd8fe0042",
+    "key": "183ed240727407ef|sd_xl_base_1.0.safetensors|13|5af169dea677",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 879457351
   },
   "ahead-of-the-story": {
     "emblem": "an arrow returned to its sender",
     "file": "content/headers/ahead-of-the-story.png",
-    "key": "e74aead185db30d8|sd_xl_base_1.0.safetensors|13|c320ca71c4b6",
+    "key": "e74aead185db30d8|sd_xl_base_1.0.safetensors|13|3f6eb2937b60",
     "reroll": 1,
     "seconds": 22.1,
     "seed": 1117559861
   },
   "ani-mystic": {
-    "emblem": "A held empty frame",
+    "emblem": "a hand holding up an empty picture frame",
     "file": "content/headers/ani-mystic.png",
-    "key": "915545104a71584b|sd_xl_base_1.0.safetensors|13|9816b64be2f3",
+    "key": "915545104a71584b|sd_xl_base_1.0.safetensors|13|9b57b2517db4",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 2121644947
   },
   "anxiety-damping": {
     "emblem": "a single dial, needle off-centre",
     "file": "content/headers/anxiety-damping.png",
-    "key": "e4d840472f38c17b|sd_xl_base_1.0.safetensors|13|71e0d7a7978b",
+    "key": "e4d840472f38c17b|sd_xl_base_1.0.safetensors|13|81a849345e39",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1379559523
   },
   "black-abbot-white-magic": {
     "emblem": "a codex hiding a codex",
     "file": "content/headers/black-abbot-white-magic.png",
-    "key": "05733124c4805864|sd_xl_base_1.0.safetensors|13|30cedefb549f",
+    "key": "05733124c4805864|sd_xl_base_1.0.safetensors|13|0f512f7aebb4",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.1,
     "seed": 1855066926
   },
   "egregores": {
     "emblem": "vessel ringed by seated figures",
     "file": "content/headers/egregores.png",
-    "key": "d6806d72dc338048|sd_xl_base_1.0.safetensors|13|06537b1e3bef",
+    "key": "d6806d72dc338048|sd_xl_base_1.0.safetensors|13|d09ae01b6fe4",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1560195769
   },
   "eichmann-in-jerusalem": {
     "emblem": "a desk in a glass booth",
     "file": "content/headers/eichmann-in-jerusalem.png",
-    "key": "9601603c84b729e9|sd_xl_base_1.0.safetensors|13|27931f8790a6",
+    "key": "9601603c84b729e9|sd_xl_base_1.0.safetensors|13|519f648f5910",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.1,
     "seed": 190020001
   },
   "empty-leader": {
     "emblem": "Hollow bust, mirrored inner void",
     "file": "content/headers/empty-leader.png",
-    "key": "89931767cc2259e7|sd_xl_base_1.0.safetensors|13|f8b435f5acaf",
+    "key": "89931767cc2259e7|sd_xl_base_1.0.safetensors|13|f1b73f00b900",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 2143864487
   },
   "geosophia": {
     "emblem": "roots beneath a stone slab",
     "file": "content/headers/geosophia.png",
-    "key": "5310bd90aa41451b|sd_xl_base_1.0.safetensors|13|67ffa8bd3924",
+    "key": "5310bd90aa41451b|sd_xl_base_1.0.safetensors|13|c27892fe2e9d",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 448344966
   },
   "iamblichus-on-the-mysteries": {
     "emblem": "a libation bowl pouring itself",
     "file": "content/headers/iamblichus-on-the-mysteries.png",
-    "key": "5f0b95c20e0c7972|sd_xl_base_1.0.safetensors|13|8ece61234f14",
+    "key": "5f0b95c20e0c7972|sd_xl_base_1.0.safetensors|13|e58a6f9090b2",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1692023323
   },
   "manufacturing-the-collapse": {
     "emblem": "trapdoor above a cradle",
     "file": "content/headers/manufacturing-the-collapse.png",
-    "key": "de906eb3965c888b|sd_xl_base_1.0.safetensors|13|3e6ea90614bb",
+    "key": "de906eb3965c888b|sd_xl_base_1.0.safetensors|13|e313cfd97dde",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 729905288
   },
   "meditation-harm": {
     "emblem": "gauge whose needle pierces itself",
     "file": "content/headers/meditation-harm.png",
-    "key": "166c74d317513143|sd_xl_base_1.0.safetensors|13|74596dfac0d4",
+    "key": "166c74d317513143|sd_xl_base_1.0.safetensors|13|fe39fd035684",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 759844261
   },
   "memories-dreams-reflections": {
     "emblem": "a well with a lowered lamp",
     "file": "content/headers/memories-dreams-reflections.png",
-    "key": "3bd1f828d11075d7|sd_xl_base_1.0.safetensors|13|de1fb07f355e",
+    "key": "3bd1f828d11075d7|sd_xl_base_1.0.safetensors|13|f71c4dd2eea3",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1954713274
   },
   "picatrix": {
     "emblem": "an open manual with a vacant chair",
     "file": "content/headers/picatrix.png",
-    "key": "274e6081d075eacb|sd_xl_base_1.0.safetensors|13|0faea39bedee",
+    "key": "274e6081d075eacb|sd_xl_base_1.0.safetensors|13|6c77cbabcd84",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.3,
     "seed": 848390858
   },
   "plotinus-collected-writings": {
-    "adopted": true,
     "emblem": "seated figure, flame in chest",
     "file": "content/headers/plotinus-collected-writings.png",
-    "key": "2ae521f043e5d33b|sd_xl_base_1.0.safetensors|13|07038b4ac5f7",
+    "key": "2ae521f043e5d33b|sd_xl_base_1.0.safetensors|13|b17ba8475d03",
     "reroll": 1,
+    "seconds": 24.0,
     "seed": 621309336
   },
   "porphyry-cave-of-the-nymphs": {
     "emblem": "cave with two gates",
     "file": "content/headers/porphyry-cave-of-the-nymphs.png",
-    "key": "67356d7a7f182ca8|sd_xl_base_1.0.safetensors|13|a38c1a15229f",
-    "reroll": 0,
-    "seconds": 22.0,
-    "seed": 1661020166
+    "key": "67356d7a7f182ca8|sd_xl_base_1.0.safetensors|13|ef0dec26e281",
+    "reroll": 1,
+    "seconds": 2.0,
+    "seed": 1661028085
   },
   "proclus-elements-of-theology": {
     "emblem": "a stepped stone pyramid",
     "file": "content/headers/proclus-elements-of-theology.png",
-    "key": "8fd04ac43a9a0e05|sd_xl_base_1.0.safetensors|13|a1b1b4e52d01",
+    "key": "8fd04ac43a9a0e05|sd_xl_base_1.0.safetensors|13|7c8c15fd096f",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 562441138
   },
   "proclus-theology-of-plato": {
     "emblem": "A stepped ziggurat of stone",
     "file": "content/headers/proclus-theology-of-plato.png",
-    "key": "4fab3935d9add752|sd_xl_base_1.0.safetensors|13|2406b1d4dbba",
+    "key": "4fab3935d9add752|sd_xl_base_1.0.safetensors|13|860aa8524bc3",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1518442167
   },
   "quareia": {
     "emblem": "a gated stair, fourteen treads",
     "file": "content/headers/quareia.png",
-    "key": "c4c96b770195c80f|sd_xl_base_1.0.safetensors|13|533e490163b8",
+    "key": "c4c96b770195c80f|sd_xl_base_1.0.safetensors|13|a6fddda52d83",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1640816962
   },
   "recovery-is-not-immunity": {
     "emblem": "a drained and refilled vessel",
     "file": "content/headers/recovery-is-not-immunity.png",
-    "key": "43ed3c4f809d42c7|sd_xl_base_1.0.safetensors|13|362ec1ddfa1d",
+    "key": "43ed3c4f809d42c7|sd_xl_base_1.0.safetensors|13|0c7336ff551d",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 595223175
   },
   "sacred-science": {
     "emblem": "an hourglass, half-drained",
     "file": "content/headers/sacred-science.png",
-    "key": "feb342aedfcbe35d|sd_xl_base_1.0.safetensors|13|2b81911e9bb0",
+    "key": "feb342aedfcbe35d|sd_xl_base_1.0.safetensors|13|2ea002c47333",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.1,
     "seed": 351072021
   },
   "safeguards": {
     "emblem": "a hand pointing past itself",
     "file": "content/headers/safeguards.png",
-    "key": "1cf7ba7ddfdd8f2d|sd_xl_base_1.0.safetensors|13|4ce3dae929dc",
+    "key": "1cf7ba7ddfdd8f2d|sd_xl_base_1.0.safetensors|13|c1fb3efc4cc2",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 854563740
   },
   "set-and-setting": {
     "emblem": "A doorframe standing alone",
     "file": "content/headers/set-and-setting.png",
-    "key": "dd761afda88e1dfe|sd_xl_base_1.0.safetensors|13|c11d172dbb30",
+    "key": "dd761afda88e1dfe|sd_xl_base_1.0.safetensors|13|a8457cb375fb",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 318094630
   },
   "star-ships": {
     "emblem": "a star-crowned hill temple",
     "file": "content/headers/star-ships.png",
-    "key": "0272bee4fc2c1255|sd_xl_base_1.0.safetensors|13|8f6a53672e77",
+    "key": "0272bee4fc2c1255|sd_xl_base_1.0.safetensors|13|a1b190c4e1ca",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.1,
     "seed": 1441458881
   },
   "the-anatomy-of-destructiveness": {
     "emblem": "a marionette with severed strings",
     "file": "content/headers/the-anatomy-of-destructiveness.png",
-    "key": "f7ddd3106f59cccf|sd_xl_base_1.0.safetensors|13|fded6090282f",
+    "key": "f7ddd3106f59cccf|sd_xl_base_1.0.safetensors|13|c06a96577eae",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.1,
     "seed": 1817573456
   },
   "the-assumed-seat": {
     "emblem": "chair seated by its shadow",
     "file": "content/headers/the-assumed-seat.png",
-    "key": "6063f06327073ffb|sd_xl_base_1.0.safetensors|13|c8236b9db558",
+    "key": "6063f06327073ffb|sd_xl_base_1.0.safetensors|13|2d77ac991062",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1480549739
   },
   "the-blood-of-the-earth": {
     "emblem": "an oil derrick over an emptying basin",
     "file": "content/headers/the-blood-of-the-earth.png",
-    "key": "6c2b75ca7477fb83|sd_xl_base_1.0.safetensors|13|b53129a53141",
+    "key": "6c2b75ca7477fb83|sd_xl_base_1.0.safetensors|13|8c9f51de0551",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 219854259
   },
   "the-breakthrough": {
     "emblem": "a single empty seminar chair",
     "file": "content/headers/the-breakthrough.png",
-    "key": "731aa70979be2def|sd_xl_base_1.0.safetensors|13|1a9d650c5432",
+    "key": "731aa70979be2def|sd_xl_base_1.0.safetensors|13|99cf2f1ebf29",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 850163026
   },
   "the-certified-frame": {
     "emblem": "a passport under a heavy stamp",
     "file": "content/headers/the-certified-frame.png",
-    "key": "7a80f3a390bd7909|sd_xl_base_1.0.safetensors|13|b394b4edda70",
+    "key": "7a80f3a390bd7909|sd_xl_base_1.0.safetensors|13|c1221cb85647",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 206197011
   },
   "the-chaldean-oracles": {
     "emblem": "a flower of pure fire",
     "file": "content/headers/the-chaldean-oracles.png",
-    "key": "a125c736c6f444ac|sd_xl_base_1.0.safetensors|13|02c5de8a4649",
+    "key": "a125c736c6f444ac|sd_xl_base_1.0.safetensors|13|1ee44b3b4ab4",
     "reroll": 1,
     "seconds": 22.1,
     "seed": 552268340
@@ -250,23 +250,23 @@
   "the-container": {
     "emblem": "A vessel holding a smaller vessel",
     "file": "content/headers/the-container.png",
-    "key": "8066a607b7a1391e|sd_xl_base_1.0.safetensors|13|bd9a9e917ec3",
+    "key": "8066a607b7a1391e|sd_xl_base_1.0.safetensors|13|c70d985c9918",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.1,
     "seed": 345805979
   },
   "the-cosmos-that-refuses": {
     "emblem": "a ladder with no top rung",
     "file": "content/headers/the-cosmos-that-refuses.png",
-    "key": "2402a338d3cfb563|sd_xl_base_1.0.safetensors|13|109e453fbcde",
+    "key": "2402a338d3cfb563|sd_xl_base_1.0.safetensors|13|a13226921db2",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 47974008
   },
   "the-costume": {
     "emblem": "suitcase with false bottom",
     "file": "content/headers/the-costume.png",
-    "key": "92d816062414257c|sd_xl_base_1.0.safetensors|13|3a6fbe672a44",
+    "key": "92d816062414257c|sd_xl_base_1.0.safetensors|13|2b38b687868d",
     "reroll": 1,
     "seconds": 22.0,
     "seed": 925473484
@@ -274,23 +274,23 @@
   "the-deep-inheritance": {
     "emblem": "a phylogenetic tree, two-layered",
     "file": "content/headers/the-deep-inheritance.png",
-    "key": "7e2dc9dd8bd24d32|sd_xl_base_1.0.safetensors|13|ce8a3e66284a",
+    "key": "7e2dc9dd8bd24d32|sd_xl_base_1.0.safetensors|13|e338e188c537",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.1,
     "seed": 1296786865
   },
   "the-designed-method": {
     "emblem": "a five-stage hourglass",
     "file": "content/headers/the-designed-method.png",
-    "key": "d759807f87eb2796|sd_xl_base_1.0.safetensors|13|11a137a56e0f",
+    "key": "d759807f87eb2796|sd_xl_base_1.0.safetensors|13|86550aefa619",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 519102748
   },
   "the-differential": {
     "emblem": "a bowl held in a hand",
     "file": "content/headers/the-differential.png",
-    "key": "f5df807fd117c9a3|sd_xl_base_1.0.safetensors|13|61773d508e87",
+    "key": "f5df807fd117c9a3|sd_xl_base_1.0.safetensors|13|5bf7e14509ad",
     "reroll": 1,
     "seconds": 22.0,
     "seed": 855282031
@@ -298,103 +298,103 @@
   "the-empty-vessel": {
     "emblem": "a poured-out vessel",
     "file": "content/headers/the-empty-vessel.png",
-    "key": "ff2b9cca8f15902d|sd_xl_base_1.0.safetensors|13|7541262a28c5",
+    "key": "ff2b9cca8f15902d|sd_xl_base_1.0.safetensors|13|bd3bbb4470cd",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1779241486
   },
   "the-environment": {
     "emblem": "an empty throne with crown",
     "file": "content/headers/the-environment.png",
-    "key": "532f61b2b409dc6f|sd_xl_base_1.0.safetensors|13|6b0190535343",
+    "key": "532f61b2b409dc6f|sd_xl_base_1.0.safetensors|13|904568ecb942",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.1,
     "seed": 324341894
   },
   "the-follower": {
     "emblem": "a dissolving silhouette figure",
     "file": "content/headers/the-follower.png",
-    "key": "cd122f35bfd8586d|sd_xl_base_1.0.safetensors|13|8e76f8ad0107",
+    "key": "cd122f35bfd8586d|sd_xl_base_1.0.safetensors|13|71a95e715c5d",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 1312970520
   },
   "the-frame-is-a-variable": {
     "emblem": "nested frames, innermost removed",
     "file": "content/headers/the-frame-is-a-variable.png",
-    "key": "dfb59650ff773126|sd_xl_base_1.0.safetensors|13|5c3c142b5ab0",
+    "key": "dfb59650ff773126|sd_xl_base_1.0.safetensors|13|6209d8f8cc9b",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 748124436
   },
   "the-holy-daimon": {
     "emblem": "Two vessels, almost touching",
     "file": "content/headers/the-holy-daimon.png",
-    "key": "6f24dc20d8294876|sd_xl_base_1.0.safetensors|13|77d1052d4c4c",
+    "key": "6f24dc20d8294876|sd_xl_base_1.0.safetensors|13|8092b60fd272",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 389360804
   },
   "the-holy-heretics": {
     "emblem": "a gate with no bar",
     "file": "content/headers/the-holy-heretics.png",
-    "key": "f368661a43c057b7|sd_xl_base_1.0.safetensors|13|03a4806457b2",
+    "key": "f368661a43c057b7|sd_xl_base_1.0.safetensors|13|c84d8bfcc057",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 532871778
   },
   "the-label": {
     "emblem": "A pasted label, mechanism beneath",
     "file": "content/headers/the-label.png",
-    "key": "926a30d1fd9b31ae|sd_xl_base_1.0.safetensors|13|b7e12ac0213f",
+    "key": "926a30d1fd9b31ae|sd_xl_base_1.0.safetensors|13|352050286cb1",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 422273885
   },
   "the-ladder-of-light": {
     "emblem": "a ladder whose top rung is missing",
     "file": "content/headers/the-ladder-of-light.png",
-    "key": "bd1e6256866963c6|sd_xl_base_1.0.safetensors|13|e5d334876a87",
+    "key": "bd1e6256866963c6|sd_xl_base_1.0.safetensors|13|12c67cba1aa7",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1822751037
   },
   "the-lucifer-effect": {
     "emblem": "half-open archive drawer, leaning papers",
     "file": "content/headers/the-lucifer-effect.png",
-    "key": "a5d45bebffd3b3dc|sd_xl_base_1.0.safetensors|13|6876f608e799",
+    "key": "a5d45bebffd3b3dc|sd_xl_base_1.0.safetensors|13|6f0fdb98f9c0",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 1580602965
   },
   "the-machine-has-no-reading": {
     "emblem": "a card catalogue drawer, one slot empty",
     "file": "content/headers/the-machine-has-no-reading.png",
-    "key": "c462696291a737c5|sd_xl_base_1.0.safetensors|13|b92e6d740f65",
+    "key": "c462696291a737c5|sd_xl_base_1.0.safetensors|13|defb989e14c7",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 1402307949
   },
   "the-machine-said-so": {
     "emblem": "an empty oracular slot",
     "file": "content/headers/the-machine-said-so.png",
-    "key": "df2c39095f4d96c3|sd_xl_base_1.0.safetensors|13|4d637e228d68",
+    "key": "df2c39095f4d96c3|sd_xl_base_1.0.safetensors|13|0af39e6f9e41",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 566232685
   },
   "the-new-jerusalem": {
     "emblem": "an unoccupied throne, radiating",
     "file": "content/headers/the-new-jerusalem.png",
-    "key": "d8a20f56beee482a|sd_xl_base_1.0.safetensors|13|a3bd7482d23b",
+    "key": "d8a20f56beee482a|sd_xl_base_1.0.safetensors|13|dbe7c0c0e5a3",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.1,
     "seed": 418183164
   },
   "the-operative-master": {
     "emblem": "a key fitting a lock",
     "file": "content/headers/the-operative-master.png",
-    "key": "1634743a71f1656f|sd_xl_base_1.0.safetensors|13|8f4dccc78245",
+    "key": "1634743a71f1656f|sd_xl_base_1.0.safetensors|13|7ae0f63418c2",
     "reroll": 1,
     "seconds": 22.0,
     "seed": 1566149122
@@ -402,89 +402,89 @@
   "the-orphic-hymns": {
     "emblem": "a offering bowl with rising smoke",
     "file": "content/headers/the-orphic-hymns.png",
-    "key": "4171f8f13cc91b9f|sd_xl_base_1.0.safetensors|13|80c9d8faa327",
+    "key": "4171f8f13cc91b9f|sd_xl_base_1.0.safetensors|13|c556de0e75be",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1588431298
   },
   "the-owned-cosmos": {
     "emblem": "an occupied axial throne",
     "file": "content/headers/the-owned-cosmos.png",
-    "key": "0d0684325dffcb1d|sd_xl_base_1.0.safetensors|13|378ea1489c30",
+    "key": "0d0684325dffcb1d|sd_xl_base_1.0.safetensors|13|c358b247f7a5",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 8737755
   },
   "the-same-move": {
     "emblem": "one weight, four pedestals",
     "file": "content/headers/the-same-move.png",
-    "key": "13ca182b9e86910b|sd_xl_base_1.0.safetensors|13|370c160e9635",
+    "key": "13ca182b9e86910b|sd_xl_base_1.0.safetensors|13|caa688a07e47",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 350497823
   },
   "the-sanctioned-trance": {
     "emblem": "bell with clapper removed",
     "file": "content/headers/the-sanctioned-trance.png",
-    "key": "0c8c303727cad95c|sd_xl_base_1.0.safetensors|13|835d507b7430",
+    "key": "0c8c303727cad95c|sd_xl_base_1.0.safetensors|13|028086b415db",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1989980607
   },
   "the-western-column": {
     "emblem": "A barred threshold gate",
     "file": "content/headers/the-western-column.png",
-    "key": "d17a77630db2d94d|sd_xl_base_1.0.safetensors|13|5bd8c80a5465",
+    "key": "d17a77630db2d94d|sd_xl_base_1.0.safetensors|13|898c4f5a3838",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 22.2,
     "seed": 977742718
   },
   "the-witch-and-the-debt": {
     "emblem": "a tilted balance scale",
     "file": "content/headers/the-witch-and-the-debt.png",
-    "key": "5abe4460bad5e9f5|sd_xl_base_1.0.safetensors|13|96f7a64d0534",
+    "key": "5abe4460bad5e9f5|sd_xl_base_1.0.safetensors|13|f8def93c5c60",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.1,
     "seed": 1802888542
   },
   "thought-reform": {
     "emblem": "a heavy rubber stamp",
     "file": "content/headers/thought-reform.png",
-    "key": "c7f0c5f71a8d500c|sd_xl_base_1.0.safetensors|13|a1eb6b195743",
+    "key": "c7f0c5f71a8d500c|sd_xl_base_1.0.safetensors|13|cd1871c977a7",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 2013215139
   },
   "two-esoteric-tarots": {
     "emblem": "a single tarot card, back showing",
     "file": "content/headers/two-esoteric-tarots.png",
-    "key": "cc89add76b863d78|sd_xl_base_1.0.safetensors|13|08fd0db7592c",
+    "key": "cc89add76b863d78|sd_xl_base_1.0.safetensors|13|507e8d9e09b7",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 129618391
   },
   "undreaming-wetiko": {
     "emblem": "a spore print, radiating",
     "file": "content/headers/undreaming-wetiko.png",
-    "key": "8a7f5fd8c8d27866|sd_xl_base_1.0.safetensors|13|4a29d8ca6954",
+    "key": "8a7f5fd8c8d27866|sd_xl_base_1.0.safetensors|13|b80d5ec9088d",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 140908098
   },
   "what-actually-works": {
     "emblem": "a stepped threshold holding weight",
     "file": "content/headers/what-actually-works.png",
-    "key": "9c41fc32e21f34e1|sd_xl_base_1.0.safetensors|13|46a482cde30e",
+    "key": "9c41fc32e21f34e1|sd_xl_base_1.0.safetensors|13|c9dc819174ca",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 90323130
   },
   "what-the-traditions-knew": {
     "emblem": "Seven closed books in a stack",
     "file": "content/headers/what-the-traditions-knew.png",
-    "key": "1b913ff123b2f100|sd_xl_base_1.0.safetensors|13|10898ab7b685",
+    "key": "1b913ff123b2f100|sd_xl_base_1.0.safetensors|13|4d6f1c86c2d4",
     "reroll": 1,
-    "seconds": 22.0,
+    "seconds": 24.0,
     "seed": 1432881034
   }
 }
