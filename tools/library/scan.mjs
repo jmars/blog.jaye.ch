@@ -43,6 +43,18 @@ function model(slug) {
   return JSON.parse(readFileSync(f, 'utf8'));
 }
 
+/** A text whose scan is named directly, without a leaf model. Some editions have
+ * no derivable leaf model (the item carries no page-number file) but the page
+ * images are there and the OFFSET is measurable: the leaf whose running head
+ * reads a known printed page gives `archive n = printed page + offset`. The Cave
+ * is served through its derived model; this is the other route, recorded beside
+ * the edition so a read can find the page. */
+function scanConfig(slug) {
+  const f = join(ROOT, 'content', 'library', slug, 'scan.json');
+  if (!existsSync(f)) return null;
+  return JSON.parse(readFileSync(f, 'utf8'));
+}
+
 /** printed page -> its leaf in the derived page model (the model is the map). */
 function leafOfPage(m, page) {
   const hit = m.leaves.find((l) => l.page === page);
@@ -53,12 +65,11 @@ function leafOfPage(m, page) {
 const archiveIndex = (leaf) => leaf - 1;
 const scanPath = (slug, n) => join(SCANS(slug), `n${n}.jpg`);
 
-function url(m, n) {
-  return `https://archive.org/download/${m.item}/page/n${n}_w1200.jpg`;
+function url(item, n) {
+  return `https://archive.org/download/${item}/page/n${n}_w1200.jpg`;
 }
 
-async function fetchPages(slug, ns) {
-  const m = model(slug);
+async function fetchPages(slug, item, ns) {
   mkdirSync(SCANS(slug), { recursive: true });
   for (const n of ns) {
     const p = scanPath(slug, n);
@@ -66,7 +77,7 @@ async function fetchPages(slug, ns) {
       console.log(`  n${n}: already saved (${statSync(p).size} bytes)`);
       continue;
     }
-    const u = url(m, n);
+    const u = url(item, n);
     const res = await fetch(u);
     if (!res.ok) throw new Error(`scan: ${u} -> HTTP ${res.status}`);
     const buf = Buffer.from(await res.arrayBuffer());
@@ -112,30 +123,50 @@ const nums = (flag) => {
 };
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const m = existsSync(DEREV(slug)) ? model(slug) : null;
+  /* EITHER ROUTE. The derived leaf model (the Cave) maps printed page <-> leaf and
+   * knows the item; a `scan.json` beside an edition whose item has no derivable
+   * leaf model names the item and the MEASURED offset (archive n = printed + offset).
+   * Both expose the same two questions: which archive page is this printed page,
+   * and what printed page is this archive page. */
+  const cfg = scanConfig(slug);
+  const m = !cfg && existsSync(DEREV(slug)) ? model(slug) : null;
+  if (!cfg && !m) throw new Error(`scan: ${slug} has neither a derived page model nor a scan.json`);
+  const item = cfg ? cfg.item : m.item;
+  const pageToN = cfg ? (pg) => pg + cfg.archiveOffset : (pg) => archiveIndex(leafOfPage(m, pg));
+  const nToPage = cfg
+    ? (n) => n - cfg.archiveOffset
+    : (n) => m.leaves.find((l) => l.leaf === n + 1)?.page ?? null;
   if (cmd === 'list') {
     if (!existsSync(SCANS(slug))) { console.log('scan: nothing saved yet'); process.exit(0); }
     const files = readdirSync(SCANS(slug)).filter((f) => f.endsWith('.jpg')).sort((a, b) => Number(a.slice(1, -4)) - Number(b.slice(1, -4)));
     console.log(`${files.length} scan page(s) saved for ${slug}:`);
     for (const f of files) {
       const n = Number(f.slice(1, -4));
-      const leaf = n + 1;
-      const pg = m.leaves.find((l) => l.leaf === leaf)?.page ?? '?';
-      console.log(`  ${f}  (archive n${n} = leaf ${leaf} = printed page ${pg}, ${statSync(join(SCANS(slug), f)).size} bytes)`);
+      const pg = nToPage(n);
+      const where = cfg ? `printed page ${pg ?? '?'}` : `leaf ${n + 1} = printed page ${pg ?? '?'}`;
+      console.log(`  ${f}  (archive n${n} = ${where}, ${statSync(join(SCANS(slug), f)).size} bytes)`);
     }
   } else if (cmd === 'fetch') {
     const pages = nums('--pages');
     const leaves = nums('--leaves');
     const ns = [];
-    if (pages) for (const p of pages) ns.push(archiveIndex(leafOfPage(m, p)));
-    if (leaves) for (const l of leaves) ns.push(archiveIndex(l));
+    if (pages) {
+      for (const p of pages) {
+        if (cfg && (p < cfg.firstPage || p > cfg.lastPage)) {
+          throw new Error(`scan: printed page ${p} is outside this work (${cfg.firstPage}-${cfg.lastPage})`);
+        }
+        ns.push(cfg ? pageToN(p) : archiveIndex(leafOfPage(m, p)));
+      }
+    }
+    if (leaves) { if (cfg) throw new Error('scan: this text is addressed by printed page, not leaf'); for (const l of leaves) ns.push(archiveIndex(l)); }
     if (!ns.length) { console.error('scan: give --pages <printed,...> or --leaves <leaf,...>'); process.exit(2); }
-    await fetchPages(slug, ns);
+    await fetchPages(slug, item, ns);
   } else if (cmd === 'read') {
     const pi = argv.indexOf('--page');
     const li = argv.indexOf('--leaf');
     if (pi < 0 && li < 0) { console.error('scan: give --page <printed> or --leaf <leaf>'); process.exit(2); }
-    const n = pi >= 0 ? archiveIndex(leafOfPage(m, Number(argv[pi + 1]))) : archiveIndex(Number(argv[li + 1]));
+    if (li >= 0 && cfg) throw new Error('scan: this text is addressed by printed page, not leaf');
+    const n = pi >= 0 ? pageToN(Number(argv[pi + 1])) : archiveIndex(Number(argv[li + 1]));
     const question = argv.filter((a, i) => !a.startsWith('--') && i > 0 && argv[i - 1] !== '--page' && argv[i - 1] !== '--leaf' && a !== slug).join(' ') ||
       'Transcribe the printed text of this page exactly.';
     const r = await readImage(slug, n, question);
