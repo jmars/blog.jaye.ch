@@ -323,7 +323,13 @@ export function policyBlock(policy) {
 /** One region's prompt. The contract is repair.mjs's, extended from one damaged
  * run to a whole region: the classes are three because they need different
  * handling, and the model is asked to work in reading order. */
-export function promptFor(region, par, policy) {
+export function promptFor(region, par, policy, book) {
+  /* WHICH BOOK, said per-text. This prompt used to name Porphyry's Cave of the
+   * Nymphs and the 1917 printing in its opening line, which is right for THAT
+   * text and wrong for every other — a reader told the wrong book cannot judge
+   * what the print's own wording is. The caller passes the description from the
+   * shelf entry; the default is the Cave's, so its recorded reads are unchanged. */
+  const desc = book || "Taylor's translation of Porphyry's *Cave of the Nymphs*, 1917 printing";
   const parBlock =
     par.status === 'located' && par.whole
       ? `THE PARALLEL EDITION — ${par.file} — the SAME TRANSLATION in another printing, given IN FULL below ` +
@@ -343,7 +349,7 @@ export function promptFor(region, par, policy) {
           .map((l) => `  ${l}`)
           .join('\n')
       : `THE PARALLEL EDITION: ${par.status}.`;
-  return `You are reading a whole section of an OCR transcription of a printed book (Taylor's translation of Porphyry's *Cave of the Nymphs*, 1917 printing), to find damage a character-counting instrument is blind to. The instrument counts a damage character standing inside a word; it cannot see (a) a word a recorded rule HALF-repaired (the marker consumed, the word left wrong), (b) a word that is wrong but has NO damage character in it (a substituted or missing letter — a plausible-looking non-word), or (c) a word broken in two or two words fused into one. Those are what you are looking for. You are the stronger instrument; the author has read the published text and reports "a fair amount of damage" where the build's own count says two.
+  return `You are reading a whole section of an OCR transcription of a printed book (${desc}), to find damage a character-counting instrument is blind to. The instrument counts a damage character standing inside a word; it cannot see (a) a word a recorded rule HALF-repaired (the marker consumed, the word left wrong), (b) a word that is wrong but has NO damage character in it (a substituted or missing letter — a plausible-looking non-word), or (c) a word broken in two or two words fused into one. Those are what you are looking for. You are the stronger instrument; the author has read the published text and reports "a fair amount of damage" where the build's own count says two.
 
 ${policyBlock(policy)}
 
@@ -594,6 +600,12 @@ async function main() {
   const entry = TEXTS.find((t) => t.slug === slug);
   if (!entry) throw new Error(`library: no such text on the shelf: ${slug}`);
   if (!hasEdition(slug)) throw new Error(`library: no stored edition for ${slug}`);
+  /* WHICH BOOK, for the prompt: the shelf entry's own description of the edition.
+   * The prompt used to hardcode the Cave's; a read of another text was told the
+   * wrong book, which is a fact the model needs to judge the print's wording. */
+  const BOOK_DESC =
+    `${entry.author || ''}'s ${entry.title || ''}` +
+    `${entry.translator ? `, translated by ${entry.translator}` : ''} (${entry.year || ''})`;
   const src = readEdition(slug);
   const doc = extract(src, { entry, sha256: sha256(src) });
   const { edits } = loadEdits(slug);
@@ -712,7 +724,7 @@ async function main() {
     const par = parallelFor(region, parallel ? { ...parallel } : null, { whole });
     if (par.status === 'located') par.file = parallel.file;
     const parallelShown = par.status === 'located' ? par.excerpt : '';
-    const prompt = promptFor(region, par, policy);
+    const prompt = promptFor(region, par, policy, BOOK_DESC);
     if (dryRun) {
       console.log(`  ${region.name}: ${prompt.length} chars (parallel ${par.status}${par.lines ? ` ${par.lines.join('-')}` : ''})`);
       continue;

@@ -65,6 +65,9 @@ const toEngine = (list) => list.map((r) => ({ find: r.find, repl: r.replace ?? r
 const findingsFile = fromArg || join(process.cwd(), 'tools', 'library', 'edits', `${slug}.fullread.json`);
 const findingsRaw = JSON.parse(readFileSync(findingsFile, 'utf8'));
 const findings = findingsRaw.findings || findingsRaw.proposals || [];
+// whether the findings were decided against a PARALLEL edition — the premise of
+// the bracket-glyph check below (see it)
+const findingsHaveParallel = !!findingsRaw.parallel;
 
 const DAMAGE = new Set('^_~*/£>\\|#™±»«}{&');
 const hasBracket = (s) => s.includes('[') || s.includes(']');
@@ -90,8 +93,19 @@ for (const f of findings) {
     drop.push([f, `CONFLICTS with the recorded reading "${existing.replace ?? existing.repl}" — the recorded one stands`]);
     continue;
   }
-  // the bracket glyph: the print sets Taylor's brackets as parentheses
-  if (hasBracket(replace) && !hasBracket(find)) { drop.push([f, 'the replacement writes a bracket glyph the print does not use (it copies the parallel)']); continue; }
+  /* THE BRACKET GLYPH, and its PREMISE. The rule exists because the PARALLEL's
+   * glyph was being copied into a replace: the Cave's 1917 print sets Taylor's
+   * brackets as PARENTHESES (MEASURED 91 '(' against 0 '['), while the 1823
+   * parallel sets them as '[' — so a '[' in a replace was the parallel's, not the
+   * print's. THE PREMISE IS THE PARALLEL. A text with NO parallel has no glyph to
+   * copy, and its own print may use square brackets outright — MEASURED: the 1816
+   * Proclus transcription carries 73 '[' and 75 ']' (Taylor brackets his
+   * additions that way), and four findings repair the damaged glyph '£' -> '['.
+   * Rejecting those was the rule overreaching past its evidence. */
+  if (findingsHaveParallel && hasBracket(replace) && !hasBracket(find)) {
+    drop.push([f, 'the replacement writes a bracket glyph the print does not use (it copies the parallel)']);
+    continue;
+  }
   // a replace that still carries a damage character would assert damaged print
   if ([...replace].some((c) => DAMAGE.has(c)) && ![...find].some((c) => DAMAGE.has(c))) { drop.push([f, 'the replacement still carries a damage character']); continue; }
 
@@ -259,7 +273,18 @@ function simulate(finalRules) {
 
 // The file's own order must be preserved for the EXISTING rules (their order is
 // recorded), so the candidates go in front of the reading group, longest first.
-const FI = rules.findIndex((r) => r.class === 'reading');
+/* WHERE THE READING GROUP BEGINS. The candidates are `reading` class and go
+ * before the file's own reading/review rules; the opener and digit rules must stay
+ * FIRST (the classes are grouped in pipeline order, and a reading rule placed
+ * before an opener would consume the characters the opener needs — the extractor
+ * REFUSES such a file). MEASURED BUG: this searched only for 'reading', so a file
+ * with NO reading rules (the first Proclus merge — 14 openers and nothing else)
+ * returned -1, `slice(0, -1)`/`slice(-1)` split the LAST OPENER off as if it were
+ * the reading group, and the 286 new rules were inserted in front of it. The
+ * default build never extracts a held-back text, so nothing caught it; the
+ * extractor threw only when the text was read directly. */
+const FI0 = rules.findIndex((r) => r.class === 'reading' || r.class === 'review');
+const FI = FI0 < 0 ? rules.length : FI0;
 const head = rules.slice(0, FI);          // opener, digit
 const reading = rules.slice(FI);          // reading + review, in file order
 
