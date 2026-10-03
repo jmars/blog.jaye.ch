@@ -134,6 +134,14 @@
     {
       "unsure_index": 24,
       "disposition": "FIXED EARLIER: \"as the reward of severe toil\" — a lost \"as\"."
+    },
+    {
+      "unsure_index": "flash-1",
+      "disposition": "FIXED: the destroyed run at the section-6/7 page break is FURNITURE, not text. The 1917 page it stands on (printed page 20, leaf 26) carries NOTHING between 'the vestment of the celestial Gods.' and '7. Why, therefore' — read from the page image. It is now named in the text's own rules as measured furniture and suppressed in the reading view like a running head (the transcription view still shows its characters). The two 'leave' rules that kept it visible are removed."
+    },
+    {
+      "unsure_index": "flash-2",
+      "disposition": "FIXED: the print reads Βορά — transliterated 'Bora' — NOT 'Boga'. The 1917 page 33 reads 'For the word Boreas is derived from Βορά, which signifies nutriment', read from the page image; the earlier 'Boga' came from the 1823 parallel, whose own OCR of the etymon is damaged. The rule is corrected to 'Bora,'."
     }
   ]
 }

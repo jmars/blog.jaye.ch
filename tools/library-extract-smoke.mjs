@@ -532,10 +532,16 @@ section('the policy: substitute-when-recorded, leave otherwise, never delete');
   );
   // a LEAVE is not a deletion: it records the decision and spends no bytes
   const leave = edits.filter((e) => e.action === 'leave');
+  /* A LEAVE SET MAY BE EMPTY, and that is the good state: a leave records damage
+   * whose reading could not be determined, so zero leaves means every damaged
+   * place a witness could settle has been settled. The asserts below hold
+   * whatever the count — each leave, if there is one, must change nothing and
+   * must carry its reason. (MEASURED: this edition's leaves went 2 -> 0 when the
+   * destroyed page-break run was reclassified as furniture, page-read.) */
   check(
-    leave.length > 0 && leave.every((e) => e.find === e.repl && e.note.length > 0),
-    `${leave.length} rule(s) record that a reading is NOT determinable ("leave") and change nothing ` +
-      `(${leave.map((e) => JSON.stringify(e.find)).join(', ')})`,
+    leave.length === 0 || leave.every((e) => e.find === e.repl && e.note.length > 0),
+    `${leave.length} rule(s) record that a reading is NOT determinable ("leave"), each changing nothing ` +
+      `(${leave.map((e) => JSON.stringify(e.find)).join(', ') || 'none — every damaged place is settled'})`,
   );
 
   /* (3) THE COUNTS, RECOMPUTED HERE from the served text of the READING VIEW:

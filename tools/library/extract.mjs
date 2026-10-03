@@ -228,6 +228,12 @@ const TEXT_RULES = {
     // occurs exactly once, on the title page, and OCRs as "From the Greeh of
     // Porphyry", so the rule never fired and the note-continuation swallowed the
     // colophon and the list's opening seven blocks as note (25)'s own text.
+    // A MEASURED FURNITURE LINE. The destroyed run between section 6's close and
+    // section 7's opener: the 1917 page it stands on (printed page 20, leaf 26)
+    // carries NOTHING between "the vestment of the celestial Gods." and
+    // "7. Why, therefore" — so the line is furniture the scanner destroyed, not
+    // text, and it is suppressed in the reading view like a running head.
+    furniture: ['- -1i"^lHi.n*-iL -t-i-ir * ->-• «, , ^X'],
     divisions: {
       notes: 'Notes',
       colophon: 'PRINTED IN GREAT BRITAIN',
@@ -610,6 +616,17 @@ function scan(lines, cfg, at) {
       const folio = bareFolio(line);
       if (folio) {
         markers.set(key, { kind: 'folio', raw: line, value: folio.value, plain: folio.plain, at: index });
+        continue;
+      }
+      /* MEASURED FURNITURE, named by the text's own rules. `isFurnitureJunk` reads
+       * a line's SHAPE (short, and little that is alphabetic), which is enough for
+       * the debris the shapes catch — but a destroyed page of furniture can carry
+       * two-letter runs and run long, and no shape test can tell it from a word.
+       * When the printed page has been READ and it carries nothing where the line
+       * stands, the line is furniture by MEASUREMENT, and the per-text config names
+       * it, exactly as it names the library's stamp. */
+      if ((cfg.furniture || []).some((f) => line === f)) {
+        junk.add(key);
         continue;
       }
       if (isFurnitureJunk(line)) junk.add(key);

@@ -2292,9 +2292,9 @@
     },
     {
       "find": "Bo/>a,",
-      "replace": "Boga,",
+      "replace": "Bora,",
       "class": "reading",
-      "note": "SUPERSEDES the recorded LEAVE for \"Bo/>a\": the 1823 parallel reads \"the word Boreas is derived from Boga, which signifies nutriment\" — the two damage characters stand for letters lost in the etymon, and the print has \"Boga\"."
+      "note": "the print reads the Greek Βορά (transliterated \"Bora\"), not \"Boga\" (1917 scan, printed page 33: \"For the word Boreas is derived from Βορά, which signifies nutriment\"). The earlier reading \"Boga\" came from the 1823 parallel, whose own OCR of the etymon is damaged; the print is the witness here."
     },
     {
       "find": "ajid_ajifonls_aj*^^",
@@ -2319,18 +2319,6 @@
       "replace": "souls",
       "class": "reading",
       "note": "the print reads \"souls\": the \".oL\" is OCR debris standing before the word (the line opens the page after the running head \"ON THE CAVE OF THE NYMPHS 35\"), and the 1823 parallel reads \"of souls, which ascend through the Sun, and\" (line 9750)."
-    },
-    {
-      "find": "-1i\"^lHi.n*-iL",
-      "action": "leave",
-      "class": "review",
-      "note": "the PAGE FURNITURE of a page break, not words. It stands alone in its own block between section 6's close (\"the vestment of the celestial Gods. 1\") and section 7's opener (\"7. Why, therefore...\"), and the 1823 parallel runs straight from \"celestial Gods.\" to \"7. Why\" with nothing between — so whatever the print has here is its page number and running head, and the OCR destroyed both beyond reading. Left visible rather than guessed: a reading invented for a page number would be a reading the edition does not have."
-    },
-    {
-      "find": "^X",
-      "action": "leave",
-      "class": "review",
-      "note": "the same page-furniture block as the run beside it (see the leave above): the tail of the destroyed page number and running head at the break between sections 6 and 7. Not a word; left visible, not guessed."
     }
   ]
 }
