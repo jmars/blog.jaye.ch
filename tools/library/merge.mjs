@@ -129,6 +129,36 @@ function widen(c) {
   if (raw <= 1) return c; // it can only touch its one site
   const proper = properIndices(served, c.find);
   if (proper.length === 0) return null;
+
+  /* A MULTI-SITE FIND IS NOT AUTOMATICALLY WRONG — it is wrong only when the
+   * sites need DIFFERENT readings. MEASURED: the first cut isolated EVERY
+   * multi-site find to one site, which broke the other sites silently. The
+   * ligature garbles are the example: `Phcedrus` -> `Phædrus` is right at all
+   * three sites, and isolating one left the other two reading `Phcedrus` (the
+   * improved vocabulary sweep found them later). `de scending`, `cold ness`,
+   * `Capri corn` and `situa tion` are the same shape.
+   *
+   * TWO signals say the same reading holds at every site, and then the find is
+   * left BARE:
+   *   (a) the replacement CONTAINS the find — an insertion (`depraved natures.
+   *       Hence` -> `... Hence,`) extends the printed text, so there is one
+   *       reading and no site can want another;
+   *   (b) the FINDING counted the sites (`sites > 1`) and gave ONE reading for
+   *       them — the proposer looked at every occurrence and asserted the same
+   *       word; the merge's job is to preserve that claim or refuse it, not to
+   *       silently reinterpret it as a one-site rule.
+   * Otherwise the sites may differ and the find is isolated to one — which is
+   * what the widening was for. */
+  /* IT MUST ALSO BE SAFE AT EVERY OCCURRENCE. A rule is applied by `split`, so a
+   * bare find reaches INSIDE other words: `tne` occurs five times as a word and
+   * once inside "sweetness", and a bare `tne` -> `the` would corrupt it (MEASURED
+   * — that was a real bug). So bare requires that EVERY raw occurrence is also a
+   * word-bounded one; if any occurrence sits inside a larger word, the find is
+   * widened instead, which is what isolates it to the safe site. */
+  const allProper = proper.length === raw;
+  const claimsSame = allProper && (c.replace.includes(c.find) || (c._f && Number(c._f.sites) > 1));
+  if (claimsSame) return { ...c, _bare: raw };
+
   // grow the find around the FIRST PROPER occurrence until it names exactly one
   // RAW occurrence (so the rule can reach nothing else); the replacement grows
   // with the context on each side.
@@ -182,6 +212,34 @@ for (const c of candidates) {
   const w = widen(c);
   if (w) widened.push(deself(w));
   else { c._unwidenable = true; widened.push(c); }
+}
+
+/* ---------- the widener's self-test ---------- */
+
+/* THE WIDENER HAS THREE BEHAVIOURS and every one of them was a bug when it was
+ * missing: a single-site find is left alone, a multi-site find whose occurrences
+ * all need the SAME reading is left BARE (isolating it broke the other sites), and
+ * a multi-site find with an occurrence INSIDE a larger word is widened (a bare
+ * `tne` -> `the` corrupts "sweetness"). This checks all three against the served
+ * text, so a change to the rule has to keep them. */
+if (args.includes('--self-test')) {
+  const cases = [
+    ['situa tion', 'situation', { _f: { sites: 2 } }, 'bare', 'a multi-site find with one reading stays bare'],
+    ['tne', 'the', { _f: { sites: 5 } }, 'widen', 'a find with an occurrence inside a word is widened (tne in "sweetness")'],
+  ];
+  let bad = 0;
+  for (const [find, replace, meta, want, why] of cases) {
+    const c = { find, replace, note: '', _f: meta._f };
+    const raw = uniqueCount(served, find);
+    const proper = properIndices(served, find);
+    if (!served.includes(find)) { console.log(`  SKIP   ${find} is not in this text`); continue; }
+    const w = widen({ ...c });
+    const got = w && w._bare ? 'bare' : w ? 'widen' : 'drop';
+    const ok = got === want;
+    console.log((ok ? '  OK   ' : '  FAIL ') + `${why} (${find}: ${raw} raw, ${proper.length} bounded -> ${got}, wanted ${want})`);
+    if (!ok) bad += 1;
+  }
+  process.exit(bad ? 1 : 0);
 }
 
 /* ---------- order: longest find first (specific before general) ---------- */
@@ -247,7 +305,7 @@ const deadNew = newRules.filter((_, i) => hits[nHead + i] === 0);
 const byReason = new Map();
 for (const [f, why] of drop) byReason.set(why.split(' —')[0], (byReason.get(why.split(' —')[0]) || 0) + 1);
 console.log(`merge ${slug}`);
-console.log(`  findings ${findings.length}; distinct candidates ${candidates.length}; widened ${widened.filter((c) => c._widened).length}; unwidenable ${widened.filter((c) => c._unwidenable).length}`);
+console.log(`  findings ${findings.length}; distinct candidates ${candidates.length}; left BARE (multi-site, one reading) ${widened.filter((c) => c._bare).length}; widened to one site ${widened.filter((c) => c._widened).length}; unwidenable ${widened.filter((c) => c._unwidenable).length}`);
 console.log(`  dropped before the contract: ${drop.length}`);
 for (const [r, n] of [...byReason].sort((a, b) => b[1] - a[1])) console.log(`     ${String(n).padStart(3)}  ${r}`);
 console.log(`  rejected by the fire contract: ${rejectedByContract.length}`);
