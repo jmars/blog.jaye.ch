@@ -81,7 +81,15 @@ type alias Flags =
     , base : String
     , hash : String
     , citation : Citation
+    , repair : Maybe RepairState
     , stored : D.Value
+    }
+
+
+{-| The edition's repair state, when it has one: readable, and not finished. -}
+type alias RepairState =
+    { state : String
+    , label : String
     }
 
 
@@ -91,6 +99,7 @@ type alias Model =
     , base : String
     , citation : Citation
     , hash0 : String
+    , repair : Maybe RepairState
     , doc : Maybe Doc
     , entries : List Entry
     , notes : Dict Int String
@@ -137,6 +146,7 @@ init flags =
             , base = flags.base
             , citation = flags.citation
             , hash0 = flags.hash
+            , repair = flags.repair
             , doc = Nothing
             , entries = []
             , notes = Dict.empty
@@ -2316,6 +2326,17 @@ rulesPanel m doc =
                     [ type_ "button", class "rd-btn", Ev.onClick RulesToggle, attribute "aria-label" "Close the list of repairs" ]
                     [ text "✕" ]
                 ]
+            , -- THE EDITION'S STATE, above the rules it is made of: a reader who
+              -- opens this list to see what was changed should also be told what is
+              -- NOT finished. Absent for an edition with no repair state.
+              case m.repair of
+                Just r ->
+                    p [ class "rd-dim" ]
+                        [ strong [] [ text ("This edition is " ++ r.label ++ ".") ]
+                        , text (" It reads end to end and is not finished: damage remains that neither the transcription nor a parallel edition could settle, and each place is cleared by reading the printed page itself.") ]
+
+                Nothing ->
+                    text "" 
             , p [ class "rd-dim" ]
                 [ text "The transcription is served exactly as it stands. The policy is: a recorded reading is substituted where one is recorded, and where none is the transcription's own characters stay — damage and all, marked in the reading view. These rules are the readings; nothing here is written into the text. The number beside each rule is how many times it fires in this text — counted when the document was built, in the order the rules are applied, so a rule cannot claim a repair it does not make." ]
             , if List.isEmpty rules then

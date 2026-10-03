@@ -427,6 +427,21 @@ export const TEXTS = [
     // worse than an absent page, and they have none of the above. Their state is
     // unchanged by this flag.
     published: true,
+    // THE REPAIR STATE. A text can be READABLE and not FINISHED: this edition runs
+    // end to end, its repairs all fire, and damage remains that neither the
+    // transcription's own context nor the 1823 parallel could settle — it is being
+    // cleared against the printed PAGE, site by site. `in-repair` says so on the
+    // index and in the reader, so a reader is not told an edition is finished when
+    // it is not. States: `in-repair` (readable, unfinished) and `repaired`
+    // (finished, every residue settled or deliberately left). Absent means no
+    // repair has been attempted — the text is not served as an edition of its own.
+    repair: {
+      state: 'in-repair',
+      // a sentence, not a label: what is unfinished, said in the reader's terms
+      note:
+        'readable end to end, and not finished: a few damaged places remain that neither the ' +
+        'transcription nor the parallel could settle, with the printed pages read one by one to clear them.',
+    },
     file: 'Porphyry-On-the-Cave-of-the-Nymphs-Taylor-1917',
     // the archive.org identifier this transcription came from. The build serves
     // the EDITION in the repo (content/library/<slug>/), never the archive; this
@@ -649,6 +664,14 @@ export function textSource(t, files) {
  * served, which is the safe direction for a flag whose whole job is to keep a
  * text off the site until someone has decided otherwise. */
 export const isPublished = (t) => t.published === true;
+
+/** THE REPAIR STATES, and the label each one reads as. A repair state is a fact
+ * about an EDITION, not about the shelf: whether the text on the page is finished
+ * or still being cleared. `inRepair` is the one the index counts, because it is
+ * the one a reader needs to be told. */
+export const REPAIR_LABELS = { 'in-repair': 'in repair', repaired: 'repaired' };
+export const repairOf = (t) => (t.repair && t.repair.state ? t.repair : null);
+export const isInRepair = (t) => !!repairOf(t) && t.repair.state === 'in-repair';
 
 /** The texts a default build serves — the shelf's own answer to "what is
  * published", so the build and every test read one list instead of two. */

@@ -80,6 +80,11 @@ header { padding: 96px 0 48px; border-bottom: 1px solid var(--line); }
 @keyframes blink { 0%,100% {opacity:1;} 50% {opacity:0;} }
 h1 { font-size: clamp(30px, 5.5vw, 46px); font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 16px; }
 h1 .fx { color: var(--accent); }
+.tag {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .04em;
+  color: var(--dim); border: 1px solid var(--line); border-radius: 999px;
+  padding: 1px 7px; white-space: nowrap;
+}
 .tagline {
   font-family: var(--mono);
   font-size: clamp(14px, 2.6vw, 17px);

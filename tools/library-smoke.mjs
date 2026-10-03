@@ -43,7 +43,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GROUPS, TEXTS, shelfFiles, textSource, SHELF, isPublished } from './library/shelf.mjs';
+import { GROUPS, TEXTS, shelfFiles, textSource, SHELF, isPublished, isInRepair } from './library/shelf.mjs';
 import { preprocess, joinLines, assess, countParagraphs } from './library/reader.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -404,6 +404,28 @@ section('the index');
     EMITTED.every((t) => drawn.some((g) => g.key === t.group)),
     'every served text is in a group the index draws',
   );
+  /* THE REPAIR STATE, stated ABOVE the list (the author's ask): a reader meeting
+   * the shelf is told which editions are readable and NOT finished. FAILS IF: the
+   * badge or the statement is dropped — a reader then takes an edition in repair
+   * for a finished one. */
+  {
+    const inRepair = EMITTED.filter(isInRepair);
+    if (inRepair.length) {
+      const firstGroup = index.indexOf('<section><div class="wrap"><h2 id="group-');
+      const noteAt = index.indexOf('in repair.</b>');
+      check(
+        noteAt >= 0 && firstGroup >= 0 && noteAt < firstGroup,
+        `the index states the repair state ABOVE the list of books (${inRepair.length} in repair)`,
+      );
+      check(
+        inRepair.every((t) => new RegExp(`<a href="/library/${t.slug}/">[^<]*</a> <span class="tag">in repair</span>`).test(index)),
+        `and each one carries the tag beside its name (${inRepair.map((t) => t.slug).join(', ')})`,
+      );
+    } else {
+      check(!index.includes('in repair.</b>'), 'and says nothing about repair when no served text is in repair');
+    }
+  }
+
   /* WHAT AN INDEX THAT SERVES PART OF THE SHELF MUST SAY (phase 5). The library's
    * own paragraphs describe the shelf — the held-back entries and the modern
    * editions that are not free included — so a page that serves one text out of

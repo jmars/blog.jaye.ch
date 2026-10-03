@@ -60,7 +60,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
-import { GROUPS, TEXTS, MODERN_EDITIONS, shelfFiles, textSource, isPublished } from './library/shelf.mjs';
+import { GROUPS, TEXTS, MODERN_EDITIONS, REPAIR_LABELS, repairOf, isInRepair, shelfFiles, textSource, isPublished } from './library/shelf.mjs';
 import { preprocess, renderBlocks, partition, assess, countParagraphs, applyCorrections } from './library/reader.mjs';
 import {
   hasEdition,
@@ -3712,6 +3712,17 @@ function provenanceHtml(t, cited, stats, a, dmg, edition) {
       `rule records the decision to leave it. So this edition reads cleanly in most places and shows its ` +
       `damage in the rest, and it never silently says anything the print does not.</p>`,
   );
+  /* THE REPAIR STATE, said on the text's own page: the index states it above the
+   * list, and this is where a reader who arrived at the text directly meets it. */
+  const rep = repairOf(t);
+  if (rep) {
+    p.push(
+      `<p><b>The state of this edition: <span class="tag">${esc(REPAIR_LABELS[rep.state] || rep.state)}</span></b> ` +
+        `— ${esc(rep.note)} A site is cleared by reading the printed page itself (the page images are ` +
+        `kept with the edition); where one is still open, the reading view shows the transcription's ` +
+        `damaged characters, marked, rather than a guess.</p>`,
+    );
+  }
   p.push(`<p><b>Edition.</b> ${esc(t.edition)}</p>`);
   if (stats) {
     p.push(
@@ -4413,6 +4424,10 @@ function readerShell(t, doc, legacySection) {
     url: `${base}t`,
     base,
     citation: citationFields(t),
+    // THE EDITION'S REPAIR STATE, so the reader can say it too: a reader inside
+    // the book is the one who needs to know that the text is readable and NOT
+    // finished (see `repairOf`).
+    repair: repairOf(t) ? { state: t.repair.state, label: REPAIR_LABELS[t.repair.state] || t.repair.state } : null,
   };
   const noscript =
     `<noscript><p><b>This page reads without scripts.</b> Below is the edition's ` +
@@ -4635,7 +4650,11 @@ function buildLibraryIndex() {
           .filter(Boolean)
           .join(', ');
         const state = t.slug === 'orphic-hymns-1827' ? ' <span class="dim">— not readable: see below</span>' : '';
-        return `<li><a href="/library/${t.slug}/">${esc(t.title)}</a> <span class="dim">— ${esc(by)}</span>${state}</li>`;
+        // THE REPAIR BADGE, beside the title: a reader deciding what to open is
+        // entitled to know whether the edition is finished before they open it.
+        const rep = repairOf(t);
+        const badge = rep ? ` <span class="tag">${esc(REPAIR_LABELS[rep.state] || rep.state)}</span>` : '';
+        return `<li><a href="/library/${t.slug}/">${esc(t.title)}</a>${badge} <span class="dim">— ${esc(by)}</span>${state}</li>`;
       })
       .join('');
     return (
@@ -4703,7 +4722,25 @@ function buildLibraryIndex() {
     `<section><div class="wrap"><h2 id="about-the-shelf">About this shelf</h2>` +
     `<div class="hint"># what it is, what was done to the texts, and what is not here</div>` +
     `<div class="prose">${preamble}</div></div></section>`;
+  /* WHAT A READER NEEDS BEFORE THEY OPEN A TEXT, stated ABOVE the list: some of
+   * these editions are readable and NOT FINISHED. The full provenance stays below
+   * the groups (a reader arrives wanting the book), but this is a fact about the
+   * texts in front of them, and it belongs where they meet them. */
+  const inRepair = SERVED.filter(isInRepair);
+  const repairNote = inRepair.length
+    ? `<section><div class="wrap"><div class="prose"><p><b>` +
+      `${inRepair.length === SERVED.length ? (SERVED.length === 1 ? 'This edition is' : 'These editions are') : `${inRepair.length} of these editions ${inRepair.length === 1 ? 'is' : 'are'}`} ` +
+      `in repair.</b> ` +
+      `Readable end to end, and not finished: damage remains that neither the transcription's own context nor a ` +
+      `parallel edition of the same translation could settle, and each place is being cleared against the printed ` +
+      `page itself, one site at a time. Until a site is settled the reader shows the transcription's own damaged ` +
+      `characters, marked — it never guesses in the print's name. ` +
+      `${inRepair.map((t) => `<a href="/library/${t.slug}/">${esc(t.title)}</a>`).join(', ')}. ` +
+      `A text marked <span class="tag">in repair</span> is one of them; the tag stands beside its name in the list ` +
+      `below, and the text's own page states what is unfinished.</p></div></div></section>`
+    : '';
   const body =
+    repairNote +
     groups +
     notes;
 

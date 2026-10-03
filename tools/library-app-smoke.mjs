@@ -724,10 +724,18 @@ section('the repairs list is the rule list, with its measured hits');
       /^repairs \(\d+\)$/.test(label),
       `the control's label is short enough for the toolbar (${JSON.stringify(label)})`,
     );
+
     ctx.click(btn);
     await settle();
     const panel = ctx.w.document.querySelector('#reader-app .rd-diff');
     check(!!panel, 'and it opens the rule list');
+    // THE EDITION'S REPAIR STATE, in the panel the reader opened: a list of
+    // repairs should say what is NOT finished. FAILS IF: the flag stops reaching
+    // the reader — a reader then takes an edition in repair for a finished one.
+    check(
+      !!panel && /This edition is in repair\./.test(panel.textContent),
+      'and the panel states that the edition is in repair, not finished',
+    );
     // FAILS IF: the panel is not rendered, or the toggle is not wired.
     const rows = [...panel.querySelectorAll('tbody tr')];
     check(
