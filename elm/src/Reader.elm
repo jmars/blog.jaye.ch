@@ -1236,7 +1236,7 @@ bar m =
         , pager m
         , div [ class "rd-bar-right" ]
             [ button [ type_ "button", class "rd-btn", attribute "aria-pressed" (bool m.cite), Ev.onClick CiteToggle ] [ text "cite" ]
-            , button [ id "rd-rules-btn", type_ "button", class "rd-btn", attribute "aria-pressed" (bool m.showRules), Ev.onClick RulesToggle ] [ text ("what was changed (" ++ String.fromInt (List.length (docRules m)) ++ ")") ]
+            , button [ id "rd-rules-btn", type_ "button", class "rd-btn", attribute "aria-pressed" (bool m.showRules), Ev.onClick RulesToggle ] [ text ("repairs (" ++ String.fromInt (List.length (docRules m)) ++ ")") ]
             , button [ type_ "button", class "rd-btn", Ev.onClick (ScaleSet (m.scale - 1)), attribute "aria-label" "Smaller text" ] [ text "A−" ]
             , button [ type_ "button", class "rd-btn", Ev.onClick (ScaleSet (m.scale + 1)), attribute "aria-label" "Larger text" ] [ text "A+" ]
             ]

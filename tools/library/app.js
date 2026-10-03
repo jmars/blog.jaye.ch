@@ -8432,7 +8432,7 @@ var $author$project$Reader$bar = function (m) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								'what was changed (' + ($elm$core$String$fromInt(
+								'repairs (' + ($elm$core$String$fromInt(
 									$elm$core$List$length(
 										$author$project$Reader$docRules(m))) + ')'))
 							])),

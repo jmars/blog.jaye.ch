@@ -3838,6 +3838,10 @@ const READER_CSS = `
 .rd-btn:hover { border-color: var(--dim); }
 .rd-btn[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .rd-btn:disabled { opacity: .45; cursor: default; }
+/* a button label never wraps mid-word: a wrapped label reads as a broken control */
+.rd-btn { white-space: nowrap; }
+/* a jumped-to anchor lands BELOW the sticky nav and toolbar, not under them */
+.rd-p, .rd-sec, .rd-pb, .rd-verse, .rd-note { scroll-margin-top: calc(var(--nav-h, 52px) + 56px); }
 .rd-x { padding: 1px 6px; }
 .rd-views { display: flex; gap: 0; }
 .rd-views .rd-btn { border-radius: 0; }
@@ -4022,9 +4026,13 @@ const READER_CSS = `
 .rd-status { padding: 18px 0; }
 
 @media (min-width: 62em) {
-  .rd-bar { position: sticky; top: 52px; z-index: 45; }
+  /* --nav-h is the site nav's MEASURED height, set by the boot script (its .wrap
+     is flex-wrap with a 52px minimum, so it grows when the links wrap). A constant
+     here put the toolbar under the header whenever the nav was taller than the
+     guess — the author's report. The fallback is the nav's minimum. */
+  .rd-bar { position: sticky; top: var(--nav-h, 52px); z-index: 45; }
   .rd-cols { grid-template-columns: 17rem minmax(0, 1fr); }
-  .rd-nav { position: sticky; top: 96px; max-height: 78vh; overflow: auto; padding-right: 8px; }
+  .rd-nav { position: sticky; top: calc(var(--nav-h, 52px) + 44px); max-height: 78vh; overflow: auto; padding-right: 8px; }
   .rd-notes-index { display: block; }
 }
 @media (max-width: 61.99em) {
@@ -4087,6 +4095,24 @@ const READER_BOOT = `
     if (kept) { flags.stored = JSON.parse(kept); }
   } catch (e) { flags.stored = null; }
   var app = Elm.Reader.init({ node: node, flags: flags });
+  /* THE STICKY OFFSET. The reader's toolbar sticks BELOW the site nav. The nav's
+     height is not a constant: its own .wrap is flex-wrap with a 52px minimum, so
+     it grows when its links wrap (a narrow window, a longer label). A hard-coded
+     a hard-coded top of 52px therefore puts the toolbar UNDER the header as soon as the nav is
+     taller than the guess — MEASURED by the author: "the blog's header covers the
+     reader's toolbar" while scrolling. The nav is measured and the offset is set
+     from it, on load and whenever it resizes. */
+  var sizeNav = function () {
+    var nav = document.querySelector('nav');
+    if (!nav || !nav.getBoundingClientRect) { return; }
+    var h = nav.getBoundingClientRect().height;
+    if (h > 0) { document.documentElement.style.setProperty('--nav-h', h + 'px'); }
+  };
+  sizeNav();
+  window.addEventListener('resize', sizeNav);
+  if (window.ResizeObserver) {
+    try { new window.ResizeObserver(sizeNav).observe(document.querySelector('nav')); } catch (e) {}
+  }
   // Elm renders on an animation frame and runs port commands during the same
   // update, so a jump or a focus asked for now names an element that is not in
   // the DOM yet — the scroll waits one frame. (Measured: without this the app

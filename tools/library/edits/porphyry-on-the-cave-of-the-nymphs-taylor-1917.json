@@ -59,6 +59,24 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": "( of sense, it is requisite to sit at the foot of",
+      "replace": "of sense, it is requisite to sit at the foot of",
+      "class": "reading",
+      "note": "the 1917 print has no bracket here (scan, printed page 38 — see above): the transcription's '(' is scan debris. (decided by the transcription's own context.)"
+    },
+    {
+      "find": ") superfluous, and being averse to the energies",
+      "replace": "superfluous, and being averse to the energies",
+      "class": "reading",
+      "note": "the 1917 print has no bracket here (scan, printed page 38 — see the rule above): the transcription's ')' is scan debris. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "( afflicted in body, casting aside everything",
+      "replace": "afflicted in body, casting aside everything",
+      "class": "reading",
+      "note": "the 1917 print has NO bracket here (scan, printed page 38: the page carries only two parenthetical phrases, '(by being its reward)' and '(in ineffable comprehensions)'). The transcription's '(' is scan debris; the print reads 'a suppliant habit, afflicted in body, casting aside everything superfluous'. (decided by the transcription's own context.)"
+    },
+    {
       "join": true,
       "find": "nature and divine wisdom, it",
       "replace": "nature and divine wisdom, which is separated, indeed, from it",

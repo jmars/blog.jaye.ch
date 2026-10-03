@@ -673,9 +673,18 @@ section('the repairs list is the rule list, with its measured hits');
 {
   const DOCJSON = JSON.parse(docText);
   const ctx = await boot();
-  const btn = ctx.byText('#reader-app .rd-bar button', 'what was changed');
+  const btn = ctx.byText('#reader-app .rd-bar button', 'repairs');
   check(!!btn, 'the repairs control is there');
   if (btn) {
+    // THE LABEL IS SHORT. It read "what was changed (N)"; that label is wide
+    // enough to overflow the toolbar at the reading column's width (MEASURED by
+    // the author), and the panel itself is titled "The repairs, as rules", so the
+    // control says the same in fewer characters.
+    const label = btn.textContent.trim();
+    check(
+      /^repairs \(\d+\)$/.test(label),
+      `the control's label is short enough for the toolbar (${JSON.stringify(label)})`,
+    );
     ctx.click(btn);
     await settle();
     const panel = ctx.w.document.querySelector('#reader-app .rd-diff');
@@ -768,8 +777,8 @@ section('the repairs list opens where the reader is, not at the end of the book'
   // halves below are what happy-dom CAN see of that fix.
   const ctx = await boot();
   const main = ctx.w.document.getElementById('rd-main');
-  const btn = ctx.byText('#reader-app .rd-bar button', 'what was changed');
-  check(!!btn, 'the control says what it does rather than only counting (what was changed (N))');
+  const btn = ctx.byText('#reader-app .rd-bar button', 'repairs');
+  check(!!btn, 'the control is the repairs list (repairs (N))');
   if (btn) {
     const before = { pct: pctOf(ctx), hash: ctx.w.location.hash, scrolled: ctx.scrolled.length };
     ctx.click(btn);
@@ -829,7 +838,7 @@ section('the repairs list opens where the reader is, not at the end of the book'
         'focus goes into the panel on opening and back to the control on Escape',
       );
       // the label states the open/closed state, as it did before the relabel
-      const btn2 = ctx.byText('#reader-app .rd-bar button', 'what was changed');
+      const btn2 = ctx.byText('#reader-app .rd-bar button', 'repairs');
       check(
         btn2 && btn2.getAttribute('aria-pressed') === 'false',
         'and the control still carries its aria-pressed state (pressed=false once closed)',
@@ -1232,6 +1241,36 @@ section('the running heads, the citation and the progress');
   const next = ctx.byText('#reader-app .rd-search button', '↓');
   check(!!next && !next.disabled, 'and next/prev are enabled once there is a match');
   // FAILS IF: the controls are not wired to the hit list.
+}
+
+/* ---------- 12. the toolbar sits below the header, not under it ---------- */
+
+section('the sticky toolbar clears the site header');
+{
+  /* THE BUG (the author's report): the blog's header covered the reader's toolbar
+   * while scrolling. The nav is sticky at top:0 and its height is not a constant
+   * (its .wrap is flex-wrap with a 52px minimum, so it grows when the links wrap);
+   * the toolbar stuck at a hard-coded 52px, so a taller nav covered it.
+   *
+   * happy-dom has no layout, so the offset cannot be measured here — what CAN be
+   * asserted is the wiring that makes the measurement happen: the toolbar's sticky
+   * top is a variable (not a constant), and the shell measures the nav into it. */
+  const barRule = /\.rd-bar \{[^}]*position:\s*sticky[^}]*\}/.exec(html);
+  check(!!barRule, 'the toolbar has a sticky rule in the shell');
+  check(
+    !!barRule && /top:\s*var\(--nav-h/.test(barRule[0]),
+    `and its sticky top is the measured nav height, not a constant (${barRule ? barRule[0].replace(/\s+/g, ' ').trim().slice(0, 100) : 'no rule'})`,
+  );
+  check(
+    /--nav-h/.test(html) && /getBoundingClientRect/.test(html) && /setProperty\('--nav-h'/.test(html),
+    'and the shell MEASURES the nav into it (getBoundingClientRect -> --nav-h)',
+  );
+  // FAILS IF: the offset goes back to a magic number, which is the bug — the nav
+  // is taller than the guess as soon as its links wrap.
+  check(
+    /scroll-margin-top:\s*calc\(var\(--nav-h/.test(html),
+    'and a jumped-to anchor lands below the header and toolbar, not under them',
+  );
 }
 
 console.log(

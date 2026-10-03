@@ -62,6 +62,27 @@
       "decided_by": "parallel",
       "note": "the print reads \"were considered by the ancients\" (the 1823 parallel 'obscurity of the cavern, were considered by the ancients'; the 1917 scan, printed page 10, agrees): the garbled token carries no damage character and was wrongly rejected by an earlier guard.",
       "sites_in_served": 1
+    },
+    {
+      "find": "( afflicted in body, casting aside everything",
+      "replace": "afflicted in body, casting aside everything",
+      "class": "reading",
+      "decided_by": "scan",
+      "note": "the 1917 print has NO bracket here (scan, printed page 38: the page carries only two parenthetical phrases, '(by being its reward)' and '(in ineffable comprehensions)'). The transcription's '(' is scan debris; the print reads 'a suppliant habit, afflicted in body, casting aside everything superfluous'."
+    },
+    {
+      "find": ") superfluous, and being averse to the energies",
+      "replace": "superfluous, and being averse to the energies",
+      "class": "reading",
+      "decided_by": "scan",
+      "note": "the 1917 print has no bracket here (scan, printed page 38 — see the rule above): the transcription's ')' is scan debris."
+    },
+    {
+      "find": "( of sense, it is requisite to sit at the foot of",
+      "replace": "of sense, it is requisite to sit at the foot of",
+      "class": "reading",
+      "decided_by": "scan",
+      "note": "the 1917 print has no bracket here (scan, printed page 38 — see above): the transcription's '(' is scan debris."
     }
   ]
 }
