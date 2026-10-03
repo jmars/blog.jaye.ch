@@ -342,7 +342,7 @@ async function assertBoots(code) {
       // the edition's repair state — the reader shows it in its repairs list.
       // A flag the boot check must carry: Elm's own flags decoder requires the
       // key even when the value is null (a Maybe field is not optional in flags).
-      repair: { state: 'in-repair', label: 'in repair' },
+      repair: { state: 'in-repair', label: 'in repair', note: 'readable end to end, and not finished.' },
       stored: null,
     },
   });

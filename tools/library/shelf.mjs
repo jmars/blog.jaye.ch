@@ -666,12 +666,28 @@ export function textSource(t, files) {
 export const isPublished = (t) => t.published === true;
 
 /** THE REPAIR STATES, and the label each one reads as. A repair state is a fact
- * about an EDITION, not about the shelf: whether the text on the page is finished
- * or still being cleared. `inRepair` is the one the index counts, because it is
- * the one a reader needs to be told. */
-export const REPAIR_LABELS = { 'in-repair': 'in repair', repaired: 'repaired' };
-export const repairOf = (t) => (t.repair && t.repair.state ? t.repair : null);
-export const isInRepair = (t) => !!repairOf(t) && t.repair.state === 'in-repair';
+ * about an EDITION, not about the shelf: whether the text on the page is damaged
+ * and unrepaired, being cleared, or finished.
+ *
+ *   damaged    readable, damaged, and NO repair attempted yet — the starting state
+ *   in-repair  readable, and being cleared against the printed page
+ *   repaired   finished: every residue settled, or deliberately left and recorded
+ *
+ * THE DEFAULT IS `damaged`, and it is a statement about the shelf, not a shrug:
+ * every transcription here carries the scanner's damage — that is what a
+ * transcription of a printed book is — so an edition that has not been worked on
+ * IS damaged. `in-repair` and `repaired` are states a text EARNS by being worked
+ * on, which is why they are declared explicitly and `damaged` need not be. */
+export const REPAIR_LABELS = { damaged: 'damaged', 'in-repair': 'in repair', repaired: 'repaired' };
+export const DEFAULT_REPAIR = {
+  state: 'damaged',
+  note:
+    'not yet repaired: the transcription carries the scanner’s damage and no repair has been attempted, so the ' +
+    'reading view shows the transcription’s own characters throughout.',
+};
+export const repairOf = (t) => (t.repair && t.repair.state ? t.repair : DEFAULT_REPAIR);
+export const repairState = (t) => repairOf(t).state;
+export const isInRepair = (t) => repairState(t) === 'in-repair';
 
 /** The texts a default build serves — the shelf's own answer to "what is
  * published", so the build and every test read one list instead of two. */

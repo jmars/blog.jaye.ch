@@ -43,7 +43,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GROUPS, TEXTS, shelfFiles, textSource, SHELF, isPublished, isInRepair } from './library/shelf.mjs';
+import { GROUPS, TEXTS, shelfFiles, textSource, SHELF, isPublished, isInRepair, repairState, REPAIR_LABELS } from './library/shelf.mjs';
 import { preprocess, joinLines, assess, countParagraphs } from './library/reader.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -409,21 +409,38 @@ section('the index');
    * badge or the statement is dropped — a reader then takes an edition in repair
    * for a finished one. */
   {
-    const inRepair = EMITTED.filter(isInRepair);
-    if (inRepair.length) {
-      const firstGroup = index.indexOf('<section><div class="wrap"><h2 id="group-');
-      const noteAt = index.indexOf('in repair.</b>');
+    // the states a served text can be in: damaged (the default — unrepaired),
+    // in repair, repaired. Every one present is named above the list and tagged
+    // beside the title. FAILS IF: a state is dropped from the statement, or the
+    // statement sinks below the groups.
+    const firstGroup = index.indexOf('<section><div class="wrap"><h2 id="group-');
+    const noteAt = index.indexOf('Some of these editions are not finished.');
+    check(
+      noteAt >= 0 && firstGroup >= 0 && noteAt < firstGroup,
+      `the index states the repair state ABOVE the list of books (note at ${noteAt}, first group at ${firstGroup})`,
+    );
+    // the note REGION: from the statement to the first group, so a label found
+    // only beside a title does not count as "named above the list"
+    const noteRegion = noteAt >= 0 && firstGroup > noteAt ? index.slice(noteAt, firstGroup) : '';
+    for (const st of ['damaged', 'in-repair', 'repaired']) {
+      const ts = EMITTED.filter((t) => repairState(t) === st);
+      const label = REPAIR_LABELS[st];
+      if (!ts.length) continue; // nothing to name: the held-back note may still use the word
       check(
-        noteAt >= 0 && firstGroup >= 0 && noteAt < firstGroup,
-        `the index states the repair state ABOVE the list of books (${inRepair.length} in repair)`,
+        noteRegion.includes(`<span class="tag">${label}</span>`) && ts.every((t) => noteRegion.includes(`/library/${t.slug}/`)),
+        `the ${label} state is named above the list, with its texts (${ts.length})`,
       );
       check(
-        inRepair.every((t) => new RegExp(`<a href="/library/${t.slug}/">[^<]*</a> <span class="tag">in repair</span>`).test(index)),
-        `and each one carries the tag beside its name (${inRepair.map((t) => t.slug).join(', ')})`,
+        ts.every((t) => new RegExp(`<a href="/library/${t.slug}/">[^<]*</a> <span class="tag">${label}</span>`).test(index)),
+        `and each ${label} text carries the tag beside its name (${ts.map((t) => t.slug).join(', ')})`,
       );
-    } else {
-      check(!index.includes('in repair.</b>'), 'and says nothing about repair when no served text is in repair');
     }
+    // the default, asserted directly: a text that declares no repair state is
+    // DAMAGED, not state-less — an unrepaired transcription is a damaged one
+    check(
+      repairState({ slug: 'x' }) === 'damaged' && REPAIR_LABELS[repairState({ slug: 'x' })] === 'damaged',
+      'a text with no declared repair state reports damaged (the default)',
+    );
   }
 
   /* WHAT AN INDEX THAT SERVES PART OF THE SHELF MUST SAY (phase 5). The library's

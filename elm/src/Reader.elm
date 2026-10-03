@@ -90,6 +90,7 @@ type alias Flags =
 type alias RepairState =
     { state : String
     , label : String
+    , note : String
     }
 
 
@@ -2333,7 +2334,8 @@ rulesPanel m doc =
                 Just r ->
                     p [ class "rd-dim" ]
                         [ strong [] [ text ("This edition is " ++ r.label ++ ".") ]
-                        , text (" It reads end to end and is not finished: damage remains that neither the transcription nor a parallel edition could settle, and each place is cleared by reading the printed page itself.") ]
+                        , text (" " ++ r.note)
+                        ]
 
                 Nothing ->
                     text "" 
