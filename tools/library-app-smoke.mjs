@@ -730,11 +730,15 @@ section('the repairs list is the rule list, with its measured hits');
     const panel = ctx.w.document.querySelector('#reader-app .rd-diff');
     check(!!panel, 'and it opens the rule list');
     // THE EDITION'S REPAIR STATE, in the panel the reader opened: a list of
-    // repairs should say what is NOT finished. FAILS IF: the flag stops reaching
-    // the reader — a reader then takes an edition in repair for a finished one.
+    // repairs should say what the edition's state IS. Read against the document's
+    // own flag, so the check follows the state rather than hardcoding one. FAILS
+    // IF: the flag stops reaching the reader — a reader then takes an unrepaired
+    // edition for a finished one.
+    const flag = /<script type="application\/json" id="reader-flags">([\s\S]*?)<\/script>/.exec(html);
+    const state = flag ? JSON.parse(flag[1]).repair : null;
     check(
-      !!panel && /This edition is in repair\./.test(panel.textContent),
-      'and the panel states that the edition is in repair, not finished',
+      !!panel && !!state && panel.textContent.includes(`This edition is ${state.label}.`),
+      `and the panel states the edition's state (${state ? JSON.stringify(state.label) : 'no flag'})`,
     );
     // FAILS IF: the panel is not rendered, or the toggle is not wired.
     const rows = [...panel.querySelectorAll('tbody tr')];

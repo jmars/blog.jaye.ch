@@ -414,7 +414,8 @@ section('the index');
     // beside the title. FAILS IF: a state is dropped from the statement, or the
     // statement sinks below the groups.
     const firstGroup = index.indexOf('<section><div class="wrap"><h2 id="group-');
-    const noteAt = index.indexOf('Some of these editions are not finished.');
+    // a stable marker: the lede sentence, not the header (which adapts to the states present)
+    const noteAt = index.indexOf('An edition here can be readable and not yet repaired');
     check(
       noteAt >= 0 && firstGroup >= 0 && noteAt < firstGroup,
       `the index states the repair state ABOVE the list of books (note at ${noteAt}, first group at ${firstGroup})`,

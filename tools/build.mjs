@@ -4766,10 +4766,15 @@ function buildLibraryIndex() {
     ? ` The ${heldBack.length} held back are not served as editions yet, and none has been repaired: ` +
       `they are ${tag('damaged')} by default, and saying nothing better than that would be saying nothing.`
     : '';
+  const unfinished = damaged.length + inRepair.length;
+  const head = unfinished
+    ? `<b>Some of these editions are not finished.</b> `
+    : `<b>These editions are ${esc(REPAIR_LABELS[repaired.length ? 'repaired' : 'damaged'])}.</b> `;
   const repairNote = sentences.length
     ? `<section><div class="wrap"><div class="prose"><p>` +
-      `<b>Some of these editions are not finished.</b> An edition here can be readable and not yet repaired, ` +
-      `being repaired, or finished, and the tag beside its name says which. ` +
+      head +
+      `An edition here can be readable and not yet repaired, being repaired, or finished, and the tag beside its ` +
+      `name says which. ` +
       sentences.join(' ') +
       heldBackNote +
       ` The text's own page states its state, and the reader's repairs panel repeats it.</p></div></div></section>`

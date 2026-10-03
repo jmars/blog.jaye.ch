@@ -436,11 +436,18 @@ export const TEXTS = [
     // (finished, every residue settled or deliberately left). Absent means no
     // repair has been attempted — the text is not served as an edition of its own.
     repair: {
-      state: 'in-repair',
-      // a sentence, not a label: what is unfinished, said in the reader's terms
+      state: 'repaired',
+      // a sentence, not a label: WHICH witnesses settled it, and what is left, said
+      // in the reader's terms. "Repaired" rests on the worklist being closed — every
+      // damaged place a witness could settle is settled — not on a second whole-text
+      // read having confirmed there is nothing left to find, which is why the note
+      // names the witnesses and the residue rather than saying "finished".
       note:
-        'readable end to end, and not finished: a few damaged places remain that neither the ' +
-        'transcription nor the parallel could settle, with the printed pages read one by one to clear them.',
+        'every damaged place a witness could settle has been settled — against the transcription\u2019s own ' +
+        'context, the 1823 parallel of the same translation, or the printed page itself, read one page at a ' +
+        'time. What remains is not the book\u2019s text: the page furniture at one page break (a recorded ' +
+        'decision to leave it visible) and this copy\u2019s own marks. A second whole-text read has not been run, ' +
+        'so the claim is that the found damage is settled, not that nothing further is findable.',
     },
     file: 'Porphyry-On-the-Cave-of-the-Nymphs-Taylor-1917',
     // the archive.org identifier this transcription came from. The build serves
