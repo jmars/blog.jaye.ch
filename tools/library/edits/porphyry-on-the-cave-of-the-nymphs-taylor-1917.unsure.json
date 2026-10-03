@@ -81,5 +81,59 @@
       "finding": "the print reads 'are tinged from blood' — the transcription's 'C.' is furniture; already repaired by the merged rule.",
       "evidence": "scan page 19"
     }
+  ],
+  "resolved_later": [
+    {
+      "unsure_index": 0,
+      "disposition": "FIXED: the print reads \"absurd for HOMER to expect\" (scan p.6; parallel). The name was lost at a blank line; a join rule supplies it."
+    },
+    {
+      "unsure_index": 1,
+      "disposition": "NO RULE: the print reads \"with respect to form ; the ancients\" — the transcription is correct."
+    },
+    {
+      "unsure_index": 3,
+      "disposition": "NO RULE: the print has a full stop and dash after \"streams\" and a space before \"From hence\" — the transcription is correct."
+    },
+    {
+      "unsure_index": 10,
+      "disposition": "NO RULE: the \"I\" after \"generation.\" is a footnote numeral, part of the page furniture, not a word."
+    },
+    {
+      "unsure_index": 15,
+      "disposition": "FIXED EARLIER: no Greek is printed here — the run is the misread English \"a signature of separating, a cup of vivific, ...\"."
+    },
+    {
+      "unsure_index": 16,
+      "disposition": "FIXED EARLIER: \"and a key of guardian power\" (the bracket and Greek the transcription showed are debris)."
+    },
+    {
+      "unsure_index": 17,
+      "disposition": "FIXED: the print sets the passage in italics with NO mark at the line head (scan p.50) — the \"!\" was debris; the rule removes it."
+    },
+    {
+      "unsure_index": 18,
+      "disposition": "FIXED: same passage, next line — the print has no mark there (scan p.50); the \"1\" was debris."
+    },
+    {
+      "unsure_index": 20,
+      "disposition": "NO RULE: the \"^\" is the library shelf label's own mark, in the library region; it is the copy's, not the book's."
+    },
+    {
+      "unsure_index": 21,
+      "disposition": "FIXED: the print has a comma after \"heavens\" (scan p.34; parallel) — the run is one join rule now."
+    },
+    {
+      "unsure_index": 22,
+      "disposition": "FIXED: \"labour\" belonged to the merged paragraph (a join rule), not to a block of its own."
+    },
+    {
+      "unsure_index": 23,
+      "disposition": "FIXED: the print reads \"this cave (as we have said) is sacred\" (scan p.37) — \"said\" was lost."
+    },
+    {
+      "unsure_index": 24,
+      "disposition": "FIXED EARLIER: \"as the reward of severe toil\" — a lost \"as\"."
+    }
   ]
 }

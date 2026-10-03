@@ -450,10 +450,14 @@ section('the policy: substitute-when-recorded, leave otherwise, never delete');
     const flattened = par.replace(/\s+/g, ' ');
     const BLOCKERS = [
       {
-        find: '_put',
-        repl: 'but',
+        // the reading is stated by ONE rule that spans the whole run: the page
+        // turn's punctuation and the "but" after it were both misread, and the
+        // print's comma (not the transcription's full stop) is part of the same
+        // repair (1917 scan, printed page 34).
+        find: 'fo~~tlTe~lieavens. _put',
+        repl: 'to the heavens, but',
         parallel: 'one of which affords a passage to souls ascending to the heavens, but the other to souls descending to the',
-        why: 'the print has "but", not "put" — a different English sentence',
+        why: 'the print has "heavens, but the other" — a comma, not a full stop',
       },
       {
         find: '\\he',

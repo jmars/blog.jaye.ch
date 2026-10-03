@@ -455,10 +455,10 @@ section('a recorded reading renders, and damage with no reading renders marked')
      the parallel's own words; here it is what the COMPILED APP shows. FAILS IF the
      rule is not applied client-side, or the app marks a word it has resolved. */
   const reading = ctx.w.document.getElementById('reader-app').textContent;
-  const put = DOCJSON.corrections.find((c) => c.find === '_put');
+  const put = DOCJSON.corrections.find((c) => c.find === 'fo~~tlTe~lieavens. _put');
   check(
-    !!put && put.repl === 'but' && put.action !== 'leave',
-    `the document records the reading "but" for the transcription's "_put" (${put ? JSON.stringify(put.repl) : 'no rule'})`,
+    !!put && put.repl === 'to the heavens, but' && put.action !== 'leave',
+    `the document records the page turn's reading "to the heavens, but" (${put ? JSON.stringify(put.repl) : 'no rule'})`,
   );
   check(
     reading.includes('but the other to souls de scending'),

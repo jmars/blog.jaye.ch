@@ -91,6 +91,20 @@
       "decided_by": "both",
       "note": "the print reads \"the ancients every where made that which has a twofold entrance\" (1917 scan, printed page 34; the 1823 parallel reads \"the ancients every / where made that which has a twofold entrance\"). The \" . mg.de\" is a garbled \"made\" with a dot-leader artefact before it.",
       "sites_in_served": 1
+    },
+    {
+      "find": "! a defect of memory",
+      "replace": "a defect of memory",
+      "class": "reading",
+      "decided_by": "scan",
+      "note": "the 1917 print sets this passage in italics and carries NO mark at the head of the line (scan, printed page 50: asked about hanging quotation marks, the page has none). The transcription's '!' is scanner debris standing in the reading view."
+    },
+    {
+      "find": "1 those discover most",
+      "replace": "those discover most",
+      "class": "reading",
+      "decided_by": "scan",
+      "note": "the same passage, the next line: no mark is printed at the head of it (scan, printed page 50). The transcription's '1' is debris."
     }
   ]
 }

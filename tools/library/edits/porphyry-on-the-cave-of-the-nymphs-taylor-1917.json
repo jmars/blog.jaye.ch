@@ -59,6 +59,157 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": "1 those discover most",
+      "replace": "those discover most",
+      "class": "reading",
+      "note": "the same passage, the next line: no mark is printed at the head of it (scan, printed page 50). The transcription's '1' is debris. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "! a defect of memory",
+      "replace": "a defect of memory",
+      "class": "reading",
+      "note": "the 1917 print sets this passage in italics and carries NO mark at the head of the line (scan, printed page 50: asked about hanging quotation marks, the page has none). The transcription's '!' is scanner debris standing in the reading view. (decided by the transcription's own context.)"
+    },
+    {
+      "join": true,
+      "find": "ahgrn-j fpr to expectTthat",
+      "replace": "absurd for Homer to expect that",
+      "class": "reading",
+      "note": "the print reads \"it would be absurd for Homer to expect, that in describing a cave...\" (1917 scan, printed page 6; 1823 parallel: \"it would be absurd for Homer to expect, that in\"). The name HOMER was lost at the blank line between the blocks, so the rule joins them; it also absorbs the garbled \"absurd\" and \"for\" and the glued \"expect that\"."
+    },
+    {
+      "find": "fo~~tlTe~lieavens. _put",
+      "replace": "to the heavens, but",
+      "class": "reading",
+      "note": "the print reads \"souls ascending to the heavens, but the other to souls descending to the earth\" (1917 scan, printed page 34; 1823 parallel: \"ascending to the heavens, but the other\"). The transcription's full stop is the print's COMMA, and \"_put\" the print's \"but\"."
+    },
+    {
+      "find": "this~caye_(aswe^jiave__ is sacred",
+      "replace": "this cave (as we have said) is sacred",
+      "class": "reading",
+      "note": "the print reads \"for to such souls this cave (as we have said) is sacred\" (1917 scan, printed page 37; 1823 parallel: \"this cave [as we have 5814] is sacred\"). The words \"said\" were lost, and the comma the earlier rule supplied is the print's opening parenthesis."
+    },
+    {
+      "find": "compre hensions",
+      "replace": "comprehensions",
+      "class": "reading",
+      "note": "split: the print reads 'in ineffable comprehensions' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "appro priately",
+      "replace": "appropriately",
+      "class": "reading",
+      "note": "split: the print reads 'appropriately consecrated to souls' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "in telligible",
+      "replace": "intelligible",
+      "class": "reading",
+      "note": "split: the print reads 'the intelligible essence' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "per petually",
+      "replace": "perpetually",
+      "class": "reading",
+      "note": "split: the print reads 'there are perpetually flowing streams' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "ro-operation",
+      "replace": "co-operation",
+      "class": "reading",
+      "note": "the r is a misread c: the print reads 'their co-operation with generation' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "compel ling",
+      "replace": "compelling",
+      "class": "reading",
+      "note": "the word split across a line end: the print reads 'thus compelling others to explore' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "pro duction",
+      "replace": "production",
+      "class": "reading",
+      "note": "split: the print reads 'the spontaneous production of caves' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "bp a symbol",
+      "replace": "be a symbol",
+      "class": "reading",
+      "note": "'bp' is 'be' through the p/b confusion: the print reads 'it will not be a symbol of' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "hemi sphere",
+      "replace": "hemisphere",
+      "class": "reading",
+      "note": "split: the print reads 'the northern hemisphere' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "pro duced",
+      "replace": "produced",
+      "class": "reading",
+      "note": "split at a line end: the print reads 'being produced by no external' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "symbol oL",
+      "replace": "symbol of",
+      "class": "reading",
+      "note": "the L is a misread f: the print reads 'a symbol of the sensible world' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "con cave",
+      "replace": "concave",
+      "class": "reading",
+      "note": "split: the print reads 'are concave, but the exterior parts' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "mun dane",
+      "replace": "mundane",
+      "class": "reading",
+      "note": "split: the print reads 'mundane powers' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "flow ing",
+      "replace": "flowing",
+      "class": "reading",
+      "note": "split: the print reads 'perpetually flowing streams' — the hyphen is the line break's (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "ap plied",
+      "replace": "applied",
+      "class": "reading",
+      "note": "split: the print reads 'is commonly applied to all souls' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "for bade",
+      "replace": "forbade",
+      "class": "reading",
+      "note": "split: the print reads 'forbade speaking while' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "[ stable",
+      "replace": "stable",
+      "class": "reading",
+      "note": "the bracket is debris at the head of a page-break block: the print reads 'a firm and stable essence' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "BuTThev",
+      "replace": "But they",
+      "class": "reading",
+      "note": "'But they' read through capitals standing for the lost letters: the print reads 'But they thought it to be a cave' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "Andit",
+      "replace": "And it",
+      "class": "reading",
+      "note": "a sentence beginning where the capital of the next word glued to 'And': the print reads 'kind. And it is equally absurd' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "gam",
+      "replace": "gain",
+      "class": "reading",
+      "note": "the print reads 'he should gain the belief of mankind' (1823 parallel: 'he should gain the belief of man-'); 'gam' is 'gain' with the i dropped. (decided by the 1823 parallel.)"
+    },
+    {
       "find": " . mg.de that which",
       "replace": " made that which",
       "class": "reading",
@@ -142,12 +293,6 @@
       "note": "the print reads 'one of which affords a passage to souls ascending' (1823 parallel); 'qne' is 'one'. (decided by the 1823 parallel.)"
     },
     {
-      "find": "expectTthat",
-      "replace": "expect that",
-      "class": "reading",
-      "note": "the print reads 'expect that': the capital T stands where the print has the word-break. (decided by the 1823 parallel.)"
-    },
-    {
       "find": "observ ing",
       "replace": "observing",
       "class": "reading",
@@ -184,12 +329,6 @@
       "note": "the print reads 'the powers that preside over waters' (1823 parallel); the T's are substituted letters. (decided by the 1823 parallel.)"
     },
     {
-      "find": "ahgrn-j",
-      "replace": "absurd",
-      "class": "reading",
-      "note": "the print reads 'absurd' (1823 parallel, same sentence); a substituted-letter garble with a stray hyphen. (decided by the 1823 parallel.)"
-    },
-    {
       "find": "musTnot",
       "replace": "must not",
       "class": "reading",
@@ -218,12 +357,6 @@
       "replace": "at the",
       "class": "reading",
       "note": "the print reads 'the ancients, at the same time' (1823 parallel: 'the ancients, at the same time'). (decided by the 1823 parallel.)"
-    },
-    {
-      "find": "fpr",
-      "replace": "for",
-      "class": "reading",
-      "note": "the print reads 'for' (1823 parallel, same sentence). (decided by the 1823 parallel.)"
     },
     {
       "find": "considerexLby",
@@ -1876,18 +2009,6 @@
       "note": "the print reads \"earth; and the one is eastern\" (the trailing f is the transcription's stray)"
     },
     {
-      "find": "fo~~tlTe~lieavens",
-      "replace": "to the heavens",
-      "class": "reading",
-      "note": "the print reads \"to the heavens\" (the 1823 parallel edition:9755)"
-    },
-    {
-      "find": "_put",
-      "replace": "but",
-      "class": "reading",
-      "note": "BLOCKER: the print reads \"but the other to souls descending to the earth\" (the 1823 parallel edition:9755-9756); \"put\" is a different sentence"
-    },
-    {
       "find": "the~other",
       "replace": "the other",
       "class": "reading",
@@ -2006,12 +2127,6 @@
       "replace": "degree",
       "class": "reading",
       "note": "stray marker at the word's edge; the printed word is \"degree\""
-    },
-    {
-      "find": "this~caye_(aswe^jiave__",
-      "replace": "this cave, as we have",
-      "class": "reading",
-      "note": "the print reads \"this cave, as we have\""
     },
     {
       "find": "therefore^",
