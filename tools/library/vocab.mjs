@@ -88,6 +88,20 @@ if (existsSync(wit)) {
 }
 
 const known = new Set((await wordlist()).split(/\s+/).filter(Boolean));
+
+/* THE GREEK LISTS, when tools/library/greek.mjs has built them. A text whose print
+ * carries Greek has two more classes: a GREEK-SCRIPT token the list does not know
+ * (a gate), and a LATIN/SYMBOL run that looks like smashed Greek — this volume's
+ * scan read its Greek as lookalikes, so `y«g`, `«yoros`, `futj^neu` are Greek the
+ * OCR flattened. The second needs the printed PAGE (tools/library/scan.mjs) to
+ * settle, so it is REPORTED and routed, never gated. */
+const GREEKDIR = join(ROOT, 'content', 'library', '.words');
+const greekUnicode = existsSync(join(GREEKDIR, 'greek-unicode.txt'))
+  ? new Set(readFileSync(join(GREEKDIR, 'greek-unicode.txt'), 'utf8').split('\n').filter(Boolean))
+  : null;
+const greekBetacode = existsSync(join(GREEKDIR, 'greek-betacode.txt'))
+  ? new Set(readFileSync(join(GREEKDIR, 'greek-betacode.txt'), 'utf8').split('\n').filter(Boolean))
+  : null;
 // (the allowlist is built below, once `core` exists — it must be normalised the
 // same way the text is, or 'nautæ' in the list would not match 'nautae' in the text)
 
