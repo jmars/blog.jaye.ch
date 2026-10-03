@@ -76,6 +76,13 @@ So the first thing to say is what Majercik says at the top of her Introduction:
 
 Three things there work. The verses are **hexameter** — poetry, not treatise. They are **purported** to be handed
 down, and the doubt in that word is Majercik's. And the authorship is disjunctive: a father, or a son, or both.
+
+**And the name is a Greek inheritance, not a place of origin.** "Chaldean" here is the epithet of a
+second-century-CE theurgist ("Julian the Chaldean"), and it had been a loose Greek and Roman word for
+"Babylonian astrologer or priest" for centuries before him. The oracles themselves are **Greek
+hexameters of the Roman empire**, read and commented by the Neoplatonists — not a Babylonian text, and
+not a survival of Mesopotamian religion. Nothing in this post comes from Mesopotamia, and the label
+should not be read as if it did.
 Saffrey distinguishes Platonising or "philosophical" oracles from "theurgy proper," and suggests the verses
 came through the theurgic technique of "calling" and "receiving," "with Julian the Theurgist functioning as the
 'medium'"; Dodds allows mediumship but gives Julian fils only the recording role; and Majercik records the third
