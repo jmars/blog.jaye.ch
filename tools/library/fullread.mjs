@@ -125,10 +125,43 @@ const DAMAGE = '^_~*£/>\\|#™±»«}{&';
  * artifact names every region and its block count, and a region with no blocks
  * would be listed with zero rather than dropped.
  */
-export function regionsOf(doc, rules) {
+export function regionsOf(doc, rules, { whole = false } = {}) {
   const body = transcriptionBlocks(doc);
   const sections = [...new Set(body.map((b) => b.section))].sort((a, b) => a - b);
   const out = [];
+  /* ONE REGION FOR THE WHOLE VOLUME. The regioning exists for MODELS THAT CANNOT
+   * HOLD THE TEXT: a section at a time keeps every request small and the reply
+   * budget unspent. A model with a large context does not need it, and a whole-text
+   * read in one call is strictly better when it fits — the reader sees the
+   * argument whole, a finding cannot be missed because its section came late, and
+   * ONE artifact is the record of the read. MEASURED: this edition is 63,623
+   * characters (~16k tokens); `deepseek-flash` is served with a 1M-token context,
+   * so the text AND the 1823 parallel (~150k tokens) fit many times over. */
+  if (whole) {
+    const all = [];
+    let region2 = null;
+    for (const b of doc.blocks || []) {
+      if (b.t === 'region') { region2 = b.kind; continue; }
+      // the book's own text: the body and the notes. The apparatus (the library's
+      // marks, the front matter, the colophon, the publisher's list) is not read
+      // here — a rule is not written against a catalogue blurb.
+      if (region2 !== 'body' && region2 !== 'notes') continue;
+      if (b.t !== 'p' && b.t !== 'verse' && b.t !== 'notedef') continue;
+      const text = String(b.x || '').replace(/\n/g, ' ');
+      if (!text) continue;
+      all.push({ t: b.t, n: b.n || null, at: b.at || null, page: b.page ?? null, section: b.section ?? null, text, toks: text.split(/\s+/).filter(Boolean) });
+    }
+    return [
+      {
+        name: 'the whole volume',
+        kind: 'body',
+        key: 'whole',
+        blocks: all,
+        view: all.map((b) => applyEditsCounted(b.text, rules)),
+        raw: all.map((b) => b.text),
+      },
+    ];
+  }
   for (const s of sections) {
     const blocks = body.filter((b) => b.section === s);
     out.push({
@@ -203,8 +236,23 @@ function twoColumn(region) {
  * (`PAD`) and capped at `MAX_PAR_CHARS` around its densest line. A miss is
  * reported as a miss, never filled with a neighbouring passage. */
 const PAD = 12;
-export function parallelFor(region, parallel) {
+export function parallelFor(region, parallel, { whole = false } = {}) {
   if (!parallel) return { status: 'no parallel volume known for this text' };
+  /* THE WHOLE PARALLEL, when the caller asked for the whole text: the locator
+   * exists to find a section's passage in a volume too large to send; with the
+   * whole volume in hand there is nothing to locate, and a cap would hide the
+   * very lines a reading is decided from. */
+  if (whole) {
+    return {
+      status: 'located',
+      lines: [1, parallel.lines.length],
+      matchedWords: null,
+      excerpt: parallel.lines.join('\n'),
+      capped: false,
+      whole: true,
+      allCandidates: [],
+    };
+  }
   if (region.kind !== 'body') {
     return {
       status:
@@ -277,7 +325,16 @@ export function policyBlock(policy) {
  * handling, and the model is asked to work in reading order. */
 export function promptFor(region, par, policy) {
   const parBlock =
-    par.status === 'located'
+    par.status === 'located' && par.whole
+      ? `THE PARALLEL EDITION — ${par.file} — the SAME TRANSLATION in another printing, given IN FULL below ` +
+        `(${par.lines[1]} lines). Its line numbers are its own; the treatise is one part of a volume that also ` +
+        `carries other works, so use the words, not the position. ` +
+        `The parallel has its own OCR damage; where it differs from the transcription, quote what it actually says:\n` +
+        par.excerpt
+          .split('\n')
+          .map((l) => `  ${l}`)
+          .join('\n')
+      : par.status === 'located'
       ? `THE PARALLEL EDITION — ${par.file} — the same translation in another printing, located at its own lines ${par.lines[0]}-${par.lines[1]} ` +
         `(${par.matchedWords} of this section's distinctive words shared${par.capped ? '; the excerpt is capped and does not reach every line of the located region' : ''}). ` +
         `The parallel has its own OCR damage; where it differs from the transcription, quote what it actually says:\n` +
@@ -485,16 +542,26 @@ export function vetFinding(f, { rawBody, front, parallelShown, region }) {
 
 /* ---------- the run ---------- */
 
-function fullreadPath(slug) {
-  return join(editsPath(slug).replace(/[^/]+$/, ''), `${slug}.fullread.json`);
+/* WHERE A READ LANDS. The first read is `<slug>.fullread.json`; a SECOND read is
+ * its own artifact (`--out=<suffix>` gives it one, e.g. `<slug>.fullread-flash.json`),
+ * because overwriting a read would destroy the record a merge was made from — and
+ * a read is evidence, not scratch. A suffix is a NAME segment, never a path: the
+ * file always lands beside the rules. */
+function fullreadPath(slug, suffix) {
+  const name = suffix ? `${slug}.fullread-${suffix}.json` : `${slug}.fullread.json`;
+  return join(editsPath(slug).replace(/[^/]+$/, ''), name);
 }
 
-function write(slug, payload) {
-  const out = fullreadPath(slug);
+function write(slug, payload, suffix) {
+  const out = fullreadPath(slug, suffix);
   if (out === editsPath(slug)) throw new Error('library: the fullread path and the rules path are the same — refusing to write');
   writeFileSync(out, `${JSON.stringify(payload, null, 2)}\n`);
   return out;
 }
+
+// the suffix this run writes under, set by --out in main(); module-level so the
+// append path can read the SAME location the write will use
+let SOME_SUFFIX = '';
 
 export function readParallel(slug) {
   const spec = parallelSpec(slug);
@@ -517,6 +584,10 @@ async function main() {
   const args = process.argv.slice(2);
   const slug = args.find((a) => !a.startsWith('--')) || (TEXTS.find((t) => hasEdition(t.slug)) || {}).slug;
   const only = (args.find((a) => a.startsWith('--only=')) || '').slice('--only='.length);
+  SOME_SUFFIX = (args.find((a) => a.startsWith('--out=')) || '').slice('--out='.length);
+  if (SOME_SUFFIX && !/^[A-Za-z0-9_-]+$/.test(SOME_SUFFIX)) {
+    throw new Error('library: --out takes a name segment (letters, digits, _ or -), not a path');
+  }
   const selfTest = args.includes('--self-test');
   const dryRun = args.includes('--dry-run');
 
@@ -534,7 +605,8 @@ async function main() {
 
   if (selfTest) return selfTestMain({ doc, rules, front, rawAll });
 
-  let regions = regionsOf(doc, rules);
+  const whole = args.includes('--whole');
+  let regions = regionsOf(doc, rules, { whole });
   if (only) {
     const want = new Set(only.split(',').map((s) => s.trim()));
     regions = regions.filter((r) => want.has(r.key));
@@ -556,7 +628,7 @@ async function main() {
   // their declaration was a temporal-dead-zone crash on the first resume.)
   const append = args.includes('--append');
   if (append) {
-    const prevPath = fullreadPath(slug);
+    const prevPath = fullreadPath(slug, SOME_SUFFIX);
     if (existsSync(prevPath)) {
       const prev = JSON.parse(readFileSync(prevPath, 'utf8'));
       const again = new Set(regions.map((r) => r.name));
@@ -573,7 +645,7 @@ async function main() {
     [...r.view.join(' ')].reduce((m, c) => (DAMAGE.includes(c) ? ((m[c] = (m[c] || 0) + 1), m) : m), {});
 
   console.log(
-    `library fullread: ${slug}\n` +
+    `library fullread: ${slug}${whole ? ' [THE WHOLE VOLUME IN ONE CALL]' : ''}\n` +
       `  regions: ${regions.length} (${regions.filter((r) => r.kind === 'body').length} body sections, ` +
       `${regions.filter((r) => r.kind !== 'body').map((r) => r.kind).join(', ') || 'no other regions'})\n` +
       `  model ${MODEL} at effort ${EFFORT}, max_tokens ${MAX_TOKENS} · ${URL_}\n` +
@@ -586,7 +658,7 @@ async function main() {
     for (const f of findings) byClass[f.kind]++;
     return {
       slug,
-      tool: 'a whole-text read by a stronger model (glm-5.3 at effort max), in sections, with both witnesses (reading view + transcription) and the parallel edition located per section: it PROPOSES findings in three classes and a human merges them',
+      tool: `a whole-text read by ${MODEL} at effort ${EFFORT}, in sections, with both witnesses (reading view + transcription) and the parallel edition located per section: it PROPOSES findings in three classes and a human merges them`,
       model: MODEL,
       effort: EFFORT,
       endpoint: URL_,
@@ -599,7 +671,7 @@ async function main() {
         // the WHOLE reading order, not only what this invocation re-sent, so
         // the coverage table is the same artifact however many times the run
         // was resumed
-        regions: regionsOf(doc, rules).map((r) => ({
+        regions: regionsOf(doc, rules, { whole }).map((r) => ({
           region: r.name,
           blocks: r.blocks.length,
           chars: r.raw.join(' ').length,
@@ -607,7 +679,7 @@ async function main() {
         })),
         requests: sent.length,
         regionsSent: [...new Set(sent.map((s) => s.region))],
-        everyRegionSent: [...new Set(sent.map((s) => s.region))].length === regionsOf(doc, rules).length,
+        everyRegionSent: [...new Set(sent.map((s) => s.region))].length === regionsOf(doc, rules, { whole }).length,
         appended: append || undefined,
       },
       context: {
@@ -624,7 +696,7 @@ async function main() {
       rejected,
       failed,
       cost: {
-        regions: regionsOf(doc, rules).length,
+        regions: regionsOf(doc, rules, { whole }).length,
         sent: sent.length,
         findings: findings.length,
         unsure: unsure.length,
@@ -634,10 +706,10 @@ async function main() {
       },
     };
   };
-  const checkpoint = () => write(slug, buildPayload());
+  const checkpoint = () => write(slug, buildPayload(), SOME_SUFFIX);
 
   for (const region of regions) {
-    const par = parallelFor(region, parallel ? { ...parallel } : null);
+    const par = parallelFor(region, parallel ? { ...parallel } : null, { whole });
     if (par.status === 'located') par.file = parallel.file;
     const parallelShown = par.status === 'located' ? par.excerpt : '';
     const prompt = promptFor(region, par, policy);
@@ -705,12 +777,12 @@ async function main() {
   }
 
   if (dryRun) return { dryRun: true };
-  const out = write(slug, buildPayload());
+  const out = write(slug, buildPayload(), SOME_SUFFIX);
   console.log(
     `\nlibrary fullread: ${out.split('/').slice(-1)[0]} — ${findings.length} finding(s) ` +
       `(${findings.filter((f) => f.kind === '1').length} visible, ${findings.filter((f) => f.kind === '2').length} clean, ` +
       `${findings.filter((f) => f.kind === '3').length} broken), ${unsure.length} unsure, ${rejected.length} rejected, ${failed.length} failed\n` +
-      `  coverage: ${[...new Set(sent.map((s) => s.region))].length} of ${regionsOf(doc, rules).length} region(s) sent; ` +
+      `  coverage: ${[...new Set(sent.map((s) => s.region))].length} of ${regionsOf(doc, rules, { whole }).length} region(s) sent; ` +
       `${buildPayload().context.minChars}-${buildPayload().context.maxChars} chars/request (mean ${buildPayload().context.meanChars})\n` +
       `  tokens ${usage.prompt_tokens} in / ${usage.completion_tokens} out\n` +
       `  NOTHING WAS MERGED. The rules file is untouched.`,

@@ -59,6 +59,24 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": "what means by asserting",
+      "replace": "what he means by asserting",
+      "class": "reading",
+      "note": "Missing word 'he' makes the clause ungrammatical; class 2 wrong phrase with no damage character. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "are C. tinged",
+      "replace": "are tinged",
+      "class": "reading",
+      "note": "Extraneous 'C.' before 'tinged'; class 1 visible artefact. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "generation. I",
+      "replace": "generation.",
+      "class": "reading",
+      "note": "Extraneous 'I' after 'generation'; class 1 visible artefact. (decided by the 1823 parallel.)"
+    },
+    {
       "find": "cold ness",
       "replace": "coldness",
       "class": "reading",
