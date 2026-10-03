@@ -750,6 +750,15 @@ inlineText i =
         IRef _ label _ ->
             label
 
+        -- the page marker and the running head are ANNOTATIONS, not the text:
+        -- counting them would put the page number in the search, and a running
+        -- head is furniture the reading view suppresses
+        IPage _ _ _ _ ->
+            ""
+
+        IRh _ ->
+            ""
+
 
 docRules : Model -> List Correction
 docRules m =
@@ -796,6 +805,11 @@ addAnchors ix e acc =
                     case i of
                         IRef _ _ rid ->
                             put rid a
+
+                        IPage _ _ (Just pid) _ ->
+                            -- a page marker that sits INSIDE a paragraph still
+                            -- carries the #p<n> anchor
+                            put pid a
 
                         _ ->
                             a
@@ -849,18 +863,40 @@ entryAnchor e =
             ""
 
 
+{-| Every printed page in document order, with the entry it sits in and its
+anchor. Since the page markers moved INSIDE the paragraph that runs across the
+page turn, a page is no longer its own entry — it is a marker inside a paragraph
+— so the index walks the paragraph's inlines as well as the standalone markers.
+`parts` accumulate back-to-front, so the inline pages are reversed into document
+order. -}
 pageIndex : List Entry -> List ( Int, String, Int )
 pageIndex entries =
     entries
         |> List.indexedMap Tuple.pair
-        |> List.filterMap
+        |> List.concatMap
             (\( ix, e ) ->
                 case e.item of
                     FPage (Just pg) _ (Just pid) _ ->
-                        Just ( ix, pid, pg )
+                        [ ( ix, pid, pg ) ]
+
+                    FPara pr ->
+                        -- `pr.parts` is ALREADY in document order (the grouping
+                        -- reverses the accumulator when it closes), so the inline
+                        -- pages come out in order; reversing them is what put the
+                        -- paragraph's LAST page first (MEASURED: #p15 reported p.17)
+                        List.filterMap
+                            (\i ->
+                                case i of
+                                    IPage (Just pg) _ (Just pid) _ ->
+                                        Just ( ix, pid, pg )
+
+                                    _ ->
+                                        Nothing
+                            )
+                            pr.parts
 
                     _ ->
-                        Nothing
+                        []
             )
 
 
@@ -885,18 +921,22 @@ when it opened, and deriving it from the position would make the citation follow
 the scroll instead of the passage. -}
 pageAt : Model -> Int -> Maybe Int
 pageAt m ix =
-    List.take (ix + 1) m.entries
-        |> List.reverse
-        |> List.filterMap
-            (\e ->
-                case e.item of
-                    FPage (Just pg) _ _ _ ->
-                        Just pg
+    let
+        pages =
+            pageIndex m.entries
+    in
+    case List.filter (\( ei, _, _ ) -> ei == ix) pages of
+        ( _, _, pg ) :: _ ->
+            -- the entry's OWN first page: a paragraph the page turn runs through
+            -- is one entry, and the page the reader is on is where it STARTS
+            Just pg
 
-                    _ ->
-                        Nothing
-            )
-        |> List.head
+        [] ->
+            pages
+                |> List.filter (\( ei, _, _ ) -> ei < ix)
+                |> List.reverse
+                |> List.head
+                |> Maybe.map (\( _, _, pg ) -> pg)
 
 
 sectionAt : Model -> Int -> Maybe String
@@ -955,18 +995,29 @@ progress m =
                 |> List.indexedMap Tuple.pair
                 |> List.filter (\( _, e ) -> e.region == "body" || e.region == "notes")
 
+        -- THE SHARE IS OF THE TEXT, by its LENGTH. Counting ENTRIES instead made
+        -- the meter a function of how the blocks are grouped: the same reader at
+        -- section 9 read 36% when every block and page marker was an entry, and
+        -- 20% after the paragraphs were joined — same text, same place, a third
+        -- less "read". A length is what "% read" means, and it does not move when
+        -- the grouping does (MEASURED: 39% by length at section 9, the same place).
+        size ( _, e ) =
+            String.length (shownText m e.item)
+
         done =
-            counted |> List.filter (\( ix, _ ) -> ix <= m.posIx) |> List.length
+            counted
+                |> List.filter (\( ix, _ ) -> ix <= m.posIx)
+                |> List.map size
+                |> List.sum
 
         total =
-            List.length counted
+            counted |> List.map size |> List.sum
     in
     if total == 0 then
         0
 
     else
         round (100 * toFloat done / toFloat total)
-
 
 
 {- ---------- subscriptions ---------- -}
@@ -1389,44 +1440,68 @@ flow m doc =
         step : ( Int, Entry ) -> ( Maybe Int, List (Html Msg) ) -> ( Maybe Int, List (Html Msg) )
         step ( ix, e ) ( curPg, acc ) =
             let
-                pg =
+                -- THE PAGES THIS ENTRY STANDS ON. A paragraph the page turn runs
+                -- through stands on several (its inline page markers), so the
+                -- page that decides the range is not one number: the entry is in
+                -- range when ANY of its pages is. Reading only the last FPage
+                -- before it left a paragraph that starts on page 5 and runs onto
+                -- 15 marked OUT of a 15-15 range.
+                inlinePages =
                     case e.item of
+                        FPara pr ->
+                            List.filterMap
+                                (\i ->
+                                    case i of
+                                        IPage (Just p) _ _ _ ->
+                                            Just p
+
+                                        _ ->
+                                            Nothing
+                                )
+                                pr.parts
+
                         FPage (Just p) _ _ _ ->
-                            Just p
+                            [ p ]
 
                         _ ->
+                            []
+
+                pages =
+                    (case curPg of
+                        Just p ->
+                            [ p ]
+
+                        Nothing ->
+                            []
+                    )
+                        ++ inlinePages
+
+                last =
+                    case List.head (List.reverse inlinePages) of
+                        Just p ->
+                            Just p
+
+                        Nothing ->
                             curPg
 
                 inRange =
                     case m.range of
                         Just ( a, b ) ->
-                            case ( e.item, pg ) of
+                            case e.item of
                                 -- A note is kept when its REFERENCE is kept: the
                                 -- notes print as endnotes, at the back, so a
                                 -- range that holds a passage holds the note that
-                                -- passage refers to — and printing pages 15–20
-                                -- without them would be printing the text with
-                                -- its annotations stripped out.
-                                ( FNote n, _ ) ->
+                                -- passage refers to.
+                                FNote n ->
                                     Set.member n.n printed
 
-                                ( _, Just p ) ->
-                                    p >= a && p <= b
-
-                                ( _, Nothing ) ->
-                                    -- MEASURED before this: every entry with no
-                                    -- printed number was kept, so a range print
-                                    -- carried the volume's front matter — the
-                                    -- library stamp and the title pages — whatever
-                                    -- range was asked for. A passage with no number
-                                    -- cannot be shown to be inside a numbered range,
-                                    -- so it is not printed as one.
-                                    False
+                                _ ->
+                                    List.any (\p -> p >= a && p <= b) pages
 
                         Nothing ->
                             True
             in
-            ( pg, itemView m doc ix e inRange :: acc )
+            ( last, itemView m doc ix e inRange :: acc )
     in
     div [ class "rd-flow" ]
         (List.reverse (Tuple.second (List.foldl step ( Nothing, [] ) (List.indexedMap Tuple.pair m.entries))))
@@ -1445,30 +1520,31 @@ notesInPrint m =
             Set.fromList (Dict.keys m.notes)
 
         Just ( a, b ) ->
+            let
+                inRange p =
+                    case p of
+                        Just n ->
+                            n >= a && n <= b
+
+                        Nothing ->
+                            False
+            in
             m.entries
                 |> List.foldl
                     (\e ( pg, set ) ->
                         let
-                            pg1 =
+                            pg0 =
                                 case e.item of
                                     FPage (Just p) _ _ _ ->
                                         Just p
 
                                     _ ->
                                         pg
-
-                            inside =
-                                case pg1 of
-                                    Just p ->
-                                        p >= a && p <= b
-
-                                    Nothing ->
-                                        False
                         in
                         case e.item of
                             FNote n ->
-                                ( pg1
-                                , if inside then
+                                ( pg0
+                                , if inRange pg0 then
                                     Set.insert n.n set
 
                                   else
@@ -1476,26 +1552,35 @@ notesInPrint m =
                                 )
 
                             FPara pr ->
-                                ( pg1
-                                , if inside then
-                                    List.foldl
-                                        (\i s ->
-                                            case i of
-                                                IRef n _ _ ->
-                                                    Set.insert n s
+                                -- the page moves WITHIN the paragraph: a page
+                                -- marker inside it (IPage) changes the page the
+                                -- refs after it stand on, which is what the range
+                                -- asks about. Reading only the entry's page left
+                                -- every ref in a page-spanning paragraph on the
+                                -- page the paragraph STARTED on.
+                                List.foldl
+                                    (\i ( pg1, s1 ) ->
+                                        case i of
+                                            IPage (Just p) _ _ _ ->
+                                                ( Just p, s1 )
 
-                                                _ ->
-                                                    s
-                                        )
-                                        set
-                                        pr.parts
+                                            IRef n _ _ ->
+                                                ( pg1
+                                                , if inRange pg1 then
+                                                    Set.insert n s1
 
-                                  else
-                                    set
-                                )
+                                                  else
+                                                    s1
+                                                )
+
+                                            _ ->
+                                                ( pg1, s1 )
+                                    )
+                                    ( pg0, set )
+                                    pr.parts
 
                             _ ->
-                                ( pg1, set )
+                                ( pg0, set )
                     )
                     ( Nothing, Set.empty )
                 |> Tuple.second
@@ -1633,6 +1718,18 @@ inlineView m doc i =
                     )
                     (String.split "\n" s)
                 )
+
+        IPage pg how idv raw ->
+            -- the page boundary as it sits in the print: a marker INSIDE the
+            -- paragraph, where the page turns
+            pageMark pg how idv raw
+
+        IRh x ->
+            if m.view == Transcription then
+                span [ class "rd-rh-inline" ] [ text x ]
+
+            else
+                text ""
 
         IRef n _ rid ->
             -- the superscript and the margin copy are SIBLINGS, not nested: the

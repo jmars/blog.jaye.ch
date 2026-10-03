@@ -75,9 +75,10 @@ function occurrenceCounts(q = 'mithra') {
   for (const b of SLUGDOC.blocks) {
     if (b.t === 'region') { flush(); region = b.kind; key = null; continue; }
     if (region !== 'body' && region !== 'notes') continue;
-    // a section, a page marker and a running head all END the open paragraph in
-    // the reader's flow (`BPb`/`BRh` emit through `close`), so they end a passage
-    if (b.t === 'sec' || b.t === 'pb' || b.t === 'rh') { flush(); key = null; continue; }
+    // a SECTION ends the open paragraph; a page marker and a running head do NOT
+    // (they are inline inside it — that is the fix)
+    if (b.t === 'sec') { flush(); key = null; continue; }
+    if (b.t === 'pb' || b.t === 'rh') continue;
     if (b.t === 'notedef') {
       const k = `n${b.n}`;
       if (key === k) parts.push(b.x || '');

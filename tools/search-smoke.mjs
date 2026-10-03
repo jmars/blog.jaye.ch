@@ -1327,8 +1327,8 @@ console.log('== the second group: the shelf');
     for (const b of doc.blocks) {
       if (b.t === 'region') { close(); region = b.kind; }
       else if (b.t === 'sec') { close(); secId = b.id; sec = b.n; opening = true; }
-      else if (b.t === 'pb') { close(); if (b.page != null) page = b.page; }
-      else if (b.t === 'rh') { close(); }
+      else if (b.t === 'pb') { if (b.page != null) page = b.page; }   // inline: does not end a paragraph
+      else if (b.t === 'rh') { }                                       // furniture: does not end a paragraph
       else if (b.t === 'notedef') {
         if (open && open.k === 'n' && open.n === b.n) open.parts.push(b.x);
         else { close(); open = { k: 'n', n: b.n, id: b.id || null, parts: [b.x], page, region, sec: null, secId: null, strong: false }; }

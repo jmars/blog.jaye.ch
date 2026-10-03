@@ -3264,11 +3264,16 @@ function shelfPassages(doc) {
         opening = true;
         break;
       case 'pb':
-        close();
+        // a page marker INSIDE a paragraph does not end it: the paragraph runs
+        // across the page break (the reader renders the marker inline), so the
+        // passage continues and keeps the page it STARTED on (`page` is captured
+        // when a passage opens). The marker still updates `page`, so the passage
+        // that opens after it — a paragraph the break does separate — carries the
+        // new page.
         if (b.page != null) page = b.page;
         break;
       case 'rh':
-        close();          // furniture: suppressed by the reading view
+        // furniture: suppressed by the reading view, and it does not end a passage
         break;
       case 'p':
       case 'verse': {
@@ -3862,10 +3867,14 @@ const READER_CSS = `
 .rd-p { margin-bottom: 0.9em; line-height: 1.62; color: var(--fg); }
 .rd-verse { display: block; padding-left: 1.4em; font-style: italic; }
 .rd-rh { font-family: var(--mono); font-size: 10px; color: var(--dim); border-top: 1px dashed var(--line); margin: 10px 0; padding-top: 2px; }
+.rd-rh-inline { font-family: var(--mono); font-size: 10px; color: var(--dim); }
 .rd-pb {
   font-family: var(--mono); font-size: 10px; color: var(--dim);
   border: 1px solid var(--line); border-radius: 999px; padding: 1px 6px;
   margin: 0 4px; vertical-align: super; white-space: nowrap;
+  /* it sits INSIDE a paragraph now (the marker is inline at the page turn), so it
+     is inline by construction — an inline element cannot break the line it is in */
+  display: inline;
 }
 .rd-pb-interp { border-style: dashed; }
 .rd-pb-refused { border-color: var(--accent); color: var(--accent); }
@@ -4276,7 +4285,10 @@ function readerSectionHtml(doc, n) {
   let on = false;
   let run = [];
   const flush = () => {
-    if (run.length) out.push(`<p${run[0].id || run[0].at ? ` id="${run[0].at || ''}"` : ''}>${run.map((r) => r.html).join('')}</p>`);
+    if (run.length) {
+      const at = run.find((r) => r.at);
+      out.push(`<p${at ? ` id="${at.at}"` : ''}>${run.map((r) => r.html).join('')}</p>`);
+    }
     run = [];
   };
   for (const b of doc.blocks) {
@@ -4307,11 +4319,18 @@ function readerSectionHtml(doc, n) {
         });
         break;
       case 'pb':
-        if (b.page != null)
-          out.push(
-            `<span class="rd-pb" id="${b.id}" data-page="${b.page}" title="Printed page ${b.page}">${b.page}</span>`,
-          );
-        else out.push(`<span class="rd-pb rd-pb-refused" title="This page marker could not be read as a number">&#10216;unnumbered page&#10217;</span>`);
+        // the marker belongs INSIDE the paragraph it falls in (the paragraph runs
+        // across the page break) — pushing it to `out` put it between two <p>s and
+        // split the sentence the print has whole
+        run.push({
+          html:
+            b.page != null
+              ? `<span class="rd-pb" id="${b.id}" data-page="${b.page}" title="Printed page ${b.page}">${b.page}</span>`
+              : `<span class="rd-pb rd-pb-refused" title="This page marker could not be read as a number">&#10216;unnumbered page&#10217;</span>`,
+        });
+        break;
+      case 'rh':
+        // furniture the reading view suppresses; it does not break the paragraph
         break;
       default:
         break;

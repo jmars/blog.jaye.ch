@@ -129,6 +129,8 @@ type Inline
     = IText String
     | IVerse String
     | IRef Int String String
+    | IPage (Maybe Int) String (Maybe String) (Maybe String)
+    | IRh String
 
 
 {-| The reading view: the rules applied in order, every occurrence. -}
@@ -375,10 +377,24 @@ step bySection b st =
             emit (close { st | section = Just id, used = Set.empty, labels = Dict.get id bySection |> Maybe.withDefault Set.empty }) (FSec n id pg)
 
         BPb pg how id raw ->
-            emit (close st) (FPage pg how id raw)
+            case st.open of
+                OPara pid authOn parts ->
+                    -- A PAGE BOUNDARY INSIDE A PARAGRAPH IS INLINE. The paragraph
+                    -- runs across the page break (MEASURED: the print's paragraphs
+                    -- do), so the marker belongs inside it — closing the paragraph
+                    -- here cut one sentence into two and is what the author saw.
+                    { st | open = OPara pid authOn (IPage pg how id raw :: parts) }
+
+                _ ->
+                    emit (close st) (FPage pg how id raw)
 
         BRh x ->
-            emit (close st) (FRh x)
+            case st.open of
+                OPara pid authOn parts ->
+                    { st | open = OPara pid authOn (IRh x :: parts) }
+
+                _ ->
+                    emit (close st) (FRh x)
 
         BPara x at ->
             appendOrOpen st (IText x) at
