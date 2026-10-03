@@ -87,16 +87,41 @@ import {
 } from './repair.mjs';
 
 const URL_ = process.env.LIBRARY_FULLREAD_URL || 'http://10.0.0.1:8324/v1/chat/completions';
-// THE MODEL, and why not the cheaper one. The author's call after the measured
-// Flash failure on this same text (repair.mjs records it: on
-// `ajid_ajifonls_aj*^^` Flash proposed a HALF repair worse than the leave it
-// replaced). This read must be done by a model stronger than the pass that came
-// before, so it is the FULL glm-5.3, not Flash.
-const MODEL = process.env.LIBRARY_FULLREAD_MODEL || 'glm-5.3';
-// GLM 5.3 is a REASONING model: `reasoning_content` is spent from the same
-// budget as `content`, and a starved call returns an empty answer (MEASURED on
-// this project's passes). A whole section read needs more room than one token.
-const EFFORT = process.env.LIBRARY_FULLREAD_EFFORT || 'max';
+/* THE MODEL: glm-5.3-FLASH by default, and WHAT THAT COSTS.
+ *
+ * It was glm-5.3 (the FULL model) — the author's call after repair.mjs measured a
+ * Flash failure on this same text. But full glm-5.3 is the scarce quota, and this
+ * pass is the right place to spend Flash instead, for a reason that is about the
+ * SHAPE of its output, not about the model's depth:
+ *
+ *   THIS PASS PROPOSES AND NEVER MERGES. Its findings go through merge.mjs, which
+ *   refuses anything that does not fire, contradicts a recorded reading, or would
+ *   silence a rule, and then through a human read against a witness. So a weaker
+ *   read's failure mode is FINDS LESS or PROPOSES SOMETHING BAD THAT IS CAUGHT —
+ *   never corrupts the text. (repair.mjs's recorded failure was the other shape: it
+ *   writes readings straight into the repair pipeline, where a half repair reaches
+ *   the reader.) MEASURED on Flash there: it failed the REPAIR pass at effort max
+ *   with 45k reasoning characters, so the shortfall was depth, not budget — which
+ *   is why this is a COST decision with a known ceiling, not a free lunch.
+ *
+ * Raise it per run with LIBRARY_FULLREAD_MODEL=glm-5.3 (or deepseek-flash at 8321,
+ * which is what the whole-volume reads used) when a read must be deeper. */
+const MODEL = process.env.LIBRARY_FULLREAD_MODEL || 'glm-5.3-flash';
+/* THE EFFORT, and why it is HIGH and not max. GLM 5.3 is a REASONING model:
+ * `reasoning_content` is spent from the SAME budget as `content`, so a call that
+ * thinks too much returns an empty or truncated answer. MEASURED on glm-5.3-Flash
+ * with an 8k prompt, the same call four ways:
+ *     effort max,  max_tokens 8000   -> empty / no answer
+ *     effort max,  max_tokens 16000  -> empty / no answer
+ *     effort max,  max_tokens 32000  -> 869 chars, 632 reasoning
+ *     effort max,  max_tokens 48000  -> empty / no answer
+ *     effort high, max_tokens 8000   -> 1327 chars, 710 reasoning, VALID JSON
+ *     effort high, max_tokens 16000  ->  891 chars, 834 reasoning, VALID JSON
+ * — high is both RELIABLE and better here, because the pass wants FINDINGS, not
+ * deliberation, and at max the model deliberates until the answer is gone.
+ * The FULL glm-5.3 does want max (it has the headroom); if you raise the model,
+ * raise this with it: LIBRARY_FULLREAD_EFFORT=max. */
+const EFFORT = process.env.LIBRARY_FULLREAD_EFFORT || 'high';
 const MAX_TOKENS = Number(process.env.LIBRARY_FULLREAD_MAX_TOKENS || 48000);
 /** The cap on the parallel excerpt sent with one region. The parallel prints
  * the same translation in fewer lines and interleaves footnotes and running
