@@ -3826,18 +3826,22 @@ const READER_CSS = `
 .rd-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .rd-bar {
   display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
-  padding: 8px 0; margin-bottom: 18px;
   border-bottom: 1px solid var(--line);
   font-family: var(--sans); font-size: 12px; color: var(--dim);
   /* IT STICKS OVER THE TEXT, SO IT NEEDS TO BE OPAQUE. Without a background the
      toolbar's controls were drawn straight over the prose and read as part of it
      (the author's report). var(--bg) rather than the nav's translucent rgba+blur:
      the toolbar carries buttons a reader aims at, and text showing through makes
-     them harder to read, not prettier. The box-shadow fills the 18px margin BELOW
-     the bar with the same colour — otherwise the prose scrolls through that band
-     and the bar looks like it is floating in the text. */
+     them harder to read, not prettier.
+
+     The gap below the bar is PADDING, not a margin, so the background covers it
+     and the bar's height INCLUDES it — which is what lets the sidebar stick below
+     the bar (see --bar-h). A margin + a box-shadow fill was the first attempt and
+     it covered the sidebar's own top: the shadow spanned the full width, over the
+     reading-progress meter (the author's next report). */
+  padding: 8px 0 18px;
+  margin-bottom: 0;
   background: var(--bg);
-  box-shadow: 0 18px 0 var(--bg);
 }
 .rd-btn {
   font: inherit; font-family: var(--sans); font-size: 12px; line-height: 1.4;
@@ -3850,7 +3854,7 @@ const READER_CSS = `
 /* a button label never wraps mid-word: a wrapped label reads as a broken control */
 .rd-btn { white-space: nowrap; }
 /* a jumped-to anchor lands BELOW the sticky nav and toolbar, not under them */
-.rd-p, .rd-sec, .rd-pb, .rd-verse, .rd-note { scroll-margin-top: calc(var(--nav-h, 52px) + 56px); }
+.rd-p, .rd-sec, .rd-pb, .rd-verse, .rd-note { scroll-margin-top: calc(var(--nav-h, 52px) + var(--bar-h, 44px) + 12px); }
 .rd-x { padding: 1px 6px; }
 .rd-views { display: flex; gap: 0; }
 .rd-views .rd-btn { border-radius: 0; }
@@ -4041,7 +4045,7 @@ const READER_CSS = `
      guess — the author's report. The fallback is the nav's minimum. */
   .rd-bar { position: sticky; top: var(--nav-h, 52px); z-index: 45; }
   .rd-cols { grid-template-columns: 17rem minmax(0, 1fr); }
-  .rd-nav { position: sticky; top: calc(var(--nav-h, 52px) + 44px); max-height: 78vh; overflow: auto; padding-right: 8px; }
+  .rd-nav { position: sticky; top: calc(var(--nav-h, 52px) + var(--bar-h, 44px)); max-height: 78vh; overflow: auto; padding-right: 8px; }
   .rd-notes-index { display: block; }
 }
 @media (max-width: 61.99em) {
@@ -4113,14 +4117,31 @@ const READER_BOOT = `
      from it, on load and whenever it resizes. */
   var sizeNav = function () {
     var nav = document.querySelector('nav');
-    if (!nav || !nav.getBoundingClientRect) { return; }
-    var h = nav.getBoundingClientRect().height;
-    if (h > 0) { document.documentElement.style.setProperty('--nav-h', h + 'px'); }
+    if (nav && nav.getBoundingClientRect) {
+      var h = nav.getBoundingClientRect().height;
+      if (h > 0) { document.documentElement.style.setProperty('--nav-h', h + 'px'); }
+    }
+    // THE TOOLBAR TOO. It wraps (flex-wrap) and its height therefore varies, and
+    // the contents sidebar sticks BELOW it — a constant there put the sidebar's
+    // own top (the reading-progress meter) under the bar.
+    var bar = document.querySelector('#reader-app .rd-bar');
+    if (bar && bar.getBoundingClientRect) {
+      var bh = bar.getBoundingClientRect().height;
+      if (bh > 0) { document.documentElement.style.setProperty('--bar-h', bh + 'px'); }
+    }
   };
   sizeNav();
   window.addEventListener('resize', sizeNav);
   if (window.ResizeObserver) {
-    try { new window.ResizeObserver(sizeNav).observe(document.querySelector('nav')); } catch (e) {}
+    try {
+      var ro = new window.ResizeObserver(sizeNav);
+      var navEl = document.querySelector('nav');
+      if (navEl) { ro.observe(navEl); }
+      // the toolbar does not exist until Elm renders it, and it grows when its
+      // controls wrap — watching the app's root catches both
+      var appEl = document.getElementById('reader-app');
+      if (appEl) { ro.observe(appEl); }
+    } catch (e) {}
   }
   // Elm renders on an animation frame and runs port commands during the same
   // update, so a jump or a focus asked for now names an element that is not in
@@ -4132,6 +4153,10 @@ const READER_BOOT = `
       return r.text();
     }).then(function (text) {
       app.ports.docReceived.send(text);
+      // the toolbar renders with the document: measure it once the frame that
+      // draws it has run (and again shortly after, for a wrapped toolbar)
+      soon(sizeNav);
+      window.setTimeout(sizeNav, 80);
     }).catch(function (e) {
 
       app.ports.docFailed.send('failed');

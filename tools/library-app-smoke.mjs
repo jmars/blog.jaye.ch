@@ -1273,16 +1273,28 @@ section('the sticky toolbar clears the site header');
   );
   // FAILS IF: the toolbar sticks over the prose with no background of its own.
   // That is a real bug the author reported: the controls were drawn straight over
-  // the text and read as part of it. The bar needs an opaque background AND the
-  // margin below it filled, or the prose scrolls through the gap.
+  // the text and read as part of it.
   const barCss = /\.rd-bar \{[^}]*\}/.exec(html);
   check(
     !!barCss && /background:\s*var\(--bg\)/.test(barCss[0]),
     `the toolbar has its OWN opaque background (${barCss && /background:[^;]*/.exec(barCss[0]) ? /background:[^;]*/.exec(barCss[0])[0] : 'none'})`,
   );
+  // FAILS IF: the band below the bar is a margin (or a full-width shadow, the
+  // first attempt) instead of padding — the background then does not cover it, or
+  // it covers the SIDEBAR's top, which is the reading-progress meter.
   check(
-    !!barCss && /box-shadow:\s*0 18px 0 var\(--bg\)/.test(barCss[0]),
-    'and the margin below it is filled with the same colour, so no prose shows through',
+    !!barCss && /padding:\s*8px 0 18px/.test(barCss[0]) && !/box-shadow:\s*0 18px/.test(barCss[0]),
+    'and the gap below it is padding the background covers, not a margin or a shadow over the sidebar',
+  );
+  // FAILS IF: the contents sidebar sticks at a constant below the toolbar — its
+  // own top (the progress meter) then goes under a wrapped bar.
+  check(
+    /\.rd-nav \{[^}]*top:\s*calc\(var\(--nav-h[^;]*var\(--bar-h/.test(html),
+    'and the sidebar sticks below the MEASURED toolbar height, so the progress meter is not covered',
+  );
+  check(
+    /--bar-h/.test(html) && /#reader-app \.rd-bar/.test(html),
+    'and the shell measures the toolbar into --bar-h',
   );
 }
 
