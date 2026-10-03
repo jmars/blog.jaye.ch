@@ -103,7 +103,7 @@ type Block
 
 {-| One rendered item. `region` says which part of the volume it belongs to, so
 search hits and the progress meter can exclude the front matter and the
-advertisements (the marks exist for exactly that). -}
+the end matter (the marks exist for exactly that). -}
 type alias Entry =
     { region : String, item : Flow }
 
@@ -363,7 +363,7 @@ step bySection b st =
     case b of
         BRegion kind id ->
             -- the region is set on the state and CARRIED by every entry after it:
-            -- the front matter and the advertisements are excluded from search
+            -- the front matter and the end matter are excluded from search
             -- and from the progress meter by this mark, and an entry that reports
             -- no region excludes nothing. (MEASURED: with the region unset every
             -- item read as "" and both exclusions were inert.)

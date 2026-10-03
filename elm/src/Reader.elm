@@ -632,7 +632,7 @@ stepSection d m =
                             ( { m
                                 | notice =
                                     if d > 0 then
-                                        "This is the last section — the notes and the advertisements follow it"
+                                        "This is the last section — the notes and the end matter follow it"
 
                                     else
                                         "This is the first section — the front matter is before it"
@@ -1017,7 +1017,7 @@ positionLabel m =
 
 
 {-| The share of the text read: the position over every entry of the text
-proper. The front matter and the advertisements are excluded by the region marks
+proper. The front matter and the end matter are excluded by the region marks
 — which is the whole reason those marks are in the document: a reader who has
 finished the notes has finished the book, whatever the publisher's catalogue
 after it says. -}
@@ -1340,7 +1340,7 @@ progressMeter m =
         [ div [ class "rd-progress-track" ]
             [ div [ class "rd-progress-fill", A.style "width" (String.fromInt pct ++ "%") ] [] ]
         , span [ class "rd-progress-label", attribute "data-progress" (String.fromInt pct) ]
-            [ text (String.fromInt pct ++ "% read — the front matter and the advertisements are not counted") ]
+            [ text (String.fromInt pct ++ "% read — the front matter and the end matter are not counted") ]
         ]
 
 
@@ -1459,7 +1459,7 @@ regionLabel kind =
             "Notes"
 
         "ads" ->
-            "The publisher’s advertisements"
+            "The end matter"
 
         _ ->
             "The text"

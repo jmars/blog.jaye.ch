@@ -522,7 +522,7 @@ section('a recorded reading renders, and damage with no reading renders marked')
    * holds only while a NOTE carries counted damage, because a margin note is the
    * one thing the app draws TWICE. The notes were the only such place, and the
    * scan repairs left them clean (MEASURED: the only damage left is the page
-   * furniture and the advertisements — no note), so `marginChars` is legitimately
+   * furniture and the end matter — no note), so `marginChars` is legitimately
    * 0 and `markedChars === readingChars`. Asserting it unconditionally would fail
    * a correct build; asserting it never is a check that cannot fail. The margin
    * mechanism itself is asserted below (the notes ARE drawn in margin copies), so
@@ -1142,7 +1142,7 @@ section('the running heads, the citation and the progress');
 }
 
 {
-  // the progress meter excludes the front matter and the advertisements: the
+  // the progress meter excludes the front matter and the end matter: the
   // region marks exist for exactly this, and a reader who has finished the notes
   // has finished the book whatever the publisher's catalogue after it says.
   //
@@ -1157,7 +1157,7 @@ section('the running heads, the citation and the progress');
   const atNotes = await boot({ hash: '#n25' });
   const notesPct = pctOf(atNotes);
   check(notesPct === 100, `a reader at the last note has read the whole text (${notesPct}%)`);
-  // FAILS IF: the advertisements are counted — the last note then reads well
+  // FAILS IF: the end matter is counted — the last note then reads well
   // below 100%, which is the bug the region marks exist to prevent.
   const atAds = await boot({ hash: '#s9' });
   const midPct = pctOf(atAds);
@@ -1223,9 +1223,9 @@ section('the running heads, the citation and the progress');
   q.dispatchEvent(new ctx.w.Event('input', { bubbles: true }));
   await settle();
   const count = ctx.w.document.querySelector('#reader-app .rd-count').textContent.trim();
-  check(count === 'no match', `a word in the advertisements is not found (${JSON.stringify(count)})`);
+  check(count === 'no match', `a word in the end matter is not found (${JSON.stringify(count)})`);
   // FAILS IF: the ads region is searched — "Watkins" is on the title page, in the
-  // advertisements, and nowhere in the text.
+  // list, and nowhere in the text.
   q.value = 'Mithra';
   q.dispatchEvent(new ctx.w.Event('input', { bubbles: true }));
   await settle();

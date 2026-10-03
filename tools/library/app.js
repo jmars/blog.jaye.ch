@@ -7595,7 +7595,7 @@ var $author$project$Reader$stepSection = F2(
 						_Utils_update(
 							m,
 							{
-								s: (d > 0) ? 'This is the last section — the notes and the advertisements follow it' : 'This is the first section — the front matter is before it'
+								s: (d > 0) ? 'This is the last section — the notes and the end matter follow it' : 'This is the first section — the front matter is before it'
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -9018,7 +9018,7 @@ var $author$project$Reader$progressMeter = function (m) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						$elm$core$String$fromInt(pct) + '% read — the front matter and the advertisements are not counted')
+						$elm$core$String$fromInt(pct) + '% read — the front matter and the end matter are not counted')
 					]))
 			]));
 };
@@ -9030,7 +9030,7 @@ var $author$project$Reader$regionLabel = function (kind) {
 		case 'notes':
 			return 'Notes';
 		case 'ads':
-			return 'The publisher’s advertisements';
+			return 'The end matter';
 		default:
 			return 'The text';
 	}
