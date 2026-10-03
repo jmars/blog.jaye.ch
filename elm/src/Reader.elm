@@ -710,7 +710,12 @@ search q m =
                     |> List.indexedMap Tuple.pair
                     |> List.filterMap
                         (\( ix, e ) ->
-                            if isProse e.item && e.region /= "front" && e.region /= "ads" then
+                            -- THE TEXT PROPER is the body and the notes. Everything
+                            -- else is the volume's apparatus: the front matter, the
+                            -- printer's colophon, the publisher's list, the library's
+                            -- own marks. A positive test names what is searched, so a
+                            -- new region kind is excluded by default, not by memory.
+                            if isProse e.item && (e.region == "body" || e.region == "notes") then
                                 if String.contains needle (String.toLower (shownText m e.item)) then
                                     Just ix
 
@@ -1458,8 +1463,14 @@ regionLabel kind =
         "notes" ->
             "Notes"
 
-        "ads" ->
-            "The end matter"
+        "colophon" ->
+            "The printer’s colophon"
+
+        "end" ->
+            "The publisher’s book list"
+
+        "library" ->
+            "The library’s marks"
 
         _ ->
             "The text"

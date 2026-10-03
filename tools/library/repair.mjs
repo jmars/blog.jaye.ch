@@ -258,7 +258,7 @@ function align(win, para, at, to = at + win.length) {
 /**
  * The served body blocks, each with its own tokens — so a damaged token can be
  * shown IN ITS PARAGRAPH, with the paragraph before and after it, which is the
- * whole point of this pass. §front matter and the advertisements are excluded
+ * whole point of this pass. The front matter and the back matter are excluded
  * exactly as review.mjs excludes them: no rule may touch either.
  */
 export function transcriptionBlocks(doc) {

@@ -213,13 +213,20 @@ const TEXT_RULES = {
     head: 'ON THE CAVE OF THE NYMPHS',
     // the University of Toronto ownership stamp, five blocks, before the book
     stamp: ['PA', '4397', 'E5', '08', '1917'],
-    // The ads boundary is the COLOPHON — the first block after note (25)'s own
-    // paragraph — not the plan's `FROM THE GREEK OF PORPHYRY`, which is vacuous:
-    // that phrase occurs exactly once in the edition, on the title page, and the
-    // title page OCRs as "From the Greeh of Porphyry", so the rule never fired
-    // and the note-continuation swallowed the colophon and the catalogue's
-    // opening seven blocks as note (25)'s own text.
-    divisions: { notes: 'Notes', ads: 'PRINTED IN GREAT BRITAIN' },
+    // The back of the volume, in its three real parts: the printer's COLOPHON,
+    // then the publisher's book-list, then the LIBRARY's own marks. The old single
+    // boundary was the colophon (the first block after note (25)'s own paragraph)
+    // — not the plan's `FROM THE GREEK OF PORPHYRY`, which is vacuous: that phrase
+    // occurs exactly once, on the title page, and OCRs as "From the Greeh of
+    // Porphyry", so the rule never fired and the note-continuation swallowed the
+    // colophon and the list's opening seven blocks as note (25)'s own text.
+    divisions: {
+      notes: 'Notes',
+      colophon: 'PRINTED IN GREAT BRITAIN',
+      // the mark's own FIRST LINE: the boundary test is per line, and this
+      // block runs on ('PLEASE DO NOT REMOVE' / 'CARDS OR SLIPS FROM THIS POCKET')
+      library: 'PLEASE DO NOT REMOVE',
+    },
   },
 };
 
@@ -995,7 +1002,7 @@ export function extract(src, meta) {
   const start = (kind, line, { sameParagraph }) => {
     if (!sameParagraph) par++;
     // `sec` runs on past the body (secN is only bumped by an opener), so a block
-    // must carry whether it is IN the body: the notes and ads regions were
+    // must carry whether it is IN the body: the notes and back-matter regions were
     // claiming section-18 paragraph anchors, which would have made a #s18-77
     // citation land on a catalogue blurb.
     cur = { kind, lines: [line], par, sec: secN, inBody: region === 'body' };
@@ -1196,14 +1203,35 @@ export function extract(src, meta) {
         start('p', line, { sameParagraph: false });
         continue;
       }
-      // The ads boundary is a PREFIX test: the colophon line carries OCR runs of
-      // spaces and runs on ('PRINTED IN GREAT BRITAIN BY NEILL AND CO., LTD.,
-      // EDINBURGH.'), so an equality test never fires.
-      const adsRule = (cfg.divisions || {}).ads;
-      if (adsRule && (line === adsRule || line.startsWith(adsRule))) {
+      // THE BACK OF THE VOLUME, in the three parts it actually has. The old
+      // single region was called "ads" and its label "the publisher's
+      // advertisements" — and it opened with a printing statement, ran through the
+      // publisher's book-list (which is what "advertisements" would mean), and
+      // ended with the library's own marks. Three different things, one wrong name.
+      //
+      //   colophon — the printer's statement. ONE block: the region opens on it and
+      //              the next block moves on.
+      //   end      — the publisher's list of books, which is the book's end matter.
+      //   library  — the SCAN's own marks at the back (the circulation pocket, the
+      //              shelf label), which belong to the copy, not to the book.
+      //
+      // Each boundary is a PREFIX test: these lines carry runs of OCR spaces and
+      // run on, so an equality test never fires.
+      const colophonRule = (cfg.divisions || {}).colophon;
+      if (colophonRule && (line === colophonRule || line.startsWith(colophonRule))) {
         flush();
-        push({ t: 'region', kind: 'ads' });
-        region = 'ads';
+        push({ t: 'region', kind: 'colophon' });
+        region = 'colophon';
+        par = 0;
+        curNote = null;
+        start('p', line, { sameParagraph: false });
+        continue;
+      }
+      const libraryRule = (cfg.divisions || {}).library;
+      if (libraryRule && (line === libraryRule || line.startsWith(libraryRule))) {
+        flush();
+        push({ t: 'region', kind: 'library' });
+        region = 'library';
         par = 0;
         curNote = null;
         start('p', line, { sameParagraph: false });
@@ -1269,6 +1297,15 @@ export function extract(src, meta) {
       }
 
       if (li === 0) {
+        // THE COLOPHON IS ONE BLOCK. Its region opens on the printer's statement
+        // and the block after it is the publisher's list, which is a different
+        // thing and gets its own region.
+        if (region === 'colophon') {
+          flush();
+          push({ t: 'region', kind: 'end' });
+          region = 'end';
+          par = 0;
+        }
         // a source block is a paragraph, so a block boundary ends the run —
         // unless the page furniture above already did (a paragraph that runs
         // over a page break keeps its text blocks, one per side of the break).
@@ -1520,7 +1557,7 @@ export function extract(src, meta) {
    * markers (`pb`) are chrome. MEASURED, and why the domain is stated here: the
    * earlier domain was the section-labelled body paragraphs only, which left the
    * note definitions and the unlabelled paragraphs of the front matter and the
-   * advertisements outside the census — so the count said 2 while the reading view
+   * back-matter blocks outside the census — so the count said 2 while the reading view
    * showed 33 damage characters. A count over less than the reading view is not a
    * count of the reading view. */
   const readingViewText = out

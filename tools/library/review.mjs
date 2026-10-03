@@ -95,10 +95,10 @@ export function correctedChunks(doc, budget = BUDGET) {
       region = b.kind;
       // The front matter is out of bounds for any rule at all (plan §7: its
       // title page carries a reading a reading of this text cites as evidence),
-      // and the advertisements are the publisher's catalogue, not the treatise —
+      // and the back matter is the publisher's list, not the treatise —
       // neither is text this pass may propose a repair for. They are not sent, so
       // no proposal can be made about them.
-      if (region === 'front' || region === 'ads') cur = null;
+      if (region !== 'body' && region !== 'notes') cur = null;
       continue;
     }
     if (b.t === 'sec') {

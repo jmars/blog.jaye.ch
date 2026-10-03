@@ -13,9 +13,9 @@
  *     `iThrough matter`, `\ But he is placed`, `sus pected`), (b) a wrong word
  *     with NO damage character at all — a substituted or missing letter is
  *     invisible to a character census by construction, and (c) everything in
- *     the NOTES and ADVERTISEMENTS regions, which the census never scanned.
+ *     the NOTES and the back-matter regions, which the census never scanned.
  *   - counted directly here (whole reading view, every region): the body still
- *     showed 31 damage characters after the rules, the notes 9, the ads 3.
+ *     showed 31 damage characters after the rules, the notes 9, the back matter 3.
  *   - COMMIT f53d4e9 has since taught the census the standalone marker; this
  *     read remains the instrument for the classes a count cannot hold: the
  *     wrong-but-CLEAN word, the fused/split word, the half-repair.
@@ -28,7 +28,7 @@
  * contiguous match and is the reason 18 of 18 body sections locate where the
  * word-level locator found only ~46 of 100 words.
  *
- * WHAT IT SENDS, per region (a body section, the notes, the advertisements):
+ * WHAT IT SENDS, per region (a body section, the notes, the back matter):
  *   1. the READING VIEW of every block in the region, in order — the corrected
  *      text as the reader sees it, so the argument is visible and a damaged
  *      word can be read against its neighbours;
@@ -117,7 +117,7 @@ const DAMAGE = '^_~*£/>\\|#™±»«}{&';
 
 /**
  * The reading order this read covers: every BODY section, then the NOTES, then
- * the ADVERTISEMENTS. The notes and ads are served to the reader by the same
+ * the BACK MATTER. The notes and the back matter are served by the same
  * reading view (the build's own region walk), they carry MEASURED damage the
  * body census never counts (9 and 3 damage characters respectively), and the
  * author's "a fair amount of damage" was a reading of the published text, which
@@ -140,7 +140,7 @@ export function regionsOf(doc, rules) {
       raw: blocks.map((b) => b.text),
     });
   }
-  for (const kind of ['notes', 'ads']) {
+  for (const kind of ['notes', 'end']) {
     const blocks = [];
     let region = null;
     for (const b of doc.blocks || []) {
@@ -158,7 +158,7 @@ export function regionsOf(doc, rules) {
     // request and starve the reply budget. The chunks are whole blocks, in
     // reading order, and none is skipped — the coverage table names each.
     const CHUNK = Number(process.env.LIBRARY_FULLREAD_NOTES_CHUNK || 12000);
-    const label = kind === 'notes' ? 'the notes' : 'the advertisements';
+    const label = kind === 'notes' ? 'the notes' : "the publisher's book list";
     let part = 0;
     for (let i = 0; i < blocks.length; ) {
       let size = 0;
@@ -208,7 +208,7 @@ export function parallelFor(region, parallel) {
   if (region.kind !== 'body') {
     return {
       status:
-        'NOT SUPPLIED for this region: the parallel edition (a different printing) carries the treatise, not this volume\'s notes or advertisements; read this region from the transcription\'s own context alone',
+        'NOT SUPPLIED for this region: the parallel edition (a different printing) carries the treatise, not this volume\'s notes or back matter; read this region from the transcription\'s own context alone',
     };
   }
   const text = region.raw.join(' ');

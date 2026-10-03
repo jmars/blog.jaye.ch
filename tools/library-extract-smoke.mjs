@@ -251,12 +251,12 @@ section('the divisions run 1…18, with distinct titles (recomputed)');
   check(body > 0, `the body region opens where the first division opens (block ${body})`);
   const regions = doc.blocks.filter((b) => b.t === 'region').map((b) => b.kind);
   check(
-    regions.join(',') === 'front,body,notes,ads',
-    `the four regions are in the order of the volume (${regions.join(', ')})`,
+    regions.join(',') === 'front,body,notes,colophon,end,library',
+    `the volume's regions are in order, each named for what it is (${regions.join(', ')})`,
   );
-  // the notes division and the catalogue head: the boundaries the plan names
+  // the notes division, then the back of the volume in its three parts
   const notesAt = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'notes');
-  const adsAt = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'ads');
+  const adsAt = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'end');
   check(
     doc.blocks[notesAt + 1] && doc.blocks[notesAt + 1].x === 'Notes',
     `the notes region opens at the print's own Notes division (${JSON.stringify((doc.blocks[notesAt + 1] || {}).x)})`,
@@ -266,9 +266,19 @@ section('the divisions run 1…18, with distinct titles (recomputed)');
   // the edition and on the title page, which OCRs as "From the Greeh of
   // Porphyry", so the rule never fired. This assertion used to encode the wrong
   // rule; it encodes the corrected one.
+  const colophonAt = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'colophon');
   check(
-    doc.blocks[adsAt + 1] && /^PRINTED IN GREAT BRITAIN/.test(doc.blocks[adsAt + 1].x),
-    `the advertisements open at the colophon (${JSON.stringify((doc.blocks[adsAt + 1] || {}).x)})`,
+    doc.blocks[colophonAt + 1] && /^PRINTED IN GREAT BRITAIN/.test(doc.blocks[colophonAt + 1].x),
+    `the printer's colophon opens its OWN region (${JSON.stringify((doc.blocks[colophonAt + 1] || {}).x)})`,
+  );
+  check(
+    doc.blocks[colophonAt + 2] && doc.blocks[colophonAt + 2].t === 'region' && doc.blocks[colophonAt + 2].kind === 'end',
+    'and the region after it is the publisher\'s list, not the colophon (the colophon is one block)',
+  );
+  const libraryAt = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'library');
+  check(
+    doc.blocks[libraryAt + 1] && /^PLEASE DO NOT REMOVE/.test(doc.blocks[libraryAt + 1].x),
+    `and the library's own marks open their region (${JSON.stringify((doc.blocks[libraryAt + 1] || {}).x)})`,
   );
   check(
     doc.blocks.filter((b) => b.t === 'notedef' && b.n === 25).length === 1,
@@ -1063,15 +1073,17 @@ section('every page boundary stands on a leaf, and the three signals are reconci
 
 /* ---------- 5. the anchors ---------- */
 
-section('the notes and the adverts are not the body');
+section('the notes and the back matter are not the body');
 {
-  // The review found three symptoms of ONE region bug: the ads boundary never
-  // fired (the plan's rule matched a phrase the title page OCRs differently), so
-  // note (25) swallowed the colophon and the catalogue's opening, and the notes
-  // and the adverts claimed section-18 paragraph anchors.
+  // The review found three symptoms of ONE region bug: the boundary never fired
+  // (the plan's rule matched a phrase the title page OCRs differently), so note
+  // (25) swallowed the colophon and the list's opening, and the notes and the back
+  // matter claimed section-18 paragraph anchors. The back of the volume is now in
+  // its three real parts (the printer's colophon, the publisher's list, the
+  // library's own marks), each named for what it is.
   const regions = doc.blocks.filter((b) => b.t === 'region').map((b) => b.kind);
-  check(regions.join(' ') === 'front body notes ads',
-    `the volume's four regions are all present, in order (${regions.join(' ')})`);
+  check(regions.join(' ') === 'front body notes colophon end library',
+    `the volume's regions are all present, in order (${regions.join(' ')})`);
 
   let region = null, outside = 0, verseOutside = 0;
   for (const b of doc.blocks) {

@@ -7438,7 +7438,7 @@ var $author$project$Reader$search = F2(
 				function (_v0) {
 					var ix = _v0.a;
 					var e = _v0.b;
-					return ($author$project$Reader$isProse(e.k) && ((e.ai !== 'front') && (e.ai !== 'ads'))) ? (A2(
+					return ($author$project$Reader$isProse(e.k) && ((e.ai === 'body') || (e.ai === 'notes'))) ? (A2(
 						$elm$core$String$contains,
 						needle,
 						$elm$core$String$toLower(
@@ -9029,8 +9029,12 @@ var $author$project$Reader$regionLabel = function (kind) {
 			return 'The front matter';
 		case 'notes':
 			return 'Notes';
-		case 'ads':
-			return 'The end matter';
+		case 'colophon':
+			return 'The printer’s colophon';
+		case 'end':
+			return 'The publisher’s book list';
+		case 'library':
+			return 'The library’s marks';
 		default:
 			return 'The text';
 	}

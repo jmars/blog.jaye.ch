@@ -1344,7 +1344,7 @@ console.log('== the second group: the shelf');
     close();
     const ps = [];
     for (const o of out) {
-      if (o.region === 'front' || o.region === 'ads') continue;
+      if (o.region !== 'body' && o.region !== 'notes') continue;
       const text = applyRules(o.parts.join(o.k === 'p' ? '' : ' '), doc.corrections);
       if (!text) continue;
       const anchor = o.k === 'n' ? (o.id || 'n' + o.n)

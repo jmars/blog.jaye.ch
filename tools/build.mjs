@@ -3205,7 +3205,7 @@ function buildSearch(navPosts) {
  *   that only the transcription's damage spells is not a word of the book. The
  *   passages are the reader's own grouping (elm/src/Reader/Document.elm `flow`):
  *   a paragraph is a run of consecutive p/verse/ref blocks, a note is a run of
- *   notedef blocks with one number, and the front matter and the advertisements
+ *   notedef blocks with one number, and the front matter and the back matter
  *   are left out — as they are of the app's own in-text search. Each passage
  *   carries the document's own anchor: the paragraph label the extractor gave it
  *   (`s4-3`), else the section it stands in (`s4`), else the printed page
@@ -3323,10 +3323,12 @@ function shelfPassages(doc) {
   close();
   const passages = [];
   for (const o of out) {
-    // the front matter and the advertisements are not the text: the app's own
-    // in-text search excludes them by the same region marks, and the plan's
-    // provenance says the publisher's catalogue is marked and not searched
-    if (o.region === 'front' || o.region === 'ads') continue;
+    // THE TEXT is the body and the notes. The front matter, the printer's
+    // colophon, the publisher's book list and the library's own marks are the
+    // volume's apparatus — the app's in-text search excludes them by the same
+    // region marks, and the plan's provenance says the catalogue is marked and not
+    // searched. A POSITIVE test, so a new region kind is excluded by default.
+    if (o.region !== 'body' && o.region !== 'notes') continue;
     const text = applyCorrections(o.parts.join(o.k === 'p' ? '' : ' '), doc.corrections);
     if (!text) continue;
     const anchor =

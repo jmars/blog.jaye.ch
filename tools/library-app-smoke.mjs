@@ -1216,7 +1216,7 @@ section('the running heads, the citation and the progress');
 
 {
   // search runs over the text proper only: the front matter is the title page,
-  // and the advertisements are the publisher's catalogue
+  // and the end matter is the publisher's list of books
   const ctx = await boot();
   const q = ctx.w.document.getElementById('rd-q');
   q.value = 'Watkins';
@@ -1224,7 +1224,7 @@ section('the running heads, the citation and the progress');
   await settle();
   const count = ctx.w.document.querySelector('#reader-app .rd-count').textContent.trim();
   check(count === 'no match', `a word in the end matter is not found (${JSON.stringify(count)})`);
-  // FAILS IF: the ads region is searched — "Watkins" is on the title page, in the
+  // FAILS IF: the end matter is searched — "Watkins" is on the title page, in the
   // list, and nowhere in the text.
   q.value = 'Mithra';
   q.dispatchEvent(new ctx.w.Event('input', { bubbles: true }));
