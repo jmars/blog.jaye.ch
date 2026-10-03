@@ -1271,6 +1271,19 @@ section('the sticky toolbar clears the site header');
     /scroll-margin-top:\s*calc\(var\(--nav-h/.test(html),
     'and a jumped-to anchor lands below the header and toolbar, not under them',
   );
+  // FAILS IF: the toolbar sticks over the prose with no background of its own.
+  // That is a real bug the author reported: the controls were drawn straight over
+  // the text and read as part of it. The bar needs an opaque background AND the
+  // margin below it filled, or the prose scrolls through the gap.
+  const barCss = /\.rd-bar \{[^}]*\}/.exec(html);
+  check(
+    !!barCss && /background:\s*var\(--bg\)/.test(barCss[0]),
+    `the toolbar has its OWN opaque background (${barCss && /background:[^;]*/.exec(barCss[0]) ? /background:[^;]*/.exec(barCss[0])[0] : 'none'})`,
+  );
+  check(
+    !!barCss && /box-shadow:\s*0 18px 0 var\(--bg\)/.test(barCss[0]),
+    'and the margin below it is filled with the same colour, so no prose shows through',
+  );
 }
 
 console.log(

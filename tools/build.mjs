@@ -3829,6 +3829,15 @@ const READER_CSS = `
   padding: 8px 0; margin-bottom: 18px;
   border-bottom: 1px solid var(--line);
   font-family: var(--sans); font-size: 12px; color: var(--dim);
+  /* IT STICKS OVER THE TEXT, SO IT NEEDS TO BE OPAQUE. Without a background the
+     toolbar's controls were drawn straight over the prose and read as part of it
+     (the author's report). var(--bg) rather than the nav's translucent rgba+blur:
+     the toolbar carries buttons a reader aims at, and text showing through makes
+     them harder to read, not prettier. The box-shadow fills the 18px margin BELOW
+     the bar with the same colour — otherwise the prose scrolls through that band
+     and the bar looks like it is floating in the text. */
+  background: var(--bg);
+  box-shadow: 0 18px 0 var(--bg);
 }
 .rd-btn {
   font: inherit; font-family: var(--sans); font-size: 12px; line-height: 1.4;
