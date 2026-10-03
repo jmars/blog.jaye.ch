@@ -59,6 +59,12 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": " . mg.de that which",
+      "replace": " made that which",
+      "class": "reading",
+      "note": "the print reads \"the ancients every where made that which has a twofold entrance\" (1917 scan, printed page 34; the 1823 parallel reads \"the ancients every / where made that which has a twofold entrance\"). The \" . mg.de\" is a garbled \"made\" with a dot-leader artefact before it. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
       "find": "( of sense, it is requisite to sit at the foot of",
       "replace": "of sense, it is requisite to sit at the foot of",
       "class": "reading",

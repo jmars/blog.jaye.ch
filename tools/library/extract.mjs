@@ -158,7 +158,12 @@ export function pageSignals(src, entry) {
   const flat = [];
   for (const block of all) for (const line of block) flat.push(line);
 
-  /* 1. The library's stamp is not text (plan §4.5): recorded, then dropped. */
+  /* 1. THE LIBRARY'S STAMP, recorded and taken out of the page-furniture pass's
+   * way. It is NOT text of the book, but it is not dropped from the DOCUMENT: it
+   * is served as the leading `library` region (see `extract`), so the
+   * transcription is whole and the copy's marks are treated the same at both
+   * ends. It is recorded here, and kept out of `lines`, because the page pass
+   * must not read its "08" as a folio. */
   let drop = 0;
   const dropped = [];
   for (const want of cfg.stamp || []) {
@@ -198,8 +203,9 @@ export const sha256 = (text) => createHash('sha256').update(text).digest('hex');
 /**
  * The per-text facts that are not rules. Everything here is a MEASURED property
  * of one edition, not a policy and not a repair: which words the running head
- * carries, which blocks the library's own stamp occupies (the stamp is not text
- * at all — plan §4.5 — so it is recorded and dropped, never served), and where
+ * carries, which blocks the library's own stamp occupies (the stamp is the copy's
+ * mark, not the book's, so it is recorded here and served as its own `library`
+ * region rather than read as text), and where
  * the volume's divisions begin.
  *
  * The REPAIRS are not here. They are in `tools/library/edits/<slug>.json` — the
@@ -211,7 +217,9 @@ export const sha256 = (text) => createHash('sha256').update(text).digest('hex');
 const TEXT_RULES = {
   'porphyry-on-the-cave-of-the-nymphs-taylor-1917': {
     head: 'ON THE CAVE OF THE NYMPHS',
-    // the University of Toronto ownership stamp, five blocks, before the book
+    // the University of Toronto ownership stamp: five blocks before the book,
+    // recorded here and SERVED as the leading `library` region (it used to be
+    // dropped, which left the copy's marks served at the back and not at the front)
     stamp: ['PA', '4397', 'E5', '08', '1917'],
     // The back of the volume, in its three real parts: the printer's COLOPHON,
     // then the publisher's book-list, then the LIBRARY's own marks. The old single
@@ -748,8 +756,8 @@ export function titleDamage(rawTitle, correctedTitle, rules) {
 }
 
 /** The text of the FRONT-MATTER REGION: the block run between the front mark and
- * the body's first division, plus the dropped blocks (the library's stamp is not
- * served but is front matter by any reading). */
+ * the body's first division, plus the library's leading stamp (served in its own
+ * region, and front matter by any reading). */
 export function frontMatterText(doc) {
   const body = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'body');
   const from = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'front');
@@ -1023,6 +1031,21 @@ export function extract(src, meta) {
   let expectedRef = 1;
 
   const push = (b) => out.push(b);
+  /* THE LIBRARY'S OWN STAMP, AT THE FRONT — a REGION now, like the library's
+   * marks at the BACK. It used to be recorded and DROPPED (plan §4.5: "the
+   * stamp is not text ... never served"), which made the two ends disagree: the
+   * back's marks were served (they were swept into the back region and split out
+   * as `library`), the front's were not. They are the same thing — this copy's
+   * own call number, at both ends — so they are treated the same: SERVED, so the
+   * transcription is whole; MARKED `library`, so they are not read as the book;
+   * and excluded from search and the meter, like the rest of the apparatus.
+   *
+   * NOTHING IS DROPPED FROM THE TRANSCRIPTION ANY MORE, which is also why the
+   * extractor's smoke asserts the document's text against the WHOLE file. */
+  if (dropped.length) {
+    push({ t: 'region', kind: 'library' });
+    for (const line of dropped) push({ t: 'p', x: tidyPunctuation(line) });
+  }
   // the front matter: the book's own front, served but marked (§4.5). Its
   // fragment anchor (#sfront) is part of the reserved grammar.
   push({ t: 'region', kind: 'front', id: 'sfront' });

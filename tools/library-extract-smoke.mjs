@@ -190,12 +190,15 @@ section('every source block lands exactly once, in order (recomputed)');
   // and no digits-only text of the book's own — recomputed as the first five
   // short blocks, then asserted to be exactly what the document recorded
   const stampCount = doc.dropped.length;
-  check(stampCount > 0, `the library stamp is recorded as dropped text (${stampCount} block(s))`);
+  check(stampCount > 0, `the library stamp is recorded (${stampCount} block(s)) — and SERVED, as the leading library region`);
   check(
     blocks.slice(0, stampCount).every((ls, i) => ls.join(' ') === doc.dropped[i].x),
     `the dropped blocks are the file's own leading blocks (${doc.dropped.map((d) => d.x).join(' ')})`,
   );
-  const source = blocks.slice(stampCount);
+  // THE WHOLE FILE, because nothing is dropped from the transcription any more:
+  // the library's stamp is SERVED as the leading `library` region (it used to be
+  // dropped), so the document's text is the file's text entire.
+  const source = blocks;
   const stream = doc.blocks.map((b) => b.x || '').join(' ');
   check(
     strip(stream) === strip(source.map((ls) => joinLines(ls)).join(' ')),
@@ -251,8 +254,8 @@ section('the divisions run 1…18, with distinct titles (recomputed)');
   check(body > 0, `the body region opens where the first division opens (block ${body})`);
   const regions = doc.blocks.filter((b) => b.t === 'region').map((b) => b.kind);
   check(
-    regions.join(',') === 'front,body,notes,colophon,end,library',
-    `the volume's regions are in order, each named for what it is (${regions.join(', ')})`,
+    regions.join(',') === 'library,front,body,notes,colophon,end,library',
+    `the volume's regions are in order, each named for what it is — the library's own marks at BOTH ends (${regions.join(', ')})`,
   );
   // the notes division, then the back of the volume in its three parts
   const notesAt = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'notes');
@@ -275,10 +278,20 @@ section('the divisions run 1…18, with distinct titles (recomputed)');
     doc.blocks[colophonAt + 2] && doc.blocks[colophonAt + 2].t === 'region' && doc.blocks[colophonAt + 2].kind === 'end',
     'and the region after it is the publisher\'s list, not the colophon (the colophon is one block)',
   );
-  const libraryAt = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'library');
+  const libAt = doc.blocks.map((b, i) => (b.t === 'region' && b.kind === 'library' ? i : -1)).filter((i) => i >= 0);
+  check(libAt.length === 2, `the library's own marks are their own region at BOTH ends (${libAt.length})`);
   check(
-    doc.blocks[libraryAt + 1] && /^PLEASE DO NOT REMOVE/.test(doc.blocks[libraryAt + 1].x),
-    `and the library's own marks open their region (${JSON.stringify((doc.blocks[libraryAt + 1] || {}).x)})`,
+    doc.blocks[libAt[0] + 1] && /^PA$/.test(doc.blocks[libAt[0] + 1].x),
+    `the front one is this copy's call number, served not dropped (${JSON.stringify((doc.blocks[libAt[0] + 1] || {}).x)})`,
+  );
+  check(
+    doc.blocks[libAt[1] + 1] && /^PLEASE DO NOT REMOVE/.test(doc.blocks[libAt[1] + 1].x),
+    `and the back one is the circulation slip (${JSON.stringify((doc.blocks[libAt[1] + 1] || {}).x)})`,
+  );
+  const frontAt = doc.blocks.findIndex((b) => b.t === 'region' && b.kind === 'front');
+  check(
+    frontAt > libAt[0] && doc.blocks[frontAt + 1] && /^ON THE$/.test(doc.blocks[frontAt + 1].x),
+    `and the BOOK's front matter opens after the library's stamp (${JSON.stringify((doc.blocks[frontAt + 1] || {}).x)})`,
   );
   check(
     doc.blocks.filter((b) => b.t === 'notedef' && b.n === 25).length === 1,
@@ -889,7 +902,13 @@ section('the printed pages are monotone, and only the rule refuses');
   // digits in the print is a folio only when it is short enough to be one (the
   // bound `bareFolio` uses); the title page's "1917" is the imprint's year and
   // is text, so it is not counted here.
-  const bare = doc.blocks.filter((b) => b.x && b.t !== 'pb' && /^[0-9]{1,3}$/.test(b.x));
+  // skip the library's own marks: its call number carries an "08", which is not
+  // the book's folio (the region marks exist so the apparatus is not read as text)
+  let reg = null;
+  const bare = doc.blocks.filter((b) => {
+    if (b.t === 'region') { reg = b.kind; return false; }
+    return reg !== 'library' && b.x && b.t !== 'pb' && /^[0-9]{1,3}$/.test(b.x);
+  });
   check(bare.length === 0, `no folio stands as a heading of its own (the folio-as-heading defect; ${bare.length} found)`);
 }
 
@@ -1082,7 +1101,7 @@ section('the notes and the back matter are not the body');
   // its three real parts (the printer's colophon, the publisher's list, the
   // library's own marks), each named for what it is.
   const regions = doc.blocks.filter((b) => b.t === 'region').map((b) => b.kind);
-  check(regions.join(' ') === 'front body notes colophon end library',
+  check(regions.join(' ') === 'library front body notes colophon end library',
     `the volume's regions are all present, in order (${regions.join(' ')})`);
 
   let region = null, outside = 0, verseOutside = 0;

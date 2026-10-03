@@ -83,6 +83,14 @@
       "class": "reading",
       "decided_by": "scan",
       "note": "the 1917 print has no bracket here (scan, printed page 38 — see above): the transcription's '(' is scan debris."
+    },
+    {
+      "find": " . mg.de that which",
+      "replace": " made that which",
+      "class": "reading",
+      "decided_by": "both",
+      "note": "the print reads \"the ancients every where made that which has a twofold entrance\" (1917 scan, printed page 34; the 1823 parallel reads \"the ancients every / where made that which has a twofold entrance\"). The \" . mg.de\" is a garbled \"made\" with a dot-leader artefact before it.",
+      "sites_in_served": 1
     }
   ]
 }
