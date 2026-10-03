@@ -137,6 +137,17 @@ const ctxOf = (view, i, len) => view.slice(Math.max(0, i - 45), i + len + 45).re
  * one on a fixture — an instrument that has never been shown to fire is an
  * instrument nobody should trust. */
 export function detectInView(view, section, out) {
+  /* GREEK SCRIPT FIRST, and on its own tokenizer: the Latin one below cannot see a
+   * Greek word at all. A token in the Greek range that neither list knows is a
+   * reading the transcription (or this list) is missing — a gate. */
+  for (const m of view.matchAll(/[\u0370-\u03ff\u1f00-\u1fff]+/g)) {
+    const raw = m[0];
+    if (raw.length < 1) continue;
+    const low = raw.toLowerCase();
+    if (!greekUnicode || greekUnicode.has(low) || greekBetacode?.has(low)) continue;
+    out.greekUnknown.push({ token: raw, context: ctxOf(view, m.index, raw.length), section });
+  }
+
   // the tokens WITH their offsets, so adjacency is computed on the view's own order
   const toks = [...view.matchAll(/[A-Za-zÀ-ÿŒœÆæ’'’\-]+/g)].map((m) => ({ raw: m[0], i: m.index }));
 
@@ -161,6 +172,24 @@ export function detectInView(view, section, out) {
       continue;
     }
     out.unknown.push({ token: raw, context: ctxOf(view, i, raw.length), section });
+  }
+
+  /* SMASHED GREEK, ON THE VIEW ITSELF — not on the Latin tokens above, because the
+   * garble SPANS the symbol and the Latin tokenizer drops it: `y«g` is `y` + `g`
+   * with the `«` between, so no token ever contains the run. The scan read this
+   * volume's Greek as LATIN LOOKALIKES and left Greek-adjacent marks in it, so a
+   * short, whitespace-delimited run that carries one of those marks and no English
+   * reading is a Greek candidate. REPORTED, never gated: settling one needs the
+   * printed PAGE (tools/library/scan.mjs reads it) plus a Greek form to check
+   * (tools/library/greek.mjs check). */
+  for (const m of view.matchAll(/\S+/g)) {
+    const raw = m[0];
+    if (raw.length > 16) continue;
+    if (!/[«»^\\~\/>£*_|#]/.test(raw)) continue;
+    const letters = raw.replace(/[^A-Za-zÀ-ÿ]/g, '');
+    if (letters.length < 2) continue;                  // pure symbol debris, not a run
+    if (/[A-Za-z]/.test(letters) && known.has(letters.toLowerCase())) continue; // an English word with a mark stuck to it
+    out.greeklike.push({ token: raw, context: ctxOf(view, m.index, raw.length), section });
   }
 
   // ADJACENT PAIRS: two tokens that join into a dictionary word, where the gap
@@ -212,7 +241,7 @@ export function detectInView(view, section, out) {
 // The reading view, block by block, exactly as the reader applies it.
 const blocks = (doc.blocks || []).filter((b) => typeof b.x === 'string');
 let section = null;
-const found = { unknown: [], capital: [], shouting: [], split: [] };
+const found = { unknown: [], capital: [], shouting: [], split: [], greekUnknown: [], greeklike: [] };
 for (const b of blocks) {
   if (b.t === 'sec' && b.x) section = b.x.replace(/\s+/g, ' ').trim().slice(0, 60);
   if (!['p', 'verse', 'notedef'].includes(b.t)) continue;
@@ -235,6 +264,8 @@ const unknown = uniq(found.unknown);
 const capital = uniq(found.capital);
 const shouting = uniq(found.shouting);
 const split = uniq(found.split);
+const greekUnknown = uniq(found.greekUnknown);
+const greeklike = uniq(found.greeklike);
 
 const show = (label, rows, why) => {
   if (!rows.length) return;
@@ -250,6 +281,8 @@ show('UNKNOWN', unknown, 'a token the dictionary, the parallel and morphology do
 show('SHOUTING', shouting, 'a token with an interior capital — English words have none');
 show('SPLIT', split, 'two adjacent tokens joining into a word, where one half cannot stand alone (or the parallel prints the join and not the split)');
 show('CAPITALISED', capital, 'unknown and absent from the parallel: mostly names, some garbles (REPORTED, not gated)');
+show('GREEK (unknown to the list)', greekUnknown, 'a Greek-script token neither Greek list knows — a reading this text or list is missing');
+show('GREEK-LIKE (needs the page)', greeklike, 'a short, non-word, symbol-bearing run: the scan read Greek as lookalikes, and settling one needs the printed page + the Greek list');
 
 /* WHAT THE GATE IS. The classes with unambiguous evidence GATE: an unknown token,
  * an interior capital, and a split with a non-word half. The two REPORTED classes
@@ -257,10 +290,12 @@ show('CAPITALISED', capital, 'unknown and absent from the parallel: mostly names
  * two-word join is a real English phrase as often as it is a split. A gate that
  * fires on names or on "a cave" is a gate that gets switched off, and a switched
  * off gate is worse than none. `--report` prints everything and exits 0. */
-const gate = [...unknown, ...shouting, ...split];
+// the gate: the classes with unambiguous evidence. `greeklike` is REPORTED and
+// routed to the page, never gated — it cannot be settled from the text alone.
+const gate = [...unknown, ...shouting, ...split, ...greekUnknown];
 
 if (jsonOut) {
-  writeFileSync(jsonOut, `${JSON.stringify({ slug, unknown, shouting, split, capital }, null, 2)}\n`);
+  writeFileSync(jsonOut, `${JSON.stringify({ slug, unknown, shouting, split, capital, greekUnknown, greeklike }, null, 2)}\n`);
   console.log(`\n  wrote ${jsonOut}`);
 }
 /* THE SELF-TEST: does the detector actually fire? Run the classes on a fixture
@@ -268,13 +303,14 @@ if (jsonOut) {
  * instrument whose failure modes are untested is the thing this project keeps
  * finding in others. */
 if (argv.includes('--self-test')) {
-  const t = { unknown: [], capital: [], shouting: [], split: [] };
-  detectInView('it was compel ling to say, and BuTThev thought so, and zqxwv and Zqxwv appeared', null, t);
+  const t = { unknown: [], capital: [], shouting: [], split: [], greekUnknown: [], greeklike: [] };
+  detectInView('it was compel ling to say, and BuTThev thought so, and zqxwv and Zqxwv appeared, and y«g «yoros', null, t);
   const checks = [
     ['shouting', 'BuTThev', t.shouting.some((x) => x.token === 'BuTThev'), 'an interior capital is caught'],
     ['split', 'compel ling', t.split.some((x) => x.token === 'compel ling'), 'a split with a non-word half is caught'],
     ['unknown', 'zqxwv', t.unknown.some((x) => x.token === 'zqxwv'), 'an unknown lowercase token is caught'],
     ['capital', 'Zqxwv', t.capital.some((x) => x.token === 'Zqxwv'), 'an unknown capitalised token is REPORTED (not gated)'],
+    ['greeklike', 'y«g', t.greeklike.some((x) => x.token === 'y«g'), 'a smashed-Greek run is REPORTED and routed to the page'],
   ];
   let bad = 0;
   for (const [cls, tok, ok, why] of checks) {
@@ -282,7 +318,7 @@ if (argv.includes('--self-test')) {
     if (!ok) bad += 1;
   }
   // and a clean sentence must produce NOTHING: the detector must not fire on prose
-  const clean = { unknown: [], capital: [], shouting: [], split: [] };
+  const clean = { unknown: [], capital: [], shouting: [], split: [], greekUnknown: [], greeklike: [] };
   detectInView('the soul descends into generation and is called a cave by the ancients', null, clean);
   const noise = Object.values(clean).reduce((a, v) => a + v.length, 0);
   console.log((noise === 0 ? '  OK   ' : '  FAIL ') + `a clean sentence reports nothing (${noise})`);
