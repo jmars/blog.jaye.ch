@@ -140,6 +140,7 @@ import { rawBlocks, joinLines, normaliseNumber, runningHead, bareFolio } from '.
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
 const SLUG = 'porphyry-on-the-cave-of-the-nymphs-taylor-1917';
+const PROCLUS_SLUG = 'proclus-elements-of-theology-taylor-1816';
 const ENTRY = TEXTS.find((t) => t.slug === SLUG);
 const strip = (s) => s.replace(/\s+/g, '');
 /** The served document's own text at a damaged find: the raw block text that carries it. */
@@ -1101,6 +1102,44 @@ section('every page boundary stands on a leaf, and the three signals are reconci
 }
 
 /* ---------- 5. the anchors ---------- */
+
+/* ---------- the damage set is per-text ---------- */
+
+section('the damage set is measured per edition');
+{
+  /* THE BASE SET IS MEASURED ON THE CAVE, and the policy says measured, not
+   * guessed. A second edition measures its own: the 1816 Proclus prints `*` as a
+   * footnote marker the scanner glues to the word (`four*`, `light*`) and `&` as
+   * an ampersand (`&c.`), so neither is damage there. A text declares what its
+   * print sets (TEXT_RULES `damageExclude`) and the document ships the effective
+   * set, which is what the reader marks against.
+   * FAILS IF: the declaration stops reaching the document (footnote markers are
+   * counted as damage and marked red again), or it leaks into another text. */
+  const base = loadBasePolicy();
+  const pro = readFileSync(join(ROOT, 'content', 'library', PROCLUS_SLUG, 'source.txt'), 'utf8');
+  const proEntry = TEXTS.find((t) => t.slug === PROCLUS_SLUG);
+  const proDoc = extract(pro, { entry: proEntry, sha256: sha256(pro) });
+  check(
+    !proDoc.damage.includes('*') && !proDoc.damage.includes('&') && proDoc.damage.includes('^'),
+    `the Proclus edition's damage set excludes its print's own characters (${JSON.stringify(proDoc.damage)})`,
+  );
+  check(
+    proDoc.damage.length === base.damage.length - 2 && proDoc.damage !== base.damage,
+    'and it is the base set minus exactly what the text declares',
+  );
+  // the CAVE declares nothing, so its set is the base's, character for character
+  const caveDoc = doc;
+  check(
+    caveDoc.damage === base.damage,
+    `and a text that declares nothing carries the base set unchanged (${JSON.stringify(caveDoc.damage)})`,
+  );
+  // the census uses the EDITION's set: a lone '*' is not damage for Proclus
+  check(
+    markerCensus('the word * stands alone', proDoc.damage).length === 0 &&
+      markerCensus('the word * stands alone', base.damage).length === 1,
+    'and the census counts a standalone asterisk as damage for the Cave and not for Proclus',
+  );
+}
 
 section('the notes and the back matter are not the body');
 {

@@ -353,6 +353,18 @@ const TEXT_RULES = {
     // CXXVI, `T>ROPOSITION` …); the opener RULES repair them, and the spec is
     // asked only for the clean shape that is left.
     opener: 'roman',
+    /* WHAT THIS EDITION'S PRINT SETS THAT THE BASE SET COUNTS AS DAMAGE. The base
+     * damage set is MEASURED — on the Cave's 1917 transcription — and the policy
+     * says measured, not guessed. This edition measures its own:
+     *   '*'  the print's FOOTNOTE MARKER (a superscript asterisk), which the
+     *        scanner glues to the word it follows — `four*`, `light*`,
+     *        `that which is intellectual*` — and sometimes leaves standing alone.
+     *        It is the print's own character, not damage.
+     *   '&'  an ordinary ampersand, as in the print's `&c.`
+     * Removing them from the set stops the census counting footnote markers as
+     * damage and stops the reader marking them red. The rest of the base set
+     * (`^ _ ~ £ > \ | #`) IS this edition's damage. */
+    damageExclude: ['*', '&'],
     // The count the extraction asserts: the propositions run I…CCXI, no gap and
     // none doubled, and a count that is not 211 names a missed or a spurious
     // opener rather than a different book.
@@ -584,7 +596,8 @@ export function loadEdits(slug) {
       ...(e.join ? { join: e.join } : {}),
     };
   });
-  checkReadingPolicy(edits, slug, base);
+  const excl = (TEXT_RULES[slug] || {}).damageExclude || [];
+  checkReadingPolicy(edits, slug, base, base.damageList.filter((c) => !excl.includes(c)));
   return { edits, meta: { classes: raw.classes || {}, order: raw.order || null, base } };
 }
 
@@ -603,11 +616,15 @@ export function loadEdits(slug) {
  * edge cases of this test and are asserted by the extractor's smoke against the
  * parallel's own words.
  */
-export function checkReadingPolicy(edits, slug, base) {
+export function checkReadingPolicy(edits, slug, base, damageList) {
   const bad = [];
+  // THE EDITION'S OWN DAMAGE SET, not the base's: a character the text declares
+  // its print sets (the 1816 Proclus's `*` footnote marker, its `&`) is not damage
+  // there, and a rule that removes it is not a silent deletion. The default is the
+  // base set, so every existing text is unchanged.
+  const dmg = damageList ? [...damageList] : [...base.damage];
   for (const e of edits) {
     if (e.action === 'leave') continue;
-    const dmg = [...base.damage];
     for (let i = 1; i < e.find.length - 1; i++) {
       if (!dmg.includes(e.find[i])) continue;
       if (/[A-Za-z]/.test(e.find[i - 1]) && /[A-Za-z]/.test(e.find[i + 1])) {
@@ -920,13 +937,24 @@ export function sectionTitle(text, cap = 8) {
  * one of those as damage would be a false claim in the reading view. The base
  * file carries the counts and the excluded set. */
 let damageRe = null;
-function damageRegex() {
-  if (!damageRe) {
-    const inClass = loadBasePolicy()
-      .damage.replace(/[\\\]^$.*+?()[{|]/g, '\\$&');
-    damageRe = new RegExp(`[${inClass}]`);
+/* THE DAMAGE SET, and WHICH EDITION'S. The base policy's set is MEASURED — on the
+ * Cave's 1917 transcription — and the policy states that it is measured, not
+ * guessed. A SECOND EDITION measures its own: the 1816 Proclus prints `*` as a
+ * FOOTNOTE MARKER (the transcription glues it to the word: `four*`, `light*`) and
+ * `&` as an ordinary ampersand (`&c.`), so neither is damage there, though both
+ * belong to the base set. A text therefore declares what its print sets, and the
+ * effective set is the base's minus that declaration. The default is the base set
+ * exactly, so every existing caller is unchanged. */
+const damageReCache = new Map();
+function damageRegex(set) {
+  // a string or a list — the base policy carries both forms (`damage`, `damageList`)
+  // and a caller may hold either
+  const chars = (Array.isArray(set) ? set.join('') : set) || loadBasePolicy().damage;
+  if (!damageReCache.has(chars)) {
+    const inClass = chars.replace(/[\\\]^$.*+?()[{|]/g, '\\$&');
+    damageReCache.set(chars, new RegExp(`[${inClass}]`));
   }
-  return damageRe;
+  return damageReCache.get(chars);
 }
 
 /** A word of the transcription that carries a character the census marks as
@@ -935,12 +963,12 @@ function damageRegex() {
  * or shows it as the transcription has it (marker and all). A word that mixes
  * letters with digits is the census's other damaged class: no character can be
  * removed from it without inventing a letter or leaving one. */
-export function wordDamaged(word) {
+export function wordDamaged(word, damageSet) {
   const bare = word
     .replace(/^[.,;:?!()"'\u201c\u201d\[]+/, '')
     .replace(/[.,;:?!()"\u201c\u201d\]|\\]+$/, '');
   if (bare === '' || !/[A-Za-z]/.test(bare)) return false;
-  return damageRegex().test(bare) || /[A-Za-z]\d|\d[A-Za-z]/.test(bare);
+  return damageRegex(damageSet).test(bare) || /[A-Za-z]\d|\d[A-Za-z]/.test(bare);
 }
 
 /** Cut a section title down to the words the cap keeps, before ellipsising — so a
@@ -971,7 +999,10 @@ export function titleDamage(rawTitle, correctedTitle, rules) {
   const stripped = titleWords(rawTitle).filter(
     (w) => wordDamaged(w) && !readings.some((r) => r.find === w || w.includes(r.find)),
   );
-  const left = titleWords(correctedTitle).filter(wordDamaged);
+  // NOT `.filter(wordDamaged)` — Array.filter passes the INDEX as the callback's
+  // second argument, which is now wordDamaged's `damageSet` (MEASURED: it threw
+  // "chars.replace is not a function" the moment the set became a parameter).
+  const left = titleWords(correctedTitle).filter((w) => wordDamaged(w));
   return { damaged: stripped.length > 0 || left.length > 0, words: [...new Set([...stripped, ...left])] };
 }
 
@@ -1235,6 +1266,18 @@ export function extract(src, meta) {
    * to the reading view. The list's order is the file's order (plan §7). */
   const { edits } = loadEdits(entry.slug);
   const openers = edits.filter((c) => c.cls === 'opener');
+
+  /* THE DAMAGE SET THIS EDITION MEASURES, from the base policy minus what the
+   * text declares its own print sets (TEXT_RULES `damageExclude`). The base set was
+   * measured on the Cave; the 1816 Proclus prints `*` as a footnote marker and `&`
+   * as an ampersand, so neither is damage there. Threaded through every census and
+   * shipped in the document, so the reader marks exactly what THIS edition's damage
+   * is. */
+  const damageExclude = cfg.damageExclude || [];
+  const damage = loadBasePolicy().damageList.filter((c) => !damageExclude.includes(c)).join('');
+  if (damageExclude.length && damage === loadBasePolicy().damage) {
+    throw new Error(`library: ${entry.slug}: damageExclude names no character of the base damage set`);
+  }
 
   /* 1. The library's stamp is not text (plan §4.5): recorded, then dropped. */
   const sig = pageSignals(src, entry);
@@ -1908,7 +1951,7 @@ export function extract(src, meta) {
   report.forEach((r, i) => {
     corrections[i].hits = r.hits;
   });
-  const policy = policyReport(readingViewText, corrections);
+  const policy = policyReport(readingViewText, corrections, damage);
 
   /* 7d. What the LEAF MODEL found is a finding like any other, and the document
    * keeps it: every page marker that does not stand at its leaf's own boundary,
@@ -1959,13 +2002,13 @@ export function extract(src, meta) {
     // THE DAMAGE SET, from the base policy to the reading view. The app marks a
     // character of this set where a damaged word has no recorded reading, so the
     // reader can SEE that the word is damaged instead of reading a silent edit.
-    damage: loadBasePolicy().damage,
+    damage,
     correctionsMeta: {
       reviewed: true,
       order: 'the order this list gives them, first to last, applied to every occurrence one text block at a time',
       policy: {
         rule: loadBasePolicy().rule,
-        damage: loadBasePolicy().damage,
+        damage,
         base: 'the shared base policy every text inherits',
         states: loadBasePolicy().states,
       },
@@ -2079,14 +2122,14 @@ export function latinLang(text) {
  * this one. The two are not the same thing and merging them would hide which is
  * which; the split is total, because a token either has a letter or does not.
  */
-export function damageCensus(text, finds) {
+export function damageCensus(text, finds, damageSet) {
   const rules = new Set(finds || []);
   const seen = new Set();
   const unrepaired = new Set();
   for (const rawTok of text.split(/\s+/)) {
     const tok = rawTok.replace(/^[.,;:?!()"'„“”\[]+/, '').replace(/[.,;:?!()"“”\]|\\]+$/, '');
     if (tok === '' || !/[A-Za-z]/.test(tok)) continue; // a word, not the scan's debris
-    if (seen.has(tok) || !damageRegex().test(tok)) continue;
+    if (seen.has(tok) || !damageRegex(damageSet).test(tok)) continue;
     seen.add(tok);
     if (!rules.has(tok)) unrepaired.add(tok);
   }
@@ -2122,10 +2165,10 @@ export function damageCensus(text, finds) {
  * an edge-stripped one), because a marker has no word around it to strip to: what
  * the list names is what the reader sees.
  */
-export function markerCensus(text) {
+export function markerCensus(text, damageSet) {
   const seen = new Set();
   for (const tok of text.split(/\s+/)) {
-    if (tok === '' || !damageRegex().test(tok)) continue;
+    if (tok === '' || !damageRegex(damageSet).test(tok)) continue;
     if (/[A-Za-z]/.test(tok)) continue; // a damaged word: damageCensus's half
     seen.add(tok);
   }
@@ -2135,9 +2178,9 @@ export function markerCensus(text) {
 /** How many characters of the policy's damage set the text still shows. The
  * number the two censuses have to account for between them, counted on the same
  * text they are counted on. */
-export function damageCharCount(text) {
+export function damageCharCount(text, damageSet) {
   let n = 0;
-  for (const c of text) if (damageRegex().test(c)) n++;
+  for (const c of text) if (damageRegex(damageSet).test(c)) n++;
   return n;
 }
 
@@ -2165,18 +2208,18 @@ export function damageCharCount(text) {
  * has it (it does). Every reading that matches nothing is caught before this, so
  * `recorded === appliedRules`.
  */
-export function policyReport(rawText, corrections) {
+export function policyReport(rawText, corrections, damageSet) {
   const rules = corrections.map((c) => ({ find: c.find, repl: c.repl, action: c.action }));
   const view = applyEditsCounted(rawText, rules);
-  const rawCensus = damageCensus(rawText, corrections.map((c) => c.find));
-  const leftWords = damageCensus(view, []);
+  const rawCensus = damageCensus(rawText, corrections.map((c) => c.find), damageSet);
+  const leftWords = damageCensus(view, [], damageSet);
   const readings = corrections.filter((c) => c.cls === 'reading');
   const applied = readings.filter((c) => c.hits > 0).length;
   const occurrences = readings.reduce((a, c) => a + (c.hits || 0), 0);
   const leaves = corrections.filter((c) => c.action === 'leave');
   return {
     raw: rawCensus,
-    left: { ...leftWords, markers: markerCensus(view), chars: damageCharCount(view) },
+    left: { ...leftWords, markers: markerCensus(view, damageSet), chars: damageCharCount(view, damageSet) },
     readings: {
       recorded: readings.length,
       applied,
