@@ -59,6 +59,20 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "join": true,
+      "find": "perse-verance",
+      "replace": "perseverance",
+      "class": "reading",
+      "note": "the print reads \"patient perseverance\" (1917 scan, printed pages 38-39: the word is split at the page break, \"perse-\" on p.38 and \"verance\" on p.39). The transcription put a blank line at the break, so the two halves are separate blocks and the rule joins them (the \"join\" field names the block the word starts in)."
+    },
+    {
+      "join": true,
+      "find": "assu'symbol oT aH",
+      "replace": "assumed it as a symbol of all",
+      "class": "reading",
+      "note": "the print reads \"but they also assumed it as a symbol of all invisible powers\" (1917 scan, printed pages 12-13; the 1823 parallel agrees). The transcription lost \"med it as a\" at the blank line, so the two blocks are joined and the lost words supplied."
+    },
+    {
       "find": "oTthijInjnitrescent",
       "replace": "of the unputrescent",
       "class": "reading",
@@ -1241,12 +1255,6 @@
       "note": "'unfold' split in two; class 3. (decided by the transcription and the 1823 parallel.)"
     },
     {
-      "find": "'symbol",
-      "replace": "symbol",
-      "class": "reading",
-      "note": "Class 1: a stray apostrophe (not a damage-set character, so the census never saw it) clings to the first word of the block; possibly the tail of the text lost at the preceding seam. (decided by the transcription and the 1823 parallel.)"
-    },
-    {
       "find": "me. the",
       "replace": "me, the",
       "class": "reading",
@@ -1377,12 +1385,6 @@
       "replace": "poet,",
       "class": "reading",
       "note": "'poet' garbled to 'ooet' with a stray T artefact (the print's comma) standing in the reading view's text; class 1 artefact. (decided by the transcription and the 1823 parallel.)"
-    },
-    {
-      "find": "oT aH",
-      "replace": "of all",
-      "class": "reading",
-      "note": "Class 2: two wrong words with no damage character in them — 'of' misread 'oT' and 'all' misread 'aH'. (decided by the 1823 parallel.)"
     },
     {
       "find": "tfiem",

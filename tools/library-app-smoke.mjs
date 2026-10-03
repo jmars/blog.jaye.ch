@@ -396,6 +396,20 @@ section('a recorded reading renders, and damage with no reading renders marked')
     reading.includes('but the other to souls de scending'),
     'and the reading view shows "but the other to souls descending"',
   );
+  /* A JOIN: the two blocks the transcription split at a blank line are ONE
+     paragraph in the reading view, and the rule that spans the seam fires. This
+     is the display half of the `join` mechanism — the other half is that the rule
+     cannot be written per block at all. FAILS IF: the merge is dropped (the blocks
+     render separately and the sentence is broken), or a future edit restores the
+     split. */
+  check(
+    reading.includes('patient perseverance'),
+    'and a word split across a page break is one paragraph: "patient perseverance" (the join rule)',
+  );
+  check(
+    reading.includes('assumed it as a symbol of all invisible powers'),
+    'and the words lost at a blank line are supplied across the join: "assumed it as a symbol of all invisible powers"',
+  );
 
   /* (2) A DAMAGED WORD WITH NO RECORDED READING RENDERS THE TRANSCRIPTION'S OWN
      CHARACTERS, WITH THE DAMAGE VISIBLE. Every character of the damage set that

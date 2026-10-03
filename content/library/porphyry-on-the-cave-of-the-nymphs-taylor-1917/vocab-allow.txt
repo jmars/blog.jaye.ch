@@ -18,10 +18,3 @@ praesidebant
 
 # -- page furniture the edition deliberately LEAVES visible (a recorded leave) --
 lHi
-
-# -- garble a per-block rule cannot express (MEASURED) --
-assu     block-end insertion: "but they also assu" ends a block and the "med" is lost; any rule that adds
-#         the letters back has its own find survive in its output ("assumed" contains "assu"), which the
-#         search index refuses, and a rule spanning the block boundary never fires.
-verance  hyphen across a page break: the print's "perseverance" stands as "perse-" at one block's end and
-#         "verance" at the next block's start, so no single-block rule can join it.

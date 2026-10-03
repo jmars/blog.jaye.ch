@@ -390,7 +390,18 @@ export function loadEdits(slug) {
     }
     seen.set(e.find, i + 1);
     // A leave spends no bytes: it counts its occurrences and replaces nothing.
-    return { find: e.find, repl: leave ? e.find : e.replace, cls: e.class, note: e.note, action: leave ? 'leave' : 'replace' };
+    // `join` (if present) names the block a rule's find starts in — the extractor
+    // merges that block with the next before the rules run, so a find that spans
+    // the transcription's paragraph split can fire. The engines ignore it once
+    // the merge is done, but it must survive loading for the merge to see it.
+    return {
+      find: e.find,
+      repl: leave ? e.find : e.replace,
+      cls: e.class,
+      note: e.note,
+      action: leave ? 'leave' : 'replace',
+      ...(e.join ? { join: e.join } : {}),
+    };
   });
   checkReadingPolicy(edits, slug, base);
   return { edits, meta: { classes: raw.classes || {}, order: raw.order || null, base } };
@@ -1300,6 +1311,65 @@ export function extract(src, meta) {
       `library: ${entry.slug}: two blocks claim the anchor "${dupe}" — an anchor two elements share is ` +
         `not an anchor (this happens when a note is referenced twice, and the fix is a per-reference anchor)`,
     );
+  }
+
+  /* 5c. THE BLOCKS A RULE CANNOT SEE ACROSS. The transcription splits a sentence
+   * at every blank line, and sometimes the print's text simply continues across
+   * one — a page break mid-word (`…patient perse-` | `verance.`, printed pages 38
+   * and 39) or words lost at the break (`…but they also assu` | `'symbol of all
+   * invisible powers`). The reading view joins consecutive text blocks, but a
+   * RULE is applied per block, so a find that spans the join can never fire, and
+   * no per-block reading can state it: `assu` -> `assumed` leaves its own find
+   * standing, and `verance` -> `perseverance` does too.
+   *
+   * So a rule may be marked `"join": true`, meaning its find CROSSES the boundary
+   * between two adjacent text blocks. The two are merged here, before the rules
+   * run, so the find is inside the one block and every engine (this one, the
+   * reader, the search) sees the same text — and the reader renders the joined
+   * sentence as one paragraph, which is what the print has.
+   *
+   * The pair is located BY THE FIND, not by an anchor: `at` is a paragraph label
+   * and a paragraph spans several blocks, so an anchor does not name one block
+   * (MEASURED — `s3-1` labels two blocks, and joining by it merged the wrong
+   * pair). The merge condition is exact: the find is in the two blocks' joined
+   * text and in NEITHER alone. The merged block keeps the first block's place;
+   * anchors are fixed strings assigned during assembly, so nothing renumbers. */
+  const joins = edits.filter((r) => r.join && r.action !== 'leave');
+  if (joins.length) {
+    // A `join` rule whose find already sits inside ONE block would never trigger
+    // the merge and would still fire like an ordinary rule — a flag that does
+    // nothing, which is unreviewed machinery. So it is refused up front: the flag
+    // is only meaningful when the find SPANS a seam.
+    for (const r of joins) {
+      const inside = out.some(
+        (b) => (b.t === 'p' || b.t === 'verse' || b.t === 'ref') && typeof b.x === 'string' && b.x.includes(r.find),
+      );
+      if (inside) {
+        throw new Error(
+          `library: ${entry.slug}: the rule "${r.find}" is marked "join" but its find lies inside a single block — ` +
+            `the join would do nothing`,
+        );
+      }
+    }
+    let merged = true;
+    while (merged) {
+      merged = false;
+      for (let i = 0; i + 1 < out.length && !merged; i += 1) {
+        const a = out[i];
+        const b = out[i + 1];
+        if (!(a.t === 'p' || a.t === 'verse')) continue;
+        if (!(b.t === 'p' || b.t === 'verse' || b.t === 'ref')) continue;
+        const glue = a.t === 'p' && b.t === 'p' ? '' : ' ';
+        const joined = `${a.x || ''}${glue}${b.x || ''}`;
+        const crosses = joins.some(
+          (r) => joined.includes(r.find) && !(a.x || '').includes(r.find) && !(b.x || '').includes(r.find),
+        );
+        if (!crosses) continue;
+        out[i] = { ...a, x: joined };
+        out.splice(i + 1, 1);
+        merged = true;
+      }
+    }
   }
 
   /* 6. The rules the reading view applies — the reviewed list, in the file's own
