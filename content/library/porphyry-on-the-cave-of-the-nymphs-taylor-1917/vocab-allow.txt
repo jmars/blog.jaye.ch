@@ -1,0 +1,27 @@
+# Words the vocabulary sweep (tools/library/vocab.mjs) flags that are NOT garbles,
+# or are garbles a per-block rule cannot express. '#' starts a comment.
+# A line is a word, optionally followed by why.
+
+# -- the print's own words: elisions, British spellings, archaic, or rare --
+t'immortals   the 1917 print's elision in the verse (the 1823 parallel prints "t' immortals")
+corporalised  British spelling of "corporalized"
+mythologising British spelling of "mythologizing"
+unputrescent  the print's word ("the unputrescent nature of the waters"; 1917 scan, printed page 23)
+ominating     the print's word ("ominating from this that they shall exchange"; 1917 scan, printed page 38)
+
+# -- the Latin quotation (Proclus), printed as Latin --
+cunctaque
+plenissimam
+circumactum
+nautæ
+praesidebant
+
+# -- page furniture the edition deliberately LEAVES visible (a recorded leave) --
+lHi
+
+# -- garble a per-block rule cannot express (MEASURED) --
+assu     block-end insertion: "but they also assu" ends a block and the "med" is lost; any rule that adds
+#         the letters back has its own find survive in its output ("assumed" contains "assu"), which the
+#         search index refuses, and a rule spanning the block boundary never fires.
+verance  hyphen across a page break: the print's "perseverance" stands as "perse-" at one block's end and
+#         "verance" at the next block's start, so no single-block rule can join it.

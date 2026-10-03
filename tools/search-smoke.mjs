@@ -1495,8 +1495,12 @@ console.log('== the second group: the shelf');
   const holdsSeq = (seq, text) => {
     const m = shelfWords(text);
     for (let i = 0; i < m.length; i++) {
+      // EVERY term of the sequence, seq[0] INCLUDED. Starting at j=1 compared
+      // only the later words: a passage holding "absurd" anywhere (not as its
+      // first word) counted as holding the phrase "equally absurd", so the
+      // check's own expectation was wrong and it failed a correct search.
       let ok = true;
-      for (let j = 1; j < seq.length; j++) if (m[i + seq[j].off - seq[0].off] !== seq[j].w) { ok = false; break; }
+      for (let j = 0; j < seq.length; j++) if (m[i + seq[j].off - seq[0].off] !== seq[j].w) { ok = false; break; }
       if (ok) return true;
     }
     return false;

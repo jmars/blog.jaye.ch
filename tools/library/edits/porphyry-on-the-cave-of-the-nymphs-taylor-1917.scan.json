@@ -54,6 +54,14 @@
       "decided_by": "scan",
       "note": "the print reads \"Minerva is wisdom.\" (scan, printed page 37): the leading stop is debris and the \"?.\" is not the print's.",
       "sites_in_served": 1
+    },
+    {
+      "find": "considerexLby",
+      "replace": "considered by",
+      "class": "reading",
+      "decided_by": "parallel",
+      "note": "the print reads \"were considered by the ancients\" (the 1823 parallel 'obscurity of the cavern, were considered by the ancients'; the 1917 scan, printed page 10, agrees): the garbled token carries no damage character and was wrongly rejected by an earlier guard.",
+      "sites_in_served": 1
     }
   ]
 }

@@ -30,3 +30,4 @@ plans/
 
 # Scan page images (PD, but bulky and re-fetchable by tools/library/scan.mjs)
 content/library/*/scans/
+content/library/.words/

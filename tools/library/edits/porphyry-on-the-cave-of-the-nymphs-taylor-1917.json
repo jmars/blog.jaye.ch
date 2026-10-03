@@ -59,6 +59,120 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": "oTthijInjnitrescent",
+      "replace": "of the unputrescent",
+      "class": "reading",
+      "note": "the 1917 scan (printed page 23) reads 'on account of the unputrescent nature of the waters'; the run is a misread. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "symbolsj)f the",
+      "replace": "symbols of the",
+      "class": "reading",
+      "note": "the print reads 'be symbols of the aquatic nymphs' (1823 parallel); the run is a misread. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "consecra tion",
+      "replace": "consecration",
+      "class": "reading",
+      "note": "the print reads 'its symbolical consecration should be amply unfolded into light'; the transcription split the word. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "qne of which",
+      "replace": "one of which",
+      "class": "reading",
+      "note": "the print reads 'one of which affords a passage to souls ascending' (1823 parallel); 'qne' is 'one'. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "expectTthat",
+      "replace": "expect that",
+      "class": "reading",
+      "note": "the print reads 'expect that': the capital T stands where the print has the word-break. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "observ ing",
+      "replace": "observing",
+      "class": "reading",
+      "note": "the print reads 'in consequence of observing the Homeric precept' (1823 parallel). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "oxbegotten",
+      "replace": "ox-begotten",
+      "class": "reading",
+      "note": "the print reads 'bees are ox-begotten' (1823 parallel: 'who are ox-begotten, from flowers'); the transcription lost the hyphen. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "cavernhas",
+      "replace": "cavern has",
+      "class": "reading",
+      "note": "the print reads 'a cave has a twofold similitude' (1823 parallel); 'cavernhas' lost its space. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "onej)fJ5F",
+      "replace": "one of the",
+      "class": "reading",
+      "note": "the print reads 'one of the gates was turned towards the north' (1823 parallel); the run is a misread. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "morejthan",
+      "replace": "more than",
+      "class": "reading",
+      "note": "the print reads 'nothing more than the conjectures of ingenious men'; the run is a misread. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "pTesideT",
+      "replace": "preside",
+      "class": "reading",
+      "note": "the print reads 'the powers that preside over waters' (1823 parallel); the T's are substituted letters. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "ahgrn-j",
+      "replace": "absurd",
+      "class": "reading",
+      "note": "the print reads 'absurd' (1823 parallel, same sentence); a substituted-letter garble with a stray hyphen. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "musTnot",
+      "replace": "must not",
+      "class": "reading",
+      "note": "the print reads 'the present cave must not be assumed' (1823 parallel); the T stands for the lost space. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "wnnlrf",
+      "replace": "would",
+      "class": "reading",
+      "note": "the print reads 'it would be absurd for' (the 1823 parallel: 'it would be absurd for to expect'); a substituted-letter garble with no damage character. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "fflfp0",
+      "replace": "gates",
+      "class": "reading",
+      "note": "the print reads 'doors and gates' (1823 parallel: 'recesses and trenches, caverns, doors, and gates'); 'fflfp0' is 'gates'. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "behei",
+      "replace": "belief",
+      "class": "reading",
+      "note": "the print reads 'he should gain the belief of mankind' (1823 parallel); 'behei' is 'belief' misread. (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "atthe",
+      "replace": "at the",
+      "class": "reading",
+      "note": "the print reads 'the ancients, at the same time' (1823 parallel: 'the ancients, at the same time'). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "fpr",
+      "replace": "for",
+      "class": "reading",
+      "note": "the print reads 'for' (1823 parallel, same sentence). (decided by the 1823 parallel.)"
+    },
+    {
+      "find": "considerexLby",
+      "replace": "considered by",
+      "class": "reading",
+      "note": "the print reads \"were considered by the ancients\" (the 1823 parallel 'obscurity of the cavern, were considered by the ancients'; the 1917 scan, printed page 10, agrees): the garbled token carries no damage character and was wrongly rejected by an earlier guard. (decided by the 1823 parallel.)"
+    },
+    {
       "find": "sepgrgtinflt * Qip yf niuiflo, a sceptre of ruling, and a key (\\fQ'f\"rHin\" p™*\"**-^",
       "replace": "separating, a cup of vivific, a sceptre of ruling, and a key of guardian power",
       "class": "reading",
@@ -485,8 +599,8 @@
       "note": "Class 1 — a stray full stop standing inside the Latin word 'imperfectumque' of Claudian's line. (decided by the transcription's own context.)"
     },
     {
-      "find": "e situa tion o",
-      "replace": "e situation o",
+      "find": "situa tion",
+      "replace": "situation",
       "class": "reading",
       "note": "'situation' split in two; class 3. (decided by the transcription and the 1823 parallel.)"
     },
@@ -1193,10 +1307,10 @@
       "note": "A plausible-looking non-word standing for 'manner' with no damage character in it — the dangerous census-invisible class (class 2). (decided by the transcription and the 1823 parallel.)"
     },
     {
-      "find": "i tne w",
-      "replace": "i the w",
+      "find": "oi tne waters",
+      "replace": "of the waters",
       "class": "reading",
-      "note": "Substituted letter (n for h) making a plausible-looking non-word with no damage character — class 2. (decided by the 1823 parallel.)"
+      "note": "the print reads \"on account of the unputrescent nature of the waters\" (the 1917 scan, printed page 23; and the 1823 parallel). The rule this replaces read \"i tne w\" -> \"i the w\", a HALF repair that left \"oi\" standing and rendered \"oi the waters\"."
     },
     {
       "find": "nearthe",
@@ -1391,10 +1505,10 @@
       "note": "the print reads \"obscurity of\""
     },
     {
-      "find": "the_cavern»",
+      "find": "the_cavern».",
       "replace": "the cavern,",
       "class": "reading",
-      "note": "the print reads \"the cavern,\""
+      "note": "the print reads \"obscurity of the cavern, were considered by the ancients\" (the 1823 parallel, and the 1917 scan, printed page 10): the » is a misread comma and the transcription's full stop is the same mark. The earlier reading left a \".\", rendering \"the cavern,.\" ."
     },
     {
       "find": "qreneratioi^and",
