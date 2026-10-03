@@ -5210,7 +5210,7 @@ var $author$project$Reader$init = function (flags) {
 	var stored = $author$project$Reader$Store$decode(flags.u);
 	var empty = {
 		ab: $elm$core$Dict$empty,
-		n: flags.n,
+		o: flags.o,
 		z: flags.z,
 		W: false,
 		ac: 0,
@@ -6061,8 +6061,28 @@ var $author$project$Reader$Document$addUsed = F2(
 			return used;
 		}
 	});
-var $elm$core$Basics$not = _Basics_not;
+var $elm$core$String$endsWith = _String_endsWith;
+var $author$project$Reader$Document$continuationParts = F3(
+	function (wasReference, parts, part) {
+		if (wasReference) {
+			return A2($elm$core$List$cons, part, parts);
+		} else {
+			if (parts.b && (!parts.a.$)) {
+				var t = parts.a.a;
+				return A2($elm$core$String$endsWith, '-', t) ? A2($elm$core$List$cons, part, parts) : A2(
+					$elm$core$List$cons,
+					$author$project$Reader$Document$IText(' '),
+					A2($elm$core$List$cons, part, parts));
+			} else {
+				return A2(
+					$elm$core$List$cons,
+					$author$project$Reader$Document$IText(' '),
+					A2($elm$core$List$cons, part, parts));
+			}
+		}
+	});
 var $elm$core$Basics$neq = _Utils_notEqual;
+var $elm$core$Basics$not = _Basics_not;
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -6153,7 +6173,7 @@ var $author$project$Reader$Document$openPara = F3(
 		return _Utils_update(
 			st,
 			{
-				r: false,
+				m: false,
 				t: A3(
 					$author$project$Reader$Document$OPara,
 					id,
@@ -6170,19 +6190,28 @@ var $author$project$Reader$Document$appendOrOpen = F3(
 			var id = _v0.a;
 			var authOn = _v0.b;
 			var parts = _v0.c;
-			return (st.r && _Utils_eq(at, id)) ? _Utils_update(
+			return ((!_Utils_eq(at, $elm$core$Maybe$Nothing)) && _Utils_eq(at, id)) ? _Utils_update(
 				st,
 				{
-					r: false,
+					m: false,
+					t: A3(
+						$author$project$Reader$Document$OPara,
+						id,
+						authOn,
+						A3($author$project$Reader$Document$continuationParts, st.m, parts, part))
+				}) : ((st.m && _Utils_eq(at, id)) ? _Utils_update(
+				st,
+				{
+					m: false,
 					t: A3(
 						$author$project$Reader$Document$OPara,
 						id,
 						authOn,
 						A2($elm$core$List$cons, part, parts))
-				}) : ((st.r && (_Utils_eq(at, $elm$core$Maybe$Nothing) && (!authOn))) ? _Utils_update(
+				}) : ((st.m && (_Utils_eq(at, $elm$core$Maybe$Nothing) && (!authOn))) ? _Utils_update(
 				st,
 				{
-					r: false,
+					m: false,
 					t: A3(
 						$author$project$Reader$Document$OPara,
 						id,
@@ -6192,7 +6221,7 @@ var $author$project$Reader$Document$appendOrOpen = F3(
 				$author$project$Reader$Document$openPara,
 				$author$project$Reader$Document$close(st),
 				part,
-				at));
+				at)));
 		} else {
 			return A3(
 				$author$project$Reader$Document$openPara,
@@ -6226,7 +6255,7 @@ var $author$project$Reader$Document$openNote = F5(
 		return _Utils_update(
 			st,
 			{
-				r: false,
+				m: false,
 				t: $author$project$Reader$Document$ONote(
 					{
 						a: id,
@@ -6326,7 +6355,7 @@ var $author$project$Reader$Document$step = F3(
 					return _Utils_update(
 						st,
 						{
-							r: true,
+							m: true,
 							t: A3(
 								$author$project$Reader$Document$OPara,
 								nid,
@@ -6347,7 +6376,7 @@ var $author$project$Reader$Document$step = F3(
 					return _Utils_update(
 						st,
 						{
-							r: true,
+							m: true,
 							t: A3(
 								$author$project$Reader$Document$OPara,
 								nid,
@@ -6374,7 +6403,7 @@ var $author$project$Reader$Document$step = F3(
 					return _Utils_eq(prev.v, n) ? _Utils_update(
 						st,
 						{
-							r: false,
+							m: false,
 							t: $author$project$Reader$Document$ONote(
 								_Utils_update(
 									prev,
@@ -6838,7 +6867,7 @@ var $author$project$Reader$Document$flow = function (blocks) {
 	var st = A3(
 		$elm$core$List$foldl,
 		$author$project$Reader$Document$step(labels.V),
-		{ap: $elm$core$Set$empty, r: false, t: $author$project$Reader$Document$ONone, C: _List_Nil, ah: '', by: $elm$core$Maybe$Nothing, y: $elm$core$Set$empty},
+		{ap: $elm$core$Set$empty, m: false, t: $author$project$Reader$Document$ONone, C: _List_Nil, ah: '', by: $elm$core$Maybe$Nothing, y: $elm$core$Set$empty},
 		blocks);
 	return $elm$core$List$reverse(
 		$author$project$Reader$Document$close(st).C);
@@ -8441,11 +8470,11 @@ var $author$project$Reader$citePanel = function (m) {
 										[
 											$elm$html$Html$Attributes$class('rd-cite-url'),
 											A2($elm$html$Html$Attributes$attribute, 'data-cite', 'passage-url'),
-											$elm$html$Html$Attributes$href(m.n + ('#' + anchor))
+											$elm$html$Html$Attributes$href(m.o + ('#' + anchor))
 										]),
 									_List_fromArray(
 										[
-											$elm$html$Html$text(m.n + ('#' + anchor))
+											$elm$html$Html$text(m.o + ('#' + anchor))
 										]))
 								])),
 							A2(
@@ -8561,12 +8590,12 @@ var $author$project$Reader$citePanel = function (m) {
 													$elm$html$Html$Attributes$class('rd-cite-url'),
 													A2($elm$html$Html$Attributes$attribute, 'data-cite', 'page-url'),
 													$elm$html$Html$Attributes$href(
-													m.n + ('#p' + $elm$core$String$fromInt(n)))
+													m.o + ('#p' + $elm$core$String$fromInt(n)))
 												]),
 											_List_fromArray(
 												[
 													$elm$html$Html$text(
-													m.n + ('#p' + $elm$core$String$fromInt(n)))
+													m.o + ('#p' + $elm$core$String$fromInt(n)))
 												]))
 										])),
 									A2(
@@ -10339,7 +10368,7 @@ var $author$project$Reader$view = function (m) {
 										$elm$html$Html$a,
 										_List_fromArray(
 											[
-												$elm$html$Html$Attributes$href(m.n + 'plain')
+												$elm$html$Html$Attributes$href(m.o + 'plain')
 											]),
 										_List_fromArray(
 											[
@@ -10409,7 +10438,7 @@ var $author$project$Reader$view = function (m) {
 											$elm$html$Html$a,
 											_List_fromArray(
 												[
-													$elm$html$Html$Attributes$href(m.n + 'plain')
+													$elm$html$Html$Attributes$href(m.o + 'plain')
 												]),
 											_List_fromArray(
 												[
@@ -10429,7 +10458,7 @@ var $author$project$Reader$view = function (m) {
 											$elm$html$Html$a,
 											_List_fromArray(
 												[
-													$elm$html$Html$Attributes$href(m.n)
+													$elm$html$Html$Attributes$href(m.o)
 												]),
 											_List_fromArray(
 												[
@@ -10468,7 +10497,7 @@ _Platform_export({'Reader':{'init':$author$project$Reader$main(
 												$elm$json$Json$Decode$andThen,
 												function (base) {
 													return $elm$json$Json$Decode$succeed(
-														{n: base, z: citation, aw: hash, ai: slug, u: stored, Z: url});
+														{o: base, z: citation, aw: hash, ai: slug, u: stored, Z: url});
 												},
 												A2($elm$json$Json$Decode$field, 'base', $elm$json$Json$Decode$string));
 										},

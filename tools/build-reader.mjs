@@ -89,7 +89,10 @@ function borrowBuildFunctions() {
       );
     }
     let depth = 0;
-    for (let j = src.indexOf(open, i); j < src.length; j += 1) {
+    // begin at the LAST character of `start` — a signature may end in `{` and
+    // also carry a `{}` default in its parameter list, and the body brace is the
+    // one `start` ends on, not the first brace after the name
+    for (let j = src.indexOf(open, i + start.length - 1); j < src.length; j += 1) {
       if (src[j] === open) depth += 1;
       else if (src[j] === close) {
         depth -= 1;
@@ -107,7 +110,7 @@ function borrowBuildFunctions() {
   const stripSrc = src.slice(stripStart, src.indexOf('\n', jsStart) + 1);
 
   const gateSrc = slice('const GATE_PATTERNS = [', '[', ']');
-  const fnSrc = slice('function checkWorkshop(html) {', '{', '}');
+  const fnSrc = slice('function checkWorkshop(html, opts = {}) {', '{', '}');
 
   const make = new Function(
     `${stripSrc}\n${gateSrc}\n${fnSrc}\nreturn { stripJsComments: stripJsComments, checkWorkshop: checkWorkshop };`,

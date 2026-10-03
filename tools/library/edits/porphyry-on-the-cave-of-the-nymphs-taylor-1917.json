@@ -60,6 +60,27 @@
     },
     {
       "join": true,
+      "find": "nature and divine wisdom, it",
+      "replace": "nature and divine wisdom, which is separated, indeed, from it",
+      "class": "reading",
+      "note": "the print reads \"nature and divine wisdom, which is separated, indeed, from it (by a difference of essence)\" (the 1823 parallel). The transcription lost \"which is separated, indeed, from\" at a blank line; the join makes the two blocks one and supplies it."
+    },
+    {
+      "join": true,
+      "find": "which is the auxiliary of reward",
+      "replace": "which is the auxiliary of labour (by being its reward",
+      "class": "reading",
+      "note": "the print reads \"bears fruit which is the auxiliary of labour (by being its reward)\" (the 1823 parallel). The transcription lost \"labour (by being its\" at a blank line; the join makes the two blocks one and supplies it."
+    },
+    {
+      "join": true,
+      "find": "but that it nature and divine wisdom,",
+      "replace": "but that it is the offspring of an intellectual nature and divine wisdom,",
+      "class": "reading",
+      "note": "the print reads \"but that it is the offspring of an intellectual nature and divine wisdom\" (the 1823 parallel: 'that it is the offspring of an intellectual nature and divine'). The transcription lost \"is the offspring of an intellectual\" at a blank line, so the two blocks are joined and the lost words supplied."
+    },
+    {
+      "join": true,
       "find": "perse-verance",
       "replace": "perseverance",
       "class": "reading",
@@ -67,7 +88,7 @@
     },
     {
       "join": true,
-      "find": "assu'symbol oT aH",
+      "find": "assu 'symbol oT aH",
       "replace": "assumed it as a symbol of all",
       "class": "reading",
       "note": "the print reads \"but they also assumed it as a symbol of all invisible powers\" (1917 scan, printed pages 12-13; the 1823 parallel agrees). The transcription lost \"med it as a\" at the blank line, so the two blocks are joined and the lost words supplied."

@@ -1043,6 +1043,53 @@ export function extract(src, meta) {
 
   const anchorOf = (block) => (block.sec ? `s${block.sec}-${block.par}` : null);
 
+  /* A BLOCK THAT CONTINUES ITS PREDECESSOR. The transcription puts a blank line
+   * between blocks, and that blank line is NOT a paragraph mark: MEASURED on this
+   * edition, it falls mid-sentence far more often than not (the scan's own line
+   * blocks, and every page break, are blank-line separated). The print's paragraph
+   * ends with a sentence — so a block whose predecessor did NOT end a sentence is
+   * not a new paragraph, and giving the two blocks the SAME `par` is what makes the
+   * document say so. The reader then renders them as one paragraph, and a rule can
+   * span them.
+   *
+   * The test is deliberately narrow, because a false JOIN is a wrong edition:
+   *  - `: ` is an INTRODUCER, not a continuation — the verse or quotation that
+   *    follows is its own display block, and the transcription's own reader marks
+   *    it as verse (`isQuoted`), which is also excluded;
+   *  - the continuation must start on a lower-case letter, a quote, a bracket or a
+   *    parenthesis — a capital OPENS a sentence, which is where a paragraph does. */
+  const endsSentence = (x) => {
+    const v = (x || '').trimEnd();
+    if (v === '') return true;
+    const last = v.slice(-1);
+    if ('.!?'.includes(last)) return true;
+    if ('"\u201d\u2019)]'.includes(last)) return '.!?'.includes(v.slice(-2, -1));
+    return false;
+  };
+  const lastTextEnding = () => {
+    // the previous TEXT block, looking back past the page furniture and reference
+    // markers that do not end a paragraph — but never past a section, a region, or
+    // a note, because a paragraph does not run through one of those
+    for (let k = out.length - 1; k >= 0; k -= 1) {
+      const b = out[k];
+      if (b.t === 'p' || b.t === 'verse') return typeof b.x === 'string' ? b.x : '';
+      if (b.t === 'sec' || b.t === 'region' || b.t === 'notedef') return null;
+    }
+    return null;
+  };
+  /** True when the block starting at `line` is a continuation of the one before,
+   *  and the two must share their paragraph. */
+  const continues = (line, bi) => {
+    if (region !== 'body') return false;
+    if (isQuoted(lines[bi])) return false;
+    if (!/^[a-z\u2018\u201c"(\[]/.test(line.trim())) return false;
+    const prev = lastTextEnding();
+    if (prev == null) return false;
+    if (/:\s*$/.test(prev)) return false;
+    return !endsSentence(prev);
+  };
+
+
   /** Split one piece of text into text runs and reference blocks, IN ORDER. The
    * reference keeps the transcription's own words — "(note i)" — beside the
    * number it resolves to, so nothing the print has is lost to the link. */
@@ -1210,9 +1257,19 @@ export function extract(src, meta) {
       if (li === 0) {
         // a source block is a paragraph, so a block boundary ends the run —
         // unless the page furniture above already did (a paragraph that runs
-        // over a page break keeps its text blocks, one per side of the break)
+        // over a page break keeps its text blocks, one per side of the break).
+        // A block that CONTINUES its predecessor shares its paragraph (`par` does
+        // not advance), so the two are one paragraph in the reading view.
+        const joined = continues(line, bi);
+        if (joined) {
+          findings.push(
+            `paragraph join: the block beginning ${JSON.stringify(line.trim().slice(0, 48))} continues the ` +
+              `sentence before it (which does not end with a full stop, and this line starts lower-case), ` +
+              `so the two are one paragraph, not two`,
+          );
+        }
         flush();
-        start(isQuoted(lines[bi]) ? 'verse' : 'p', line, { sameParagraph: false });
+        start(isQuoted(lines[bi]) ? 'verse' : 'p', line, { sameParagraph: joined });
       } else if (cur) {
         cur.lines.push(line);
       } else {
@@ -1359,7 +1416,11 @@ export function extract(src, meta) {
         const b = out[i + 1];
         if (!(a.t === 'p' || a.t === 'verse')) continue;
         if (!(b.t === 'p' || b.t === 'verse' || b.t === 'ref')) continue;
-        const glue = a.t === 'p' && b.t === 'p' ? '' : ' ';
+        // The separator is a SPACE at a word boundary, and NOTHING when the first
+        // block ends in a hyphen and the word runs on (`perse-` | `verance` is one
+        // word). MEASURED: a blank line is a word boundary, so `assu` | `'symbol`
+        // is `assu 'symbol`, not `assu'symbol`.
+        const glue = /-$/.test(a.x || '') ? '' : ' ';
         const joined = `${a.x || ''}${glue}${b.x || ''}`;
         const crosses = joins.some(
           (r) => joined.includes(r.find) && !(a.x || '').includes(r.find) && !(b.x || '').includes(r.find),

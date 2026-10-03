@@ -56,14 +56,42 @@ function occurrenceCounts(q = 'mithra') {
   const SLUGDOC = JSON.parse(readFileSync(DOC, 'utf8'));
   const rules = SLUGDOC.corrections || [];
   const apply = (s) => rules.reduce((acc, r) => acc.split(r.find).join(r.repl), s);
+  // COUNT THE PASSAGES THE READER COUNTS — the reader groups the blocks into
+  // paragraphs (by the extractor's own `at` label) and searches THOSE, so counting
+  // raw blocks here would disagree the moment a paragraph spans several blocks.
+  // This is the reader's grouping, re-stated: a new entry when the paragraph label
+  // changes (or when a note begins).
   let region = '';
+  let key = null;
+  let parts = [];
   let hits = 0;
+  const flush = () => {
+    if (parts.length) {
+      const text = apply(parts.join(''));
+      if (text.toLowerCase().includes(q)) hits += 1;
+    }
+    parts = [];
+  };
   for (const b of SLUGDOC.blocks) {
-    if (b.t === 'region') region = b.kind;
+    if (b.t === 'region') { flush(); region = b.kind; key = null; continue; }
     if (region !== 'body' && region !== 'notes') continue;
-    const text = b.x ? apply(b.x) : '';
-    if (text.toLowerCase().includes(q)) hits += 1;
+    // a section, a page marker and a running head all END the open paragraph in
+    // the reader's flow (`BPb`/`BRh` emit through `close`), so they end a passage
+    if (b.t === 'sec' || b.t === 'pb' || b.t === 'rh') { flush(); key = null; continue; }
+    if (b.t === 'notedef') {
+      const k = `n${b.n}`;
+      if (key === k) parts.push(b.x || '');
+      else { flush(); key = k; parts = [b.x || '']; }
+      continue;
+    }
+    if (b.t !== 'p' && b.t !== 'verse' && b.t !== 'ref') continue;
+    const x = b.t === 'verse' ? (b.x || '').replace(/\n/g, ' ') : b.x || '';
+    const k = b.t === 'ref' ? key : `@${b.at || ''}`;
+    if (b.t !== 'ref' && key != null && k === key) parts.push(x);
+    else if (b.t === 'ref' && key != null) parts.push(x);
+    else { flush(); key = k; parts = [x]; }
   }
+  flush();
   return { hits };
 }
 

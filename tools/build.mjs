@@ -3273,9 +3273,13 @@ function shelfPassages(doc) {
       case 'p':
       case 'verse': {
         const x = b.t === 'verse' ? b.x.replace(/\n/g, ' ') : b.x;
-        if (open && open.k === 'p') {
+        // A passage is ONE paragraph: the reader groups by the extractor's own
+        // label (`at`), so two blocks continue each other only when they carry
+        // the SAME label. Joining every consecutive block instead made the index
+        // coarser than the reader — a passage spanned paragraphs the reader sets
+        // apart (MEASURED: 98 passages against 201 reader paragraphs).
+        if (open && open.k === 'p' && b.at != null && b.at === open.at) {
           open.parts.push(x);
-          if (!open.at && b.at) open.at = b.at;
         } else {
           close();
           open = { k: 'p', parts: [x], at: b.at || null, page, region, sec, secId, strong: opening };
@@ -3284,7 +3288,8 @@ function shelfPassages(doc) {
         break;
       }
       case 'ref': {
-        // a reference splits a paragraph in the blocks, not in the reading view
+        // a reference splits a paragraph in the blocks, not in the reading view:
+        // it belongs to the paragraph that is open
         if (open && open.k === 'p') {
           open.parts.push(b.x);
           if (!open.at && b.at) open.at = b.at;

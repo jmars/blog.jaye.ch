@@ -1334,7 +1334,10 @@ console.log('== the second group: the shelf');
         else { close(); open = { k: 'n', n: b.n, id: b.id || null, parts: [b.x], page, region, sec: null, secId: null, strong: false }; }
       } else if (b.t === 'p' || b.t === 'verse' || b.t === 'ref') {
         const x = b.t === 'verse' ? b.x.replace(/\n/g, ' ') : b.x;
-        if (open && open.k === 'p') { open.parts.push(x); if (!open.at && b.at) open.at = b.at; }
+        // A passage is ONE paragraph: continue only when the block carries the
+        // SAME paragraph label (`at`) as the open passage — the reader's own rule.
+        const continuesPara = b.t === 'ref' ? open && open.k === 'p' : open && open.k === 'p' && b.at != null && b.at === open.at;
+        if (continuesPara) { open.parts.push(x); if (!open.at && b.at) open.at = b.at; }
         else { close(); open = { k: 'p', parts: [x], at: b.at || null, page, region, sec, secId, strong: opening }; opening = false; }
       }
     }

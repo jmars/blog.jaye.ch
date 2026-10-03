@@ -440,14 +440,21 @@ step bySection b st =
                     openNote (close st) n x id lang
 
 
-{-| A text block continues the open paragraph only when a reference split it —
-the extractor's own label decides, so two different labelled paragraphs are
-never merged into one anchor. -}
+{-| A text block continues the open paragraph when it is the SAME paragraph — the
+extractor's own label decides, so two different labelled paragraphs are never
+merged into one anchor, and the blocks the transcription split at a blank line
+that is not a paragraph mark (the blank lines are page breaks and the scanner's
+own line blocks, not the print's paragraphs) are joined back into the one
+paragraph the print has. A reference that split a paragraph keeps merging too:
+its parts carry the same label. -}
 appendOrOpen : St -> Inline -> Maybe String -> St
 appendOrOpen st part at =
     case st.open of
         OPara id authOn parts ->
-            if st.lastRef && at == id then
+            if at /= Nothing && at == id then
+                { st | open = OPara id authOn (continuationParts st.lastRef parts part), lastRef = False }
+
+            else if st.lastRef && at == id then
                 { st | open = OPara id authOn (part :: parts), lastRef = False }
 
             else if st.lastRef && at == Nothing && not authOn then
@@ -458,6 +465,29 @@ appendOrOpen st part at =
 
         _ ->
             openPara (close st) part at
+
+
+{-| The parts of ONE paragraph, accumulated back-to-front, as the next block joins
+it. A REFERENCE split the paragraph mid-text, so its halves meet with no
+separator. Two BLOCKS that share the paragraph label were split at a blank line —
+a word boundary, so they meet with a SPACE, unless the first ends in a hyphen and
+the word runs on (`perse-` | `verance` is one word). -}
+continuationParts : Bool -> List Inline -> Inline -> List Inline
+continuationParts wasReference parts part =
+    if wasReference then
+        part :: parts
+
+    else
+        case parts of
+            IText t :: _ ->
+                if String.endsWith "-" t then
+                    part :: parts
+
+                else
+                    IText " " :: part :: parts
+
+            _ ->
+                IText " " :: part :: parts
 
 
 firstJust : Maybe a -> Maybe a -> Maybe a
