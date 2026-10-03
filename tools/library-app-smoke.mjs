@@ -755,6 +755,16 @@ section('the repairs list opens where the reader is, not at the end of the book'
         cs.overflow === 'auto' && mh > 0 && mh < ctx.w.innerHeight,
         `with its own scroll and a height capped below the window (${cs.maxHeight} of ${ctx.w.innerHeight}px), so the page stays readable behind it`,
       );
+      // FAILS IF: the close control scrolls out of view. The panel is its own
+      // scroll container and the table runs to hundreds of rows; the ✕ is in the
+      // head, so without `position: sticky` a reader scrolled down must scroll
+      // back to the top to dismiss the list (MEASURED on the published text).
+      const head = panel.querySelector('.rd-diff-head');
+      const hcs = head ? ctx.w.getComputedStyle(head) : null;
+      check(
+        !!head && hcs.position === 'sticky',
+        `and its HEAD is stuck to the scrollport (position:${hcs ? hcs.position : '(no head)'}) so the ✕ stays reachable however far the list is scrolled`,
+      );
       check(
         Number(cs.zIndex) >= 60,
         `and it sits above the text (z-index ${cs.zIndex}, the layer the note popover and the citation panel use)`,

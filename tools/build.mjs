@@ -3976,6 +3976,20 @@ const READER_CSS = `
   .rd-cite { left: auto; right: 16px; transform: none; width: min(26rem, 30vw); }
 }
 .rd-cite-head, .rd-diff-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+/* THE CLOSE CONTROL MUST NOT SCROLL AWAY. .rd-diff is its own scroll container
+   (overflow: auto, max-height 82vh) and the table is 341 rows; the ✕ lives in
+   the head, so scrolling the list carried the only visible close control out of
+   view and a reader had to scroll back to the top to dismiss it (MEASURED on the
+   published Cave text). The head is stuck to the top of the scrollport instead,
+   with the panel's own background so rows pass under it cleanly. The citation
+   panel is one passage high, so it is not stuck — a needless overlap there would
+   hide the passage the reader opened it to copy. */
+.rd-diff-head {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--bg2);
+  padding-bottom: 6px; margin-bottom: 2px;
+  border-bottom: 1px solid var(--line);
+}
 .rd-cite h3, .rd-diff h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: 8px; }
 .rd-cite-line { font-family: var(--serif); font-size: 15px; }
 .rd-cite-url { font-family: var(--mono); font-size: 12px; }
@@ -4379,6 +4393,12 @@ function libraryTextPages(t, navPosts, cited) {
     `${t.title} — ${t.author}${t.translator ? `, translated by ${t.translator}` : ''}, ${t.year}. ` +
     `An unedited public-domain transcription of the printed edition, with the readings that cite it.`;
   const page = (over) => ({
+    // The <title> tag, distinct from shareTitle: without it every library page
+    // shipped `<title>undefined</title>` (MEASURED on the published Cave text),
+    // because page() defaults it and the reader pages never passed one. The raw
+    // t.title goes here — page() escapes it once; `title` above is already
+    // escaped for use as HTML (heroTitle), and would be escaped twice.
+    title: `${t.title} — blog.jaye.ch`,
     shareTitle: title,
     type: 'article',
     description,
