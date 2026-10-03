@@ -53,9 +53,10 @@ Start where the traditions post started — with the name — because the East's
 other traditions' names do not.
 
 The alchemical term is 走火, *zǒuhuǒ*, "fire deviation": the fire is the practice's own heat. In the
-operative texts the fire is not a metaphor for effort — it is the thing the method operates with. Liu
-Huayang's 1799 treatise, defining the practice in one line, says "Refinement" refers to using Fire to
-transform substances.[^huayang] The practitioner heats something, inside the body, on purpose. The fuller
+operative texts the fire is not a metaphor for effort — it is the thing the method operates with. The
+1799 edition of Liu Huayang's treatise, in the prefatory material printed with it, defines the practice
+in one line: "Refinement" refers to using Fire to transform substances.[^huayang] The practitioner heats
+something, inside the body, on purpose. The fuller
 name for the failure is 走火入魔, *zǒuhuǒ rùmó* — fire deviation, entering demon — and the second half names
 the arrival of 魔, *mó*, māra: the state that comes dressed as progress. The Chan tradition has 風狂,
 *fēngkuáng*, "wind-mad" — the Zen sickness the traditions post quoted from Chinul.[^traditions]
@@ -124,8 +125,8 @@ meditative landscape for the destination:
 
 The Tibetan tantras say it in one line each. A Great Perfection tantra in the rNying ma rgyud 'bum:
 "**Whatever those who have not realized it meditate upon will become a demon.**" And on what the demon
-then does, from the collection at Tshamdrak: "Sounds in the sky and the teaching of Dharma occur. **Out of
-joy, one shows it off and demonstrates meditative absorption.**"[^tantras]
+then does, in another volume of the same collection (the Cha): "Sounds in the sky and the teaching of
+Dharma occur. **Out of joy, one shows it off and demonstrates meditative absorption.**"[^tantras]
 
 Read that against the series and it is not a description of a spirit; it is a description of a **social
 event**. The state arrives, it feels like attainment, and the next thing that happens is a performance of
@@ -143,7 +144,7 @@ itself, acquiring students, and dissolving the precepts it arrived under.
 Now the part no other column in this series has: a **schedule**.
 
 The operative name for it is 火候, *huǒhòu* — "fire timing." Bai Yuchan's collected works (1594 edition)
-contain a full monthly table of it, stage by stage through the lunar year, each month with its own firing
+contain a full monthly table of it, stage by stage over a ten-month cycle, each month with its own firing
 instruction and its own analogy from a peach tree's growth — and at the dangerous months, the instruction
 changes from heating to **bathing**: "This month belongs to Mao-wood; vigor is in the Mao phase, **bathe
 the head of the elixir**," and at the opposite pole, "Eighth Month: This month belongs to You-metal;
@@ -213,9 +214,9 @@ self-refinement is diligent and the accumulation of virtue resonates with the di
 refine the Grand Elixir**."[^cantong1] The elixir is not available to the unvirtuous, in these texts, as
 a matter of technique.
 
-**The stages are explicit and sequenced.** Liu Huayang again, on the structure of the work: "Within this
-process, there are **real sequences**: establishing the work, the moment to begin the 'hand-work,' and
-the moment to 'turn the hand.'"[^huayang] Bai Yuchan's monthly table is the same claim in full detail.
+**The stages are explicit and sequenced.** The same prefatory material, on the structure of the work:
+"Within this process, there are **real sequences**: establishing the work, the moment to begin the
+'hand-work,' and the moment to 'turn the hand.'"[^huayang] Bai Yuchan's monthly table is the same claim in full detail.
 Nobody arrives at the deep state on a whim in this literature, because the literature does not address
 anyone who has not already walked the earlier stages.
 
@@ -386,7 +387,7 @@ needs.**
 AI-translated historical texts, using its public search and page interface; this post did not reach the
 books independently, and the translations are machine-generated and unchecked against the originals. Each
 note gives the work, the page as the library catalogues it, and the book's address
-(https://sourcelibrary.org/book/<slug>) so any passage can be followed and checked. Source Library
+(of the form https://sourcelibrary.org/book/…) so any passage can be followed and checked. Source Library
 content is **CC-BY-SA-4.0** (attribution: Source Library); that licence's share-alike term attaches to
 reuse of the translations, and the quoted passages below are reproduced under it. Titles and dates are as
 the library catalogues them.
@@ -398,7 +399,7 @@ that range from physical pain and illness to psychological obsession or madness"
 https://sourcelibrary.org/book/sancai-tuhui-juan-74
 
 [^huayang]: Liu Huayang 柳華陽 (b. 1736), 華陽金仙證論 ; 慧命經 (*Huayang jinxian zhenglun*; *Huiming
-jing*), 1799 edition — p. 97: "'Refinement' refers to using Fire to transform substances… Within this
+jing*), 1799 edition — p. 97, in a preface printed with the work (signed "Preface by Sun", and referring to Huayang in the third person), not in Huayang's own voice: "'Refinement' refers to using Fire to transform substances… Within this
 process, there are real sequences: establishing the work, the moment to begin the 'hand-work,' and the
 moment to 'turn the hand'." P. 90, from the preface: "It is not that I enjoy meddling, but I wish to
 prevent the reckless annotations of later generations… I wish to thank and dismiss those who lack a
