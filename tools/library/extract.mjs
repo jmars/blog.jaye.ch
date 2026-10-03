@@ -937,6 +937,41 @@ function applyLeaves(markers, leaves, findings) {
   }
 }
 
+/* ---------- the transcription's punctuation spacing ---------- */
+
+/** THE OCR SPLIT PUNCTUATION OFF AS ITS OWN WORD. The transcription puts a space
+ * before a closing mark ("in native marble shine ;") and after an opening quote
+ * ('" High at the head'), because the scanner's word segmentation treated the mark
+ * as a token. The PRINT sets them tight — English never sets a space before `;`,
+ * and never between a quote and the word it opens — and MEASURED, the artifacts
+ * are systematic: ` ;` 110 times, an opening quote + space 41 times, a closing
+ * quote with a space before it 11 times.
+ *
+ * This is a WHITESPACE normalization, not a reading: no character of the print is
+ * in question, only the spaces the scan left around marks the print sets tight. It
+ * belongs with the collapsing of the scan's column-padding runs (collapseLine),
+ * which is why it is applied here and not as 150 rules — and it is applied to the
+ * block text BOTH views read, so the reading view and the "as scanned" view agree
+ * about the print's own spacing.
+ *
+ * The two quote cases need context, which is why this is a pass and not a
+ * find/replace rule: an opening quote may legitimately have a space BEFORE it
+ * ("says, \"The island") and a closing quote a space AFTER it ("end.\" This"),
+ * so only the space on the wrong side of each is removed. */
+export function tidyPunctuation(s) {
+  return s
+    // no space before a closing mark. NOT the full stop: a SPACED ellipsis
+    // (`. . .`) is a print convention, and the one stray ' .' this edition has is
+    // already a recorded reading. So the set is the marks that are never spaced.
+    .replace(/ +([,;:!?])/g, '$1')
+    // no space after an OPENING quote: the quote stands at a word boundary (start,
+    // whitespace, an opening bracket or a dash) and the space is INSIDE it
+    .replace(/(^|[\s([\u2014-])(["\u201c\u2018]) (?=\S)/g, '$1$2')
+    // no space before a CLOSING quote: the quote follows a word or a closing mark
+    // and does NOT open a word (so a quote before a letter is left alone)
+    .replace(/([\w.,;:!?)\]]) +(["\u201d\u2019])(?![A-Za-z])/g, '$1$2');
+}
+
 /**
  * Extract one stored edition into the served document (plan §4.1).
  *
@@ -1018,7 +1053,7 @@ export function extract(src, meta) {
       let held = [];
       const emitVerse = () => {
         if (!held.length) return;
-        push({ t: 'verse', x: held.join('\n'), ...(block.sec && block.inBody ? { at: anchorOf(block) } : {}) });
+        push({ t: 'verse', x: tidyPunctuation(held.join('\n')), ...(block.sec && block.inBody ? { at: anchorOf(block) } : {}) });
         held = [];
       };
       for (const line of block.lines) {
@@ -1041,7 +1076,7 @@ export function extract(src, meta) {
       else if (run.x !== '')
         push({
           t: note ? 'notedef' : 'p',
-          x: run.x,
+          x: tidyPunctuation(run.x),
           ...(note ? { n: note.n, ...(note.lang ? { lang: note.lang } : {}) } : {}),
           ...(block.sec && block.inBody && !note ? { at: anchorOf(block) } : {}),
         });

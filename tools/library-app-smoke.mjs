@@ -399,6 +399,45 @@ section('the two views are named for what they are — repaired and as scanned')
   }
 }
 
+/* ---------- 7a1b. the punctuation the print sets tight is tight ---------- */
+
+section('the transcription\'s punctuation spacing is normalized');
+{
+  /* The OCR split punctuation off as its own word, so the transcription carried a
+     space before a closing mark and after an opening quote. The print sets them
+     tight, and the normalization is a WHITESPACE pass (tidyPunctuation), not a
+     reading: it is applied where the scan's column-padding runs are already
+     collapsed. MEASURED: ` ;` 110 times, an opening quote + space 41 times. FAILS
+     IF: the pass is dropped — the reading view then shows `shine ;` and `" High`.
+     The 13 remaining quote-plus-space and 4 space-plus-quote cases are CLOSING
+     quotes followed by a space and OPENING quotes preceded by one, which are
+     correct; the assertions below are the artifacts, not those. */
+  const ctx = await boot();
+  const reading = ctx.w.document.getElementById('reader-app').textContent;
+  check(
+    reading.includes('in native marble shine;'),
+    'a space before a semicolon is gone ("in native marble shine;")',
+  );
+  check(
+    reading.includes('called Naiades?'),
+    'and a space before a question mark ("called Naiades?")',
+  );
+  check(
+    reading.includes('high at the head') === false && /[\u201c"] high/i.test(reading) === false,
+    'and no space after an opening quote (' + JSON.stringify((reading.match(/[\u201c"][^\u201d"\n]{0,12}/) || [''])[0]) + ')',
+  );
+  check(
+    reading.includes('"Nymphs," says Hermias'),
+    'while a CLOSING quote keeps the space that follows it ("Nymphs," says Hermias)',
+  );
+  // FAILS IF: the pass over-corrects — a space before a punctuation mark is never
+  // correct, but a spaced ELLIPSIS is a print convention and is left alone.
+  check(
+    (reading.match(/ ;/g) || []).length === 0 && (reading.match(/ ,/g) || []).length === 0,
+    `and no space survives before a semicolon or comma (${(reading.match(/ ;/g) || []).length} / ${(reading.match(/ ,/g) || []).length})`,
+  );
+}
+
 /* ---------- 7a2. the damage the policy leaves is VISIBLE (the policy's proof) ---------- */
 
 section('a recorded reading renders, and damage with no reading renders marked');

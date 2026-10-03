@@ -292,10 +292,10 @@
       "note": "Class 2 — lower-case l substituted for the pronoun I at the head of the bracketed addition. (decided by the transcription's own context.)"
     },
     {
-      "find": "Scholia on the Phcedrus of Plato, \" are",
-      "replace": "Scholia on the Phædrus of Plato, \" are",
+      "find": "Scholia on the Phcedrus of Plato, \"are",
+      "replace": "Scholia on the Phædrus of Plato, \"are",
       "class": "reading",
-      "note": "Class 2 — the print's æ-ligature 'Phædrus' read as 'ce', leaving the plausible-looking non-word 'Phcedrus'. (decided by the transcription's own context.)"
+      "note": "Class 2 — the print's æ-ligature 'Phædrus' read as 'ce', leaving the plausible-looking non-word 'Phcedrus'. (The space the transcription put after the opening quote is normalized away before the rules run.)"
     },
     {
       "find": "Orphic fiction \"is beautifully unfolded",
@@ -484,10 +484,10 @@
       "note": "Class 2 — 'Timæus' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
     },
     {
-      "find": "connected. , iThrough",
+      "find": "connected., iThrough",
       "replace": "connected. Through",
       "class": "reading",
-      "note": "Class 1: stray ' , i' debris stands between the full stop and 'Through' in the reading view's own text. (decided by the transcription and the 1823 parallel.)"
+      "note": "Class 1: stray ' , i' debris stands between the full stop and 'Through' in the reading view's own text. (The space before the comma is normalized away before the rules run.)"
     },
     {
       "find": "dwell, near fountains",
@@ -496,10 +496,10 @@
       "note": "Class 2: 'dwell' is a plausible real word substituted for the parallel's 'dwelt' (missing t), with a stray comma after it — invisible to any character census. (decided by the 1823 parallel.)"
     },
     {
-      "find": "fountains and river ;",
-      "replace": "fountains and rivers ;",
+      "find": "fountains and river;",
+      "replace": "fountains and rivers;",
       "class": "reading",
-      "note": "The plural 's' is missing from 'rivers' — a wrong word with no damage character, invisible to the census (class 2). (decided by the transcription and the 1823 parallel.)"
+      "note": "The plural 's' is missing from 'rivers' — a wrong word with no damage character, invisible to the census (class 2). (The space before the semicolon is normalized away before the rules run.)"
     },
     {
       "find": "or Mithra. as well as",
@@ -718,10 +718,10 @@
       "note": "'the poet calls' fused into one token with 'c' turned to 'jr', still standing whole in the reading view (class 3). (decided by the transcription and the 1823 parallel.)"
     },
     {
-      "find": "«*•<*, anH js",
+      "find": " «*•<*, anH js",
       "replace": ", and is",
       "class": "reading",
-      "note": "Class 1 run-together fragment: the comma after 'taste' and the words 'and is' collapsed into scanner noise that still stands in the reading view, carrying the only two damage characters ('«' and '*') the build counted. (decided by the transcription and the 1823 parallel.)"
+      "note": "Class 1 run-together fragment: the comma after 'taste' and the words 'and is' collapsed into scanner noise. The find leads with the SPACE the noise follows, so the replacement does not leave 'taste , and is' — the print sets the comma tight."
     },
     {
       "find": "putre faction",
@@ -800,12 +800,6 @@
       "replace": "conformably",
       "class": "reading",
       "note": "Word broken in two by a lost line-end hyphen, class 3; reading view still prints it as two words. (decided by the transcription and the 1823 parallel.)"
-    },
-    {
-      "find": "themselves ;",
-      "replace": "themselves;",
-      "class": "reading",
-      "note": "OCR inserted a space before the semicolon; the artefact stands in the reading view, class 1 (the print carries no space there). (decided by the transcription and the 1823 parallel.)"
     },
     {
       "find": "testi monies",
@@ -1816,10 +1810,10 @@
       "note": "the print reads \"are Cancer\""
     },
     {
-      "find": "j__but",
+      "find": " j__but",
       "replace": "; but",
       "class": "reading",
-      "note": "the print reads \"; but\""
+      "note": "the print reads '; but' after 'Capricorn'. The find leads with the SPACE it follows, so the replacement does not leave 'Capricorn ; but'."
     },
     {
       "find": "#ip",
