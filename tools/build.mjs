@@ -5067,6 +5067,22 @@ const POST_META = {
       'The Western esoteric tradition ran the same induction, named the same failure and built the same safeguards into a syllabus \u2014 and published its own predation account.',
     accent: 'Column',
   },
+  'the-central-column': {
+    prompt: 'cat the-central-column.md',
+    tagline: 'the <b>central column</b>: the tradition that named the failure which looks like success \u2014 in a single word.',
+    hint: '<a href="/">\u2190 home</a> · the fourth column, with notes',
+    description:
+      'The Islamic material \u2014 texts, not a class: istidr\u0101j, being led on step by step while reading the leading as progress; \u02bfujb and ghur\u016br; the stations that are not the goal; and a chain of transmission that holds a teacher to a line.',
+    accent: 'Column',
+  },
+  'the-eastern-column': {
+    prompt: 'cat the-eastern-column.md',
+    tagline: 'the <b>eastern column</b>: the same failure written into the body \u2014 and a practice that metered its own fire.',
+    hint: '<a href="/">\u2190 home</a> · the fifth column, with notes',
+    description:
+      'The operative traditions of the Far East \u2014 走火入魔, fire-deviation, a failure with symptoms in the body and a name in the technique: a fire-timing schedule, gates before the heat, and a master chained to a lineage.',
+    accent: 'Column',
+  },
   'the-frame-is-a-variable': {
     prompt: 'cat the-frame-is-a-variable.md',
     tagline: 'the <b>largest frame</b>: a cosmology is a frame too \u2014 and the same three questions apply to it.',

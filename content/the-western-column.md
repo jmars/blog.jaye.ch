@@ -340,6 +340,14 @@ in one sentence — that **they, and not the spirits, are in charge of their own
 The series has arrived at the same place from six directions now. This is the seventh, and the most
 surprising: **the tradition that knew the most about the collapse is the one that trusted it least.**
 
+Two further columns now run the same test in the traditions this one did not reach.
+[The central column](/the-central-column/) takes the Islamic material, where the failure that looks
+like success has a word of its own — *istidrāj*, being led on step by step while reading the leading as
+progress. [The eastern column](/the-eastern-column/) takes the operative Far East, where the same
+failure is written into the body and the practice is metered by a fire-timing schedule. The three
+columns are one set: the West, the middle, and the East, each with its own record and its own
+countermeasures — and the West remains the one that wrote its safeguards down as a syllabus.
+
 ---
 
 ## Notes

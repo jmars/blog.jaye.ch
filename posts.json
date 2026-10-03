@@ -168,6 +168,26 @@
       "series": "implications"
     },
     {
+      "slug": "the-central-column",
+      "file": "the-central-column.md",
+      "navLabel": "the central column",
+      "kind": "argument",
+      "summary": "The Islamic tradition named the failure that looks like success: istidrāj — being led on while reading the leading as progress — plus ʿujb, ghurūr, the stations that are not the goal, and a chain of transmission that makes a teacher accountable to a line.",
+      "date": "2026-10-03",
+      "published": true,
+      "series": "implications"
+    },
+    {
+      "slug": "the-eastern-column",
+      "file": "the-eastern-column.md",
+      "navLabel": "the eastern column",
+      "kind": "argument",
+      "summary": "The operative traditions of the Far East wrote the same failure into the body — 走火入魔, fire-deviation — and metered the practice with a fire-timing schedule, gates before the heat, and a master chained to a lineage rather than to himself.",
+      "date": "2026-10-03",
+      "published": true,
+      "series": "implications"
+    },
+    {
       "slug": "the-same-move",
       "file": "the-same-move.md",
       "navLabel": "the pattern",
@@ -572,7 +592,7 @@
       "file": "proclus-theology-of-plato.md",
       "navLabel": "proclus, on the theology of plato",
       "kind": "reading",
-      "summary": "A close reading of Proclus\u2019 Theology of Plato in Thomas Taylor\u2019s translation \u2014 the frame that argues, in a hierarchy of mediation, for a cosmos with an explicit claim on how things are.",
+      "summary": "A close reading of Proclus’ Theology of Plato in Thomas Taylor’s translation — the frame that argues, in a hierarchy of mediation, for a cosmos with an explicit claim on how things are.",
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
@@ -582,7 +602,7 @@
       "file": "proclus-elements-of-theology.md",
       "navLabel": "proclus, the elements of theology",
       "kind": "reading",
-      "summary": "A close reading of Proclus\u2019 Elements of Theology \u2014 the same frame stated as a proof: two hundred and eleven propositions derived from a first principle, with no ritual, no mediator and no operator anywhere in it.",
+      "summary": "A close reading of Proclus’ Elements of Theology — the same frame stated as a proof: two hundred and eleven propositions derived from a first principle, with no ritual, no mediator and no operator anywhere in it.",
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
@@ -592,7 +612,7 @@
       "file": "iamblichus-on-the-mysteries.md",
       "navLabel": "iamblichus, on the mysteries",
       "kind": "reading",
-      "summary": "A close reading of Iamblichus\u2019 On the Mysteries \u2014 the answer to the last book: not thought but the acts themselves unite, and the efficacy is placed in the rite, outside anyone who performs it.",
+      "summary": "A close reading of Iamblichus’ On the Mysteries — the answer to the last book: not thought but the acts themselves unite, and the efficacy is placed in the rite, outside anyone who performs it.",
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
@@ -602,7 +622,7 @@
       "file": "plotinus-collected-writings.md",
       "navLabel": "plotinus, collected writings",
       "kind": "reading",
-      "summary": "A close reading of Plotinus in Thomas Taylor\u2019s translations \u2014 the founder of the line, whose ascent is by turning inward, and whose successor rejected that route for having nothing performed outside the thinker.",
+      "summary": "A close reading of Plotinus in Thomas Taylor’s translations — the founder of the line, whose ascent is by turning inward, and whose successor rejected that route for having nothing performed outside the thinker.",
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
@@ -612,7 +632,7 @@
       "file": "porphyry-cave-of-the-nymphs.md",
       "navLabel": "porphyry, on the cave of the nymphs",
       "kind": "reading",
-      "summary": "A close reading of Porphyry\u2019s On the Cave of the Nymphs \u2014 the ascent given a location: a cave in the Odyssey read as the cosmos, with two gates, and the soul\u2019s descent into generation drawn as geography.",
+      "summary": "A close reading of Porphyry’s On the Cave of the Nymphs — the ascent given a location: a cave in the Odyssey read as the cosmos, with two gates, and the soul’s descent into generation drawn as geography.",
       "date": "2026-10-01",
       "published": true,
       "series": "readings"
