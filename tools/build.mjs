@@ -476,7 +476,21 @@ const DARK_DECLS = (root) => {
  * figure CSS, so these rules can override the things they have to (hiding a
  * figure's controls in print, re-tokening the palette for dark).
  */
-const PAGE_CSS = `/* ---------- masthead reveal ---------- */
+const PAGE_CSS = `/* ---------- a small tag ---------- */
+/* A pill label: the library index marks an edition's repair state with it ("in
+   repair", "repaired", "damaged"), and the text's own page uses it too. IT
+   BELONGS HERE, NOT IN design/blog.css: that file is GENERATED from the
+   blog-design submodule by tools/extract-css.mjs, so a hand-added rule there is
+   lost the next time anyone runs a full build. (MEASURED: this rule was added to
+   the generated file, a build regenerated it away, and the badge went unstyled
+   on the live index.) PAGE_CSS is the site-local layer that sits ON TOP of the
+   generated design system — anything site-specific goes here. */
+.tag {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .04em;
+  color: var(--dim); border: 1px solid var(--line); border-radius: 999px;
+  padding: 1px 7px; white-space: nowrap;
+}
+/* ---------- masthead reveal ---------- */
 /* build.mjs hero() wraps each hero word in <span class="w" style="--i:N">.
    Default state: fully visible and static — the hidden start and the animation
    exist only for readers who have NOT asked for reduced motion, so a
@@ -5082,6 +5096,14 @@ const POST_META = {
     description:
       'The operative traditions of the Far East \u2014 走火入魔, fire-deviation, a failure with symptoms in the body and a name in the technique: a fire-timing schedule, gates before the heat, and a master chained to a lineage.',
     accent: 'Column',
+  },
+  'no-instrument-to-break': {
+    prompt: 'cat no-instrument-to-break.md',
+    tagline: 'the <b>boundary case</b>: a system that shares half the model and lacks the other half \u2014 which is what a control is for.',
+    hint: '<a href="/">\u2190 home</a> · the boundary, with notes',
+    description:
+      'Mesopotamian religion reads a person\u2019s state from outside \u2014 diviners, omens, a case the sufferer cannot read \u2014 and has no inward practice whose own instrument fails. The difference refines the model rather than confirming it.',
+    accent: 'Boundary',
   },
   'the-frame-is-a-variable': {
     prompt: 'cat the-frame-is-a-variable.md',
