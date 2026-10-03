@@ -1,0 +1,92 @@
+{
+  "slug": "proclus-elements-of-theology-taylor-1816",
+  "edition": "Proclus: The Elements of Theology, translated by Thomas Taylor (London, 1816), Propositions I–CCXI as printed in The Six Books of Proclus on the Theology of Plato, vol. II",
+  "base": "_base.json",
+  "order": "The rules apply in the order this list gives them, first to last, each one to every occurrence, one text block at a time — the order the reading view applies them in and the order their hits are counted in. All fourteen are opener rules: the division number the transcription mangled, repaired to the number the sequence requires (each is the proposition due at its place, confirmed against Dodds' parallel text of the same proposition where the number alone left doubt).",
+  "edits": [
+    {
+      "find": "T>ROPOSITION XXVI.",
+      "replace": "PROPOSITION XXVI.",
+      "class": "opener",
+      "note": "Proposition XXVI is due at this place in the run (XXV stands before it, XXVII after), and the print's label is PROPOSITION throughout: the OCR read the P as T>. Dodds' prop. 26 opens 'Every cause which is productive of other things…', which is this statement."
+    },
+    {
+      "find": "PROPOSITION XXX,",
+      "replace": "PROPOSITION XXX.",
+      "class": "opener",
+      "note": "Proposition XXX is due (XXIX before, XXXI after); the print closes its label with a stop, and the OCR gave the line a comma."
+    },
+    {
+      "find": "PROPOSmON XLVI.",
+      "replace": "PROPOSITION XLVI.",
+      "class": "opener",
+      "note": "Proposition XLVI is due at this place. The statement is 'Every thing self-subsistent is incorruptible', Dodds' prop. 46 — the reconnaissance's own example of a number confirmed by the parallel text."
+    },
+    {
+      "find": "^PROPOSITION LX,",
+      "replace": "PROPOSITION LX.",
+      "class": "opener",
+      "note": "Proposition LX is due (LIX stands before it); the stray caret is the OCR's mark before the label, and the print closes its label with a stop."
+    },
+    {
+      "find": "PROPOSITION LX XVIII.",
+      "replace": "PROPOSITION LXXVIII.",
+      "class": "opener",
+      "note": "Proposition LXXVIII is due at this place (LXXVII before, LXXIX after): the OCR split the double X with a space. The statement, on the immovable and the moved, is Dodds' prop. 78."
+    },
+    {
+      "find": "PROPOSITION Cl.",
+      "replace": "PROPOSITION CI.",
+      "class": "opener",
+      "note": "Proposition CI is due (C before, CII after): the OCR read the I of CI as a lower-case l. The statement, on the one and multitude in the intellectual order, is Dodds' prop. 101."
+    },
+    {
+      "find": "PROPOSITION CXI\\ r .",
+      "replace": "PROPOSITION CXIV.",
+      "class": "opener",
+      "note": "Proposition CXIV is due at this place (CXIII before, CXV after): the OCR broke the numeral with debris. The statement is the one Dodds' prop. 114 carries, on the participated and the participant."
+    },
+    {
+      "find": "PROPOSITION CXYII.",
+      "replace": "PROPOSITION CXVII.",
+      "class": "opener",
+      "note": "Proposition CXVII is due (CXVI before, CXVIII after): the OCR read the V of CXVII as a Y."
+    },
+    {
+      "find": "PROPOSITION CXXVl.",
+      "replace": "PROPOSITION CXXVI.",
+      "class": "opener",
+      "note": "Proposition CXXVI is due (CXXV before, CXXVII after): the final I was read as a lower-case l."
+    },
+    {
+      "find": "PROPOSITION CXXVUI.",
+      "replace": "PROPOSITION CXXVIII.",
+      "class": "opener",
+      "note": "Proposition CXXVIII is due (CXXVII before, CXXIX after): the OCR read the II of the numeral as UI."
+    },
+    {
+      "find": "PROPOSITION CLIV.,",
+      "replace": "PROPOSITION CLIV.",
+      "class": "opener",
+      "note": "Proposition CLIV is due (CLIII before, CLV after); the stray comma after the stop is the OCR's, and the pipeline's punctuation pass has closed the space the transcription had before it (the rule's find is the tidied line, which is the text the reading view serves)."
+    },
+    {
+      "find": "' PROPOSmON CLXXXII.",
+      "replace": "PROPOSITION CLXXXII.",
+      "class": "opener",
+      "note": "Proposition CLXXXII is due (CLXXXI before, CLXXXIII after): a stray opening quote stands before the label and the label's second S was read as m."
+    },
+    {
+      "find": "PROPOSITION CXCVUI.",
+      "replace": "PROPOSITION CXCVIII.",
+      "class": "opener",
+      "note": "Proposition CXCVIII is due (CXCVII before, CXCIX after): the OCR read the II of the numeral as UI."
+    },
+    {
+      "find": "PROPOSITION ccvm.",
+      "replace": "PROPOSITION CCVIII.",
+      "class": "opener",
+      "note": "Proposition CCVIII is due (CCVII before, CCIX after): the label is set in small capitals here and the OCR read the II of the numeral as m."
+    }
+  ]
+}

@@ -1750,9 +1750,28 @@ console.log('== the second group: the shelf');
     const stored = held.find((t) => existsSync(join(ROOT, 'content', 'library', t.slug, 'source.txt')));
     heldSlug = (stored || held[0] || {}).slug || null;
     if (heldSlug) {
-      // the transcription-only text: read where the build reads it
-      const src = readFileSync(m.textSource(m.TEXTS.find((t) => t.slug === heldSlug), files), 'utf8');
-      const ws = (src.toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((w) => w.length >= 7);
+      // the transcription-only text: read where the build reads it; a text with
+      // a stored edition is read from the EDITION (the same decision the build
+      // makes — a slice edition's shelf file is the whole volume it came from)
+      const heldEntry0 = m.TEXTS.find((t) => t.slug === heldSlug);
+      const storedPath = join(ROOT, 'content', 'library', heldSlug, 'source.txt');
+      const src = readFileSync(existsSync(storedPath) ? storedPath : m.textSource(heldEntry0, files), 'utf8');
+      /* THE WORD MUST BE ONE THE TEXT'S PASSAGES CARRY, not one any block carries.
+       * MEASURED: this picked `digitized` — a word from the Google-scan FURNITURE
+       * ("Digitized by t^OOQLe"), which the extractor rightly classifies as a
+       * running head and keeps out of the passages. Searching it returns nothing
+       * even with LIBRARY=1, because nothing indexed holds it, and the smoke
+       * failed a correct build. So the words come from the READING VIEW's prose
+       * blocks (the text the index actually stores). */
+      const { extract: xExtract } = require('../tools/library/extract.mjs');
+      const heldDoc2 = xExtract(src, { entry: heldEntry0, sha256: null });
+      const rules2 = heldDoc2.corrections.map((c) => ({ find: c.find, repl: c.repl, action: c.action }));
+      const apply2 = (x) => rules2.reduce((a, r) => (r.find && r.action !== 'leave' && r.find !== r.repl ? a.split(r.find).join(r.repl) : a), x);
+      const passageText = heldDoc2.blocks
+        .filter((b) => typeof b.x === 'string' && (b.t === 'p' || b.t === 'verse' || b.t === 'notedef'))
+        .map((b) => apply2(b.x))
+        .join(' ');
+      const ws = (passageText.toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((w) => w.length >= 7);
       const shelfTermSetAll = new Set(shelf.terms);
       for (const w of ws) {
         if (postTerms.has(w) || startsPostWord(w)) continue;
@@ -1786,6 +1805,12 @@ console.log('== the second group: the shelf');
   // the two halves of the asymmetry, through the build's own CLI. It writes
   // OUTSIDE dist: a test must not leave anything in the tree it is checking
   const tmpIndex = join(osTmpdir(), 'search-smoke-shelf-index.json');
+  /* CLEAN UP FIRST, not only at the end of the block. tmpIndex is a FIXED path,
+   * so a run that CRASHES between writing it and the cleanup at the end leaves a
+   * stale index that makes the NEXT run fail `!existsSync` on a build that did the
+   * right thing (MEASURED: exactly that, after a crash elsewhere in this block).
+   * A test must not fail because its own previous run died. */
+  try { require('node:fs').unlinkSync(tmpIndex); } catch (e) { /* nothing to remove */ }
   let defaultOut = null;
   try {
     defaultOut = execFileSync('node', [join('tools', 'build.mjs'), `--shelf-index=${tmpIndex}`, `--only=${heldSlug}`],
@@ -1803,23 +1828,51 @@ console.log('== the second group: the shelf');
   check(previewOk && preview.docs.length === 1 && preview.docs[0].slug === heldSlug,
     `with LIBRARY=1 the SAME build indexes it (${previewOk ? preview.pass.length + ' passage(s)' : 'the build failed'})`);
   if (previewOk) {
-    // a transcription-only text has no stored document: its anchors are the ids
-    // the page's own renderer emits, computed here from the source
+    /* A STORED-EDITION text's anchors are the DOCUMENT's (`s<n>`, `s<n>-<par>`
+     * and the page anchors the extractor emits); a transcription-only text has
+     * no document, so its anchors are the heading ids its own page renders.
+     * The preview index is the same build's own work either way, so the anchor
+     * set is recomputed from the same source the build read. */
     const heldEntry = require('../tools/library/shelf.mjs').TEXTS.find((t) => t.slug === heldSlug);
-    const heldSrc = readFileSync(require('../tools/library/shelf.mjs').textSource(heldEntry, require('../tools/library/shelf.mjs').shelfFiles()), 'utf8');
-    const heldDoc = pagePreprocess(heldSrc, {});
-    const heldParts = pagePartition(heldDoc, 1800000);
-    const pageHeadIds = new Set();
-    heldParts.forEach((p2) => { for (const b of p2.blocks) if (b.type === 'heading') pageHeadIds.add(b.id); });
-    const heldAnchors = preview.pass.filter((r) => r[1] != null).map((r) => r[1]);
-    const badAnchor = heldAnchors.filter((a2) => !pageHeadIds.has(a2));
-    check(heldAnchors.length > 0 && badAnchor.length === 0,
-      `every anchor of a shelf-only text is a heading id its OWN page renders (${heldAnchors.length} anchor(s), ` +
-        `${badAnchor.length} not among the ${pageHeadIds.size} heading id(s); e.g. ${heldAnchors.slice(0, 3).join(', ')})`);
-    const paths = new Set(preview.pass.map((r) => r[6] || ''));
-    const wanted = new Set([''].concat(heldParts.map((_, i) => i === 0 ? '' : `/library/${heldSlug}/part-${i + 1}/`)));
-    check([...paths].every((x) => wanted.has(x)),
-      `and its page paths are the pages that text is emitted in (${heldParts.length} part(s); ${[...paths].filter(Boolean).length} passage(s) on a later part)`);
+    const heldStored = join(ROOT, 'content', 'library', heldSlug, 'source.txt');
+    const shelfMod = require('../tools/library/shelf.mjs');
+    const heldSrc = readFileSync(existsSync(heldStored) ? heldStored : shelfMod.textSource(heldEntry, shelfMod.shelfFiles()), 'utf8');
+    let heldAnchors;
+    let wanted;
+    if (existsSync(heldStored)) {
+      // the document's own anchors: what the extractor emits at these bytes
+      const { extract, anchorLists } = require('../tools/library/extract.mjs');
+      const heldDoc = extract(heldSrc, { entry: heldEntry, sha256: null });
+      const lists = anchorLists(heldDoc);
+      heldAnchors = preview.pass.filter((r) => r[1] != null).map((r) => r[1]);
+      const docAnchors = new Set([
+        ...lists.sections,
+        ...lists.pages,
+        ...lists.regions,
+        ...heldDoc.blocks.filter((b) => b.at).map((b) => b.at),
+      ]);
+      const badAnchor = heldAnchors.filter((a2) => !docAnchors.has(a2));
+      check(heldAnchors.length > 0 && badAnchor.length === 0,
+        `every anchor of a stored-edition text is an anchor its OWN document carries (${heldAnchors.length} anchor(s), ` +
+          `${badAnchor.length} not among ${docAnchors.size}; e.g. ${heldAnchors.slice(0, 3).join(', ')})`);
+      wanted = null; // the page-path check below is the transcription-only case's
+    } else {
+      const heldDoc = pagePreprocess(heldSrc, {});
+      const heldParts = pagePartition(heldDoc, 1800000);
+      const pageHeadIds = new Set();
+      heldParts.forEach((p2) => { for (const b of p2.blocks) if (b.type === 'heading') pageHeadIds.add(b.id); });
+      heldAnchors = preview.pass.filter((r) => r[1] != null).map((r) => r[1]);
+      const badAnchor = heldAnchors.filter((a2) => !pageHeadIds.has(a2));
+      check(heldAnchors.length > 0 && badAnchor.length === 0,
+        `every anchor of a shelf-only text is a heading id its OWN page renders (${heldAnchors.length} anchor(s), ` +
+          `${badAnchor.length} not among the ${pageHeadIds.size} heading id(s); e.g. ${heldAnchors.slice(0, 3).join(', ')})`);
+      wanted = new Set([''].concat(heldParts.map((_, i) => i === 0 ? '' : `/library/${heldSlug}/part-${i + 1}/`)));
+    }
+    if (wanted) {
+      const paths = new Set(preview.pass.map((r) => r[6] || ''));
+      check([...paths].every((x) => wanted.has(x)),
+        `and its page paths are the pages that text is emitted in (${wanted.size} allowed; ${[...paths].filter(Boolean).length} passage(s) on a later part)`);
+    }
     // NOW the same query, with the preview index installed in the same page
     S.loadDeep(Object.assign({}, deepRaw, { shelf: preview }));
     const previewHits = S.queryShelf(heldWord, { limit: 200 });

@@ -279,6 +279,29 @@ export const TEXTS = [
     cat: ['proclus-theology-of-plato'],
   },
   {
+    slug: 'proclus-elements-of-theology-taylor-1816',
+    group: 'ascent-argued',
+    // THE WORK AS ITS OWN TEXT, out of the volume that carries it. The Elements
+    // of Theology is one work inside the 1816 volume (shelved whole beside this
+    // entry, and transcribed twice more as the two volume transcriptions); this
+    // entry serves THAT work alone, as the edition prints it — the transcription
+    // is the volume's own bytes over the lines the work occupies, recorded in
+    // the edition's import.json (`extract`), not a fresh transcription.
+    file: 'Proclus-Taylor-Elements-Theology-and-Theology-of-Plato-1816',
+    title: 'The Elements of Theology',
+    author: 'Proclus',
+    translator: 'Thomas Taylor',
+    year: 1816,
+    lang: 'en',
+    edition:
+      'Proclus: The Elements of Theology, translated by Thomas Taylor; printed as the second work of The Six Books of Proclus on the Theology of Plato, vol. II (London, 1816). This edition serves the Elements alone, over the pages the volume gives it (301–441).',
+    // the archive.org identifier the slice was carved from (import.json records
+    // the whole file's sha256 and the line range; the build serves the stored
+    // slice and never reads the item)
+    item: 'thomastaylor',
+    cat: ['proclus-elements-of-theology'],
+  },
+  {
     slug: 'dionysius-divine-names-mystical-theology-parker-1897',
     group: 'ascent-argued',
     file: 'Pseudo-Dionysius-Mystical-Theology-Divine-Names-Parker-1897',

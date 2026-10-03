@@ -190,9 +190,11 @@ export function pageSignals(src, entry) {
   const at = (bi, li) => base[bi] + li;
   const markerKeyAt = (index) => (index >= drop && index - drop < keys.length ? keys[index - drop] : null);
 
-  /* 2. Page furniture, consumed before anything is read as a heading (§4.2). */
+  /* 2. Page furniture, consumed before anything is read as a heading (§4.2).
+   * `reconcile` has already given every marker the page the TRANSCRIPTION's own
+   * readings support; step 2b then reads the leaves. */
   const { markers, junk } = scan(lines, cfg, at);
-  reconcile(markers);
+  reconcile(markers, cfg);
   return { cfg, all, lines, drop, dropped, flat, flatLines: flat.length, markers, junk, markerKeyAt, at };
 }
 
@@ -214,6 +216,102 @@ export const sha256 = (text) => createHash('sha256').update(text).digest('hex');
  * rules, never as a second text, so the transcription stays inspectable and the
  * diff view is the rule list itself.
  */
+/** How one text's divisions are NUMBERED. `arabic` is the Cave's own shape — a
+ * bare arabic numeral at the start of a line that carries the section's own
+ * first words ("7. Why, therefore") — and `roman` is the label shape the 1816
+ * volume prints ("PROPOSITION XXVI."), where the division's number stands on a
+ * line of its own and the section's words begin on the next block. The spec is
+ * DATA, not code: each shape is one entry here, and a third numbering would be
+ * a third entry rather than a fork in the extraction. */
+const OPENER_SPECS = {
+  arabic: { re: /^['\u2018]?(\d{1,2})\.\s/, read: (token) => Number(token) },
+  roman: {
+    // the label, an optional stray quote before it (the transcription opens one
+    // proposition with `' PROPOSmON`), the numeral, and its stop
+    re: /^['\u2018]?\s*PROPOSITION\s+([IVXLCDM]+)\b[.,]?/,
+    read: readRoman,
+  },
+};
+
+/** A roman numeral as the print writes it, read subtractively. The transcription
+ * spells the number through OCR confusions (`Cl.` for CI, `CXXVl.` for CXXVI,
+ * `ccvm.` for CCVIII), and those are repaired by the opener RULES before this is
+ * asked — the spec only ever reads the CLEAN shape, which is what makes the rule
+ * list the reviewable thing and the reader a one-liner. */
+function readRoman(token) {
+  const R = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+  let n = 0;
+  for (let i = 0; i < token.length; i++) {
+    const v = R[token[i]];
+    if (v == null) return NaN;
+    n += i + 1 < token.length && R[token[i + 1]] > v ? -v : v;
+  }
+  return n;
+}
+
+/** The per-text head-furniture CLASSIFIERS. A named key, not a function in the
+ * config: the config is DATA a reviewer reads, and the classifier is measured
+ * against one transcription. Each returns true for a line that is page
+ * furniture (suppressed in the reading view, shown in the transcription view)
+ * and false for a line of the book's own text. */
+const FURNITURE_HEADS = {
+  /* The 1816 Proclus volume's heads and feet. The signatures, measured over
+   * every line of the slice: a line is one of these iff its tokens are drawn
+   * only from the head vocabulary and the roman numerals, with at most the
+   * folio's digits and the OCR debris the scan leaves on a token — and the
+   * line's first word-like token is a spelling of 'PROP.' (any case, with up to
+   * five damage letters before the 'op': pkop., fcROP., PIJOP., PBOP., PEOP.,
+   * PflOP., I'KOP.) or the line begins one of the fixed shapes (the watermark,
+   * 'ELEMENTS', 'OF THEOLOGY.', 'Vol. II.', 'Proc.'). MEASURED on the slice:
+   * 135 range-head lines so recognised, zero text lines among them. */
+  'proclus-1816': (line) => {
+    if (/^digitiz/i.test(line)) return true;                    // 'Digitized by …' (140)
+    if (/^(?:google|gc>9gle)/i.test(line)) return true;         // the line under it (33)
+    if (/proposition/i.test(line)) return false;                // a division label, never furniture
+    if (/^proc[.,]/i.test(line)) return true;                   // the running foot's 'Proc.'
+    if (/^(?:vol|vo\s?l)[.,]\s*(?:ii|11)\b/i.test(line)) return true; // 'Vol. II.' / 'Vo l. II.'
+    if (/^(?:elements?|element s|elements,)\b/i.test(line)) return true; // the verso title word (64)
+    if (/^(?:of|ok|oe)\s+theology\b/i.test(line)) return true;  // the recto words (58)
+    if (/^prop[.,]?\s+vol\b/i.test(line)) return true;          // 'Prop. Vol. II. 2 U' — a Proc misread
+    /* the range head 'PROP. <romans>': the first word-like token ends in 'op'
+     * (every measured spelling does), and every token after it is a roman
+     * numeral (allowing the scan's damage: half the letters roman), a head
+     * word, or the folio's digits. */
+    const toks = line.split(/\s+/);
+    const alpha = (t) => t.replace(/[^A-Za-z1]/g, '');
+    const HEAD = /^(?:elements?|of|theology|oe|ok|el)$/i;
+    const romanish = (t) => {
+      const a = alpha(t);
+      if (a === '') return false;
+      const rom = (a.match(/[ivxlcdmjnu]/gi) || []).length;
+      return rom === a.length || (a.length >= 3 && rom * 2 >= a.length);
+    };
+    const PROPWORD = /^[^A-Za-z]*[A-Za-z'1]{0,5}op[.,]?$/i;
+    const pi = toks.findIndex((t) => PROPWORD.test(t));
+    if (pi < 0) return false;
+    if (line.length > 48) return false;
+    for (let k = pi + 1; k < toks.length; k++) {
+      const t = toks[k].replace(/[^A-Za-z1-9.,]/g, '');
+      if (t === '') continue;
+      if (HEAD.test(alpha(t)) || romanish(t) || /^\d{1,3}[a-z]?[.,]?$/.test(t)) continue;
+      return false;
+    }
+    for (let k = 0; k < pi; k++) {
+      const t = alpha(toks[k]);
+      if (t === '') continue;
+      if (HEAD.test(t) || /^\d{1,3}[a-z]?$/.test(t)) continue;
+      return false;
+    }
+    return true;
+  },
+};
+
+/** Is this line head-FOOTER furniture, per the text's own classifier? */
+function furnitureHead(cfg, line) {
+  const fn = cfg.furnitureHead ? FURNITURE_HEADS[cfg.furnitureHead] : null;
+  return fn ? fn(line) : false;
+}
+
 const TEXT_RULES = {
   'porphyry-on-the-cave-of-the-nymphs-taylor-1917': {
     head: 'ON THE CAVE OF THE NYMPHS',
@@ -241,6 +339,68 @@ const TEXT_RULES = {
       // block runs on ('PLEASE DO NOT REMOVE' / 'CARDS OR SLIPS FROM THIS POCKET')
       library: 'PLEASE DO NOT REMOVE',
     },
+  },
+
+  /* The Elements of Theology, as its own work out of the volume that carries
+   * it: 211 propositions, each numbered in roman on a line of its own, the
+   * statement and proof following as separate blocks. Everything here is
+   * MEASURED on the stored slice (content/library/<slug>/source.txt, whose
+   * import.json traces it to the volume's own file over the lines the work
+   * occupies). */
+  'proclus-elements-of-theology-taylor-1816': {
+    // THE DIVISIONS: `PROPOSITION <roman>.` — OPENER_SPECS.roman reads it. The
+    // transcription mangles 14 of the 211 numerals (`Cl.` for CI, `CXXVl.` for
+    // CXXVI, `T>ROPOSITION` …); the opener RULES repair them, and the spec is
+    // asked only for the clean shape that is left.
+    opener: 'roman',
+    // The count the extraction asserts: the propositions run I…CCXI, no gap and
+    // none doubled, and a count that is not 211 names a missed or a spurious
+    // opener rather than a different book.
+    expectedDivisions: 211,
+    // THE CONTENTS-LIST WORD CAP. Eight words (the Cave's own cap) leave three
+    // of this text's opening statements identical to their neighbours' — props
+    // XXXI/XXXIII both open "Every thing which proceeds from a certain
+    // thing…", and CLXIII–CLXV all open "Every multitude of unities which is
+    // participated by…" — so the cap is ten, the smallest that distinguishes
+    // all 211 (MEASURED: 208 distinct at eight, 211 at ten).
+    titleWords: 10,
+    // THE PAGE ARITHMETIC of a folio-only volume (see `reconcile`): the heads
+    // are words and carry no number, so the folio chain is the only number the
+    // text reads, and a scan that loses a folio line must not refuse every
+    // reading after it. The bound is MEASURED on this slice: the largest true
+    // gap between consecutive readable folios is 4 pages (333→336, 347→350,
+    // 352→356 through its confused reading), so a skip wider than 4 is a
+    // disagreement, not a missing line — 990 where 330 is due is refused.
+    folioSkip: 4,
+    // THE PAGE FURNITURE, by shape. This volume's heads carry NO number inline
+    // (measured: 3 of 494 head lines carry a digit token, each a folio the scan
+    // glued onto a verso range head — 'PROP. L. OF THEOLOGY. 535', which is the
+    // folio 350 reversed); the folio stands on its OWN line, which `bareFolio`
+    // reads, so this text needs the watermark and the head WORDS recognised as
+    // furniture and nothing else. The shapes, measured over every line of the
+    // slice (see `furnitureHead`, which applies them):
+    //   the Google watermark — 'Digitized by …' in all its OCR spellings (140
+    //     lines: t^OOQLe, boogie, v^ooQie, {jOoq le, the split 'Digitiz ed by')
+    //     and the 'Google' line under it (33, one scanned 'Gc>9gle');
+    //   the verso range head 'PROP. <propositions this page carries>' — 124
+    //     lines, OCR'd in a dozen spellings of the word itself (pkop., fcROP.,
+    //     PROF., PBOP., PIJOP., PEOP., I'KOP., PflOP.), sometimes run together
+    //     with the folio and the recto words ('374 ELEMENTS PROP. CX1I.');
+    //   the recto head's words — 'OF THEOLOGY.' (56) with its OCR forms
+    //     ('OF THEOLOGY*', 'OK THEOLOGY.', 'OE THEOLOGY.') and 'ELEMENTS'
+    //     (64: the verso head alone, where the folio was picked up by the line
+    //     before it; the full 'ELEMENTS OF THEOLOGY.' twice is the title page
+    //     and its repeat, which are FRONT MATTER and excluded by position);
+    //   the signature marks at the foot — 'Proc.' with what follows ('Proc.
+    //     Vol. II. 2 S', 'Proc. Vox,. II. 2 R', the split 'Vo l. II.'), the
+    //     bare 'Vol. II.', and the mis-scanned 'Prop. Vol. II. 2 U' (a Proc
+    //     the scan read as Prop);
+    //   the bare gathers ('3 K', '2 Q') and the scan's debris, which the shape
+    //     test `isFurnitureJunk` already catches.
+    // The range head is recognised by its own classifier below (`isRangeHead`),
+    // because no list of spellings can carry the dozen forms the scan gives the
+    // one word 'PROP.'; the rest are the shapes named above.
+    furnitureHead: 'proclus-1816',
   },
 };
 
@@ -559,9 +719,6 @@ export function checkEdits(doc) {
   return report;
 }
 
-/** A section opener at the start of a line, with the transcription's stray
- * quote before the number. The number must then fit the sequence (below). */
-const OPENER = /^['\u2018]?(\d{1,2})\.\s/;
 /** A note definition's marker, at the start of a line in the notes region. */
 const NOTE_MARK = /^\(([^)\s]{1,3})\)\s*/;
 /** A note reference in the running text: every reference in this edition is
@@ -613,6 +770,21 @@ function scan(lines, cfg, at) {
         });
         continue;
       }
+      /* THE HEAD-WORD FURNITURE ANOTHER VOLUME PRINTS. The 1816 Proclus prints
+       * its heads as WORDS with no number in them — the verso 'PROP. <range>'
+       * and 'ELEMENTS', the recto 'OF THEOLOGY.' — with the folio on its own
+       * line, which `bareFolio` below reads. Those lines are furniture exactly
+       * as a running head is (suppressed in the reading view, shown in the
+       * transcription view), and they are recognised by the text's own measured
+       * classifier, because no equality list can carry the OCR spellings the
+       * scan gives them. A head line that DOES carry a number ('PROP. L. OF
+       * THEOLOGY. 535') is still furniture: MEASURED, all three such lines
+       * carry a folio the scan glued to the head, and one of them (535 where
+       * 350 is due) is the folio reversed — a number a head never printed. */
+      if (furnitureHead(cfg, line)) {
+        junk.add(key);
+        continue;
+      }
       const folio = bareFolio(line);
       if (folio) {
         markers.set(key, { kind: 'folio', raw: line, value: folio.value, plain: folio.plain, at: index });
@@ -635,18 +807,34 @@ function scan(lines, cfg, at) {
   return { markers, junk };
 }
 
-/** The next marker that carries a readable head number, from `from` on. */
+/** The next marker that carries a readable head number, from `from` on. When the
+ * text's heads carry no numbers at all (the 1816 Proclus), the FOLIO is the only
+ * marker that reads one — so the same walk looks for the next plain folio, which
+ * is what a first folio with nothing before it is tested against. */
 function nextHeadValue(markers, keys, from) {
   for (let i = from; i < keys.length; i++) {
     const m = markers.get(keys[i]);
     if (m.kind === 'head' && m.value != null) return m.value;
+    if (m.kind === 'folio' && m.plain) return m.value;
   }
   return null;
 }
 
-/** Reconcile the page candidates — the plan's rule, in one place (§4.2). */
-function reconcile(markers) {
+/** Reconcile the page candidates — the plan's rule, in one place (§4.2).
+ *
+ * For a volume whose only number-bearing marker is the BARE FOLIO (the 1816
+ * Proclus: its heads are words, and no leaf model is stored), the Cave's exact
+ * ±1 test cannot start — nothing before the first folio supplies the `next`
+ * value, and a scan that loses one folio line refuses every reading after it.
+ * The per-text `folioSkip` widens the step for THAT case alone, and the
+ * widening is still arithmetic, not taste: a plain reading v > last is accepted
+ * when it skips only pages no earlier plain candidate reads (the folio lines
+ * the scan lost) and no more than the bound the volume's own scan measured
+ * (its largest true gap is 4). A confused reading, a backward reading and a
+ * reading that jumps past a refused plain one are all still refused. */
+function reconcile(markers, cfg = {}) {
   const keys = [...markers.keys()];
+  const skip = cfg.folioSkip || 0;
   let last = null;
   for (let i = 0; i < keys.length; i++) {
     const m = markers.get(keys[i]);
@@ -666,8 +854,21 @@ function reconcile(markers) {
       // an ambiguous reading: it must fill the gap it sits in
       ok = m.value === (last !== null ? last + 1 : next !== null ? next - 1 : m.value);
       ok = ok && (last === null || m.value > last);
+    } else if (skip > 0 && m.plain) {
+      // a folio-only volume: accept the first plain reading, a +1 step, or a
+      // forward skip over pages nothing read — never past a reading this rule
+      // refused, and never further than the measured bound
+      ok =
+        last === null ||
+        m.value === last + 1 ||
+        (m.value > last &&
+          m.value - last <= skip &&
+          keys.slice(0, i).every((k) => {
+            const c = markers.get(k);
+            return !(c.kind === 'folio' && c.plain && c.value > last && c.value < m.value);
+          }));
     } else {
-      // a bare folio: the same test, and the neighbours must agree
+      // a bare folio: the Cave's own test, and the neighbours must agree
       ok =
         (last !== null && m.value === last + 1) ||
         (last === null && next !== null && m.value === next - 1);
@@ -684,16 +885,18 @@ function reconcile(markers) {
   return markers;
 }
 
-/** A section's title: the section's OWN opening words, capped at eight words and
- * cut at the earliest punctuation boundary inside the cap, ellipsised. The 1917
- * print has no contents page (MEASURED: nothing between the title page and §1),
- * so the table of contents is generated apparatus and the title is honestly
+/** A section's title: the section's OWN opening words, capped (eight words by
+ * default — the cap is per-text where the openings need more to differ, see
+ * `extract`) and cut at the earliest punctuation boundary inside the cap,
+ * ellipsised. Neither the 1917 print nor the 1816 volume prints a contents
+ * page (MEASURED: nothing between the title page and the first division), so
+ * the table of contents is generated apparatus and the title is honestly
  * derived from the text, not taken from the edition. */
-export function sectionTitle(text) {
+export function sectionTitle(text, cap = 8) {
   const words = text.split(' ').filter((w) => w !== '');
-  const cap = Math.min(words.length, 8);
-  let cut = cap;
-  for (let i = 2; i < cap; i++) {
+  const max = Math.min(words.length, cap);
+  let cut = max;
+  for (let i = 2; i < max; i++) {
     if (/[,.;:?!]$/.test(words[i])) {
       cut = i + 1;
       break;
@@ -1014,6 +1217,18 @@ export function tidyPunctuation(s) {
 export function extract(src, meta) {
   const entry = meta.entry;
   const cfg = TEXT_RULES[entry.slug] || {};
+  /* THE OPENER SHAPE is a property of the text (OPENER_SPECS): the Cave's own
+   * divisions are a bare arabic numeral on the line that carries the section's
+   * first words; the 1816 Proclus prints `PROPOSITION <roman>.` on a line of
+   * its own. The same regex/read pair serves both, so a third numbering is data
+   * rather than a fork in the extraction. */
+  const OPENER = OPENER_SPECS[cfg.opener || 'arabic'];
+  if (!OPENER) {
+    throw new Error(
+      `library: ${entry.slug}: the opener spec "${cfg.opener}" is not one of ${Object.keys(OPENER_SPECS).join(', ')} — ` +
+        `a text's division numbering must name a shape the extraction can read`,
+    );
+  }
   /* The rules come from the reviewed edits file, not from this module, and the
    * whole list is loaded before anything is read: the extraction NEEDS the
    * `opener` class to find a section at all, and the document ships every rule
@@ -1313,12 +1528,13 @@ export function extract(src, meta) {
         continue;
       }
 
-      const open = OPENER.exec(fixed);
+      const open = OPENER.re.exec(fixed);
+      const openN = open ? OPENER.read(open[1]) : null;
       if (open && region === 'front') {
-        if (Number(open[1]) !== expectedSec) {
+        if (openN !== expectedSec) {
           throw new Error(
             `library: ${entry.slug}: section ${expectedSec} is expected here but the text opens ` +
-              `section ${open[1]} (${JSON.stringify(line.slice(0, 60))}) — the divisions do not run 1…N`,
+              `section ${openN} (${JSON.stringify(line.slice(0, 60))}) — the divisions do not run 1…N`,
           );
         }
         flush();
@@ -1331,7 +1547,7 @@ export function extract(src, meta) {
         start('p', line, { sameParagraph: false });
         continue;
       }
-      if (open && region === 'body' && Number(open[1]) === expectedSec) {
+      if (open && region === 'body' && openN === expectedSec) {
         // a division the transcription ran into the paragraph before it (§11 of
         // this volume opens mid-paragraph): the paragraph break the print has is
         // restored here, and the line begins the new section's first paragraph.
@@ -1411,15 +1627,28 @@ export function extract(src, meta) {
 
   /* 4. The properties the plan requires the extraction to have, asserted here so
    * a silent mis-read cannot be served: the divisions run 1…N with none missing
-   * and none duplicated, and every note marker runs 1…M and is referenced. */
-  if (expectedSec - 1 !== 18) {
+   * and none duplicated, and every note marker runs 1…M and is referenced.
+   * N is the text's own (its `expectedDivisions`): the Cave's eighteen and the
+   * Proclus's 211 are both MEASURED facts about one edition, and a count that
+   * is not the edition's names a missed or a spurious opener rather than a
+   * different book. */
+  const wantDivisions = cfg.expectedDivisions || 18;
+  if (expectedSec - 1 !== wantDivisions) {
     throw new Error(
-      `library: ${entry.slug}: the text's divisions do not run 1…18 — ` +
+      `library: ${entry.slug}: the text's divisions do not run 1…${wantDivisions} — ` +
         `${expectedSec - 1} were found, so a section is either not detected (its opener is still ` +
         `mangled) or detected twice (an opener that is not one); the offender is the division whose ` +
         `number is not the one due`,
     );
   }
+  /* THE NOTE MACHINERY IS THE EDITION'S OWN. The 1917 Cave carries a numbered
+   * Notes division, every marker `(n)` defined and referenced; the 1816 Proclus
+   * has NO such division (MEASURED: zero `(note n)` references in the slice —
+   * its marginal notes are the page-foot kind, unnumbered in this
+   * transcription) — so the three arithmetic gates below assert the Cave's
+   * shape only where the text has it: a text with neither definitions nor
+   * references has nothing to check, and a text with one but not the other
+   * fails exactly as before. */
   const consecutive = defs.every((d, i) => d.n === i + 1);
   if (!consecutive) {
     const bad = defs.find((d, i) => d.n !== i + 1);
@@ -1428,21 +1657,23 @@ export function extract(src, meta) {
         `note ${bad.n} stands where ${defs.indexOf(bad) + 1} is due (marker "${bad.token}")`,
     );
   }
-  const referenced = new Set(refs.map((r) => r.n));
-  const unreferenced = defs.filter((d) => !referenced.has(d.n));
-  if (unreferenced.length) {
-    throw new Error(
-      `library: ${entry.slug}: ${unreferenced.length} note definition(s) nothing refers to ` +
-        `(${unreferenced.map((d) => d.n).join(', ')}) — every note of this edition is referenced in the text`,
-    );
-  }
-  const undefinedRef = refs.find((r) => r.n < 1 || r.n > defs.length);
-  if (undefinedRef || refs.length > defs.length) {
-    throw new Error(
-      `library: ${entry.slug}: a note reference resolves to no definition — ` +
-        `${refs.length} references against ${defs.length} definitions, so at least one definition was ` +
-        `missed (a marker the extraction does not see, or a note whose paragraph start is not a line start)`,
-    );
+  if (defs.length || refs.length) {
+    const referenced = new Set(refs.map((r) => r.n));
+    const unreferenced = defs.filter((d) => !referenced.has(d.n));
+    if (unreferenced.length) {
+      throw new Error(
+        `library: ${entry.slug}: ${unreferenced.length} note definition(s) nothing refers to ` +
+          `(${unreferenced.map((d) => d.n).join(', ')}) — every note of this edition is referenced in the text`,
+      );
+    }
+    const undefinedRef = refs.find((r) => r.n < 1 || r.n > defs.length);
+    if (undefinedRef || refs.length > defs.length) {
+      throw new Error(
+        `library: ${entry.slug}: a note reference resolves to no definition — ` +
+          `${refs.length} references against ${defs.length} definitions, so at least one definition was ` +
+          `missed (a marker the extraction does not see, or a note whose paragraph start is not a line start)`,
+      );
+    }
   }
 
   /* 4b. The language of the notes. The one Latin passage in this edition is a
@@ -1574,30 +1805,55 @@ export function extract(src, meta) {
   /* 7. The table of contents: generated, from the divisions the edition itself
    * makes, each entry carrying the section's own opening words.
    *
-   * The TITLE is generated apparatus — the 1917 print has no contents page — and
-   * it is derived from the CORRECTED opening words (option (a) of the phase-3
-   * brief, not (b)): the title is built from the same words, with the same rules,
-   * in the same order, as the reading view applies to that same line, so the
-   * contents list and the reading cannot disagree about the sentence a reader
-   * meets first. Deriving it from the whole corrected view instead would mean the
-   * client deriving apparatus from text it has already rendered, for no gain.
+   * The TITLE is generated apparatus — neither the 1917 print nor the 1816
+   * volume prints a contents page — and it is derived from the CORRECTED
+   * opening words (option (a) of the phase-3 brief, not (b)): the title is built
+   * from the same words, with the same rules, in the same order, as the reading
+   * view applies to that same line, so the contents list and the reading cannot
+   * disagree about the sentence a reader meets first.
+   *
+   * WHICH words depends on the division's shape, and the shape is the text's:
+   * the Cave's opener carries the section's own first words on the same line
+   * (`1. What does Homer…`), so the title is that line minus its numeral; the
+   * 1816 Proclus prints the label on a line of its own (`PROPOSITION XXVI.`),
+   * so the title is the NEXT text block's opening, and a label-shaped first
+   * block is stepped over. The word CAP is per-text for the same reason: eight
+   * words distinguish the Cave's eighteen sections but leave two of the
+   * Proclus's opening statements identical to their neighbours' (props 31/33
+   * and 163–165 all open "Every thing which proceeds…"), and a contents list
+   * whose entries do not distinguish the divisions is not a contents list.
    *
    * Every entry also carries the RAW derivation (`raw`) — the title the
    * transcription's own damaged words give — because that is what the
    * transcription view must show and what the review diffs against. A title still
    * damaged after correction is marked `damaged` and the entry names the words: it
    * is NEVER repaired by inventing a reading. */
+  const titleCap = cfg.titleWords || 8;
+  const titleOf = (text) => sectionTitle(text, titleCap);
+  // the roman shape's own label line: stripped whole, so the title is the
+  // statement's words rather than the label repeated 211 times. The test is on
+  // the CORRECTED line — the opener rules have repaired the mangled label by
+  // the time the block is read here, and the raw form (`T>ROPOSITION XXVI.`)
+  // does not match the clean shape.
+  const isLabel = (x) => {
+    if (cfg.opener !== 'roman') return false;
+    const fixed = applyCorrections(x, corrections);
+    return OPENER.re.test(fixed) && fixed.replace(OPENER.re, '').trim() === '';
+  };
   const toc = [];
   for (let i = 0; i < out.length; i++) {
     const b = out[i];
     if (b.t !== 'sec') continue;
-    const body = out.slice(i + 1).find((x) => x.t === 'p' || x.t === 'verse');
+    let body = out.slice(i + 1).find((x) => x.t === 'p' || x.t === 'verse');
+    while (body && isLabel(body.x)) {
+      body = out.slice(out.indexOf(body) + 1).find((x) => x.t === 'p' || x.t === 'verse');
+    }
     const line = body ? body.x.split('\n')[0] : '';
     // `raw` is the title with NO rule applied — the transcription's own words,
     // which is what the transcription view must show; `title` is the same words
     // through the full rule list, which is what the reading view applies.
-    const rawTitle = sectionTitle(line.replace(OPENER, ''));
-    const title = sectionTitle(applyCorrections(line, corrections).replace(OPENER, ''));
+    const rawTitle = titleOf(line.replace(OPENER.re, ''));
+    const title = titleOf(applyCorrections(line, corrections).replace(OPENER.re, ''));
     const harm = titleDamage(rawTitle, title, corrections);
     toc.push({
       id: b.id,
@@ -1613,7 +1869,11 @@ export function extract(src, meta) {
   }
   const titles = toc.map((t) => t.title);
   if (new Set(titles).size !== titles.length) {
-    throw new Error(`library: ${entry.slug}: two sections derive the same title — the titles must distinguish them`);
+    throw new Error(
+      `library: ${entry.slug}: ${titles.length - new Set(titles).size} section(s) derive a title another section ` +
+        `already has — the titles must distinguish them (a longer per-text word cap, or a damaged opener the ` +
+        `rules do not read)`,
+    );
   }
 
   /* 7b. THE POLICY, COUNTED — on the text the reader is given. The base policy is
@@ -2315,16 +2575,56 @@ export function importWitness(slug, shelfFilename, why) {
  * this, the build reads `content/library/<slug>/source.txt` and the shelf can be
  * absent. Re-running on a CHANGED shelf file fails rather than overwrite: the
  * stored edition may already be cited, and replacing it silently would move
- * every page number a citation names. */
+ * every page number a citation names.
+ *
+ * A SLICE OF A VOLUME records its own provenance and is NOT re-carved here: the
+ * import record an earlier pass wrote already names the item, the whole file's
+ * sha256 and the line range, and the stored bytes are that file's bytes over
+ * those lines (the reconnaissance carved this one deliberately). So an edition
+ * whose record carries an `extract` block is verified against itself — the
+ * stored slice must hash to the recorded sha256, and the whole file is
+ * re-hashed against the recorded whole when the shelf still holds it — and a
+ * shelf file that has changed is refused on the same terms as any other. */
 export function importEdition(slug) {
   const entry = TEXTS.find((t) => t.slug === slug);
   if (!entry) throw new Error(`library: no shelf entry '${slug}'`);
+  const record = join(LIBRARY_DIR, slug, 'import.json');
+  const prev = existsSync(record) ? JSON.parse(readFileSync(record, 'utf8')) : null;
+  /* A SLICE EDITION is already imported when its record and its bytes agree. */
+  if (prev && prev.extract) {
+    const bytes = readFileSync(editionPath(slug));
+    const sha256 = createHash('sha256').update(bytes).digest('hex');
+    if (sha256 !== prev.sha256) {
+      throw new Error(
+        `library: ${slug}: the stored slice is not the bytes the import recorded.\n` +
+          `  recorded: ${prev.sha256}\n  stored:   ${sha256}\n` +
+          `  A slice edition is carved once, on purpose; nothing here re-carves it. If the volume's ` +
+          `transcription has changed, read the difference, carve a NEW edition (a new slug), and leave ` +
+          `this one — it may already be cited.`,
+      );
+    }
+    /* The whole file the slice was carved from is cross-checked when the shelf
+     * still holds it: the slice's provenance is exact only while the volume's
+     * own bytes are the recorded ones. */
+    if (existsSync(join(SHELF, entry.file + '.txt'))) {
+      const wholeBytes = readFileSync(join(SHELF, entry.file + '.txt'));
+      const wholeSha = createHash('sha256').update(wholeBytes).digest('hex');
+      if (wholeSha !== prev.extract.whole_sha256) {
+        throw new Error(
+          `library: ${slug}: the volume this slice was carved from has changed on the shelf.\n` +
+            `  carved from: ${prev.extract.whole_sha256}\n  now:          ${wholeSha}\n` +
+            `  The stored edition is unchanged and still served; but its recorded provenance names ` +
+            `bytes the shelf no longer holds, so the trace is stale. Re-carve deliberately or record ` +
+            `the new whole — do not overwrite this edition.`,
+        );
+      }
+    }
+    return { ...prev, skipped: true };
+  }
   const from = textSource(entry, shelfFiles());
   const bytes = readFileSync(from);
   const sha256 = createHash('sha256').update(bytes).digest('hex');
-  const record = join(LIBRARY_DIR, slug, 'import.json');
-  if (existsSync(record)) {
-    const prev = JSON.parse(readFileSync(record, 'utf8'));
+  if (prev) {
     if (prev.sha256 === sha256) return { ...prev, skipped: true };
     throw new Error(
       `library: ${slug}: the shelf file has changed since this edition was imported.\n` +

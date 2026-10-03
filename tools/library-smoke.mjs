@@ -148,7 +148,15 @@ if (!BUILT) {
   process.exit(failures === 0 ? 0 : 1);
 }
 const files = shelfFiles();
-const srcOf = (t) => readFileSync(textSource(t, files), 'utf8');
+/* A text with a STORED EDITION is read from the edition, not the shelf — the
+ * same decision the build makes (tools/build.mjs `libraryTextPages`): the page
+ * serves the edition the repo stores, so the paragraph and heading counts it is
+ * compared against are the edition's. The shelf entry of a slice edition (the
+ * 1816 Proclus Elements) names the WHOLE VOLUME it was carved from, whose
+ * counts are four works', so the shelf is not the text this check wants even
+ * when it is the only place the bytes exist. */
+const srcOf = (t) =>
+  readFileSync(existsSync(join(ROOT, 'content', 'library', t.slug, 'source.txt')) ? join(ROOT, 'content', 'library', t.slug, 'source.txt') : textSource(t, files), 'utf8');
 const builtPages = (slug) => {
   const dir = join(LIB, slug);
   if (!existsSync(dir)) return [];
