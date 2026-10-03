@@ -105,6 +105,12 @@ type alias Model =
     , hitIx : Int
     , jump : String
     , posIx : Int
+    -- THE PAGE THE READER NAVIGATED TO, when it is a printed page. A paragraph
+    -- that runs across a page turn is ONE entry, so the entry alone cannot say
+    -- whether the reader is on the page the paragraph started on or the one it
+    -- turned onto (MEASURED: jumping to page 15, inside a paragraph that starts on
+    -- p.14, reported p.14). Set when a page is gone to, cleared by a scroll.
+    , atPage : Maybe Int
     , open : Maybe Int
     , cite : Bool
     -- The passage the open citation panel is ABOUT (plan §11 phase 5). The panel
@@ -150,6 +156,7 @@ init flags =
             , hitIx = 0
             , jump = ""
             , posIx = 0
+            , atPage = Nothing
             , open = Nothing
             , cite = False
             , citeIx = 0
@@ -406,7 +413,9 @@ update msg m =
                 ( m, Cmd.none )
 
             else
-                ( { m | posIx = ix }, persistCmd { m | posIx = ix } )
+                -- a scroll means the reader moved by reading, not by a page jump,
+                -- so the pinned page no longer describes where they are
+                ( { m | posIx = ix, atPage = Nothing }, persistCmd { m | posIx = ix } )
 
         Typing on ->
             ( { m | typing = on }, Cmd.none )
@@ -501,10 +510,21 @@ goToSilent : String -> Model -> ( Model, Cmd Msg )
 goToSilent aid m =
     case Dict.get aid m.anchors of
         Just ix ->
-            ( withNote aid { m | posIx = ix }, jumpTo aid )
+            -- a hash the reader arrived on is a navigation like any other: if it
+            -- names a printed page, the position is that page (see `atPage`)
+            ( withNote aid { m | posIx = ix, atPage = pageAnchor m.entries aid }, jumpTo aid )
 
         Nothing ->
             ( { m | notice = "Nothing here is called " ++ aid }, Cmd.none )
+
+
+{-| The printed page an anchor names, when it names one. -}
+pageAnchor : List Entry -> String -> Maybe Int
+pageAnchor entries aid =
+    pageIndex entries
+        |> List.filter (\( _, a, _ ) -> a == aid)
+        |> List.head
+        |> Maybe.map (\( _, _, pg ) -> pg)
 
 
 {-| A jump the reader asked for: scroll AND leave the fragment in the URL, so a
@@ -514,8 +534,11 @@ goTo aid m =
     case Dict.get aid m.anchors of
         Just ix ->
             let
+                pinned =
+                    pageAnchor m.entries aid
+
                 m1 =
-                    withNote aid { m | posIx = ix }
+                    withNote aid { m | posIx = ix, atPage = pinned }
             in
             ( m1, Cmd.batch [ jumpTo aid, setHash aid, persistCmd m1 ] )
 
@@ -907,7 +930,12 @@ tocIds m =
 
 currentPage : Model -> Maybe Int
 currentPage m =
-    pageAt m m.posIx
+    case m.atPage of
+        Just p ->
+            Just p
+
+        Nothing ->
+            pageAt m m.posIx
 
 
 currentSection : Model -> Maybe String
@@ -925,16 +953,22 @@ pageAt m ix =
         pages =
             pageIndex m.entries
     in
-    case List.filter (\( ei, _, _ ) -> ei == ix) pages of
-        ( _, _, pg ) :: _ ->
-            -- the entry's OWN first page: a paragraph the page turn runs through
-            -- is one entry, and the page the reader is on is where it STARTS
+    case ( List.drop ix m.entries |> List.head |> Maybe.map .item, List.filter (\( ei, _, _ ) -> ei < ix) pages |> List.reverse |> List.head ) of
+        -- standing ON a page marker is that page
+        ( Just (FPage pg _ _ _), _ ) ->
+            pg
+
+        -- a PARAGRAPH stands on the page it STARTS on: the last page marker BEFORE
+        -- it. Its own inline markers are the pages it runs ONTO (MEASURED: reading
+        -- the first marker inside the entry reported p. 15 for a paragraph that
+        -- starts on p. 14, because the marker inside it was the p.15 turn)
+        ( _, Just ( _, _, pg ) ) ->
             Just pg
 
-        [] ->
-            pages
-                |> List.filter (\( ei, _, _ ) -> ei < ix)
-                |> List.reverse
+        -- a paragraph with no marker before it (the front matter): its own first
+        -- inline page, if it has one
+        _ ->
+            List.filter (\( ei, _, _ ) -> ei == ix) pages
                 |> List.head
                 |> Maybe.map (\( _, _, pg ) -> pg)
 
@@ -2024,7 +2058,15 @@ citePanel m =
                 m.citeIx
 
             pg =
-                pageAt m ix
+                -- the page the citation names: the page the reader NAVIGATED to
+                -- when that is a printed page (jumping to #p15 is citing p.15),
+                -- else the page the frozen passage starts on
+                case m.atPage of
+                    Just p ->
+                        Just p
+
+                    Nothing ->
+                        pageAt m ix
 
             anchor =
                 passageAnchor m ix

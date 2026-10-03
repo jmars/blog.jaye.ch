@@ -935,9 +935,11 @@ section('the running heads, the citation and the progress');
     for (const b of docJson.blocks) {
       if (b.t === 'pb' && b.page != null) page = b.page;
       if (secOf(b) != null) sec = secOf(b);
-      if (b.at) pageAt.set(b.at, { page, sec });
+      // the paragraph's OWN first page: a paragraph the page turn runs through is
+      // one paragraph, and the page it is ON is where it starts (the reader's rule
+      // — and the page marker is inside the paragraph now)
+      if (b.at && !pageAt.has(b.at)) pageAt.set(b.at, { page, sec });
     }
-    for (const b of docJson.blocks) if (b.at && !pageAt.has(b.at)) pageAt.set(b.at, { page, sec });
   }
   const known = docJson.blocks.find((b) => b.at === 's4-1');
   check(!!known, `the served document materialises the paragraph anchor the citation is taken from (${!!known})`);

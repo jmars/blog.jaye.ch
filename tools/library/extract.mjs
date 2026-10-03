@@ -1067,9 +1067,20 @@ export function extract(src, meta) {
     return false;
   };
   const lastTextEnding = () => {
-    // the previous TEXT block, looking back past the page furniture and reference
-    // markers that do not end a paragraph — but never past a section, a region, or
-    // a note, because a paragraph does not run through one of those
+    // THE BLOCK BEING ACCUMULATED IS THE IMMEDIATELY PRECEDING ONE. `flush` runs
+    // AFTER this test (the order is: decide, flush, start), so the previous block
+    // is still in `cur` and NOT yet in `out`. Reading only `out` therefore judged
+    // every continuation against the block BEFORE the previous one — MEASURED: it
+    // missed "16. In this cave, therefore, says Homer," | "all external
+    // possessions must be deposited." and joined a block to text two blocks back.
+    if (cur) {
+      if (cur.note) return null; // a note's paragraph is the note's own
+      if (cur.kind === 'p' || cur.kind === 'verse') return joinLines(cur.lines);
+      return null;
+    }
+    // no open block: the previous thing was a marker, a section or a region, so
+    // look back through `out` for the last TEXT block — but never past a section,
+    // a region or a note, because a paragraph does not run through one of those
     for (let k = out.length - 1; k >= 0; k -= 1) {
       const b = out[k];
       if (b.t === 'p' || b.t === 'verse') return typeof b.x === 'string' ? b.x : '';
@@ -1082,7 +1093,10 @@ export function extract(src, meta) {
   const continues = (line, bi) => {
     if (region !== 'body') return false;
     if (isQuoted(lines[bi])) return false;
-    if (!/^[a-z\u2018\u201c"(\[]/.test(line.trim())) return false;
+    // a continuation starts on a lower-case letter, a quote, an opening or a
+    // CLOSING bracket — `) superfluous` continues a parenthesis, and refusing it
+    // broke the paragraph the print has whole (MEASURED: page 36)
+    if (!/^[a-z\u2018\u201c"(\[)\]]/.test(line.trim())) return false;
     const prev = lastTextEnding();
     if (prev == null) return false;
     if (/:\s*$/.test(prev)) return false;
