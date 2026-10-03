@@ -59,6 +59,48 @@
       "note": "The note this definition belongs to, read from the marker's position in the sequence."
     },
     {
+      "find": "cold ness",
+      "replace": "coldness",
+      "class": "reading",
+      "note": "the print reads 'coldness' (1823 parallel prints it twice, and never 'cold ness'): split at a line end."
+    },
+    {
+      "find": "de scending",
+      "replace": "descending",
+      "class": "reading",
+      "note": "the print reads 'descending' (1823 parallel): split at a line end."
+    },
+    {
+      "find": "Capri corn",
+      "replace": "Capricorn",
+      "class": "reading",
+      "note": "the print reads 'Capricorn' (1823 parallel prints it 14 times, never 'Capri corn'): split."
+    },
+    {
+      "find": "Phcedrus",
+      "replace": "Phædrus",
+      "class": "reading",
+      "note": "the print reads 'Phædrus': the source has NO æ or œ anywhere (MEASURED: zero of both), so the ligature reads as 'ce'."
+    },
+    {
+      "find": "Phcedo",
+      "replace": "Phædo",
+      "class": "reading",
+      "note": "the print reads 'Phædo', the same ligature."
+    },
+    {
+      "find": "Timceus",
+      "replace": "Timæus",
+      "class": "reading",
+      "note": "the print reads 'Timæus', the same ligature."
+    },
+    {
+      "find": "foiL",
+      "replace": "for",
+      "class": "reading",
+      "note": "the print reads 'a fiction casually devised for the purpose' (1823 parallel: 'fiction casually devised for'); the IL are the lost r. (decided by the 1823 parallel.)"
+    },
+    {
       "find": "1 those discover most",
       "replace": "those discover most",
       "class": "reading",
@@ -431,12 +473,6 @@
       "note": "Class 2 — lower-case l substituted for the pronoun I at the head of the bracketed addition. (decided by the transcription's own context.)"
     },
     {
-      "find": "Scholia on the Phcedrus of Plato, \"are",
-      "replace": "Scholia on the Phædrus of Plato, \"are",
-      "class": "reading",
-      "note": "Class 2 — the print's æ-ligature 'Phædrus' read as 'ce', leaving the plausible-looking non-word 'Phcedrus'. (The space the transcription put after the opening quote is normalized away before the rules run.)"
-    },
-    {
       "find": "Orphic fiction \"is beautifully unfolded",
       "replace": "Orphic fiction is beautifully unfolded",
       "class": "reading",
@@ -467,22 +503,10 @@
       "note": "A single substituted English word with no damage character ('those' for the print's 'these'), invisible to the character count; the parallel, though a different printing, is clean here and decides. (decided by the 1823 parallel.)"
     },
     {
-      "find": "Scholia on the Phcedrus of Plato, pub",
-      "replace": "Scholia on the Phædrus of Plato, pub",
-      "class": "reading",
-      "note": "Class 2 — 'Phædrus' with the æ ligature read as 'ce' (second occurrence). (decided by the transcription's own context.)"
-    },
-    {
       "find": "Wrappers, Svo. 6d. net. Post free 7d.",
       "replace": "Wrappers, 8vo. 6d. net. Post free 7d.",
       "class": "reading",
       "note": "Class 2: 'Svo.' for '8vo.' — numeral 8 read as S; no damage character. (decided by the transcription's own context.)"
-    },
-    {
-      "find": "remarks in the Phcedo, that the soul",
-      "replace": "remarks in the Phædo, that the soul",
-      "class": "reading",
-      "note": "Class 2 — 'Phædo' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
     },
     {
       "find": "Price is. 6d. net. Post free is. yd.",
@@ -551,12 +575,6 @@
       "note": "Class 2 — Latin 'nautæ' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
     },
     {
-      "find": "Commentary on the Timceus",
-      "replace": "Commentary on the Timæus",
-      "class": "reading",
-      "note": "Class 2 — 'Timæus' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
-    },
-    {
       "find": "webs will y evidently be",
       "replace": "webs will evidently be",
       "class": "reading",
@@ -617,12 +635,6 @@
       "note": "Class 2 — Martianus Capella's title 'De Nuptiis Philologiæ', the ligature mangled to make a wrong Latin form 'Philologies'. (decided by the transcription's own context.)"
     },
     {
-      "find": "Proclus on the Timceus",
-      "replace": "Proclus on the Timæus",
-      "class": "reading",
-      "note": "Class 2 — 'Timæus' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
-    },
-    {
       "find": "connected., iThrough",
       "replace": "connected. Through",
       "class": "reading",
@@ -663,12 +675,6 @@
       "replace": "intelligible concerns",
       "class": "reading",
       "note": "Class 3 broken word: the word is split as 'con cern' and the final s is also lost, so the reading view shows two fragments where the print has one word; the parallel supplies 'concerns'. (decided by the transcription and the 1823 parallel.)"
-    },
-    {
-      "find": "in the Timceus, calls",
-      "replace": "in the Timæus, calls",
-      "class": "reading",
-      "note": "Class 2 — 'Timæus' with the æ ligature read as 'ce'. (decided by the transcription's own context.)"
     },
     {
       "find": "described >by Proclus",
@@ -765,12 +771,6 @@
       "replace": "a passage to souls",
       "class": "reading",
       "note": "Class 3: three words fused into one ('passage to souls') with no damage character in the fused mass. (decided by the transcription's own context.)"
-    },
-    {
-      "find": "s de scending i",
-      "replace": "s descending i",
-      "class": "reading",
-      "note": "'descending' broken in two at a line break and still shown split in the reading view (class 3). (decided by the transcription and the 1823 parallel.)"
     },
     {
       "find": "arrexpTaHatiori",
@@ -923,12 +923,6 @@
       "note": "Class 2: wrong word carrying no damage character ('n' read as 'ji'); the reading view still shows it wrong after the adjacent '_' on 'reality_' was repaired. (decided by the transcription and the 1823 parallel.)"
     },
     {
-      "find": " Capri corn,",
-      "replace": " Capricorn,",
-      "class": "reading",
-      "note": "Class 3: 'Capricorn' split in two ('Capri corn'); this 1917 printing spells the name 'Capricorn' as in block 1, where the 1823 parallel has 'Capricornus'. (decided by the transcription and the 1823 parallel.)"
-    },
-    {
       "find": "appella tion",
       "replace": "appellation",
       "class": "reading",
@@ -1017,12 +1011,6 @@
       "replace": "cavern which",
       "class": "reading",
       "note": "Class 3: 'cavern' and 'which' fused into one word; the reading view itself still prints 'a cavernwhich'. (decided by the transcription and the 1823 parallel.)"
-    },
-    {
-      "find": " cold ness ",
-      "replace": " coldness ",
-      "class": "reading",
-      "note": "Broken word: 'coldness' split in two (class 3). (decided by the transcription's own context.)"
     },
     {
       "find": "con versant",

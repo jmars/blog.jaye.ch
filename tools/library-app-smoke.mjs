@@ -461,8 +461,8 @@ section('a recorded reading renders, and damage with no reading renders marked')
     `the document records the page turn's reading "to the heavens, but" (${put ? JSON.stringify(put.repl) : 'no rule'})`,
   );
   check(
-    reading.includes('but the other to souls de scending'),
-    'and the reading view shows "but the other to souls descending"',
+    reading.includes('but the other to souls descending'),
+    'and the reading view shows "but the other to souls descending" (the split is joined)',
   );
   /* A JOIN: the two blocks the transcription split at a blank line are ONE
      paragraph in the reading view, and the rule that spans the seam fires. This
