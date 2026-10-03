@@ -31,7 +31,7 @@ separate from them.
 
 ## 1. The case that is not a column
 
-The series has now argued five times that the same structure recurs: a practice induces a state, the
+The series has now argued five times that the same structure recurs[^traditions]: a practice induces a state, the
 state cannot report itself, and whoever stands on the far side supplies the appraisal — which can recode
 the state as attainment. Every one of the five was chosen because it was *likely* to contain the
 structure. That is how a search for confirming cases works, and it is also how a search for confirming
@@ -86,7 +86,7 @@ themselves:
 > The sorcerer did not handle well my illness.
 > And the necromancer could not make an end of my malady."[^ludlul2]
 
-The Akkadian gives *sakikkû* — symptoms — and names the *mašmaššu* and the *bārû*: the two offices at
+The Akkadian gives *sakikkû* — symptoms — and names the *mašmašu* and the *bārû*: the two offices at
 the centre of this post. Read that against [the mechanism post](/meditation-harm/) and one half of the
 model is there in force. The sufferer's condition is opaque; the reading is professional; and even the
 professionals, in this poem, cannot complete it. The tradition also had a diagnostic series actually
@@ -132,7 +132,7 @@ labour* rather than a single reader:
 Beside them stood the *kalû*, the lamentation priest, whose "mission was to 'appease' the 'heart of the
 gods' through his chants,"[^kalu] and the *mahhu*, the ecstatic, of whom more in §6. James A.
 Montgomery's 1913 edition of the Nippur incantation bowls preserves the same pair for a later,
-Aramaic-speaking clientele: "the Babylonian *āšipu* incantation priest and *mašmaššu* purification
+Aramaic-speaking clientele: "the Babylonian *āšipu* incantation priest and *mašmašu* purification
 priest."[^montgomery]
 
 And in Jastrow's synthesis, the reading is not an adjunct to the rite — it is what the rite is *for*:
@@ -160,7 +160,7 @@ specialist reads it for him. The pattern scales without changing shape.
 
 The central column's strongest single finding was *istidrāj*: success read as approval, the reading
 itself being the trap. Does the Mesopotamian material read prosperity as divine favour? It does — and,
-more interesting for this series, its wisdom literature *names the popular read and inverts it*. The sufferer in *Ludlul*, on the page before the specialists passage:
+more interesting for this series, its wisdom literature *names the popular read and inverts it*. The sufferer in *Ludlul*, on the page after the specialists passage:
 
 > "If it go well with them, they speak of climbing up to heaven;
 > If they be in trouble, they talk of going down to hell."[^ludlul3]
@@ -349,7 +349,7 @@ The table is the post's finding, and for once most rows are marked *absent* — 
 |---|---|---|
 | **a state induced by the subject's own practice** | vipassanā, the fire-phases, the Void, dhikr — all attested | **not attested on this shelf**; the affliction arrives from outside — demons, witchcraft, the anger of a god |
 | **the state cannot report itself** | the sensor is consumed by the practice | the case cannot be read — but because the god's mind is opaque ("The sin that I have committed I know not"), not because a practice consumed the reader |
-| **the reading comes from outside** | the holder, the director, the teacher | present as **permanent professional offices** — *āšipu*, *mašmaššu*, *bārû*, *kalû* — the most developed instance in the series |
+| **the reading comes from outside** | the holder, the director, the teacher | present as **permanent professional offices** — *āšipu*, *mašmašu*, *bārû*, *kalû* — the most developed instance in the series |
 | **the appraisal can recode the state as attainment** | *istidrāj*, *prelest*, *nyams* | present for **fortune** ("If it go well with them, they speak of climbing up to heaven") and inverted by the tradition's rule — not attested for a practice-induced state |
 | **rescue is external** | the holder acts; the tradition supplies the frame | present — the *Maqlû* counter-rite; the god's mercy in *Ludlul*; the decision the worshipper "waited anxiously for" |
 
@@ -387,7 +387,7 @@ who meet "Chaldean" in the earlier posts should not carry this material back ont
 **This post does not describe "the Mesopotamians," or any people, civilisation or community.** It names
 texts — *Ludlul bēl nēmeqi*, "A man and his god," the penitential psalms, the *Šurpu*, *Maqlû* and
 *Utukki limnūti* series, the Uruk temple ritual — and editions — Jastrow 1898, Thompson 1903, Langdon
-1909, Montgomery 1913, Rogers 1912, Thureau-Dangin 1921 — and offices — *āšipu*, *mašmaššu*, *bārû*,
+1909, Montgomery 1913, Rogers 1912, Thureau-Dangin 1921 — and offices — *āšipu*, *mašmašu*, *bārû*,
 *kalû*, *mahhu*. The texts span something over two millennia and several languages, they were written
 by different people for different purposes, and the scholars quoted disagreed with each other (Langdon
 explicitly marks his reconstruction as an attempt to prove). A set of editions is a reading, not a
@@ -423,38 +423,36 @@ originals; several sit on top of early-Assyriology English editions whose own co
 **CC-BY-SA-4.0** (attribution: Source Library); that licence's share-alike term attaches to reuse of the
 translations. Where a page carries the Akkadian transliteration, that is stated at the point of use.
 
-[^ludlul]: *Ludlul bēl nēmeqi* ("I will praise the lord of wisdom"), Tablet II — the specialists
+[^ludlul]: *Ludlul bēl nēmeqi* ("I will praise the lord of wisdom") — the specialists
 passage, in R. W. Rogers, *Cuneiform Parallels to the Old Testament*, New York: Eaton & Mains /
-Cincinnati: Jennings & Graham, 1912 — library scan p. 196 (printed p. 165). "The Enchanter did not fix
+Cincinnati: Jennings & Graham, 1912 — library scan p. 195. "The Enchanter did not fix
 through his oracle the future. / The seer, at the libation, did not establish my right. / I turned to
 the necromancer, but he opened not my ear. / The magician by his sorceries did not loosen my ban."
-https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament
+https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament-incl-adapa-the-rogers
 
-[^ludlul2]: *Ludlul bēl nēmeqi*, Tablet II, later lines — Rogers, *Cuneiform Parallels*, library scan
-p. 200 (printed p. 169), a page that also carries the Akkadian transliteration: *sa-kik-ki-ia iš-ḫu-ṭu
+[^ludlul2]: *Ludlul bēl nēmeqi*, later lines — Rogers, *Cuneiform Parallels*, library scan
+p. 199, a page that also carries the Akkadian transliteration: *sa-kik-ki-ia iš-ḫu-ṭu
 (amêlu) mašmašu / u te-ri-ti-ia (amêlu) bârû u-taš-ši* — the sufferer's *sakikkû* (symptoms) and the
-offices *mašmaššu* and *bārû* named in the line itself. "My symptoms of fever were not clear to the
+offices *mašmašu* and *bārû* named in the line itself. "My symptoms of fever were not clear to the
 magicians, / And my omens did the diviner leave dark…"
-https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament
+https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament-incl-adapa-the-rogers
 
-[^ludlul3]: *Ludlul bēl nēmeqi*, Tablet I — Rogers, *Cuneiform Parallels*, library scan p. 198 (printed
-p. 167): "If it go well with them, they speak of climbing up to heaven; / If they be in trouble, they
+[^ludlul3]: *Ludlul bēl nēmeqi* — Rogers, *Cuneiform Parallels*, library scan p. 198: "If it go well with them, they speak of climbing up to heaven; / If they be in trouble, they
 talk of going down to hell."
-https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament
+https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament-incl-adapa-the-rogers
 
-[^ludlul4]: *Ludlul bēl nēmeqi*, Tablet II — Rogers, *Cuneiform Parallels*, library scan p. 197
-(printed p. 166): "That which seemeth good to itself, that is evil with god, / And that which in its
+[^ludlul4]: *Ludlul bēl nēmeqi* — Rogers, *Cuneiform Parallels*, library scan p. 197: "That which seemeth good to itself, that is evil with god, / And that which in its
 heart is rejected, that is good with god. / Who can understand the counsel of the gods in heaven? /
 The plan of the gods full of darkness, who shall establish it?"; and "Now they are hungry, and are like
 a corpse, / Again they are full, and are like unto god."
-https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament
+https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament-incl-adapa-the-rogers
 
 [^manhisgod]: "A man and his god," anonymous Sumerian, Ur III / Old Babylonian (c. 2100–1600 BCE) —
 chapter "Human Imperfection and Supplication": "When shares were allotted to all the people, my
 allotted share was suffering." https://sourcelibrary.org/book/a-man-and-his-god
 
 [^psalms]: Penitential psalms, as edited in Morris Jastrow, Jr., *The Religion of Babylonia and
-Assyria*, Boston: Ginn & Company, 1898 — library scan pp. 341–342 (printed pp. 321–322): the psalm to
+Assyria*, Boston: Ginn & Company, 1898 — library scan p. 340: the psalm to
 the unknown god ("O that the god who is unknown be pacified…"), "The sin that I have committed I know
 not," and "Food I have not eaten; / Clear water I have not drunk," with Jastrow's note that the
 reference to fasting "occurs so frequently in these psalms that one is tempted to conclude that such a
@@ -477,7 +475,7 @@ https://sourcelibrary.org/book/rituels-accadiens-thureau-dangin
 
 [^montgomery]: James A. Montgomery, *Aramaic Incantation Texts from Nippur*, Philadelphia: The
 University Museum, 1913 — library scan p. 55: "For the Babylonian *āšipu* incantation priest and
-*mašmaššu* purification priest…"; and library scan p. 64, on the days listed in a *Šurpu* text as
+*mašmašu* purification priest…"; and library scan p. 64, on the days listed in a *Šurpu* text as
 propitious for exorcism.
 https://sourcelibrary.org/book/aramaic-incantation-texts-from-nippur-montgomery
 
@@ -487,7 +485,7 @@ looked-for omens that the offering was brought, the symbolic acts performed, and
 recited… The worshipper waited anxiously for the priest's decision."
 https://sourcelibrary.org/book/the-religion-of-babylonia-and-assyria
 
-[^eclipse]: Eclipse omens of the month Nisan, quoted in Jastrow, *The Religion of Babylonia and
+[^eclipse]: Eclipse omens, quoted in Jastrow, *The Religion of Babylonia and
 Assyria*, ch. XX — library scan p. 385: "An eclipse happening on the 15th day, the king of Dilmun is
 slain, and someone seizes the throne."
 https://sourcelibrary.org/book/the-religion-of-babylonia-and-assyria
@@ -501,7 +499,7 @@ ascribed to the influence of the demons."
 https://sourcelibrary.org/book/the-religion-of-babylonia-and-assyria
 
 [^thompson]: R. Campbell Thompson, *The Devils and Evil Spirits of Babylonia*, Vol. I, London: Luzac &
-Co., 1903 — *Utukki limnūti*, Tablet XVI, library scan p. 192: "By this (incantation) may Shamash
+Co., 1903 — *Utukki limnūti*, library scan p. 192: "By this (incantation) may Shamash
 remove his hand."
 https://sourcelibrary.org/book/the-devils-and-evil-spirits-of-babylonia-vol-i-incl-the-thompson
 
@@ -532,11 +530,11 @@ been confined to the mysteries performed in huts in the fields." Langdon's recon
 something he had attempted to prove; quoted as his view.
 https://sourcelibrary.org/book/sumerian-and-babylonian-psalms-langdon
 
-[^dream]: A prayer for a favourable dream, in Rogers, *Cuneiform Parallels*, library scan pp. 215–216
+[^dream]: A prayer for a favourable dream, in Rogers, *Cuneiform Parallels*, library scan p. 216
 (printed pp. 184–185): "From my wickedness cause me to depart, and let me be saved by thee. / Send unto
 me and let me behold a favorable dream. / May the dream I behold be favorable. / May the dream I behold
 be true"; and, continuing, "Unto Marduk the merciful commend me into his favorable hands for favor."
-https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament
+https://sourcelibrary.org/book/cuneiform-parallels-to-the-old-testament-incl-adapa-the-rogers
 
 [^dreambooks]: Jastrow, *The Religion of Babylonia and Assyria*, ch. XX — library scan p. 424 (printed
 p. 404): "What a person saw, what he dreamed, what happened to him, what appeared in his house or among
@@ -549,7 +547,7 @@ https://sourcelibrary.org/book/the-religion-of-babylonia-and-assyria
 and [the safeguards](/safeguards/) for the model's requirements; [the western column](/the-western-column/),
 [the central column](/the-central-column/) and [the eastern column](/the-eastern-column/) for the three
 columns this boundary case sits outside; and [the mechanism post](/meditation-harm/) for the causal
-claim being tested — the posts this one tests, rather than completes.[^traditions]
+claim being tested — the posts this one tests, rather than completes.
 
 *Marking:* quoted — every passage in §2–§6 is from the translation cited, located through Source Library
 (https://sourcelibrary.org) and reproduced under CC-BY-SA-4.0 (attribution: Source Library), with book,
