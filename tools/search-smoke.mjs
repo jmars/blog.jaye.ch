@@ -1310,7 +1310,14 @@ console.log('== the second group: the shelf');
    * join rule.
    */
   const docPath = (slug) => join(ROOT, 'dist', 'library', slug, 't');
-  const shelfDocRaw = JSON.parse(readFileSync(docPath(shelfRaw.docs[0].slug), 'utf8'));
+  /* EVERY text the index serves, in the index's own order — not the first one.
+   * The shelf is a LIST of texts, and every check below compares against the
+   * served document; written against `docs[0]` alone they silently stop covering
+   * the rest the moment a second text is published (MEASURED: with the Elements
+   * published beside the Cave, the 76-passage tail came back as 76 "differences"
+   * and 36 "unresolved" anchors — a correct build failing its own gate). */
+  const shelfDocs = shelfRaw.docs.map((x) => JSON.parse(readFileSync(docPath(x.slug), 'utf8')));
+  const shelfDocRaw = shelfDocs[0];
   const applyRules = (text, rules) => {
     let out = text;
     for (const r of rules) {
@@ -1353,7 +1360,8 @@ console.log('== the second group: the shelf');
     }
     return ps;
   }
-  const view = readingView(shelfDocRaw);
+  const views = shelfDocs.map((d) => ({ doc: d, ps: readingView(d) }));
+  const view = views.flatMap((v) => v.ps);
   let vDiff = 0, vFirst = '';
   for (let i = 0; i < Math.max(view.length, shelf.pass.length); i++) {
     const a = view[i], b = shelf.pass[i];
@@ -1366,19 +1374,28 @@ console.log('== the second group: the shelf');
       `(${vDiff} difference(s)${vFirst ? ' — ' + vFirst : ''})`);
   // and the reading view is the CORRECTED text, not the transcription: every
   // rule that REPLACES something must have left no `find` behind in it
-  const replacing = shelfDocRaw.corrections.filter((r) => r.find && r.find !== r.repl && r.action !== 'leave');
-  const allShelfText = shelf.pass.map((r) => r[5]).join(' ');
-  const leftover = replacing.filter((r) => allShelfText.includes(r.find));
+  /* PER DOCUMENT, and per passage. A text's rules are asked of ITS OWN reading
+   * view: aggregated across texts, one text's rule is searched for in another
+   * text's passages, and a `find` that is a common English fragment is then
+   * reported as a leftover it never was (MEASURED: the Cave's `atthe` → `at the`
+   * rule, looked for in the Elements, matched a seam the Elements glues together).
+   * And per PASSAGE, not over the passages JOINED: a passage can end on "." and
+   * the next begin "For every thing", and the join then fabricates a `find` that
+   * no passage holds. The claim is about the text the reader is shown, so it is
+   * asked of the passages themselves, of the text that owns the rule. */
+  const replacing = shelfDocs.flatMap((d) => d.corrections.filter((r) => r.find && r.find !== r.repl && r.action !== 'leave'));
+  const replacementOf = (d) => d.corrections.filter((r) => r.find && r.find !== r.repl && r.action !== 'leave');
+  const leftover = views.flatMap(({ doc, ps }) => replacementOf(doc).filter((r) => ps.some((p) => p.text.includes(r.find))));
   check(replacing.length > 0 && leftover.length === 0,
     `the indexed text is the CORRECTED reading view: none of the ${replacing.length} replacing rule(s) leaves its ` +
       `find in it (${leftover.length} left${leftover.length ? ': ' + JSON.stringify(leftover[0].find) : ''})`);
-  const applied = replacing.filter((r) => allShelfText.includes(r.repl)).length;
+  const applied = views.reduce((n, { doc, ps }) => n + replacementOf(doc).filter((r) => ps.some((p) => p.text.includes(r.repl))).length, 0);
   check(applied > replacing.length / 2,
     `and the repaired readings are what stands in it (${applied} of ${replacing.length} rules' replacements occur in the indexed text)`);
 
   /* ---- every anchor the index names resolves ---------------------------- */
   const docAnchors = new Set();
-  for (const b of shelfDocRaw.blocks) {
+  for (const d of shelfDocs) for (const b of d.blocks) {
     if (b.at) docAnchors.add(b.at);
     if (b.id) docAnchors.add(b.id);
   }
@@ -1739,59 +1756,26 @@ console.log('== the second group: the shelf');
    * gate.
    */
   const servedSlugs = new Set(shelf.docs.map((x) => x.slug));
-  const refusals = [];
   let heldSlug = null;
   const shelfModule = require('../tools/library/shelf.mjs');
   try {
     const m = shelfModule;
-    const files = m.shelfFiles();
     const held = m.TEXTS.filter((t) => !servedSlugs.has(t.slug));
-    // the harshest case: a text with a STORED EDITION that is still held back
-    const stored = held.find((t) => existsSync(join(ROOT, 'content', 'library', t.slug, 'source.txt')));
-    heldSlug = (stored || held[0] || {}).slug || null;
-    if (heldSlug) {
-      // the transcription-only text: read where the build reads it; a text with
-      // a stored edition is read from the EDITION (the same decision the build
-      // makes — a slice edition's shelf file is the whole volume it came from)
-      const heldEntry0 = m.TEXTS.find((t) => t.slug === heldSlug);
-      const storedPath = join(ROOT, 'content', 'library', heldSlug, 'source.txt');
-      const src = readFileSync(existsSync(storedPath) ? storedPath : m.textSource(heldEntry0, files), 'utf8');
-      /* THE WORD MUST BE ONE THE TEXT'S PASSAGES CARRY, not one any block carries.
-       * MEASURED: this picked `digitized` — a word from the Google-scan FURNITURE
-       * ("Digitized by t^OOQLe"), which the extractor rightly classifies as a
-       * running head and keeps out of the passages. Searching it returns nothing
-       * even with LIBRARY=1, because nothing indexed holds it, and the smoke
-       * failed a correct build. So the words come from the READING VIEW's prose
-       * blocks (the text the index actually stores). */
-      const { extract: xExtract } = require('../tools/library/extract.mjs');
-      const heldDoc2 = xExtract(src, { entry: heldEntry0, sha256: null });
-      const rules2 = heldDoc2.corrections.map((c) => ({ find: c.find, repl: c.repl, action: c.action }));
-      const apply2 = (x) => rules2.reduce((a, r) => (r.find && r.action !== 'leave' && r.find !== r.repl ? a.split(r.find).join(r.repl) : a), x);
-      const passageText = heldDoc2.blocks
-        .filter((b) => typeof b.x === 'string' && (b.t === 'p' || b.t === 'verse' || b.t === 'notedef'))
-        .map((b) => apply2(b.x))
-        .join(' ');
-      const ws = (passageText.toLowerCase().match(/[a-z][a-z'-]+/g) || []).filter((w) => w.length >= 7);
-      const shelfTermSetAll = new Set(shelf.terms);
-      for (const w of ws) {
-        if (postTerms.has(w) || startsPostWord(w)) continue;
-        if (shelfTermSetAll.has(w) || shelf.terms.some((x) => x.indexOf(w) === 0)) continue;
-        if (S.query(w, { limit: 200 }).results.length) continue;
-        refusals.push(w);
-        if (refusals.length >= 3) break;
-      }
-    }
+    /* WHICH held-back text is a property of the SHELF, and publishing a text
+     * beside it changes the choice — so nothing here may depend on one particular
+     * text being readable by the EXTRACTOR. MEASURED: this used to pick the first
+     * held text with a STORED EDITION and read that text's passages locally;
+     * publishing the Elements moved the pick onto the next stored text, whose
+     * divisions open at 3, `extract` threw, and a correct build failed its own
+     * gate. Prefer a stored edition (the harsher case) but do not require one.
+     * The word that follows is read off the PREVIEW INDEX the build itself
+     * writes, which is that text's reading view by construction. */
+    const stored = held.filter((t) => existsSync(join(ROOT, 'content', 'library', t.slug, 'source.txt')));
+    heldSlug = ((stored[0] || held[0]) || {}).slug || null;
   } catch (e) {
-    check(false, `the shelf module could not be read to pick a held-back word: ${e.message}`);
+    check(false, `the shelf module could not be read to pick a held-back text: ${e.message}`);
   }
-  check(!!heldSlug && refusals.length > 0,
-    `a held-back text and words only it uses were found ("${heldSlug}": ${refusals.join(', ')})`);
-  const heldWord = refusals[0];
-  check(S.queryShelf(heldWord, { limit: 200 }).results.length === 0,
-    `a word only the HELD-BACK text uses returns no passage from the shelf (${S.queryShelf(heldWord).results.length})`);
-  check(!deepRaw.shelf.docs.some((x) => x.slug === heldSlug) && JSON.stringify(deepRaw).indexOf(heldWord) < 0,
-    `and the emitted index does not carry that text at all (${deepRaw.shelf.docs.length} text(s): ` +
-      `${deepRaw.shelf.docs.map((x) => x.slug).join(', ')})`);
+  check(!!heldSlug, `a held-back text was found ("${heldSlug}")`);
   // and the texts the page SEARCHES are exactly the texts the shelf PUBLISHES,
   // read off the shelf's own flag rather than off dist: a result can therefore
   // only ever point at a text the site means to serve. (Whether a page for it is
@@ -1827,6 +1811,35 @@ console.log('== the second group: the shelf');
   } catch (e) { previewOk = false; }
   check(previewOk && preview.docs.length === 1 && preview.docs[0].slug === heldSlug,
     `with LIBRARY=1 the SAME build indexes it (${previewOk ? preview.pass.length + ' passage(s)' : 'the build failed'})`);
+  /* THE WORD COMES OUT OF THE PREVIEW INDEX — the build's OWN reading view of
+   * that text — not out of a local `extract` call. Those are different layers,
+   * and for a text with no stored edition the extractor is not the reader: it
+   * refuses all 37 held-back texts (their divisions do not run 1…N), while the
+   * build indexes them all the same. And it must be a word the text's PASSAGES
+   * carry, which reading the preview gives by construction (the earlier lesson:
+   * a word from the scan's furniture, `digitized`, returns nothing even with
+   * LIBRARY=1, and failed a correct build). */
+  let heldWord = null;
+  if (previewOk) {
+    const shelfStartsWord = (t) => {
+      let lo = 0, hi = shelf.terms.length;
+      while (lo < hi) { const mid = (lo + hi) >>> 1; if (shelf.terms[mid] < t) lo = mid + 1; else hi = mid; }
+      return lo < shelf.terms.length && shelf.terms[lo].indexOf(t) === 0;
+    };
+    const words = new Set();
+    for (const row of preview.pass) for (const w of String(row[5]).toLowerCase().match(/[a-z]{7,}/g) || []) words.add(w);
+    for (const w of words) {
+      if (postTerms.has(w) || startsPostWord(w)) continue;          // a piece already carries it
+      if (shelf.at[w] !== undefined || shelfStartsWord(w)) continue; // the SERVED shelf carries it
+      heldWord = w; break;
+    }
+  }
+  check(!!heldWord, `a word only the held-back text uses was found ("${heldSlug}": ${heldWord})`);
+  check(!!heldWord && S.queryShelf(heldWord, { limit: 200 }).results.length === 0,
+    `a word only the HELD-BACK text uses returns no passage from the shelf (${heldWord ? S.queryShelf(heldWord).results.length : 'no word'})`);
+  check(!!heldWord && !deepRaw.shelf.docs.some((x) => x.slug === heldSlug) && JSON.stringify(deepRaw).indexOf(heldWord) < 0,
+    `and the emitted index does not carry that text at all (${deepRaw.shelf.docs.length} text(s): ` +
+      `${deepRaw.shelf.docs.map((x) => x.slug).join(', ')})`);
   if (previewOk) {
     /* A STORED-EDITION text's anchors are the DOCUMENT's (`s<n>`, `s<n>-<par>`
      * and the page anchors the extractor emits); a transcription-only text has

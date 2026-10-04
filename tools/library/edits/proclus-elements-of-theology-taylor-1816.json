@@ -89,6 +89,426 @@
       "note": "Proposition CCVIII is due (CCVII before, CCIX after): the label is set in small capitals here and the OCR read the II of the numeral as m."
     },
     {
+      "find": "xo/uw&ij yap fitipuxKrxof «v, jjpero tov eiravayivaxrxorra aurep rpafjLfLaTKrrtjv (ij toi fiev TgaoTirra Xao$ yever) ex two$ to yas$ ey$vero } turep itqqgtov eyevero, toutov St eixovror jxi) avrov epyov ewai ra toixvra fotiao-xen, aXXa rwv xaXoufisvcov QtXotroQw to iwv tfijcrev o Enxovpo$ f «r’ extmvf ft oi padurreov e<rnv, eiireg avrot tijv tcov ovtcov aX rfietav ttraatv.",
+      "replace": "κομιδῇ γὰρ μειρακίσκος ὢν, πρῶτον τὸν ἐπαναγινώσκοντα αὐτῷ Γραμματιστὴν (ἤ τοι μὲν πρώτιστα Χάος γένετ') ἐκ τίνος τὸ Χάος ἐγένετο, εἰπὲ πρῶτον γένετο. τούτου δὲ εἰπόντος μὴ αὑτοῦ ἔργον εἶναι τὰ τοιαῦτα διδάσκειν, ἀλλὰ τῶν καλουμένων φιλοσόφων· τοίνυν ἔφησεν ὁ Ἐπίκουρος, ἐκείνοις μοι βαδιστέον ἐστὶν, εἴπερ αὐτοῖ τὴν τῶν ὄντων ἀλήθειαν ἴσασιν.",
+      "class": "reading",
+      "note": "the Sextus Empiricus quotation: the print reads \"κομιδῇ γὰρ μειρακίσκος ὢν, πρῶτον τὸν ἐπαναγινώσκοντά αὐτῷ Γραμματιστὴν (ἤ τοι μὲν πρώτιστα Χάος γένετ') ἐκ τίνος τὸ Χάος ἐγένετο, εἰπὲ πρῶτον γένετο. τούτου δὲ εἰπόντος μὴ αὑτοῦ ἔργον εἶναι τὰ τοιαῦτα διδάσκειν, ἀλλὰ τῶν καλουμένων φιλοσόφων· τοίνυν ἔφησεν ὁ Ἐπίκουρος, ἐκείνοις μοι βαδιστέον ἐστὶν, εἴπερ αὐτοῖ τὴν τῶν ὄντων ἀλήθειαν ἴσασιν\" (page image, printed page 378 = archive n883) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "i tierpov Be tcov txvtcov a>$ iratn ryv otxnav, xou to reXo; exihafiirovra, xcu a* %avra •Keqir/ovroLj xcu ogi£ovra rou$ afyaoroig aoroo, xcu tsolv to; vxeprpt\\ciofjL§vai$ icepotrog wtgo^ai*",
+      "replace": "μέτρον δὲ τῶν πάντων ὡς πᾶσι τὴν οὐσίαν, καὶ τὸ τέλος ἐπιλάμποντα, καὶ ὡς πάντα περιέχοντα, καὶ ὁρίζοντα ταῖς ἀφθάρτοις αὑτοῦ, καὶ πάντος ὑπερηπλωμέναις πέρατος ὑπεροχαῖς.",
+      "class": "reading",
+      "note": "the print reads \"μέτρον δὲ τῶν πάντων ὡς πᾶσι τὴν οὐσίαν, καὶ τὸ τέλος ἐπιλάμποντα, καὶ ὡς πάντα περιέχοντα, καὶ ὁρίζοντα ταῖς ἀφθάρτοις αὑτοῦ, καὶ πάντος ὑπερηπλωμέναις πέρατος ὑπεροχαῖς\" (page image, printed page 377 = archive n882) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "vav to xXtjJoj rant svahov reov /tm^o/tcvcov otto rmg aurhjTov <rc» paros 07x007x10* tori. oxiXa/xxoi yag too* tou xovjxou jxogoov, xea ha fMcov you, xai njj",
+      "replace": "καὶ τὸ πλῆθος τῶν ἑνάδων τῶν μετεχομένων ὑπό τινος αἰσθητοῦ σώματος ἐγκοσμίου ἐστι. ἐπιλάμπει γὰρ τῶν τοῦ κόσμου μερῶν, καὶ διὰ μέσου νοῦ, καὶ τῆς ψυχῆς.",
+      "class": "reading",
+      "note": "the print reads \"may be removed by reading καὶ τὸ πλῆθος τῶν ἑνάδων τῶν μετεχομένων ὑπό τινος αἰσθητοῦ σώματος ἐγκοσμίου ἐστι. ἐπιλάμπει γὰρ τῶν τοῦ κόσμου μερῶν, καὶ διὰ μέσου νοῦ, καὶ τῆς ψυχῆς\" (page image, printed page 410 = archive n915) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Toov Bum avtipaov ev [MV X eyovrcuv rov Beov a>$ eveoseoog to 0 X 01 $ amov, xcu tolvto$ too ovto$, xcu *a<n}$ %coijr f xcu you too TotvTeXo v; txtxuvct.",
+      "replace": "Τῶν θεῶν ἀνδρῶν ἐν μὲν λεγόντων τὸν θεὸν ὡς ἑνώσας τοῖς οὖσι αἴτιον, καὶ πάντως τοῦ ὄντος, καὶ πάσης ζωῆς, καὶ τοῦ νοῦ παντελῶς ἐπέκεινα.",
+      "class": "reading",
+      "note": "the print reads \"Τῶν θεῶν ἀνδρῶν ἐν μὲν λεγόντων τὸν θεὸν ὡς ἑνώσας τοῖς οὖσι αἴτιον, καὶ πάντως τοῦ ὄντος, καὶ πάσης ζωῆς, καὶ τοῦ νοῦ παντελῶς ἐπέκεινα\" (page image, printed page 377 = archive n882) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "xcu tit) raov [isv xati 9 otura voovfxevuiv yevo$ V7cc<rTr)<rctvT0 IhiBayopiXoi nccutie^, eo$ etrava/3e/3i)xo$ to ev",
+      "replace": "καὶ δὴ τῶν μὲν καθ' αὑτὰ νοουμένων γένος ὑπερέχοντα Πυθαγόρειοι λέγουσι, τὸ ἐπαναβεβηκὸς τῷ ἑνί.",
+      "class": "reading",
+      "note": "the print reads \"καὶ δὴ τῶν μὲν καθ' αὑτὰ νοουμένων γένος ὑπερέχοντα Πυθαγόρειοι λέγουσι, τὸ ἐπαναβεβηκὸς τῷ ἑνί\" (page image, printed page 377 = archive n882) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "ev Qeotf apa, ij fxtv Katctgory\\$ ten xai wgcorws ayctiov, xcti ij fgovgct, xat ttccv toiqutov.",
+      "replace": "ἐν τοῖς θεοῖς ἄρα, ἡ μὲν καθαρότης ἐστι καὶ πρῶτον ἀγαθὸν, καὶ ἡ φρουρὰ, καὶ πᾶν τοιοῦτον.",
+      "class": "reading",
+      "note": "the print reads \"it is necessary to supply the words, ἐν τοῖς θεοῖς ἄρα, ἡ μὲν καθαρότης ἐστι καὶ πρῶτον ἀγαθὸν, καὶ ἡ φρουρὰ, καὶ πᾶν τοιοῦτον\" (page image, printed page 405 = archive n910) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "xav to reov evatoov rwv /urf^oftcvcov uxo tivo$ ***** yag WTi reov T ou xoTftou /xegcov,",
+      "replace": "καὶ τὸ πλῆθος τῶν ἑνάδων τῶν μετεχομένων ὑπό τινος ***** γάρ ἐστι τῶν τοῦ κόσμου μερῶν,",
+      "class": "reading",
+      "note": "the print reads \"For it is as follows: καὶ τὸ πλῆθος τῶν ἑνάδων τῶν μετεχομένων ὑπό τινος ***** γάρ ἐστι τῶν τοῦ κόσμου μερῶν\" (page image, printed page 410 = archive n915) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "evaxnv 8s itiav, cckq nj$ /xeTe^oftrvitf cy*8o£. fKaa Toy y up tqvt'jov tavrov x. r. A.",
+      "replace": "ἑνώσει δὲ θείαν, ἀπὸ τῆς μετεχομένης ἑνάδος. ἕκαστον γὰρ τούτων ἑαυτοῦ καὶ τ. λ.",
+      "class": "reading",
+      "note": "the print reads \"From the version of Patricius, however, the defect may be supplied as follows: ἑνώσει δὲ θείαν, ἀπὸ τῆς μετεχομένης ἑνάδος. ἕκαστον γὰρ τούτων ἑαυτοῦ καὶ τ. λ.\" (page image, printed page 388 = archive n893) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "yo w t< x£f<r<rov voco 8c xgteeov to ti, oweg ovo/xottypev iiov pavcgov.",
+      "replace": "τὸ δὲ τοιοῦτον οὔ μονον εἶμεν δεῖ, ἀλλὰ καὶ νοῦ τι κρεῖσσον· νοῶ δὲ κρεῖσσον ἐστι, ὅπερ ὀνομάζομεν θεὸν φαίνεσθαι.",
+      "class": "reading",
+      "note": "the Archytas fragment: the print reads \"τὸ δὲ τοιοῦτον οὔ μονον εἶμεν δεῖ, ἀλλὰ καὶ νοῦ τι κρεῖσσον· νοῶ δὲ κρεῖσσον ἐστι, ὅπερ ὀνομάζομεν θεὸν φαίνεσθαι\" (page image, printed page 376 = archive n881) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "ainx ytwi itixij, aXka xot<ra curt * ym ijtixi) oux eon ^cooyowxt),",
+      "replace": "αἰτία γεννητική, ἀλλὰ πᾶσα αἰτία γεννητικὴ οὐκ ἔστι ζωογονική,",
+      "class": "reading",
+      "note": "the print reads \"The words αἰτία γεννητική, ἀλλὰ πᾶσα αἰτία γεννητικὴ οὐκ ἔστι ζωογονική, are wanting in the original\" (page image, printed page 404 = archive n909) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "aXa/xiria, <rxo rcvBiot, apu^la, ftdquBpov uroybovw, AttoMoov",
+      "replace": "ἀχαμία, σκοτία, ἀοπλία, βάραθρον, ὑποχθόνιον, ἀπόλλων",
+      "class": "reading",
+      "note": "the print reads \"such as ἀχαμία, σκοτία, ἀοπλία, βάραθρον, ὑποχθόνιον, ἀπόλλων, &c.\" (page image, printed page 377 = archive n882) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "xaimpav, avarpt^tt its rtjy «unj{ fvffiv. to yap o%r)fia.",
+      "replace": "καθαράν, συντρέχειν εἰς τὴν αὑτῆς ἀρχαίαν φύσιν. τὸ γὰρ ὄχημα.",
+      "class": "reading",
+      "note": "the print reads \"I have added the words καθαράν, συντρέχειν εἰς τὴν αὑτῆς ἀρχαίαν φύσιν. τὸ γὰρ ὄχημα\" (page image, printed page 439 = archive n944) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "vow ravros xou ou<ri«$ 8uv«|xci xou •wqtvfiua uwepe^ei",
+      "replace": "νοῦ παντὸς καὶ οὐσίας δυνάμει καὶ πρεσβείᾳ ὑπερίδρυται",
+      "class": "reading",
+      "note": "the print reads \"the first cause νοῦ παντὸς καὶ οὐσίας δυνάμει καὶ πρεσβείᾳ ὑπερίδρυται\" (page image, printed page 376 = archive n881) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "axrre xaj *) fupix y 4 xm ro amov aga to u o%tipctros",
+      "replace": "ὥστε καὶ ἡ μερικὴ ψυχὴ, καὶ τὸ αἴτιον ἄρα τοῦ ὀχήματος αὐτῆς,",
+      "class": "reading",
+      "note": "the print reads \"Instead of ωστε καὶ ἡ μερικὴ ψυχὴ, καὶ τὸ αἴτιον ἄρα τοῦ ὀχήματος αὐτῆς\" (page image, printed page 438 = archive n943) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "owr# xai to oiriov tyj$ fitptxw xm of a tov o^futros",
+      "replace": "ὥστε καὶ τὸ αἴτιον τῆς μερικῆς ψυχῆς, καὶ ἄρα τοῦ ὀχήματος αὐτῆς.",
+      "class": "reading",
+      "note": "the print reads \"to be necessary to read ωστε καὶ τὸ αἴτιον τῆς μερικῆς ψυχῆς, καὶ ἄρα τοῦ ὀχήματος αὐτῆς\" (page image, printed page 438 = archive n943) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "otXXa xeu ouo-ictf, five g &»}$• SijAov yog x. A.",
+      "replace": "ἀλλὰ καὶ οὐσίας, ὥσπερ ζωῆς. δῆλον γὰρ ψυχῆς π.λ.",
+      "class": "reading",
+      "note": "the print reads \"instead of ἀλλὰ καὶ οὐσίας, ὥσπερ ζωῆς. δηλον γὰρ ψυχῆς π.λ.\" (page image, printed page 427 = archive n932) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "aXxeu ov<nag, wctg 8»jAoy. rgo yag x. A.",
+      "replace": "ἀλλὰ καὶ οὐσίας, ὥσπερ ζωῆς δῆλον. περὶ γὰρ ψυχῆς π.λ.",
+      "class": "reading",
+      "note": "the print reads \"may be restored to the true sense by reading ἀλλὰ καὶ οὐσίας, ὥσπερ ζωῆς δηλον. περὶ γὰρ ψυχῆς π.λ.\" (page image, printed page 427 = archive n932) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "wgts mw, s wgos n KgMTTov nri0Tgi$rr««",
+      "replace": "ἢ πρὸς ἑαυτὸν, ἢ πρὸς τὸ κρεῖττον ἐπιστρέφεται",
+      "class": "reading",
+      "note": "the print reads \"it is necessary to supply the words ἢ πρὸς ἑαυτὸν, ἢ πρὸς τὸ κρεῖττον ἐπιστρέφεται which are wanting in the original\" (page image, printed page 406 = archive n911) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "xm' tngyiutv Si row ^yovow ptTi%»vc*.",
+      "replace": "κατ' ἐνέργειαν δὲ τοῦ χρόνου μετέχουσα.",
+      "class": "reading",
+      "note": "the print reads \"it is here requisite to supply the words κατ' ἐνέργειαν δὲ τοῦ χρόνου μετέχουσα\" (page image, printed page 428 = archive n933) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "o^gn/frai rqs Xf to f ur K * UT ¥",
+      "replace": "ἐξῆρτηται τῆς χρωμένης αὐτῷ ψυχῆς.",
+      "class": "reading",
+      "note": "the print reads \"it is necessary to read ἐξῆρτηται τῆς χρωμένης αὐτῷ ψυχῆς\" (page image, printed page 438 = archive n943) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "ifjgiyrai Tot$ xpwfjLtvoif out m",
+      "replace": "ἐξῆρται τοῖς χρωμένοις αὐτῷ ψυχῆς,",
+      "class": "reading",
+      "note": "the print reads \"For ἐξῆρται τοῖς χρωμένοις αὐτῷ ψυχῆς, it is necessary to read ἐξῆρτηται τῆς χρωμένης αὐτῷ ψυχῆς\" (page image, printed page 438 = archive n943) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Kara tijv avrou owna* oyi£«.",
+      "replace": "κατὰ τὴν αὐτοῦ οὐσίαν ἀεὶ οὖσαν.",
+      "class": "reading",
+      "note": "the print reads \"to supply in this place the words κατὰ τὴν αὐτοῦ οὐσίαν ἀεὶ οὖσαν\" (page image, printed page 415 = archive n920) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "too to rt\\tiov n ms itots.",
+      "replace": "καὶ τὸ τέλειον ἐν τοῖς θεοῖς.",
+      "class": "reading",
+      "note": "the print reads \"supply the words καὶ τὸ τέλειον ἐν τοῖς θεοῖς\" (page image, printed page 403 = archive n908) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "xat ha fj*<rov, xai ttj$",
+      "replace": "καὶ διὰ μέσου, καὶ τῆς ψυχῆς.",
+      "class": "reading",
+      "note": "the print reads \"καὶ διὰ μέσου, καὶ τῆς ψυχῆς. From the version of Patricius\" (page image, printed page 410 = archive n915) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "(avro to terno SijXowv)",
+      "replace": "(αὑτὸ τὸ αὑτῷ δηλοῦν)",
+      "class": "reading",
+      "note": "the print reads \"and himself manifesting himself (αὑτὸ τὸ αὑτῷ δηλοῦν)\" (page image, printed page 377 = archive n882) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "x*i axiyijrof, «/ugwro$",
+      "replace": "καὶ ἀκίνητος, ἀμέριστος",
+      "class": "reading",
+      "note": "the print reads \"to supply the words καὶ ἀκίνητος, ἀμέριστος\" (page image, printed page 414 = archive n919) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "mqfartfo* too no;, t it",
+      "replace": "προσεχῶς τοῦ νοῦ, ὁ δὲ μερικὸς ἀριθμὸς ἐγγυτέρω τοῦ ἑνός.",
+      "class": "reading",
+      "note": "the print reads \"it is necessary here to read and supply from the version of Patricius, προσεχῶς του νοῦ, ὁ δὲ μερικὸς ἀριθμὸς ἐγγυτέρω του ἑνός\" (page image, printed page 421 = archive n926) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "(tvtpyua *<m irp* voo)",
+      "replace": "(ἐνέργεια γάρ ἐστι πρὸ νοῦ)",
+      "class": "reading",
+      "note": "the print reads \"is an energy prior to intellect (ἐνέργεια γάρ ἐστι πρὸ νοῦ)\" (page image, printed page 382 = archive n887) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "/iWT« It wane t decoy.",
+      "replace": "μετὰ δὲ πάντα θεοῦ.",
+      "class": "reading",
+      "note": "the print reads \"it is necessary to read μετὰ δὲ πάντα θεοῦ\" (page image, printed page 398 = archive n903) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "iuux\"9>rni «v <r»iucns",
+      "replace": "καὶ χωριστὴ τοῦ σώματος",
+      "class": "reading",
+      "note": "the print reads \"it is here necessary to supply the words καὶ χωριστὴ τοῦ σώματος\" (page image, printed page 425 = archive n930) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "jxrr«8iWi To** tfefa.",
+      "replace": "μεταδίδωσι τοῖς ἐφεξῆς.",
+      "class": "reading",
+      "note": "the print reads \"ἑαυτοῦ ἑνώσεως μεταδίδωσι τοῖς ἐφεξῆς.\" (page image, printed page 388 = archive n893) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "o/xoi»$ warra m jcwi.",
+      "replace": "ὁμοίως πάντα νοήσουσιν.",
+      "class": "reading",
+      "note": "the print reads \"it is requisite to supply the words ομοιως παντα νοησουσιν\" (page image, printed page 413 = archive n918) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "4'^X’lf ou Aoyi&piyiK",
+      "replace": "ψυχῆς οὐ λογιζομένης",
+      "class": "reading",
+      "note": "the print reads \"The words ψυχῆς οὐ λογιζομένης are wanting in the original\" (page image, printed page 426 = archive n931) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "»o>jrov to ti rovrcf",
+      "replace": "νοητὸν ἔστι τοῦτο",
+      "class": "reading",
+      "note": "the print reads \"it is necessary to read νοητον εστι τουτο\" (page image, printed page 411 = archive n916) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "vorjjov t<rn. tovto",
+      "replace": "νοητὸν ἔστι. τοῦτο",
+      "class": "reading",
+      "note": "the print reads \"Instead of νοητον εστι. τουτο here, it is necessary to read νοητον εστι τουτο\" (page image, printed page 411 = archive n916) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "jtMra 8* wana 9i»v",
+      "replace": "μετὰ δὲ πάντα θεὸν",
+      "class": "reading",
+      "note": "the print reads \"For μετὰ δὲ πάντα θεὸν, it is necessary to read μετὰ δὲ πάντα θεοῦ\" (page image, printed page 398 = archive n903) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "i) Stoxivi)<n(",
+      "replace": "ᾗ διακίνησις",
+      "class": "reading",
+      "note": "the print reads \"For ᾗ διακινησίς, it is necessary to read ἰδίαν κίνησιν\"; the transcription's \"διὰ κινήσις\" is a misreading of the two words the garble spells (iSi« = ἰδίαν, xiv>j<n$ = κίνησιν) (page image, printed page 433 = archive n938) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "ovo^oy /xovov",
+      "replace": "ὄνομα μόνον",
+      "class": "reading",
+      "note": "the print reads \"Instead of οὐ οὐ μόνον, which is evidently the true reading, ὄνομα μόνον is erroneously printed in Stobæus\" (page image, printed page 376 = archive n881). The page-image transcription of this footnote came back stripped of accents while the same page's body Greek (ὡς ἀνάγκα τρὶς εἶμεν…, οὐ μόνον) is fully accented, so the accents here are RESTORED from the page's own convention, not read off the footnote. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "iSi« xiv>j<n$",
+      "replace": "ἰδίαν κίνησιν",
+      "class": "reading",
+      "note": "the print reads \"it is necessary to read ἰδίαν κίνησιν\" (page image, printed page 433 = archive n938) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "ov ov ftovov",
+      "replace": "οὐ οὐ μόνον",
+      "class": "reading",
+      "note": "the print reads \"Instead of οὐ οὐ μόνον, which is evidently the true reading, ὄνομα μόνον is erroneously printed in Stobæus\" (page image, printed page 376 = archive n881). The page-image transcription of this footnote came back stripped of accents while the same page's body Greek (ὡς ἀνάγκα τρὶς εἶμεν…, οὐ μόνον) is fully accented, so the accents here are RESTORED from the page's own convention, not read off the footnote. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "(xupitotie$)",
+      "replace": "(κυριάδες)",
+      "class": "reading",
+      "note": "the print reads \"possessing absolute dominion (κυριάδες)\" (page image, printed page 377 = archive n882) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "(Agx^ve ro$)",
+      "replace": "(Ἀρχαίνετος)",
+      "class": "reading",
+      "note": "the print reads \"which Archainetus (Ἀρχαίνετος) denominates a cause prior to cause\" (page image, printed page 377 = archive n882) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "i^giifitvov.",
+      "replace": "ἐξῃρημένον.",
+      "class": "reading",
+      "note": "the print reads \"For ἐξηρημένον it is necessary to read ἐξῃρημένον\" (page image, printed page 404 = archive n909) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "miigu/xtvwy.",
+      "replace": "ἐνιδρυμένον.",
+      "class": "reading",
+      "note": "the print reads \"Here also we must read ἐνιδρυμένον for ἐνιδρυμένον\" (page image, printed page 404 = archive n909) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "(«vojroiof)",
+      "replace": "(ἑνωτικὸς)",
+      "class": "reading",
+      "note": "the print reads \"or an unific (ἑνωτικὸς) goodness\" (page image, printed page 390 = archive n895) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "oti «£»fcv,",
+      "replace": "ὅτι ζωῆς ἔξωθεν,",
+      "class": "reading",
+      "note": "the print reads \"Here too, the words ὁτὶ ζωῆς ἐξωθεν, are wanting in the original\" (page image, printed page 427 = archive n932) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "tfygtifUMv",
+      "replace": "ἐξηρημένον",
+      "class": "reading",
+      "note": "the print reads \"For ἐξηρημένον it is necessary to read ἐξῃρημένον\"; the iota of the second form is lost in the transcription's glyph run of the first (page image, printed page 404 = archive n909) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "»<rri. »*»",
+      "replace": "ἐστι. καὶ γὰρ",
+      "class": "reading",
+      "note": "the print reads \"ἀμέριστος ἐστι. καὶ γὰρ\" (page image, printed page 414 = archive n919) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "/urt^orra.",
+      "replace": "μετέχοντα.",
+      "class": "reading",
+      "note": "the print reads \"it is here necessary to supply the words καὶ τὸν νοῦν μὴ μετέχοντα\" (page image, printed page 422 = archive n927) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "to votgov*",
+      "replace": "τὸ νοερόν",
+      "class": "reading",
+      "note": "the print reads \"it is necessary to read τὸ νοερόν\" (page image, printed page 424 = archive n929) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "(/xovov)",
+      "replace": "(μόνος)",
+      "class": "reading",
+      "note": "the print reads \"and alone (μόνος), possessing absolute dominion\" (page image, printed page 377 = archive n882) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "*A»ov<ov",
+      "replace": "πλείονων",
+      "class": "reading",
+      "note": "the print reads \"ὡς πλείονων is omitted in the original\" (page image, printed page 387 = archive n892) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "(rpowm)",
+      "replace": "(πρόνοια)",
+      "class": "reading",
+      "note": "the print reads \"But providence (πρόνοια) as the name signifies\" (page image, printed page 382 = archive n887) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "T«y mg*",
+      "replace": "τῶν νοερῶν",
+      "class": "reading",
+      "note": "the print reads \"For τῶν νοερῶν, it is necessary to read τὸ νοερόν\" (page image, printed page 424 = archive n929) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "theii*",
+      "replace": "their",
+      "class": "reading",
+      "note": "the print reads \"Hence things of a secondary nature, from their more partial subsistence\" (page image, printed page 401 = archive n906) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "*avr«",
+      "replace": "πάντα",
+      "class": "reading",
+      "note": "the print reads \"The word παντα is omitted in the original\" (page image, printed page 413 = archive n918) (decided by the transcription's own context.)"
+    },
+    {
+      "find": "xm yog tv toi$ pig tarots at Bova/xti; truvayofj&vat ptv, xiWavXao'tatyrrat, pigiCopcyai Be, aputyouvrat, For powers when congregated are not multiplied, but united. Hence it is necessary to read xat yag iv t ot§ (tegtarotf at Buvafut; truvetyofitvat pev, ivi^ovrat, pegt&pevat Be, woXXawXatrtafyvrat, xat apvlgovvrat,",
+      "replace": "καὶ γὰρ ἐν τοῖς μεριστοῖς αἱ δυνάμεις συναγόμεναι μὲν, πολλαπλασιάζονται, μεριζόμεναι δὲ, ἀμυδροῦνται. For powers when congregated are not multiplied, but united. Hence it is necessary to read καὶ γὰρ ἐν τοῖς μεριστοῖς αἱ δυνάμεις συναγόμεναι μὲν, ἐνίζονται, μεριζόμεναι δὲ, πολλαπλασιάζονται, καὶ ἀμυδροῦνται,",
+      "class": "reading",
+      "note": "the print reads \"There is evidently a very gross error here in the original which is as follows: καὶ γὰρ ἐν τοῖς μεριστοῖς αἱ δυνάμεις συναγόμεναι μὲν, πολλαπλασιάζονται, μεριζόμεναι δὲ, ἀμυδροῦνται. … Hence it is necessary to read καὶ γὰρ ἐν τοῖς μεριστοῖς αἱ δυνάμεις συναγόμεναι μὲν, ἐνίζονται, μεριζόμεναι δὲ, πολλαπλασιάζονται, καὶ ἀμυδροῦνται.\" (page image, printed page 364 = archive n869); the served block is joined from three printed lines and is cut off after apvlgovvrat, so its comma is kept. Every flattened token lines up: xm = καὶ, yog = γὰρ, tv = ἐν, toi$ = τοῖς, pig tarots = μεριστοῖς, at = αἱ, Bova/xti; = δυνάμεις, truvayofj&vat ptv = συναγόμεναι μὲν, xiWavXao'tatyrrat = πολλαπλασιάζονται, pigiCopcyai Be = μεριζόμεναι δὲ, aputyouvrat = ἀμυδροῦνται, ivi^ovrat = ἐνίζονται. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "*m njv axe njf twiriuf xgef taw to msTgrrrixov we read ti tot tori xara njv axo n)( oottxf tytgytta* xgef taun txtrrgfirrixov.",
+      "replace": "ἐστι τὴν ἀπὸ τῆς οὐσίας πρὸς ἑαυτὸ ἐπιστρεπτικὸν we read ἢ οὖν ἐστι κατὰ τὴν ἀπὸ τῆς οὐσίας ἐνέργειαν πρὸς ἑαυτὸ ἐπιστρεπτικόν.",
+      "class": "reading",
+      "note": "the print reads \"…if instead of ἐστι τὴν ἀπὸ τῆς οὐσίας πρὸς ἑαυτὸ ἐπιστρεπτικὸν we read ἢ οὖν ἐστι κατὰ τὴν ἀπὸ τῆς οὐσίας ἐνέργειαν πρὸς ἑαυτὸ ἐπιστρεπτικόν.\" (page image, printed page 332 = archive n837); the served block joins the two hyphenated line-breaks of the source (tw- / iriuf, txt- / rrgfirrixov) without the hyphen, as it does for the block as a whole. The lemma is 8 tokens for 8 words (njv = τὴν, axe = ἀπὸ, twiriuf = οὐσίας, xgef = πρὸς, msTgrrrixov = ἐπιστρεπτικὸν) and the correction 12 for 12 (xara njv = κατὰ τὴν, oottxf = οὐσίας, tytgytta* = ἐνέργειαν, txtrrgfirrixov = ἐπιστρεπτικόν). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "For to ouk ctvTov here, it U necessary to read rep at' dvr ov. * For to moT-gf^ov, it is requisite to read to fwj triorff^ov.",
+      "replace": "For τὸ αὐτὸ αὐτοῦ here, it U necessary to read τὸ αὑτὸ αὐτοῦ. * For τὸ ἐπιστρεφόμενον, it is requisite to read τὸ μὴ ἐπιστρεφόμενον.",
+      "class": "reading",
+      "note": "the print reads (note 1) \"For τὸ αὐτὸ αὐτοῦ here, it is necessary to read τὸ αὑτὸ αὐτοῦ.\" and (note 2) \"For τὸ ἐπιστρεφόμενον, it is requisite to read τὸ μὴ ἐπιστρεφόμενον.\" (page image, printed page 331 = archive n836); to ouk ctvTov = τὸ αὐτὸ αὐτοῦ, rep at' dvr ov = τὸ αὑτὸ αὐτοῦ, moT-gf^ov = ἐπιστρεφόμενον, fwj = μὴ. Both footnotes are served in one block. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Instead of fci wgarrov c£ tivcu, it is necessary to read In wge rev «£ etpfow nv*i.",
+      "replace": "Instead of τὸι πρῶτον ἐξ ἀμφοῖν εἶναι, it is necessary to read τὸι πρὸ τοῦ ἐξ ἀμφοῖν εἶναι.",
+      "class": "reading",
+      "note": "the print reads \"Instead of τὸι πρῶτον ἐξ ἀμφοῖν εἶναι, it is necessary to read τὸι πρὸ τοῦ ἐξ ἀμφοῖν εἶναι.\" (page image, printed page 361 = archive n866); fci = τὸι, wgarrov = πρῶτον, c£ = ἐξ, tivcu = ἀμφοῖν εἶναι, In = τὸι, wge rev = πρὸ τοῦ, nv*i = εἶναι (the print's τὸι is as the page prints it). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Instead of it opoiov avo/swiov, it is necessary to read u>s it op«i«v «<; o/toiov.",
+      "replace": "Instead of ὡς δὴ ὁμοίαν ἀνομοίου, it is necessary to read ὡς δ' ὁμοίαν εἰς ὁμοίου.",
+      "class": "reading",
+      "note": "the print reads \"Instead of ὡς δὴ ὁμοίαν ἀνομοίου, it is necessary to read ὡς δ' ὁμοίαν εἰς ὁμοίου.\" (page image, printed page 372 = archive n877); it = ὡς, opoiov = δὴ ὁμοίαν, avo/swiov = ἀνομοίου, u>s = ὡς, op«i«v = ὁμοίαν, «<; = εἰς, o/toiov = ὁμοίου. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "For cm to fw ctvrrjv St$0)0*1, it is necessary to read m ro jatr cum\\v $18 «kti.",
+      "replace": "For αν το μεν αυτην διδωσι, it is necessary to read αν το μεν αὐτὴν διδωσι.",
+      "class": "reading",
+      "note": "the print reads \"For αν το μεν αυτην διδωσι, it is necessary to read αν το μεν αὐτὴν διδωσι.\" (page image, printed page 309 = archive n814). The page carries two footnotes, both OCR'd with the marker \"1\"; this is the second (the first, \"For τοῖς αἰτίοις here, it is obviously necessary to read τοῖς αἰτιατοῖς.\", is a separate served block). Each flattened token lines up with a Greek word: to = τὸ, ctvrrjv = αὐτὴν, St$0)0*1 = δίδωσι. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Instead .of *»$ to Stoxgifa, it is necessary to read to; to m haxgitt*.",
+      "replace": "Instead .of μὴ τὸ διακριθῆναι, it is necessary to read μὴ τὸ μὴ διακριθῆναι.",
+      "class": "reading",
+      "note": "the print reads \"Instead of μὴ τὸ διακριθῆναι, it is necessary to read μὴ τὸ μὴ διακριθῆναι.\" (page image, printed page 327 = archive n832); *»$ = μὴ, to = τὸ, Stoxgifa = διακριθῆναι, to; to m = μὴ τὸ μὴ, haxgitt*. = διακριθῆναι. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "nw; y*y«/un> vf’ «u futj^neu, I read tea St Tiro? ymptm ov fUTt^rra i.",
+      "replace": "τινὸς γενομένου υφ' ου μετέχεται, I read καὶ τὸ τινὸς γενομένου υφ' ου μετέχεται.",
+      "class": "reading",
+      "note": "the print reads \"Instead therefore of τινὸς γενομένου υφ' ου μετέχεται, I read καὶ τὸ τινὸς γενομένου υφ' ου μετέχεται.\" (page image, printed page 319 = archive n824); each flattened token lines up: nw; = τινὸς, y*y«/un> = γενομένου, vf' = υφ', «u = ου, futj^neu, = μετέχεται, tea St = καὶ τὸ, fUTt^rra = μετέχεται. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "The words to toiovy tvtpyuet ov o *vto are wanting in the original*",
+      "replace": "The words τὸ ποιοῦν ἐνεργείᾳ ᾗ αὐτὸ δύναμις, are wanting in the original*",
+      "class": "reading",
+      "note": "the print reads \"The words τὸ ποιοῦν ἐνεργείᾳ ᾗ αὐτὸ δύναμις, are wanting in the original.\" (page image, printed page 355 = archive n860); to toiovy = τὸ ποιοῦν, tvtpyuet = ἐνεργείᾳ, ov = ᾗ, o = αὐτὸ, *vto = δύναμις. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "Instead of prr' oorto here, it is necewarytoread jmt* mvto.",
+      "replace": "Instead of μετ' αὐτὸν here, it is necewarytoread μετ' αὐτό.",
+      "class": "reading",
+      "note": "the print reads \"Instead of μετ' αὐτὸν here, it is necessary to read μετ' αὐτό.\" (page image, printed page 322 = archive n827); prr' oorto = μετ' αὐτὸν, jmt* mvto = μετ' αὐτό. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "For /ujtaniv tetvrou, it it requisite to read fttgimy mwiw.",
+      "replace": "For μεριστὴν ἑαυτοῦ, it it requisite to read μεριστὸν ἑαυτοῦ.",
+      "class": "reading",
+      "note": "the print reads \"For μεριστὴν ἑαυτοῦ, it is requisite to read μεριστὸν ἑαυτοῦ.\" (page image, printed page 333 = archive n838); /ujtaniv = μεριστὴν, tetvrou = ἑαυτοῦ, fttgimy = μεριστὸν, mwiw = ἑαυτοῦ. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "e*v to oj/toi; *v. But instead of eav, we must read *a.v.",
+      "replace": "ἐὰν τὸ εἶναι· εἶ. But instead of ἐὰν, we must read πᾶν.",
+      "class": "reading",
+      "note": "the print reads \"…which should begin at the words ἐὰν τὸ εἶναι· εἶ. But instead of ἐὰν, we must read πᾶν.\" (page image, printed page 358 = archive n863); e*v = ἐὰν, to = τὸ, oj/toi; = εἶναι, *v = εἶ, eav = ἐὰν, *a.v = πᾶν. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "For v*t*niunt{, it is necessary to read wifm/wotf.",
+      "replace": "For ὑποκείμενοις, it is necessary to read ὑπεριδρυμένοις.",
+      "class": "reading",
+      "note": "the print reads \"For ὑποκείμενοις, it is necessary to read ὑπεριδρυμένοις.\" (page image, printed page 374 = archive n879); v*t*niunt{, = ὑποκείμενοις, wifm/wotf. = ὑπεριδρυμένοις. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "ugpfns »*p«w» s,",
+      "replace": "ἄρρητος ἐξέλευσις,",
+      "class": "reading",
+      "note": "the print reads \"…the imparticipable from the ineffable is ἄρρητος ἐξέλευσις, an ineffable evolution into light.\" (page image, printed page 366 = archive n871); ugpfns = ἄρρητος, »*p«w» s, = ἐξέλευσις, (the print's comma). (decided by the transcription's own context.)"
+    },
+    {
       "find": "too ovtoj seems to be wanting",
       "replace": "τοῦ ὄντος seems to be wanting",
       "class": "reading",
@@ -96,9 +516,9 @@
     },
     {
       "find": "xa* on «XAo in this place",
-      "replace": "καὶ οὐκ ἄλλο in this place",
+      "replace": "καὶ ἔτι ἄλλο in this place",
       "class": "reading",
-      "note": "the print reads \"Instead of καὶ οὐκ ἄλλο in this place, it appears to me to be necessary to read καὶ οὐκ ἄλλοις\" (page image, printed page 321 = archive n826). Each flattened token lines up with a Greek word: xa* = καὶ, on = οὐκ, «XAo = ἄλλο. (decided by the transcription's own context.)"
+      "note": "CORRECTED 2026-10-03. Three independent reads of the page image (printed page 321 = archive n826) give \"Instead of καὶ ἔτι ἄλλο in this place, it appears to me to be necessary to read καὶ ἔτι ἄλλοις\" (variants: ἄλλας / ἐπ' ἄλλοις) — the second word is ἔτι, and NO read supports the οὐκ this rule previously recorded (that reading came from a single earlier page read and is refuted). xa* = καὶ, on = ἔτι, «XAo = ἄλλο. (decided by the transcription's own context.)"
     },
     {
       "find": "«Aoy is omitted",

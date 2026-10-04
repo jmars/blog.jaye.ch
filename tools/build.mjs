@@ -4778,7 +4778,8 @@ function buildLibraryIndex() {
   }
   const heldBackNote = heldBack.length
     ? ` The ${heldBack.length} held back are not served as editions yet, and none has been repaired: ` +
-      `they are ${tag('damaged')} by default, and saying nothing better than that would be saying nothing.`
+      `they are ${tag('damaged')} — every transcription here carries the scanner's damage, and these have not ` +
+      `been worked on.`
     : '';
   const unfinished = damaged.length + inRepair.length;
   const head = unfinished
@@ -4791,7 +4792,8 @@ function buildLibraryIndex() {
       `name says which. ` +
       sentences.join(' ') +
       heldBackNote +
-      ` The text's own page states its state, and the reader's repairs panel repeats it.</p></div></div></section>`
+      ` The tag is repeated on each text's own page, where the reader's repairs panel also lists the ` +
+      `corrections that edition carries.</p></div></div></section>`
     : '';
   const body =
     repairNote +

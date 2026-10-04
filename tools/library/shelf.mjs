@@ -300,6 +300,24 @@ export const TEXTS = [
     // slice and never reads the item)
     item: 'thomastaylor',
     cat: ['proclus-elements-of-theology'],
+    // PUBLISHED, and served IN REPAIR. This entry has everything the Cave has —
+    // a stored edition, pinned anchors, a page model resting on the volume's own
+    // running heads, a repair rule set in which every one of the 374 rules fires,
+    // a damage set MEASURED for this print — and one thing it does not: a closed
+    // worklist. Its residue is known and counted, so it is served with the state
+    // that says so rather than held back, which would hide a readable edition.
+    published: true,
+    repair: {
+      state: 'in-repair',
+      note:
+        'readable, and being cleared against the printed page, site by site. The rules settle what the ' +
+        'transcription\u2019s own context settles: 385 readings applied, and the reading view still shows 28 ' +
+        'damaged word(s) and 12 standalone marker(s) — the scanner\u2019s flattening of the book\u2019s Greek, ' +
+        'where the OCR read Greek letters as Latin lookalikes. Those are being resolved one printed page at a ' +
+        'time against the page image; the pages that remain are the ones where the page itself is unclear or ' +
+        'where two readings of it disagree, and they are left VISIBLE rather than guessed. A second whole-text ' +
+        'read has not been run.',
+    },
   },
   {
     slug: 'dionysius-divine-names-mystical-theology-parker-1897',
