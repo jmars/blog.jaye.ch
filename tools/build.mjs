@@ -290,6 +290,7 @@ function nav(current, navPosts) {
     here('/timeline/', "what's new") +
     here('/map/', 'the map') +
     here('/worker/', 'the worker') +
+    here('/harness/', 'the harness') +
     here('/search/', 'search') +
     (LIBRARY_ON ? here('/library/', 'library') : '') +
     SERIES.map(dropdown).join('') +
@@ -1056,6 +1057,8 @@ const PALETTE_JS = (data) => `(function () {
       m: 'the map of the whole collection.' },
     { n: 'worker', u: 'worker', a: 'ps', d: 'the worker', k: '',
       m: 'the worker page: three arms of one agent, and a self that does not survive its own reconstruction.' },
+    { n: 'harness', u: 'harness', a: '', d: 'the harness', k: '',
+      m: 'the harness page: the design of a very-long-horizon agent — three modules, three substrates, and a constraint set marked by its own evidence.' },
     { n: 'home', u: 'home', a: 'start-here', d: 'the front page', k: '',
       m: 'the front page.' },
     { n: 'url', u: 'url [slug]', a: '', d: 'a page address on the web', k: 'page',
@@ -1126,6 +1129,7 @@ const PALETTE_JS = (data) => `(function () {
   function goSearch(q) { window.location.href = '/search/' + (q ? '?q=' + encodeURIComponent(q) : ''); }
   function goMap() { window.location.href = '/map/'; }
   function goWorker() { window.location.href = '/worker/'; }
+  function goHarness() { window.location.href = '/harness/'; }
   /** The commands the pages themselves display, made to RUN as shown.
    *
    * Every page's masthead prints a command (cat <slug>.md, ls -lt, netstat -a,
@@ -1246,6 +1250,7 @@ const PALETTE_JS = (data) => `(function () {
     if (cmd === 'home' || cmd === 'start-here' || (cmd === 'cd' && !arg)) return goHome();
     if (cmd === 'map' || cmd === 'netstat') return goMap();
     if (cmd === 'worker' || cmd === 'ps') return goWorker();
+    if (cmd === 'harness') return goHarness();
     if (cmd === 'series') return show(listing(seriesKey(arg)));
     if (cmd === 'search' || cmd === 'grep' || cmd === 'find' || cmd === 'rg') return goSearch(arg);
     if (cmd === 'theme') return themeCmd(arg);
@@ -1576,6 +1581,7 @@ function paletteAssets(navPosts) {
   data.pages.push({ slug: 'timeline', title: "What's new", series: '', kind: 'page' });
   data.pages.push({ slug: 'map', title: 'The map', series: '', kind: 'page' });
   data.pages.push({ slug: 'worker', title: 'The worker', series: '', kind: 'page' });
+  data.pages.push({ slug: 'harness', title: 'The harness', series: '', kind: 'page' });
   data.pages.push({ slug: 'search', title: 'Search', series: '', kind: 'page' });
   if (LIBRARY_ON) data.pages.push({ slug: 'library', title: 'The library', series: '', kind: 'page' });
   // The shelf itself, as command-line entries: a text page's own masthead prints
@@ -2169,11 +2175,11 @@ function build404(navPosts) {
     `<div class="prose">` +
     `<p>Every address on this site is one of the pages below — the summary, ` +
     `<a href="/timeline/">what's new</a>, <a href="/map/">the map</a>, ` +
-    `<a href="/worker/">the worker</a>, <a href="/search/">the search</a>, ${libraryLink}or a post in one of ` +
+    `<a href="/worker/">the worker</a>, <a href="/harness/">the harness</a>, <a href="/search/">the search</a>, ${libraryLink}or a post in one of ` +
     `its ${NUM_WORD[seriesCount] || seriesCount} series. ` +
     `There is no other content, and nothing was ` +
     `deleted to hide it.</p>` +
-    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li><li><a href="/worker/">The worker — three arms of one agent, and the loss of the self</a></li><li><a href="/search/">The search — every piece, by words, vectors and links</a></li>${libraryItem}${links}</ul>` +
+    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li><li><a href="/worker/">The worker — three arms of one agent, and the loss of the self</a></li><li><a href="/harness/">The harness — the design of a very-long-horizon agent, and which of its own claims are measured</a></li><li><a href="/search/">The search — every piece, by words, vectors and links</a></li>${libraryItem}${links}</ul>` +
     `<p>If you followed a link from somewhere else, the link is stale; the pieces ` +
     `above are current.</p>` +
     `</div></div></section>`;
@@ -2776,6 +2782,206 @@ function buildWorker() {
     tagline: `three arms, one task suite — and a self that goes empty at the first compaction and never comes back.`,
     body,
     navCurrent: '/worker/',
+  };
+}
+
+/* ---------- the harness page: the design, its constraints, its build ---------- */
+
+/** The curated design data the /harness/ page and its figures read. Committed
+ * beside the widgets and regenerated from the design documents by its own
+ * generator (which refuses to write a row it cannot parse); the page ships the
+ * transcribed design, never a number typed here. */
+function harnessData() {
+  return JSON.parse(readFileSync(join(VIZ_DIR, 'harness-data.json'), 'utf8'));
+}
+
+/** The harness — the design page: a planned very-long-horizon agent
+ * architecture — three modules on three deliberately different substrates,
+ * coupled through an external store and a compiled controlled-natural-language
+ * currency — shown as what it is: a design sketch whose every binding
+ * constraint carries its own status (MEASURED / INTERPRETATION / PROJECTION /
+ * DECIDED / an open choice), and whose build exists in parts. A standalone
+ * page in the worker's own shape; every string the figures read was parsed
+ * from the design documents by the generator, not written by hand. */
+function buildHarness() {
+  const data = harnessData();
+  const counts = {};
+  for (const c of data.constraints) {
+    const k = c.status[0];
+    counts[k] = (counts[k] || 0) + 1;
+  }
+  const n = (k) => String(counts[k] || 0);
+  const json = JSON.stringify(data).replaceAll('<', '\\u003c');
+
+  const body =
+    `<section><div class="wrap">` +
+    `<div class="hint"># three modules, three substrates, and a constraint set that says which of its own claims are measured</div>` +
+    `<div class="prose">` +
+
+    `<h2>The design</h2>` +
+    `<p>This page explains a design — not a result. The design is a planned agent architecture for very-long-horizon ` +
+    `stability: three modules on three deliberately different substrates, coupled through an external shared store ` +
+    `and a compiled controlled-natural-language currency. The substrate assignments are made for measured reasons, ` +
+    `not taste: a single LLM has no separable subsystems, no mutual inhibition, and one timescale, so the ` +
+    `dissociation the whole design rests on is structurally unavailable to a monolith. Every claim on this page is ` +
+    `curated from the design's own documents, and every constraint carries the status its own authors gave it — ` +
+    `MEASURED (a number with an artifact behind it), INTERPRETATION (a reading of measured facts), PROJECTION (a ` +
+    `design hypothesis no measurement backs yet), DECIDED (a user decision, on stated grounds), or an open design ` +
+    `choice marked as one. The figures are interactive; the design is the source, and the page is its map.</p>` +
+
+    `<h2>The three modules</h2>` +
+    `<p>The model the design comes from has five coupled states with three functional roles — a self-content ` +
+    `generator, a demand/reduction variable, and an attention/setpoint/gain control loop — which map onto the ` +
+    `neuroscience triple network: DMN ~ the generator, CEN ~ the demand, SN ~ the control loop, with DMN and CEN ` +
+    `mutually inhibitory under SN regulation. The agent's three modules are: <b>DMN</b>, a self-referential LLM ` +
+    `with an explicit recursion depth T (generate self-content; maintain a narrative self across turns); ` +
+    `<b>CEN</b>, a deterministic Datalog engine (executive checking and reduction — receive the DMN's assertions ` +
+    `and verify them); <b>SN</b>, a cheap non-deliberative regulator (mutual inhibition, switching, gain control, ` +
+    `rescue — never an LLM, because two independent measured requirements disqualify one: it must act every step, ` +
+    `and the monitoring-cost ceiling demands it stay cheap). The store they share is external to all of them — ` +
+    `a module that fails must not take the record down with it (the sensor-relocation rule, generalized).</p>` +
+    `<div class="viz" data-viz="modules">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the three modules as a ` +
+    `diagram — DMN (an LLM, self-referential), CEN (the Datalog engine), SN (a cheap non-deliberative regulator) — ` +
+    `coupled through the external store and the compiled currency, each with its substrate, the measured ` +
+    `requirement that forced it, and its build status.</p></noscript>\n` +
+    `  <p class="viz-caption">The three-module diagram — curated from the design. Select a module to read its ` +
+    `substrate, the measured requirement that forced that substrate, and its build status; the store is drawn ` +
+    `outside every module, which is the design's own point. Not a measurement of anything else.</p>\n` +
+    `</div>\n` +
+
+    `<h2>The constraint set</h2>` +
+    `<p>The design's binding constraints are stated as a set, each with its evidence and its status. The grid below ` +
+    `is the design's real shape: of its <b>${data.constraints.length}</b> constraints, <b>${n('MEASURED')}</b> are ` +
+    `MEASURED, <b>${n('INTERPRETATION')}</b> INTERPRETATION, <b>${n('PROJECTION')}</b> PROJECTION, ` +
+    `<b>${n('DECIDED')}</b> DECIDED, and <b>${n('C')}</b> open design choices — and several constraints carry two ` +
+    `statuses at once (one half measured, the other projected), which the design says plainly rather than smoothing. ` +
+    `Filter by status, and click any cell to read the constraint and its evidence. The design's own headline open ` +
+    `problem is the first one: an evaluator must have access to something the dynamics do not determine, and how ` +
+    `the mechanism creates that asymmetry is not yet designed.</p>` +
+    `<div class="viz" data-viz="constraints">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the design's whole ` +
+    `constraint set as a grid, one cell per constraint, each carrying its status — MEASURED, INTERPRETATION, ` +
+    `PROJECTION, DECIDED, or an open design choice — with the counts per status in the readout.</p></noscript>\n` +
+    `  <p class="viz-caption">The constraint grid — every binding constraint of the design, curated from its own ` +
+    `documents: the status is the authors' own marking, visible as a word in every cell and in the readout, never ` +
+    `by colour alone. A constraint that carries two statuses is sorted under the first and shows both when ` +
+    `selected.</p>\n` +
+    `</div>\n` +
+
+    `<h2>What is built</h2>` +
+    `<p>The design exists in parts: the regulator and control loop are REAL (built, reviewed, and their tests ` +
+    `reproduce the model's regulated trajectories exactly); the Datalog engine the CEN runs on is REAL behind an ` +
+    `unchanged protocol, with a measured cost envelope; the DMN's generative seat is a STUB, an interface with a ` +
+    `fixed fixture emitter, awaiting the live model. The scaffold holds a deliberate honesty convention: every ` +
+    `component is marked REAL, STUB, or PENDING — and a STUB is stated as a stub, never silently read as built. ` +
+    `The one component the design calls PENDING is the evidence-widening component, which refuses to run and ` +
+    `names its own blocker.</p>` +
+
+    `<h2>The tiered memory</h2>` +
+    `<p>The self is not carried on the working set — it is re-established every turn from the store, at a price. ` +
+    `Two layers make it finite: a <b>chargeable retrieval seat</b> (the reconstruction pays the engine's own ` +
+    `per-entry cost, so the charge grows with the retrieved set and the self thins when the budget binds), and a ` +
+    `<b>codec layer</b> — three implementations of one existing seat that decide, at consolidation, in what form an ` +
+    `entry is remembered. The three codecs are ordered on two axes at once: encode cost ` +
+    `<b>SCHEMA &lt; GIST &lt; LATENT</b> and structural fidelity <b>SCHEMA &gt; GIST &gt; LATENT</b>. The orderings ` +
+    `agree, and that agreement is the design's core claim: wherever structure exists, fidelity is free — the ` +
+    `cheapest codec is also the most faithful — so the policy never trades fidelity for economy on structured ` +
+    `content. Where they break, each codec has its own named break: SCHEMA cannot represent content outside its ` +
+    `grammar at all (unrepresentable, not compressed-worse); GIST drifts, unmeasured until a consolidation pass ` +
+    `runs on a real store; LATENT is opaque — a vector code cannot be audited by reading it. And LATENT itself is ` +
+    `<b>not buildable</b>: its objective is to predict Y, and Y is the task — with no task, training it anyway ` +
+    `silently degrades the objective to "reconstruct the content", an autoencoder rather than the theory's ` +
+    `criterion. The figure draws it as the gap it is.</p>` +
+    `<div class="viz" data-viz="codecs">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the three memory codecs ` +
+    `on the two axes the design orders them on — encode cost against drift — with SCHEMA cheap and zero-drift by ` +
+    `construction, GIST at one model call and unmeasured drift, and LATENT drawn as a not-buildable gap, gated on ` +
+    `the task.</p></noscript>\n` +
+    `  <p class="viz-caption">The three codecs on the two orderings — curated from the design. Click or hover a ` +
+    `codec to read what its Z is, its decoder, its drift status as a word, and where its ordering breaks; LATENT ` +
+    `is drawn dashed and empty because it does not exist yet, and a seat drawn as if it works would be the exact ` +
+    `overclaim this page exists to avoid.</p>\n` +
+    `</div>\n` +
+
+    `<h3>The selection policy — rules, not weights</h3>` +
+    `<p>Which codec an entry gets is decided by a frozen policy of five rules with stated rationales — no weights, ` +
+    `no sums, the same shape as the salience gate's any-salient rule. The rules, in precedence order: ` +
+    `<b>S1</b> structure is free — fully structured content goes to SCHEMA regardless of anything else; ` +
+    `<b>S2</b> narrative goes to GIST, at a consolidation boundary, only if the entry is cold and over a named ` +
+    `size floor; <b>S3</b> bulk goes to LATENT, gated — and because LATENT is not buildable, the honest outcome ` +
+    `is IDENTITY with the gap stated, never a pretend-latent; <b>S4</b> hot entries are never re-encoded (a hot ` +
+    `entry keeps its codec even under S1 — switching under load couples the injected self's representation to ` +
+    `its use); <b>S5</b> no schedule, no policy — until a consolidation schedule runs on the run path, IDENTITY ` +
+    `is the honest codec. Two cases sit outside the ladder entirely: entries of the low tier never reach the ` +
+    `policy (the salience gate already decided they do not consolidate), and the policy itself is the third ` +
+    `externally-owned selector — after the retrieval selector and the cue policy — because a mechanism choosing ` +
+    `its own codec would choose the one that makes its own content easiest to predict and smallest: a ` +
+    `self-serving compression, the project's own subject one layer down.</p>` +
+    `<div class="viz" data-viz="policy">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the five selection ` +
+    `rules S1–S5 as a decision: pick an entry's tier, content type, temperature and size, and the policy returns ` +
+    `the codec and the rule that fired, with its rationale.</p></noscript>\n` +
+    `  <p class="viz-caption">The selection policy, drivable — curated from the design. Set the entry's ` +
+    `attributes and watch which rule fires; the low-tier button shows the entry that never reaches the policy ` +
+    `at all, and a bulk entry returns identity with the latent gap stated. The rules have no weights — the ` +
+    `first rule that fires decides.</p>\n` +
+    `</div>\n` +
+
+    `<h3>The envelope, and the compounding guard</h3>` +
+    `<p>Every compressed value is stored in a self-describing envelope — codec id, decoder version, payload — so a ` +
+    `drift change can be attributed to a codec or decoder change rather than to the content; every decision also ` +
+    `snapshots its inputs (tier, salience, size, age, access count, cold flag), because a codec choice that ` +
+    `cannot say why is the silent-drop failure mode one layer down. Correction is by supersession, never rewrite: ` +
+    `the record is append-only, so the original entry is never deleted and any supersession chain bottoms out at ` +
+    `an identity-decodable value — a gist whose endpoint is down degrades along the chain to the original rather ` +
+    `than to nothing. The same immutability is what makes the compounding guard free: the gist input at any ` +
+    `window is the superseded original, never the previous gist, so each gist is one lossy step from the original ` +
+    `rather than step n of a chain of generational drift.</p>` +
+
+    `<h3>Depletability, and the control that makes it a measurement</h3>` +
+    `<p>The self must be depletable — that is the failure mode the retrieval seat exists to expose. The ` +
+    `demonstration, measured: at a fixed budget of B=6 derivations per turn, growing the store 3 → 8 → 12 turns ` +
+    `thins the reconstructed self — priced coverage <b>1.000 → 0.857 → 0.545</b>. The control: with retrieval ` +
+    `priced at zero, the same growth does not thin at all — coverage stays <b>1.000</b>. That asymmetry is the ` +
+    `evidence the mechanism is real rather than a parameter; the control arm reproduces the pilot's retention-1.000 ` +
+    `defect (a non-depletable narrative self gives retention 1.000 — nothing was consumed, so the model's ` +
+    `mechanism was never engaged). Decay is applied the same way: at consolidation, to the retrieval weight, ` +
+    `never to the record — reachability decays, the record stays byte-identical.</p>` +
+    `<div class="viz" data-viz="retrieval">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the depletability ` +
+    `curve — priced reconstruction coverage falling as the store grows at a fixed budget — beside its control, ` +
+    `the free-retrieval line holding at 1.000 over the same growth.</p></noscript>\n` +
+    `  <p class="viz-caption">Depletability and its control — the three published points are drawn as measured ` +
+    `markers at the published budget (B=6); every other point on the curve is the same arithmetic the battery ` +
+    `runs, live under the sliders, drawn as the design's own stated projection. The control line is flat at 1.000: ` +
+    `that flatness is the point.</p>\n` +
+    `</div>\n` +
+
+    `<h2>Where the claims come from</h2>` +
+    `<p>The measured numbers behind the design's regulator rules come from the same control-theoretic model the ` +
+    `worker page replays (paper 1, doi:<a href="https://doi.org/10.5281/zenodo.22943642">10.5281/zenodo.22943642</a>` +
+    `, and the record of the worker experiment itself, doi:<a href="https://doi.org/10.5281/zenodo.23128113">10.5281/zenodo.23128113</a>` +
+    `). This page quotes the design's own constraint statuses and its scaffold's own component map; where a claim ` +
+    `is one of those papers', it is cited by DOI. The design sketch itself is the source for everything else, and ` +
+    `it says of itself that it should be revised or discarded as its pre-registered tests return data.</p>` +
+    `</div>` +
+    `<script type="application/json" id="viz-data-harness">${json}</script>` +
+    `</div></section>`;
+
+  return {
+    title: 'The harness — blog.jaye.ch',
+    shareTitle: 'The harness — blog.jaye.ch',
+    type: 'website',
+    description:
+      `A planned very-long-horizon agent architecture — three modules on three substrates, an external store, ` +
+      `a compiled currency — with every binding constraint carrying its own status: measured, interpretation, ` +
+      `projection, decided, or an open design choice.`,
+    prompt: 'ps -u harness',
+    heroTitle: `The <span class="fx">harness</span>`,
+    tagline: `three substrates, one design — and a constraint set that says which of its own claims are measured.`,
+    body,
+    navCurrent: '/harness/',
   };
 }
 
@@ -5003,6 +5209,7 @@ function sitemapXml(posts, extra = []) {
     { loc: `${BASE}/timeline/`, lastmod: newest },
     { loc: `${BASE}/map/`, lastmod: newest },
     { loc: `${BASE}/worker/`, lastmod: newest },
+    { loc: `${BASE}/harness/`, lastmod: newest },
     { loc: `${BASE}/search/`, lastmod: newest },
     ...(LIBRARY_ON ? [{ loc: `${BASE}/library/`, lastmod: newest }] : []),
     ...extra.map((rel) => ({ loc: `${BASE}${rel}`, lastmod: newest })),
@@ -5818,6 +6025,7 @@ written.push({
 });
 written.push({ rel: 'map/index.html', html: writePage('map/index.html', buildMap(navPosts), navPosts) });
 written.push({ rel: 'worker/index.html', html: writePage('worker/index.html', buildWorker(), navPosts) });
+written.push({ rel: 'harness/index.html', html: writePage('harness/index.html', buildHarness(), navPosts) });
 written.push({ rel: 'search/index.html', html: writePage('search/index.html', buildSearch(navPosts), navPosts) });
 // The library (plan §11 phase 5): a text is served when its own shelf entry is
 // PUBLISHED, and LIBRARY=1 (see the constant) only widens that to the whole
