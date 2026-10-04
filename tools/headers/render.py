@@ -13,10 +13,14 @@ Resumable: the manifest is written after EVERY image, and a slug whose brief and
 settings are unchanged is skipped, so an interrupted batch costs only what was
 still in flight.
 
-    python3 tools/headers/render.py --start        # launch ComfyUI, then render
-    python3 tools/headers/render.py                # render into a running server
+    python3 tools/headers/render.py                # start ComfyUI if needed, render, stop it
+    python3 tools/headers/render.py --keep         # ... but leave ComfyUI running after
     python3 tools/headers/render.py --only <slug>
     python3 tools/headers/render.py --force
+
+If ComfyUI is not already reachable, render.py launches it (run.sh) and owns it:
+it stops the container when the batch ends so an idle server is not left pinning
+VRAM. A server that was already up when render.py started is left running.
 """
 
 import argparse
@@ -66,6 +70,15 @@ def wait_up(deadline=180):
         except Exception:
             time.sleep(3)
     return False
+
+
+def comfy_up():
+    """Is a ComfyUI already reachable at COMFY? One quick probe, no waiting."""
+    try:
+        get("/system_stats", timeout=5)
+        return True
+    except Exception:
+        return False
 
 
 def reroll_of(renders, slug):
@@ -132,7 +145,11 @@ def main():
     ap.add_argument("--reroll", type=int,
                     help="offset the per-slug seed (N*7919); re-rolls a stray while "
                          "staying reproducible")
-    ap.add_argument("--start", action="store_true", help="launch ComfyUI first")
+    ap.add_argument("--start", action="store_true",
+                    help="accepted for compatibility; starting ComfyUI when "
+                         "needed is now the default")
+    ap.add_argument("--keep", action="store_true",
+                    help="leave ComfyUI running after the batch (old behaviour)")
     ap.add_argument("--adopt", action="store_true",
                     help="record the PNGs already on disk as current, without "
                          "rendering — for when files were restored or hand-picked")
@@ -175,6 +192,10 @@ def main():
 
     print(f"{len(slugs)} posts, {len(todo)} to render via {COMFY}")
 
+    # Empty work is a no-op: never start a container (or stop one) for nothing.
+    if not todo and not args.adopt:
+        return
+
     if args.adopt:
         # The PNG on disk is the deliverable and the manifest is its cache. When
         # a frame was hand-picked or restored from a backup, the honest move is
@@ -193,43 +214,53 @@ def main():
         print(f"adopted {n} existing renders")
         return
 
-    if args.start:
-        print("starting ComfyUI...")
-        # see run.sh — the container is rootful, which is what grants /dev/kfd
-        subprocess.Popen([str(HERE / "run.sh")])
+    started_us = False
+    try:
+        if not comfy_up():
+            print("starting ComfyUI...")
+            # see run.sh — the container is rootful, which is what grants /dev/kfd
+            subprocess.Popen([str(HERE / "run.sh")])
+            started_us = True
+            if not wait_up():
+                sys.exit(f"ComfyUI not reachable at {COMFY}")
 
-    if not wait_up():
-        sys.exit(f"ComfyUI not reachable at {COMFY}")
+        done = failed = 0
+        for slug, b, key, dest in todo:
+            t0 = time.time()
+            try:
+                img = render_one(slug, b, style, ckpt)
+                fetch(img, dest)
+                renders[slug] = {"key": key, "file": str(dest.relative_to(ROOT)),
+                                 "seed": b["seed"] % (2 ** 31), "reroll": reroll,
+                                 "emblem": b.get("emblem"), "seconds": round(time.time() - t0, 1)}
+                done += 1
+                print(f"  [{done + failed}/{len(todo)}] {slug}  {time.time() - t0:.0f}s  "
+                      f"({b.get('emblem')})")
+            except Exception as e:
+                failed += 1
+                renders.setdefault(slug, {})["error"] = str(e)[:300]
+                print(f"  [{done + failed}/{len(todo)}] FAILED {slug}: {e}")
+            # written every iteration: a killed batch keeps what it earned
+            MANIFEST.write_text(json.dumps(renders, indent=2, sort_keys=True) + "\n")
 
-    done = failed = 0
-    for slug, b, key, dest in todo:
-        t0 = time.time()
-        try:
-            img = render_one(slug, b, style, ckpt)
-            fetch(img, dest)
-            renders[slug] = {"key": key, "file": str(dest.relative_to(ROOT)),
-                             "seed": b["seed"] % (2 ** 31), "reroll": reroll,
-                             "emblem": b.get("emblem"), "seconds": round(time.time() - t0, 1)}
-            done += 1
-            print(f"  [{done + failed}/{len(todo)}] {slug}  {time.time() - t0:.0f}s  "
-                  f"({b.get('emblem')})")
-        except Exception as e:
-            failed += 1
-            renders.setdefault(slug, {})["error"] = str(e)[:300]
-            print(f"  [{done + failed}/{len(todo)}] FAILED {slug}: {e}")
-        # written every iteration: a killed batch keeps what it earned
-        MANIFEST.write_text(json.dumps(renders, indent=2, sort_keys=True) + "\n")
+        print(f"rendered {done}, failed {failed} -> {OUT}")
 
-    print(f"rendered {done}, failed {failed} -> {OUT}")
-
-    # Stage 3: derive the social card from what was just rendered. Pillow only
-    # exists in the container, so this shells out rather than importing.
-    if done:
-        here = Path(__file__).resolve().parent
-        subprocess.run(
-            [str(here / "postprocess.sh")] + [s for s, *_ in todo],
-            check=False,
-        )
+        # Stage 3: derive the social card from what was just rendered. Pillow only
+        # exists in the container, so this shells out rather than importing.
+        if done:
+            here = Path(__file__).resolve().parent
+            subprocess.run(
+                [str(here / "postprocess.sh")] + [s for s, *_ in todo],
+                check=False,
+            )
+    finally:
+        # Stop only what we started: an idle server holds VRAM for nothing, but
+        # one that was already running belongs to whoever launched it. --keep
+        # opts back into leaving it up. finally, so a render failure, an
+        # unhandled exception, or Ctrl-C still tears it down.
+        if started_us and not args.keep:
+            print("stopping ComfyUI...")
+            subprocess.run([str(HERE / "stop.sh")], check=False)
 
     if failed:
         sys.exit(1)
