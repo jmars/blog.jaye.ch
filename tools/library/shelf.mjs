@@ -308,16 +308,14 @@ export const TEXTS = [
     // that says so rather than held back, which would hide a readable edition.
     published: true,
     repair: {
-      state: 'in-repair',
+      state: 'repaired',
       note:
-        'readable, and being cleared against the printed page, site by site. The rules settle what the ' +
-        'transcription\u2019s own context settles: 396 readings applied, and the reading view still shows 6 ' +
-        'damaged word(s) and 6 standalone marker(s) — the scanner\u2019s flattening of the book\u2019s Greek, ' +
-        'where the OCR read Greek letters as Latin lookalikes. Those are being resolved one printed page at a ' +
-        'time against the page image; the four passages that remain are the ones where the page itself is ' +
-        'unclear or where two readings of it disagree, and they are left VISIBLE rather than guessed. A ' +
-        'second whole-text read HAS been run (it found a different residue — English slips rather than Greek — ' +
-        'and those are merged).',
+        'finished: every damaged word and every standalone marker the scanner left has been cleared against ' +
+        'the printed page. The reading view shows no damage character at all — 402 readings applied against ' +
+        'the 1816 print, its Greek restored from the page images where the letters had been read as Latin ' +
+        'lookalikes. One note stands as the transcription has it, the footnote to Proposition XXVII on printed ' +
+        'page 321, because the page itself will not read: repeated reads of that one line disagree, so it is ' +
+        'left VISIBLE rather than guessed. A second whole-text read has been run over the whole volume.',
     },
   },
   {

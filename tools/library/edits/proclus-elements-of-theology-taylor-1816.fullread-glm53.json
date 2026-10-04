@@ -4,7 +4,7 @@
   "model": "glm-5.3",
   "effort": "max",
   "endpoint": "http://10.0.0.1:8324/v1/chat/completions",
-  "generated": "2026-10-04T02:05:13Z",
+  "generated": "2026-10-04T02:39:39Z",
   "mergesNothing": "Nothing here has been merged. These are PROPOSALS with evidence; the last machine-merge attempt would have asserted readings the print does not have (\"but\" -> \"put\", \"the\" -> \"he\", \"caverns\" -> \"cavern\"). To accept one, add it to the rules file by hand (class \"reading\", the transcription-find verbatim) and build.",
   "policy": {
     "rule": "substitute-if-known-else-leave",
@@ -88,10 +88,11 @@
         }
       }
     ],
-    "requests": 2,
+    "requests": 3,
     "regionsSent": [
       "the whole volume (part 1 of 6)",
-      "the whole volume (part 2 of 6)"
+      "the whole volume (part 2 of 6)",
+      "the whole volume (part 3 of 6)"
     ],
     "everyRegionSent": false
   },
@@ -99,11 +100,12 @@
     "maxParallelChars": 9000,
     "charsPerRequest": [
       108610,
-      100370
+      100370,
+      98520
     ],
-    "minChars": 100370,
+    "minChars": 98520,
     "maxChars": 108610,
-    "meanChars": 104490
+    "meanChars": 102500
   },
   "sent": [
     {
@@ -127,6 +129,17 @@
       "reasoningTokens": 61384,
       "thinkingChars": 205941,
       "rawBodyChars": 43219
+    },
+    {
+      "region": "the whole volume (part 3 of 6)",
+      "promptChars": 98520,
+      "parallel": {
+        "status": "no parallel volume known for this text"
+      },
+      "finish": "length",
+      "reasoningTokens": 61371,
+      "thinkingChars": 211754,
+      "rawBodyChars": 42290
     }
   ],
   "findings": [],
@@ -146,19 +159,23 @@
     {
       "region": "the whole volume (part 2 of 6)",
       "error": "the reply was not the JSON asked for (δὲ ἐνίοις εἶναι\" = \"but to be sometimes\" hmm — the anchor at \"sometimes,\" — the note \"1 [Greek] is o)"
+    },
+    {
+      "region": "the whole volume (part 3 of 6)",
+      "error": "the reply was not the JSON asked for (Hmm.\n\nOK — decision for B12: report it as class 2 (missing print marker, no damage char in RV): find)"
     }
   ],
   "cost": {
     "regions": 6,
-    "sent": 2,
+    "sent": 3,
     "findings": 0,
     "unsure": 0,
     "rejected": 0,
-    "failed": 2,
+    "failed": 3,
     "usage": {
-      "prompt_tokens": 22573,
-      "completion_tokens": 65536,
-      "total_tokens": 88109
+      "prompt_tokens": 45164,
+      "completion_tokens": 131072,
+      "total_tokens": 176236
     }
   }
 }
