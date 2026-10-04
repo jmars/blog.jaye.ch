@@ -21,6 +21,7 @@
  *   node tools/headers/prompts.mjs --force         # regenerate everything
  *   node tools/headers/prompts.mjs --only <slug>   # one post
  *   node tools/headers/prompts.mjs --dry-run       # show inputs, call nothing
+ *   node tools/headers/prompts.mjs --seedream      # recompose the Seedream prompt layer (text only)
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
@@ -45,6 +46,7 @@ const FORCE = has('--force');
 // several slugs and the single-value form would silently drop all but the last
 const ONLY = argv.flatMap((a, i) => (a === '--only' ? (argv[i + 1] || '').split(',') : [])).filter(Boolean);
 const RECOMPOSE = has('--recompose');
+const SEEDREAM = has('--seedream');
 
 const style = JSON.parse(readFileSync(join(__dirname, 'style.json'), 'utf8'));
 const manifest = JSON.parse(readFileSync(join(ROOT, 'posts.json'), 'utf8'));
@@ -319,6 +321,134 @@ function compose(brief) {
   return out;
 }
 
+/** Assemble the Seedream prompt from the brief's RAW fields, not the stored
+ * prompt: compose() mangles that prompt for SDXL's two quirks (medium
+ * vocabulary stripped, every placement claim rewritten to 'off-centre'), and
+ * Seedream needs neither — it reads long instructions literally and renders a
+ * competent hand from a named artist reference, so the raw composition (median
+ * ~44 words) survives intact.
+ *
+ * Hygiene only: normalise casing, trailing periods and whitespace, and turn an
+ * em-dash into a comma (the briefs use them as parenthetical asides, which read
+ * fine as commas in prose but as literal pauses nowhere). MEDIUM/WIDE/PLACEMENT
+ * and the BUDGET/tok() trimming are SDXL-only and deliberately not reused.
+ */
+function composeSeedream(brief, slug) {
+  const sd = style.seedream;
+  const DASH = /[—–―]/g;
+  // ARTICLE. 15 of the 64 raw emblems carry no determiner, and verbatim they
+  // read as broken English in the object clause ('The drawing depicts gauge
+  // whose needle pierces itself.'). First match wins; a null replacement means
+  // the emblem needs nothing added. The number-word arm is not decoration:
+  // 'seven closed books in a stack' is fine as written and 'a seven closed
+  // books' is not.
+  const ARTICLE = [
+    [/^(?:a|an|the)\b/i, null],                                        // already determined
+    [/^(?:one|two|three|four|five|six|seven|eight|nine|ten)\b/i, null], // number-led
+    [/^[aeiou]/i, 'an '],
+    [/^./, 'a '],
+  ];
+  // Plural head nouns that stand without an article. An explicit list, not a
+  // pattern: guessing plural from a trailing 's' would catch 'glass' and
+  // 'compass'. Keyed by the emblem text, which is what the entries name.
+  const PLURAL_EXCEPTIONS = new Set([
+    'nested frames, innermost removed',
+    'roots beneath a stone slab',
+  ]);
+  // CLASS A — FRAMING. The briefs were written against the original 2.4:1
+  // banner, and 'wide' in front of the frame or its empty field is stale there:
+  // it re-asks for a canvas the header no longer has. Drop the adjective — but
+  // only where it modifies the FRAME, never where it describes the OBJECT
+  // ('wide and shallow', 'a low wide mound', 'a wide shallow basin').
+  const FRAMING = [
+    [/\bwide\s+empty\b/gi, 'empty'],       // wide empty paper/frame/field/margin
+    [/\bwide\s+emptiness\b/gi, 'empty space'],
+    [/\bwide\s+margins\b/gi, 'margins'],
+    [/\bwide\s+frame\b/gi, 'frame'],
+    [/\bwide,\s*empty\b/gi, 'empty'],
+    // 'wide empty' is the one drop that can strand a vowel: 'in a wide empty
+    // frame' becomes 'in a empty frame'. Repair the article the drop created.
+    [/\ba\s+empty\b/gi, 'an empty'],
+  ];
+  // CLASS B — DE-CENTRE. The house composition is ASYMMETRIC; a centred,
+  // isolated, symmetrical object on an empty field IS an icon, and the briefs
+  // were written for a banner where 'centred in the frame' only meant 'not at
+  // the edge'. A bare centring claim becomes off-centre. DIRECTIONAL centring
+  // ('centred slightly left', 'centred in the left third') and GEOMETRIC centre
+  // ('the geometric centre of the ring', 'at the vertical centre') are already
+  // the intent and are left alone — which is why every rule here names the
+  // frame or its field and none of them fires on 'centre of the ring'.
+  const CENTRE = [
+    // The amendment names this sentence-initial form explicitly, and without
+    // 'placed': a sentence that opens on 'placed' reads worse than one that
+    // opens on the placement itself. It must sit before the general rule below.
+    [/\b(?:centred|centered) in a frame with\b/gi, 'off-centre in the frame with'],
+    [/\bat the exact centre of (?:the |a )?(?:wide )?(?:frame|field)\b/gi, 'off-centre'],
+    [/\bat the exact centre\b/gi, 'off-centre'],
+    // Same class as the two above, and the reason the class exists (the house
+    // style is asymmetric): a ring of figures 'filling the centre of the frame'
+    // or an arrow 'dominating the centre' is the centred isolated icon the
+    // house rules forbid, so the placement claim still has to be replaced.
+    [/\bfilling the centre of (?:the |a )?(?:wide )?(?:frame|field)\b/gi,
+     'placed off-centre and filling the frame'],
+    [/\bdominating the centre of (?:the |a )?(?:wide )?(?:frame|field)\b/gi,
+     'placed off-centre and dominating the frame'],
+    [/\bin the centre of (?:the |a )?(?:wide )?(?:frame|field)\b/gi, 'off-centre'],
+    // Both spellings: the raw briefs carry the American 'centered' in three
+    // slugs (sacred-science, the-ladder-of-light, geosophia), and a rule that
+    // only reads 'centred' would leave the bare claim in the clause untouched.
+    [/\b(?:centred|centered) and tall in the frame\b/gi, 'off-centre and tall in the frame'],
+    [/\bsits low and (?:centred|centered)\b/gi, 'sits low and off-centre'],
+    [/\b(?:centred|centered) in (?:the |a )?(?:wide )?frame\b/gi, 'placed off-centre in the frame'],
+    [/\bdead centre\b/gi, 'off-centre'],
+  ];
+  // The tables read case-insensitively but a composition is a sentence: keep
+  // whatever capital the match itself began with.
+  const swap = (t, table) => {
+    for (const [re, to] of table) {
+      t = t.replace(re, (hit) => (/^[A-Z]/.test(hit)
+        ? to.charAt(0).toUpperCase() + to.slice(1) : to));
+    }
+    return t;
+  };
+  const hyg = (s) => String(s ?? '').trim()
+    .replace(DASH, ',')
+    .replace(/^(A|An|The)\s+/, (m) => m.toLowerCase())
+    .replace(/^([A-Z])(?=[a-z])/, (m) => m.toLowerCase())
+    .replace(/[.]+$/, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/(\s*,\s*)+,?/g, ', ')      // collapse comma runs the dash swap can make
+    .replace(/\s+([,.;:])/g, '$1')
+    .trim();
+  const hand = sd.hand;
+  const iconography = sd.iconography;
+  const emblem = hyg(brief.emblem);
+  const symbols = (brief.symbols || []).map(hyg).filter(Boolean);
+  // Applied AFTER hyg: the article decision reads the same lowercase text that
+  // goes into the clause, so 'Hollow bust' -> 'a hollow bust', not 'a Hollow'.
+  const rule = emblem && !PLURAL_EXCEPTIONS.has(emblem)
+    ? ARTICLE.find(([re]) => re.test(emblem)) : null;
+  const determined = rule && rule[1] ? rule[1] + emblem : emblem;
+  const object = determined ? `The drawing depicts ${determined}.` : '';
+  const parts = symbols.length ? `It is built from these parts: ${symbols.join('; ')}.` : '';
+  let composition = hyg(brief.composition);
+  if (!composition) {
+    // No raw composition: fall back to the stored prompt for this clause
+    // rather than leave the frame undescribed.
+    composition = hyg(brief.prompt);
+    console.error(`  note: ${slug}: no raw composition, used the stored prompt`);
+  }
+  if (composition) {
+    composition = swap(swap(composition, FRAMING), CENTRE);  // CLASS A then B
+    composition = composition.charAt(0).toUpperCase() + composition.slice(1) + '.';
+  }
+  // No accent, no palette clause: an invented red would be a false statement.
+  const accent = hyg(brief.accent);
+  const palette = accent ? sd.palette.replace('{accent}', accent) : '';
+  return [hand, iconography, object, parts, composition, palette, sd.suppress]
+    .filter(Boolean).join(' ');
+}
+
 async function main() {
   // Style-only re-application: rebuild the prompt/negative of every EXISTING
   // brief from style.json, touching no LLM-facing field. Tuning the hand must
@@ -333,6 +463,23 @@ async function main() {
     }
     writeFileSync(BRIEFS, JSON.stringify(briefs, null, 2) + '\n');
     console.log(`recomposed ${n} briefs at style version ${style.version}`);
+    return;
+  }
+
+  // Seedream layer: recompose the seedream_prompt of every EXISTING brief from
+  // its RAW fields (emblem/composition/symbols/accent), adding only
+  // seedream_prompt/seedream_version — the SDXL prompt/negative/input_hash are
+  // not touched, so the SDXL renders stay valid.
+  if (SEEDREAM) {
+    const sd = style.seedream;
+    let n = 0;
+    for (const [slug, b] of Object.entries(briefs)) {
+      if (ONLY.length && !ONLY.includes(slug)) continue;
+      briefs[slug] = { ...b, seedream_prompt: composeSeedream(b, slug), seedream_version: sd.version };
+      n++;
+    }
+    writeFileSync(BRIEFS, JSON.stringify(briefs, null, 2) + '\n');
+    console.log(`seedream-composed ${n} briefs at seedream version ${sd.version}`);
     return;
   }
 

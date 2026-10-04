@@ -21,6 +21,10 @@ still in flight.
 If ComfyUI is not already reachable, render.py launches it (run.sh) and owns it:
 it stops the container when the batch ends so an idle server is not left pinning
 VRAM. A server that was already up when render.py started is left running.
+
+--backend seedream swaps the local SDXL graph for a hosted ByteDance Seedream
+call (DeepInfra's partner endpoint, through the proxy that holds the key), so it
+starts no container and takes no seed — the server picks one.
 """
 
 import argparse
@@ -37,6 +41,12 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 COMFY = os.environ.get("COMFY_URL", "http://127.0.0.1:8188")
+# Second backend. The partner inference endpoint is not the OpenAI-compatible
+# one: it takes an explicit WxH size (the OpenAI route rejects size tiers) and
+# returns temporary URLs rather than inline bytes. The proxy box holds the
+# DeepInfra key, so requests from this host need no auth header of their own.
+DEEPINFRA_URL = os.environ.get("DEEPINFRA_URL", "http://10.0.0.1:8322")
+SEEDREAM_MODEL = os.environ.get("SEEDREAM_MODEL", "ByteDance/Seedream-5.0-Pro")
 OUT = ROOT / "content" / "headers"
 MANIFEST = HERE / "renders.json"
 
@@ -137,6 +147,56 @@ def fetch(image, dest):
         dest.write_bytes(r.read())
 
 
+def seedream_render(brief, style, dest):
+    """One hosted Seedream call, image written to dest.
+
+    Returns the seed the server chose: the request has no field for one, so a
+    Seedream frame is not reproducible the way an SDXL one is. Seedream also has
+    no negative prompt — brief['negative'] is deliberately not sent, since a
+    banished term handed to this model comes back as a posited object.
+    """
+    c = style["composition"]
+    payload = {
+        # The seedream prompt is composed for the no-negative, long-instruction
+        # model; the stored prompt is the SDXL keyword assembly, which Seedream
+        # reads as a list of nouns in the wrong order.
+        "prompt": brief.get("seedream_prompt") or brief["prompt"],
+        # An explicit WxH from style.json, not a '1K'/'2K' tier: the tiers keep
+        # their own aspect (2K costs more) and would override the house ratio.
+        "size": f"{c['width']}x{c['height']}",
+        "output_format": "png",
+        "optimize_prompt_mode": "standard",
+    }
+    req = urllib.request.Request(
+        f"{DEEPINFRA_URL}/v1/inference/{SEEDREAM_MODEL}",
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json"},
+    )
+    # ~60s measured; 300s so a queued request is not aborted at the proxy.
+    try:
+        with urllib.request.urlopen(req, timeout=300) as r:
+            body = json.loads(r.read() or b"{}")
+    except urllib.error.HTTPError as e:
+        # str(HTTPError) omits the body, which is where the endpoint's own
+        # validation message lives.
+        raise RuntimeError(
+            f"seedream http {e.code}: {e.read()[:400].decode(errors='replace')}") from None
+    images = body.get("images") or []
+    if not images:
+        raise RuntimeError(f"seedream returned no image: {json.dumps(body)[:400]}")
+    # Temporary signed URL (~24h), not bytes: download it now or lose the frame.
+    try:
+        with urllib.request.urlopen(images[0], timeout=300) as r:
+            dest.write_bytes(r.read())
+    except urllib.error.HTTPError as e:
+        # same as the inference call: str(HTTPError) omits the body, and an
+        # expired signed URL is just a bare 403 without it.
+        raise RuntimeError(
+            f"seedream download http {e.code}: {e.read()[:400].decode(errors='replace')}"
+        ) from None
+    return body.get("seed")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", action="append",
@@ -154,7 +214,13 @@ def main():
                     help="record the PNGs already on disk as current, without "
                          "rendering — for when files were restored or hand-picked")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--backend", choices=("sdxl", "seedream"), default="sdxl",
+                    help="sdxl (default) renders locally through ComfyUI; "
+                         "seedream calls the hosted ByteDance model instead")
     args = ap.parse_args()
+
+    if args.backend == "seedream" and args.reroll is not None:
+        print("  --reroll has no effect on seedream: the server chooses the seed")
 
     style = json.loads((HERE / "style.json").read_text())
     briefs = json.loads((HERE / "briefs.json").read_text())
@@ -182,15 +248,30 @@ def main():
         # The prompt and the seed are in the key: editing the prompt anywhere
         # upstream must invalidate the render, or a stale PNG silently survives
         # a style change (which is exactly what happened to this batch).
-        sig = f"{b['prompt']}|{b['negative']}|{b['seed']}"
-        key = (f"{b['input_hash']}|{style['model']['checkpoint']}"
-               f"|{style.get('version')}|{hashlib.sha256(sig.encode()).hexdigest()[:12]}")
+        # The key also carries the backend, so an SDXL PNG and a Seedream PNG
+        # for the same slug cannot be mistaken for each other. Seedream hashes
+        # the prompt alone: we do not send the negative, and the seed is the
+        # server's, so hashing either would invalidate a cached PNG for a change
+        # that never reached the model.
+        if args.backend == "seedream":
+            sig = b.get("seedream_prompt") or b["prompt"]
+            # style.seedream.version, not style.version: tuning the seedream
+            # layer must invalidate seedream renders without touching any SDXL key.
+            sd_version = (style.get("seedream") or {}).get("version") or style.get("version")
+            ident = f"seedream|{SEEDREAM_MODEL}|{sd_version}"
+        else:
+            sig = f"{b['prompt']}|{b['negative']}|{b['seed']}"
+            ident = f"{style['model']['checkpoint']}|{style.get('version')}"
+        key = (f"{b['input_hash']}|{ident}"
+               f"|{hashlib.sha256(sig.encode()).hexdigest()[:12]}")
         dest = OUT / f"{slug}.png"
         if not args.force and renders.get(slug, {}).get("key") == key and dest.exists():
             continue
         todo.append((slug, b, key, dest))
 
-    print(f"{len(slugs)} posts, {len(todo)} to render via {COMFY}")
+    target = (COMFY if args.backend == "sdxl"
+              else f"{DEEPINFRA_URL}/v1/inference/{SEEDREAM_MODEL}")
+    print(f"{len(slugs)} posts, {len(todo)} to render via {target}")
 
     # Empty work is a no-op: never start a container (or stop one) for nothing.
     if not todo and not args.adopt:
@@ -206,9 +287,14 @@ def main():
             if not dest.exists():
                 print(f"  no {dest.name} on disk, cannot adopt")
                 continue
+            # Adopting records a PNG we did not render. On seedream there is no
+            # seed to attribute at all, so the entry must not borrow SDXL's
+            # per-slug seed and claim a frame we never had a say in.
+            meta = ({"seed": None, "seed_source": "unreported", "backend": "seedream",
+                     "model": SEEDREAM_MODEL} if args.backend == "seedream" else
+                    {"seed": b["seed"] % (2 ** 31), "reroll": reroll_of(renders, slug)})
             renders[slug] = {"key": key, "file": str(dest.relative_to(ROOT)),
-                             "seed": b["seed"] % (2 ** 31), "reroll": reroll_of(renders, slug),
-                             "emblem": b.get("emblem"), "adopted": True}
+                             "emblem": b.get("emblem"), "adopted": True, **meta}
             n += 1
         MANIFEST.write_text(json.dumps(renders, indent=2, sort_keys=True) + "\n")
         print(f"adopted {n} existing renders")
@@ -216,7 +302,9 @@ def main():
 
     started_us = False
     try:
-        if not comfy_up():
+        # Seedream is a remote call: it has no container to start, wait for, or
+        # stop, and touching one would pin VRAM for a batch that never uses it.
+        if args.backend == "sdxl" and not comfy_up():
             print("starting ComfyUI...")
             # see run.sh — the container is rootful, which is what grants /dev/kfd
             subprocess.Popen([str(HERE / "run.sh")])
@@ -228,11 +316,21 @@ def main():
         for slug, b, key, dest in todo:
             t0 = time.time()
             try:
-                img = render_one(slug, b, style, ckpt)
-                fetch(img, dest)
+                if args.backend == "seedream":
+                    # The seed is provenance here, not a setting: nothing in the
+                    # request fixes it, so it is recorded as the server's — and
+                    # as unreported when the response carries none, which the
+                    # live endpoint has done even though out_schema requires it.
+                    seed = seedream_render(b, style, dest)
+                    meta = {"seed": seed,
+                            "seed_source": "server" if seed is not None else "unreported",
+                            "backend": "seedream", "model": SEEDREAM_MODEL}
+                else:
+                    fetch(render_one(slug, b, style, ckpt), dest)
+                    meta = {"seed": b["seed"] % (2 ** 31), "reroll": reroll}
                 renders[slug] = {"key": key, "file": str(dest.relative_to(ROOT)),
-                                 "seed": b["seed"] % (2 ** 31), "reroll": reroll,
-                                 "emblem": b.get("emblem"), "seconds": round(time.time() - t0, 1)}
+                                 "emblem": b.get("emblem"),
+                                 "seconds": round(time.time() - t0, 1), **meta}
                 done += 1
                 print(f"  [{done + failed}/{len(todo)}] {slug}  {time.time() - t0:.0f}s  "
                       f"({b.get('emblem')})")
@@ -258,7 +356,7 @@ def main():
         # one that was already running belongs to whoever launched it. --keep
         # opts back into leaving it up. finally, so a render failure, an
         # unhandled exception, or Ctrl-C still tears it down.
-        if started_us and not args.keep:
+        if args.backend == "sdxl" and started_us and not args.keep:
             print("stopping ComfyUI...")
             subprocess.run([str(HERE / "stop.sh")], check=False)
 
