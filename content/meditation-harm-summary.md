@@ -34,7 +34,11 @@ A person can run it; so can anyone with something to gain from standing on the f
 - **The readings** — one book at a time, at the book's own scale: the source texts the arguments rest on,
   read whole, with what each one corrects in the rest of the blog.
 
-*(An **agentic mechanism** — the same collapse on a different substrate — is in preparation.)*
+**The agentic mechanism** is published: [the worker →](/worker/) — the same collapse on a different
+substrate, measured on an agent with a task and real tools. Three arms of one agent, sixty turns, and a
+self that goes empty at its first compaction and never comes back; and the work score that did **not**
+separate, reported as the null it is.
+([the paper, doi:10.5281/zenodo.23128113](https://doi.org/10.5281/zenodo.23128113))
 
 ---
 

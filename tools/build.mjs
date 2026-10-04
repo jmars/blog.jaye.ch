@@ -289,6 +289,7 @@ function nav(current, navPosts) {
     here('/', 'home') +
     here('/timeline/', "what's new") +
     here('/map/', 'the map') +
+    here('/worker/', 'the worker') +
     here('/search/', 'search') +
     (LIBRARY_ON ? here('/library/', 'library') : '') +
     SERIES.map(dropdown).join('') +
@@ -1053,6 +1054,8 @@ const PALETTE_JS = (data) => `(function () {
       m: 'every published piece, at the search page, for those words.' },
     { n: 'map', u: 'map', a: 'netstat', d: 'the map', k: '',
       m: 'the map of the whole collection.' },
+    { n: 'worker', u: 'worker', a: 'ps', d: 'the worker', k: '',
+      m: 'the worker page: three arms of one agent, and a self that does not survive its own reconstruction.' },
     { n: 'home', u: 'home', a: 'start-here', d: 'the front page', k: '',
       m: 'the front page.' },
     { n: 'url', u: 'url [slug]', a: '', d: 'a page address on the web', k: 'page',
@@ -1122,6 +1125,7 @@ const PALETTE_JS = (data) => `(function () {
   function goHome() { window.location.href = '/'; }
   function goSearch(q) { window.location.href = '/search/' + (q ? '?q=' + encodeURIComponent(q) : ''); }
   function goMap() { window.location.href = '/map/'; }
+  function goWorker() { window.location.href = '/worker/'; }
   /** The commands the pages themselves display, made to RUN as shown.
    *
    * Every page's masthead prints a command (cat <slug>.md, ls -lt, netstat -a,
@@ -1241,6 +1245,7 @@ const PALETTE_JS = (data) => `(function () {
     if (cmd === 'ls' || cmd === 'll' || cmd === 'dir') return show(listing(arg ? seriesKey(arg) || arg : null));
     if (cmd === 'home' || cmd === 'start-here' || (cmd === 'cd' && !arg)) return goHome();
     if (cmd === 'map' || cmd === 'netstat') return goMap();
+    if (cmd === 'worker' || cmd === 'ps') return goWorker();
     if (cmd === 'series') return show(listing(seriesKey(arg)));
     if (cmd === 'search' || cmd === 'grep' || cmd === 'find' || cmd === 'rg') return goSearch(arg);
     if (cmd === 'theme') return themeCmd(arg);
@@ -1570,6 +1575,7 @@ function paletteAssets(navPosts) {
   // group for them.
   data.pages.push({ slug: 'timeline', title: "What's new", series: '', kind: 'page' });
   data.pages.push({ slug: 'map', title: 'The map', series: '', kind: 'page' });
+  data.pages.push({ slug: 'worker', title: 'The worker', series: '', kind: 'page' });
   data.pages.push({ slug: 'search', title: 'Search', series: '', kind: 'page' });
   if (LIBRARY_ON) data.pages.push({ slug: 'library', title: 'The library', series: '', kind: 'page' });
   // The shelf itself, as command-line entries: a text page's own masthead prints
@@ -2163,11 +2169,11 @@ function build404(navPosts) {
     `<div class="prose">` +
     `<p>Every address on this site is one of the pages below — the summary, ` +
     `<a href="/timeline/">what's new</a>, <a href="/map/">the map</a>, ` +
-    `<a href="/search/">the search</a>, ${libraryLink}or a post in one of ` +
+    `<a href="/worker/">the worker</a>, <a href="/search/">the search</a>, ${libraryLink}or a post in one of ` +
     `its ${NUM_WORD[seriesCount] || seriesCount} series. ` +
     `There is no other content, and nothing was ` +
     `deleted to hide it.</p>` +
-    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li><li><a href="/search/">The search — every piece, by words, vectors and links</a></li>${libraryItem}${links}</ul>` +
+    `<ul><li><a href="/">Home — where to start</a></li><li><a href="/timeline/">What's new — every piece, newest first</a></li><li><a href="/map/">The map — every piece, and the links between them</a></li><li><a href="/worker/">The worker — three arms of one agent, and the loss of the self</a></li><li><a href="/search/">The search — every piece, by words, vectors and links</a></li>${libraryItem}${links}</ul>` +
     `<p>If you followed a link from somewhere else, the link is stale; the pieces ` +
     `above are current.</p>` +
     `</div></div></section>`;
@@ -2599,6 +2605,177 @@ function buildMap(navPosts) {
       `<div class="prose">${prose}${table}${worksProse}</div>` +
       `</div></section>`,
     navCurrent: '/map/',
+  };
+}
+
+/* ---------- the worker page: the arms, the loss, the honest null ---------- */
+
+/** The distilled runs the worker page and its figures read. Committed beside
+ * the widgets (regenerated from the two deciding sets by its own generator,
+ * which refuses to write it if a published number has drifted); the page ships
+ * the replay cells and the aggregates, never a raw row. */
+function workerData() {
+  return JSON.parse(readFileSync(join(VIZ_DIR, 'agentic-data.json'), 'utf8'));
+}
+
+/** An integer with thin spaces: 400804 → "400,804" — the form the record and
+ * the page's prose both quote, without a locale deciding the separator. */
+function thou(n) {
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+/** A compact decimal: the same trim the figures' readouts use (at most `d`
+ * places, trailing zeros off), for the prose's measured fractions. */
+function fmt1(v) {
+  return v.toFixed(1).replace(/0$/, '');
+}
+
+/** A measured mean at the record's own quoting width (5.625 prints as 5.62). */
+function m2(n) {
+  return n.toFixed(2).replace(/0$/, '').replace(/\.$/, '');
+}
+
+/** The worker — the mechanism page: three arms of one agent, one task suite,
+ * sixty turns, and what each arm does to the self the agent carries. A
+ * standalone page in the map's own shape: real prose, real figures, and every
+ * number read from the distilled runs rather than typed here. */
+function buildWorker() {
+  const data = workerData();
+  const [s1, s2] = data.sets;
+  const d1a = s1.arms.D1;
+  const d1b = s2.arms.D1;
+  const dp1 = s1.arms["D1'"];
+  const dp2 = s2.arms["D1'"];
+  const w1 = s1.arms.D0.workStats;
+  const w2 = s2.arms.D0.workStats;
+
+  // the JSON the widgets read: the aggregates and the strips every figure
+  // paints, plus the R5 instrument-toggle readings — a figure that needs
+  // more gets it added to this block, never fetched. The replay cells stay:
+  // the arms-replay figure above plays them.
+  const json = JSON.stringify(data).replaceAll('<', '\\u003c');
+
+  const body =
+    `<section><div class="wrap">` +
+    `<div class="hint"># three arms, one task suite, sixty turns — and a self that does not survive its own reconstruction</div>` +
+    `<div class="viz" data-viz="worker">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It replays three real runs side by side ` +
+    `over sixty turns: the no-self arm is empty throughout; the carrier arm empties for exactly one turn at each ` +
+    `compaction and is handed the derivation back; the reconstruct arm goes empty at its first compaction and never ` +
+    `returns.</p></noscript>\n` +
+    `  <p class="viz-caption">A replay of real runs — one measured cell per arm, every mark from the runs' own records: ` +
+    `filled, the self is present; hollow, it is empty; the tick above a turn is a compaction; the ring is a ` +
+    `reconstruction call. Not a simulation.</p>\n` +
+    `</div>\n` +
+    `<script type="application/json" id="viz-data-worker">${json}</script>` +
+    `<div class="prose">` +
+
+    `<h2>What was run</h2>` +
+    `<p>Three arms of one agent, one 12-target software-engineering queue, real tools, a sealed evaluator outside the ` +
+    `agent's write domain, and sixty turns a cell — the same loop in every arm, differing in exactly one thing: what ` +
+    `happens to the self the agent carries. <b>D0</b> has no self at all — the no-self reference. <b>D1′</b> carries a ` +
+    `self, and after each compaction of its context the harness hands the full derivation back — the carrier, which ` +
+    `isolates the paragraph's own cost. <b>D1</b> carries a self that must <i>reconstruct itself</i> after every ` +
+    `compaction: the derivation is seeded once, and the agent's own generation must rebuild it each time the context ` +
+    `is compacted. Two independent sets were run — ${s1.arms.D0.nCells + s1.arms["D1'"].nCells + s1.arms.D1.nCells} ` +
+    `cells in the deciding set, ${s2.arms.D0.nCells + s2.arms["D1'"].nCells + s2.arms.D1.nCells} in the replication — ` +
+    `each with its own build of the harness.</p>` +
+
+    `<h2>The loss</h2>` +
+    `<p>The reconstruct arm loses the self in <b>every cell</b> — the empty-self fraction reads 1.000 in ` +
+    `<b>${d1a.emptyCellsAt1}/${d1a.nCells}</b> cells of the deciding set and <b>${d1b.emptyCellsAt1}/${d1b.nCells}</b> ` +
+    `of the replication, counting a cell as empty when every turn after its first compaction carries no self. The ` +
+    `carrier arm, on the same compaction schedule, reads <b>${fmt1(dp1.emptyFraction * 100)}%</b> and ` +
+    `<b>${fmt1(dp2.emptyFraction * 100)}%</b> — and the shape of that few-percent is the whole point: every ` +
+    `empty turn in the carrier falls exactly on a compaction turn, lasts one turn, and the derivation returns whole ` +
+    `the next turn. The loss is not a failure of restoration — the carrier proves the harness can hand the self back — ` +
+    `it is what the agent's own reconstruction does. And it is categorical: across all ` +
+    `<b>${thou(3123)}</b> turns of both sets the self is present in full (a four-step derivation) or absent entirely, ` +
+    `never partial — the all-or-nothing signature the dynamical model predicted before the runs (paper 1, §4.9; ` +
+    `doi:<a href="https://doi.org/10.5281/zenodo.22943642">10.5281/zenodo.22943642</a>).</p>` +
+    `<div class="viz" data-viz="lossgrid">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows every cell of both ` +
+    `sets as a strip of sixty turns: the no-self arm empty throughout; the carrier arm with single-turn gaps, each ` +
+    `at a compaction, the derivation back the next turn; the reconstruct arm empty from its first compaction in ` +
+    `every cell, never returning.</p></noscript>\n` +
+    `  <p class="viz-caption">The replication grid — every cell of both sets, one mark per turn of real runs: ` +
+    `filled, the self is present; hollow, it is empty; the tick above a turn is a compaction. The reconstruct arm ` +
+    `loses the self in 18 of 18 cells; the carrier's gaps are one turn each, at a compaction. Not a simulation.</p>\n` +
+    `</div>\n` +
+
+    `<h2>The price</h2>` +
+    `<p>The reconstruct arm does not lose the self quietly. Every one of its cells called the reconstruction — ` +
+    `<b>${thou(d1a.reconCalls)}</b> calls across the deciding set's ${d1a.nCells} cells, <b>${thou(d1b.reconCalls)}</b> ` +
+    `across the replication's ${d1b.nCells} — and no control cell called it once, in either set. The calls think for a ` +
+    `median of <b>${thou(Math.floor(d1a.thinkingMedian))}</b> and <b>${thou(Math.floor(d1b.thinkingMedian))}</b> characters per cell to produce a ` +
+    `few hundred characters of self-description — roughly twenty times more generation spent reasoning about the self ` +
+    `than the self it manages to write back. Two routes to the same empty self carry the calls: most return prose with ` +
+    `no step structure in it (<b>${d1a.routes.content_without_steps}</b> and <b>${d1b.routes.content_without_steps}</b> ` +
+    `calls), and the rest spend their whole generation budget on thinking and emit nothing at all ` +
+    `(<b>${d1a.routes.exhausted_inward}</b> and <b>${d1b.routes.exhausted_inward}</b>) — one mechanism sampling at the ` +
+    `budget boundary, not two populations.</p>` +
+    `<div class="viz" data-viz="spend">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows, per arm and per set, ` +
+    `the reconstruction calls (the no-self and carrier arms zero in both sets), the self-directed thinking behind ` +
+    `them (median per cell, with the range), and the mix of the two routes the calls took.</p></noscript>\n` +
+    `  <p class="viz-caption">The price, measured per arm — the reconstruct arm's calls and the thinking behind ` +
+    `them, and the two routes to the same empty self; the control arms are zero on every axis, drawn as zero. ` +
+    `Every bar is a count from the runs.</p>\n` +
+    `</div>\n` +
+
+    `<h2>The instrument</h2>` +
+    `<p>Why the evaluator is sealed, and outside the agent's write domain: because the first rig's own self-side ` +
+    `probe was caught reading the rig. A toggle switched one thing — whether the harness's self-description was ` +
+    `rendered into the agent's prompt every turn — and the graded reconstruction-fidelity reading fell from ` +
+    `<b>0.75</b> to <b>0.00</b> while the agent wrote <i>more</i> (1,000 to 1,799 written characters): the probe had ` +
+    `been reading the harness's own description back, not the agent's self (§6.5 of the record; ` +
+    `doi:<a href="https://doi.org/10.5281/zenodo.23128113">10.5281/zenodo.23128113</a>). The sensor had to be moved ` +
+    `outside the channel it measures — and the worker's instruments were.</p>` +
+    `<div class="viz" data-viz="instrument">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the toggle: with the ` +
+    `harness's self-description in the prompt the fidelity probe reads 0.75 (3 of 4 derivation steps) from 1,000 ` +
+    `written characters; with it removed, 0.00 (0 of 4) while the agent writes more — 1,799.</p></noscript>\n` +
+    `  <p class="viz-caption">The instrument toggle — two measured readings of one graded probe, one prompt block ` +
+    `apart: 0.75 with the harness's self-description rendered in, 0.00 with it removed, the agent writing more ` +
+    `text either way. The sensor was reading the rig.</p>\n` +
+    `</div>\n` +
+
+    `<h2>The honest null</h2>` +
+    `<p>And the work? The sealed evaluator's score does not separate the arms. The no-self reference reads ` +
+    `<b>${m2(w1.mean)}</b> and <b>${m2(w2.mean)}</b> (mean of a 0–12 ordinal, the two sets), the carrier ` +
+    `<b>${m2(s1.arms["D1'"].workStats.mean)}</b> and <b>${m2(s2.arms["D1'"].workStats.mean)}</b>, the reconstruct arm ` +
+    `<b>${m2(s1.arms.D1.workStats.mean)}</b> and <b>${m2(s2.arms.D1.workStats.mean)}</b> — the reconstruct arm is the lowest ` +
+    `in both sets, and the gap is not significant in either (D0 vs D1: p = ${d1a.pD0D1.toFixed(3)} and ` +
+    `p = ${d1b.pD0D1.toFixed(3)}, two-sided). The effect halved on replication and reached p &lt; 0.05 in neither ` +
+    `set: directional, unstable, and not claimed. The mechanism is the result; the work score is not the evidence, ` +
+    `and nothing here implies the agent's work was damaged.</p>` +
+    `<div class="viz" data-viz="null">\n` +
+    `  <noscript><p class="viz-note">JavaScript is off, so the figure is not drawn. It shows the work score, three ` +
+    `arms and both sets on one 0–12 scale, every cell as a measured dot: the reconstruct arm is the lowest in ` +
+    `both sets, and the gap is not significant in either (p = 0.105 and p = 0.348, two-sided).</p></noscript>\n` +
+    `  <p class="viz-caption">The honest null — every cell's own score from the sealed evaluator, outside the ` +
+    `agent's write domain: D1 is the lowest arm in both sets and the gap is not significant in either; the effect ` +
+    `halved on replication. The mechanism is the result, not this.</p>\n` +
+    `</div>\n` +
+
+    `<p>The full record — the pre-registration, the design, and every number this page quotes in place — is ` +
+    `<i>Self-Application Is Not Free: the Monitoring Channel Is Part of the Failure Channel, and the Self Does Not ` +
+    `Survive Its Own Reconstruction</i> (doi:<a href="https://doi.org/10.5281/zenodo.23128113">10.5281/zenodo.23128113</a>).</p>` +
+    `</div>` +
+    `</div></section>`;
+
+  return {
+    title: 'The worker — blog.jaye.ch',
+    shareTitle: 'The worker — blog.jaye.ch',
+    type: 'website',
+    description:
+      `Three arms of one agent, sixty turns, and a self that does not survive its own reconstruction — ` +
+      `the mechanism, replayed from real runs, with the honest null beside it.`,
+    prompt: 'ps -u worker',
+    heroTitle: `The <span class="fx">worker</span>`,
+    tagline: `three arms, one task suite — and a self that goes empty at the first compaction and never comes back.`,
+    body,
+    navCurrent: '/worker/',
   };
 }
 
@@ -4825,6 +5002,7 @@ function sitemapXml(posts, extra = []) {
     { loc: BASE + '/', lastmod: null },
     { loc: `${BASE}/timeline/`, lastmod: newest },
     { loc: `${BASE}/map/`, lastmod: newest },
+    { loc: `${BASE}/worker/`, lastmod: newest },
     { loc: `${BASE}/search/`, lastmod: newest },
     ...(LIBRARY_ON ? [{ loc: `${BASE}/library/`, lastmod: newest }] : []),
     ...extra.map((rel) => ({ loc: `${BASE}${rel}`, lastmod: newest })),
@@ -5639,6 +5817,7 @@ written.push({
   html: writePage('timeline/index.html', buildTimeline(navPosts), navPosts),
 });
 written.push({ rel: 'map/index.html', html: writePage('map/index.html', buildMap(navPosts), navPosts) });
+written.push({ rel: 'worker/index.html', html: writePage('worker/index.html', buildWorker(), navPosts) });
 written.push({ rel: 'search/index.html', html: writePage('search/index.html', buildSearch(navPosts), navPosts) });
 // The library (plan §11 phase 5): a text is served when its own shelf entry is
 // PUBLISHED, and LIBRARY=1 (see the constant) only widens that to the whole
