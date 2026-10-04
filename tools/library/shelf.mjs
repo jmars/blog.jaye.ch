@@ -311,12 +311,13 @@ export const TEXTS = [
       state: 'in-repair',
       note:
         'readable, and being cleared against the printed page, site by site. The rules settle what the ' +
-        'transcription\u2019s own context settles: 385 readings applied, and the reading view still shows 28 ' +
-        'damaged word(s) and 12 standalone marker(s) — the scanner\u2019s flattening of the book\u2019s Greek, ' +
+        'transcription\u2019s own context settles: 396 readings applied, and the reading view still shows 6 ' +
+        'damaged word(s) and 6 standalone marker(s) — the scanner\u2019s flattening of the book\u2019s Greek, ' +
         'where the OCR read Greek letters as Latin lookalikes. Those are being resolved one printed page at a ' +
-        'time against the page image; the pages that remain are the ones where the page itself is unclear or ' +
-        'where two readings of it disagree, and they are left VISIBLE rather than guessed. A second whole-text ' +
-        'read has not been run.',
+        'time against the page image; the four passages that remain are the ones where the page itself is ' +
+        'unclear or where two readings of it disagree, and they are left VISIBLE rather than guessed. A ' +
+        'second whole-text read HAS been run (it found a different residue — English slips rather than Greek — ' +
+        'and those are merged).',
     },
   },
   {

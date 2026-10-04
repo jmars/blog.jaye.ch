@@ -773,7 +773,7 @@ async function call(prompt, opts = {}) {
     body: JSON.stringify({
       model: opts.model || MODEL,
       max_tokens: opts.maxTokens || MAX_TOKENS,
-      ...(EFFORT ? { effort: EFFORT } : {}),
+      ...(EFFORT ? { reasoning_effort: EFFORT } : {}), // the router rejects `effort` now (MEASURED 2026-10-04, HTTP 422); reasoning_effort is accepted
       messages: [{ role: 'user', content: prompt }],
     }),
   });

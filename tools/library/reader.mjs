@@ -57,7 +57,7 @@ const MIN_LETTER_RATIO = 0.5;
  * Deliberately short: every entry added is a chance to keep a hyphen that was
  * really a line break ("re-" in "re-moved"), so only the compounds that occur
  * hyphenated in these editions are here. */
-const COMPOUND = new Set(['self', 'half', 'non', 'semi', 'well', 'all', 'ever', 'cross', 'quasi']);
+const COMPOUND = new Set(['self', 'half', 'non', 'semi', 'well', 'all', 'ever', 'cross', 'quasi', 'two']);
 
 const HTML = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
 const esc = (s) => s.replace(/[&<>]/g, (c) => HTML[c]);
@@ -108,7 +108,13 @@ export function joinLines(lines) {
       out = ln;
       continue;
     }
-    if (out.endsWith('-') && !out.endsWith('--')) {
+    // THE LINE-END HYPHEN comes in two glyphs in these scans: `-` (the Porphyry
+    // volume) and `¬` (the 1816 Proclus, MEASURED — 166 occurrences, every one at
+    // a line's end and none mid-line). Both mean "the printer broke the word here",
+    // so both take the same de-hyphenation: a compound keeps its hyphen, a broken
+    // word is rejoined. Without this the Proclus reading view showed `partici¬
+    // pation` — the scan's hyphen standing in the prose.
+    if ((out.endsWith('-') || out.endsWith('\u00ac')) && !out.endsWith('--')) {
       const stem = out.slice(0, -1);
       const head = ln[0];
       const lastWord = stem.slice(stem.lastIndexOf(' ') + 1).toLowerCase();

@@ -150,7 +150,7 @@ const DAMAGE = '^_~*£/>\\|#™±»«}{&';
  * artifact names every region and its block count, and a region with no blocks
  * would be listed with zero rather than dropped.
  */
-export function regionsOf(doc, rules, { whole = false } = {}) {
+export function regionsOf(doc, rules, { whole = false, chunk = 1 } = {}) {
   const body = transcriptionBlocks(doc);
   const sections = [...new Set(body.map((b) => b.section))].sort((a, b) => a - b);
   const out = [];
@@ -175,6 +175,32 @@ export function regionsOf(doc, rules, { whole = false } = {}) {
       const text = String(b.x || '').replace(/\n/g, ' ');
       if (!text) continue;
       all.push({ t: b.t, n: b.n || null, at: b.at || null, page: b.page ?? null, section: b.section ?? null, text, toks: text.split(/\s+/).filter(Boolean) });
+    }
+    // ONE REGION, OR N CONTIGUOUS ONES. `--chunk=N` splits the volume into N
+    // contiguous parts at block boundaries: the read is still the whole text, in
+    // reading order, every block, but each request is smaller. It exists because
+    // a single whole-volume request to a REASONING model can outlive the router's
+    // stream (MEASURED: glm-5.3 at effort high/max on this 595k-char prompt ran
+    // 14-28 minutes and ended with no final frame and no content, while the same
+    // prompt capped at 4k tokens answered in 49s). One artifact still records the
+    // read; only the request boundaries change.
+    const n = Math.max(1, Math.floor(chunk) || 1);
+    if (n > 1) {
+      const size = Math.ceil(all.length / n);
+      const parts = [];
+      for (let k = 0; k < n; k++) {
+        const part = all.slice(k * size, (k + 1) * size);
+        if (!part.length) continue;
+        parts.push({
+          name: `the whole volume (part ${k + 1} of ${n})`,
+          kind: 'body',
+          key: `whole:${k + 1}`,
+          blocks: part,
+          view: part.map((b) => applyEditsCounted(b.text, rules)),
+          raw: part.map((b) => b.text),
+        });
+      }
+      return parts;
     }
     return [
       {
@@ -226,14 +252,14 @@ export function regionsOf(doc, rules, { whole = false } = {}) {
         j++;
       }
       part++;
-      const chunk = blocks.slice(i, j);
+      const chunkBlocks = blocks.slice(i, j);
       out.push({
         name: `${label} (part ${part})`,
         kind,
         key: `${kind}:${part}`,
-        blocks: chunk,
-        view: chunk.map((b) => applyEditsCounted(b.text, rules)),
-        raw: chunk.map((b) => b.text),
+        blocks: chunkBlocks,
+        view: chunkBlocks.map((b) => applyEditsCounted(b.text, rules)),
+        raw: chunkBlocks.map((b) => b.text),
       });
       i = j;
     }
@@ -427,7 +453,13 @@ export async function callStream(prompt, { url = URL_, model = MODEL, maxTokens 
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,
-      ...(effort ? { effort } : {}),
+      // THE EFFORT KEY, and why it is `reasoning_effort`. This router took `effort`
+      // when this tool was written and REJECTS it now (MEASURED 2026-10-04: HTTP 422
+      // "Extra inputs are not permitted" for body.effort on both glm-5.3 and
+      // glm-5.3-flash, while the OpenAI-standard `reasoning_effort` is accepted and
+      // changes the reply's length). The env var still names the level; only the wire
+      // key changed.
+      ...(effort ? { reasoning_effort: effort } : {}),
       stream: true,
       // ask the router to put usage on the final frame (OpenAI-compatible
       // routers do this by default; the flag costs nothing if ignored)
@@ -643,7 +675,8 @@ async function main() {
   if (selfTest) return selfTestMain({ doc, rules, front, rawAll });
 
   const whole = args.includes('--whole');
-  let regions = regionsOf(doc, rules, { whole });
+  const chunk = Number((args.find((a) => a.startsWith('--chunk=')) || '').slice('--chunk='.length)) || 1;
+  let regions = regionsOf(doc, rules, { whole, chunk });
   if (only) {
     const want = new Set(only.split(',').map((s) => s.trim()));
     regions = regions.filter((r) => want.has(r.key));
@@ -708,7 +741,7 @@ async function main() {
         // the WHOLE reading order, not only what this invocation re-sent, so
         // the coverage table is the same artifact however many times the run
         // was resumed
-        regions: regionsOf(doc, rules, { whole }).map((r) => ({
+        regions: regionsOf(doc, rules, { whole, chunk }).map((r) => ({
           region: r.name,
           blocks: r.blocks.length,
           chars: r.raw.join(' ').length,
@@ -716,7 +749,7 @@ async function main() {
         })),
         requests: sent.length,
         regionsSent: [...new Set(sent.map((s) => s.region))],
-        everyRegionSent: [...new Set(sent.map((s) => s.region))].length === regionsOf(doc, rules, { whole }).length,
+        everyRegionSent: [...new Set(sent.map((s) => s.region))].length === regionsOf(doc, rules, { whole, chunk }).length,
         appended: append || undefined,
       },
       context: {
@@ -733,7 +766,7 @@ async function main() {
       rejected,
       failed,
       cost: {
-        regions: regionsOf(doc, rules, { whole }).length,
+        regions: regionsOf(doc, rules, { whole, chunk }).length,
         sent: sent.length,
         findings: findings.length,
         unsure: unsure.length,
@@ -819,7 +852,7 @@ async function main() {
     `\nlibrary fullread: ${out.split('/').slice(-1)[0]} — ${findings.length} finding(s) ` +
       `(${findings.filter((f) => f.kind === '1').length} visible, ${findings.filter((f) => f.kind === '2').length} clean, ` +
       `${findings.filter((f) => f.kind === '3').length} broken), ${unsure.length} unsure, ${rejected.length} rejected, ${failed.length} failed\n` +
-      `  coverage: ${[...new Set(sent.map((s) => s.region))].length} of ${regionsOf(doc, rules, { whole }).length} region(s) sent; ` +
+      `  coverage: ${[...new Set(sent.map((s) => s.region))].length} of ${regionsOf(doc, rules, { whole, chunk }).length} region(s) sent; ` +
       `${buildPayload().context.minChars}-${buildPayload().context.maxChars} chars/request (mean ${buildPayload().context.meanChars})\n` +
       `  tokens ${usage.prompt_tokens} in / ${usage.completion_tokens} out\n` +
       `  NOTHING WAS MERGED. The rules file is untouched.`,

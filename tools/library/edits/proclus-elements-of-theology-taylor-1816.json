@@ -89,6 +89,222 @@
       "note": "Proposition CCVIII is due (CCVII before, CCIX after): the label is set in small capitals here and the OCR read the II of the numeral as m."
     },
     {
+      "find": "For axiwjro* here, it is requisite to read juwwo;.",
+      "replace": "For ἀκίνητος here, it is requisite to read ἀεικίνητος.",
+      "class": "reading",
+      "note": "the print reads \"For ἀκίνητος here, it is requisite to read ἀεικίνητος\" (page image, printed page 413 = archive n918). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "by. intellection",
+      "replace": "by intellection",
+      "class": "reading",
+      "note": "stray period artefact. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "It it necessary",
+      "replace": "It is necessary",
+      "class": "reading",
+      "note": "it it for it is. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "imparticipate",
+      "replace": "imparticipable",
+      "class": "reading",
+      "note": "imparticipate for imparticipable. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "Patridns,it",
+      "replace": "Patricius, it",
+      "class": "reading",
+      "note": "proper name typo and fused comma+it. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "it omitted",
+      "replace": "is omitted",
+      "class": "reading",
+      "note": "it for is in footnote. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "inffpxble",
+      "replace": "ineffable",
+      "class": "reading",
+      "note": "garbled ineffable. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "accessary",
+      "replace": "necessary",
+      "class": "reading",
+      "note": "accessary for necessary. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "oaaitted",
+      "replace": "omitted",
+      "class": "reading",
+      "note": "oaaitted for omitted. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "fronai",
+      "replace": "from",
+      "class": "reading",
+      "note": "fronai for from. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "dungs",
+      "replace": "things",
+      "class": "reading",
+      "note": "dungs for things. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "L e.",
+      "replace": "i. e.",
+      "class": "reading",
+      "note": "L e. for i. e. (decided by the transcription and the 1823 parallel.)"
+    },
+    {
+      "find": "«$* otmyxot rpti$ ttfitv raj apx a $> r av ts t<rrcv tom trgayfMtToov, xou ray xou to •£ ovtou xivarixov xai otopar oy 8 vvapar to 8e toiovtov ov ov fiovov 1 eifin 8ei, aKXa xou",
+      "replace": "ὡς ἀνάγκα τρεῖς εἶμεν τὰς ἀρχάς, τάν τε ὕλαν τῶν πραγμάτων, καὶ τὰν μορφάν, καὶ τὸ ἐξ αὑτῶν κινατικὸν καὶ ἀόρατον δύναμιν· τὸ δὲ τοιοῦτον οὔ μονον εἶμεν δεῖ, ἀλλὰ καὶ",
+      "class": "reading",
+      "note": "the print reads the Archytas fragment \"ὡς ἀνάγκα τρεῖς εἶμεν τὰς ἀρχάς, τάν τε ὕλαν τῶν πραγμάτων, καὶ τὰν μορφάν, καὶ τὸ ἐξ αὑτῶν κινατικὸν καὶ ἀόρατον δύναμιν· τὸ δὲ τοιοῦτον οὔ μονον εἶμεν δεῖ, ἀλλὰ καὶ\" (page image, printed page 376 = archive n881). The fragment is Doric, so ἀνάγκα, εἶμεν, τάν, ὕλαν, μορφάν and κινατικόν are Doric forms (not in the word list); ἀόρατον is not in the list either, the list being this shelf's Greek plus LSJ headwords. This span stops at \"ἀλλὰ καὶ\" so the reading joins the rule already recorded for the following half (\"τὸ δὲ τοιοῦτον … θεὸν φαίνεσθαι\"). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "1 For iif ro MTutrtpov, it ir necessary to read *»$ro amarev.",
+      "replace": "1 For εἰς τὸ αἰτιώτερον, it is necessary to read εἰς τὸ αἰτιατόν.",
+      "class": "reading",
+      "note": "the print reads \"For εἰς τὸ αἰτιώτερον, it is necessary to read εἰς τὸ αἰτιατόν\" (page image, printed page 349 = archive n854); the OCR's own \"MTutrtpov\" spells αἰτιώτερον (αι-τ-ι-ώ-τ-ε-ρ-ο-ν), and its \"it ir necessary\" is the print's \"it is necessary\". (decided by the transcription's own context.)"
+    },
+    {
+      "find": "£or primarily] being consists of bound and infinity.",
+      "replace": "[or primarily] being consists of bound and infinity.",
+      "class": "reading",
+      "note": "the print reads \"Hence every thing which is truly [or primarily] being consists of bound and infinity.\" (page image, printed page 361 = archive n866; the print sets Taylor's addition in square brackets, which the OCR flattened to \"£\"). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "For K»g ov here, it is necessary to read ox..",
+      "replace": "For παρὸν here, it is necessary to read παράγον.",
+      "class": "reading",
+      "note": "the print reads \"For παρὸν here, it is necessary to read παράγον\" (page image, printed page 324 = archive n829). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "oXov ww, ptgo t Si xivmai, >j,",
+      "replace": "ὅλον κινεῖ, μέρος δὲ κινεῖται, ἢ,",
+      "class": "reading",
+      "note": "the print reads \"Hence, the words ὅλον κινεῖ, μέρος δὲ κινεῖται, ἢ, must be supplied\" (page image, printed page 313 = archive n818). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "t» is omitted in the original.",
+      "replace": "τὶ is omitted in the original.",
+      "class": "reading",
+      "note": "the print reads \"τὶ is omitted in the original\" (page image, printed page 363 = archive n868, footnote 1 — the worklist's printed page 332/n837 is wrong; n837's footnotes are the \"defect in the original\" and \"ούτω is omitted\" notes). The OCR's \"»\" is not a plain iota (this transcription writes a plain iota \"i\", as in \"to ti,\" for νοῦ τι), and the same page's note 2 glosses ἀϊδιότης ἀπειρία τίς ἐστιν, whose τί is the word the note says is omitted. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "mSuttk arttgitt rif «rw.",
+      "replace": "ἀϊδιότης ἀπειρία τίς ἐστιν.",
+      "class": "reading",
+      "note": "the print reads \"...appear to be ἀϊδιότης ἀπειρία τίς ἐστιν\" — the Greek runs on a second line of the same footnote (page image, printed page 363 = archive n868, footnote 2; read twice at native resolution, the diaeresis on the ἰ and the smooth breathing on the ἀ both visible). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "the most perfect. 9 _",
+      "replace": "the most perfect.",
+      "class": "reading",
+      "note": "the print ends the line at \"most perfect.\" (page image, printed page 328 = archive n833): the \"9 _\" is not text — the volume's own djvu word boxes put it 1150px to the right of where the line ends (x=3605 against the line's end x=2455), i.e. stray scan marks in the margin, and the page carries no footnote. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "{rot oyrccg ovra).",
+      "replace": "(τὰ ὄντως ὄντα).",
+      "class": "reading",
+      "note": "the print reads \"or to beings truly so called (τὰ ὄντως ὄντα)\" (page image, printed page 360 = archive n865; the OCR's \"oyrccg\" is ο-ντ-ω-ς). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "£with divine fire]",
+      "replace": "[with divine fire]",
+      "class": "reading",
+      "note": "the print reads \"conjoining soul with intellect and co-inflaming it [with divine fire], when this intellect is participable\" (page image, printed page 388 = archive n893; the print uses square brackets for Taylor's additions, which the OCR flattened to \"£\"). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "unities («w&«r).",
+      "replace": "unities (ἑνάδες).",
+      "class": "reading",
+      "note": "the print reads \"it is either united, or unities (ἑνάδες)\" (page image, printed page 304 = archive n809; read at 3000px, the breathing on the ἑ and the acute on the ά both visible). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "{aei yivopevov)",
+      "replace": "(ἀεὶ γινόμενον)",
+      "class": "reading",
+      "note": "the print reads \"or rising into existence, (ἀεὶ γινόμενον) possesses an infinite power\" (page image, printed page 358 = archive n863; read twice at 2300px, both times \"ἀεὶ γινόμενον\"). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "(om»s ov)",
+      "replace": "(ὄντως ὄν)",
+      "class": "reading",
+      "note": "the print reads \"Every thing which is truly being (ὄντως ὄν) is infinite\" (page image, printed page 359 = archive n864). The OCR's own \"om»s\" is ο-ντ-ω-ς, not ο-υ-τ-ω-ς: this transcription writes a υ as \"v\", as in \"ovtou\" for αὐτῶν in the same line, while it writes the ντ of ὄντως \"m\" here and \"y\" on the next page (n865's \"oyrccg\"), and the print's own English gloss of the word is \"truly being\". The vision model sometimes reads the heavy ν as υ at this resolution, which is why several of its passes print \"ουτως\". (decided by the transcription's own context.)"
+    },
+    {
+      "find": "necessary to read •< 8. ^ ew.vouj, ha rVww eX*<rcr«, x«r« n,y h»a^ mi,xx«4,v. e< ow e x . A",
+      "replace": "necessary to read οἱ δὲ μετ' ἐκείνους, διὰ πλειόνων ἐλάττω, κατὰ τὴν δυνάμεως ἔλλειψιν. εἰ οὖν ἐκεῖνοι, κ. λ.",
+      "class": "reading",
+      "note": "the print reads «necessary to read οἱ δὲ μετ' ἐκείνους, διὰ πλειόνων ἐλάττω, κατὰ τὴν δυνάμεως ἔλλειψιν. εἰ οὖν ἐκεῖνοι, κ. λ.» (printed page 419, scan n924 — NOT page 306/n811 as the worklist has it; the 306 attribution is a token-match error). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "From the Tersion of Patricius, it is here necessary to supply the words x«fa* •< y*g.",
+      "replace": "From the version of Patricius, it is here necessary to supply the words καθ' ἕν. εἰ γάρ.",
+      "class": "reading",
+      "note": "the print reads «From the version of Patricius, it is here necessary to supply the words καθ' ἕν. εἰ γάρ.» — the words Taylor's English brackets as \"[according to one. For if]\" (printed page 413, scan n918). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "for ti yetg iav tov von, **{ vovf, it is requisite to read yag tfcurov you wets ms •",
+      "replace": "For εἰ γὰρ ἑαυτὸν νοεῖ, καὶ νοῦς, it is requisite to read ἢ γὰρ ἑαυτὸν νοεῖ πᾶς νοῦς.",
+      "class": "reading",
+      "note": "the print reads «For εἰ γὰρ ἑαυτὸν νοεῖ, καὶ νοῦς, it is requisite to read ἢ γὰρ ἑαυτὸν νοεῖ πᾶς νοῦς.» (printed page 411, scan n916), the reading Dodds prints at 167.8. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "From the version of Patricias, it is here necessary to supply the words Sn to «w pq",
+      "replace": "From the version of Patricius, it is here necessary to supply the words καὶ τὸν νοῦν μὴ",
+      "class": "reading",
+      "note": "the print reads «From the version of Patricius, it is here necessary to supply the words καὶ τὸν νοῦν μὴ μετέχοντα.» — μετέχοντα. stands in the next source line (printed page 422, scan n927; three reads give καὶ τὸν νοῦν μὴ, two give διὰ τοῦ νοῦ μὴ). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "wanting in the original} but from the version of Patricias ought to be added.",
+      "replace": "wanting in the original; but from the version of Patricius ought to be added.",
+      "class": "reading",
+      "note": "the print reads «...are wanting in the original; but from the version of Patricius ought to be added.» (printed page 426, scan n931). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "For jttrfucrov here, it is necessary to read afutn tr#«.",
+      "replace": "For μεθεκτοῦ here, it is necessary to read ἀμεθέκτου.",
+      "class": "reading",
+      "note": "the print reads «For μεθεκτοῦ here, it is necessary to read ἀμεθέκτου.» (printed page 409, scan n914); μεθεκτοῦ is the form the word list carries (μεθέκτου is not). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "The words xcu vous $ut{ are omitted in the original.",
+      "replace": "The words καὶ νοῦς θεῖος are omitted in the original.",
+      "class": "reading",
+      "note": "the print reads «The words καὶ νοῦς θεῖος are omitted in the original.» (printed page 422, scan n927), the reading Dodds' apparatus records at 181.1 for BCD. (decided by the transcription's own context.)"
+    },
+    {
+      "find": "For ti «v, it appears requisite to read ti ov.",
+      "replace": "For τι ἐν, it appears requisite to read τι ὄν.",
+      "class": "reading",
+      "note": "the print reads «For τι ἐν, it appears requisite to read τι ὄν.» — the ἐν/ὂν correction (printed page 406, scan n911). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "xai yetg axtigos tnn orr a>( ixgwto;",
+      "replace": "καὶ γὰρ ἄπειρος ἐστιν οὕτως ἕκαστος",
+      "class": "reading",
+      "note": "the print reads «καὶ γὰρ ἄπειρος ἐστιν οὕτως ἕκαστος» after \"the words\" (printed page 401, scan n906; tight 4x band of the footnote line). (decided by the transcription's own context.)"
+    },
+    {
+      "find": "mx >• omitted hrthe original.",
+      "replace": "οὐχ is omitted in the original.",
+      "class": "reading",
+      "note": "the print reads «οὐχ is omitted in the original.» (printed page 432, scan n937) — the OCR dropped the \"is\" and fused \"in the\". (decided by the transcription's own context.)"
+    },
+    {
+      "find": "not vivific.’}",
+      "replace": "not vivific.³]",
+      "class": "reading",
+      "note": "the print closes Taylor's bracket «...is not vivific.³]» — a superscript 3 (the note \"The words αἰτία γεννητική... are wanting in the original.\") then the closing square bracket (printed page 404, scan n909). (decided by the transcription's own context.)"
+    },
+    {
       "find": "xo/uw&ij yap fitipuxKrxof «v, jjpero tov eiravayivaxrxorra aurep rpafjLfLaTKrrtjv (ij toi fiev TgaoTirra Xao$ yever) ex two$ to yas$ ey$vero } turep itqqgtov eyevero, toutov St eixovror jxi) avrov epyov ewai ra toixvra fotiao-xen, aXXa rwv xaXoufisvcov QtXotroQw to iwv tfijcrev o Enxovpo$ f «r’ extmvf ft oi padurreov e<rnv, eiireg avrot tijv tcov ovtcov aX rfietav ttraatv.",
       "replace": "κομιδῇ γὰρ μειρακίσκος ὢν, πρῶτον τὸν ἐπαναγινώσκοντα αὐτῷ Γραμματιστὴν (ἤ τοι μὲν πρώτιστα Χάος γένετ') ἐκ τίνος τὸ Χάος ἐγένετο, εἰπὲ πρῶτον γένετο. τούτου δὲ εἰπόντος μὴ αὑτοῦ ἔργον εἶναι τὰ τοιαῦτα διδάσκειν, ἀλλὰ τῶν καλουμένων φιλοσόφων· τοίνυν ἔφησεν ὁ Ἐπίκουρος, ἐκείνοις μοι βαδιστέον ἐστὶν, εἴπερ αὐτοῖ τὴν τῶν ὄντων ἀλήθειαν ἴσασιν.",
       "class": "reading",
@@ -377,10 +593,10 @@
       "note": "the print reads \"ἀμέριστος ἐστι. καὶ γὰρ\" (page image, printed page 414 = archive n919) (decided by the transcription's own context.)"
     },
     {
-      "find": "/urt^orra.",
+      "find": "/urt^orra. «",
       "replace": "μετέχοντα.",
       "class": "reading",
-      "note": "the print reads \"it is here necessary to supply the words καὶ τὸν νοῦν μὴ μετέχοντα\" (page image, printed page 422 = archive n927) (decided by the transcription's own context.)"
+      "note": "the print reads \"it is here necessary to supply the words καὶ τὸν νοῦν μὴ μετέχοντα\" (page image, printed page 422 = archive n927) (decided by the transcription's own context.; the stray « the scanner left after the word is part of the same garble and goes with it."
     },
     {
       "find": "to votgov*",
@@ -1323,12 +1539,6 @@
       "replace": "trifling impulse,",
       "class": "reading",
       "note": "Closing parenthesis replaces comma. (decided by the transcription's own context.)"
-    },
-    {
-      "find": ". For every thing",
-      "replace": "For every thing",
-      "class": "reading",
-      "note": "Stray period before 'For'. (decided by the transcription's own context.)"
     },
     {
       "find": "two-fold power. *",
