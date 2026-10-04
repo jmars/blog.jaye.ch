@@ -957,5 +957,52 @@
     "prompt": "a clear ink drawing on white paper, a drawing of seated figure, flame in chest: seated figure, flame in chest, the figure as one heavy solid mass: a broad hooded robe tapering to crossed legs, the hood a solid dome, no facial detail except a single closed eye-line cut in negative, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the flame in the chest, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
     "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion, centred, symmetrical, symmetry, mandala, radial symmetry, concentric ornament, crest, badge, logo, ornamental decoration, patterned, tiled, repeated motif, fine stippling, dense hatching, cross-hatching, etching texture, aged paper, stained parchment",
     "seed": 2768785065
+  },
+  "no-instrument-to-break": {
+    "emblem": "a cracked clay liver model",
+    "composition": "the liver fills the frame as one solid mass, seen flat from above, its roughly oval body anchored low and wide with a stubby gallbladder lobe jutting to one side; empty paper above it",
+    "symbols": [
+      "the liver as a single heavy solid silhouette — a thick rounded lobe with a wedge-shaped process, drawn as solid black mass with a lighter cut edge, like a sculpted clay teaching model",
+      "one deep fissure running across the lobe from edge to edge, a clean break that splits the surface into two unequal halves",
+      "a few shallow square and wedge-shaped depressions pressed into the surface, evenly spaced, the model’s own marking grid rendered as solid stamped shapes, none of them touching the break",
+      "the break itself left empty — a plain gap of paper with nothing written in it"
+    ],
+    "accent": "the single fissure crossing the lobe carries the red wash",
+    "input_hash": "37e6343fd701ac5e",
+    "model": "glm-5.3",
+    "prompt": "a clear ink drawing on white paper, a drawing of a cracked clay liver model: a cracked clay liver model, the liver as a single heavy solid silhouette — a thick rounded lobe with a wedge-shaped process, drawn as solid black mass with a lighter cut edge, like a sculpted clay teaching model, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the single fissure crossing the lobe carries the, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion, centred, symmetrical, symmetry, mandala, radial symmetry, concentric ornament, crest, badge, logo, ornamental decoration, patterned, tiled, repeated motif, fine stippling, dense hatching, cross-hatching, etching texture, aged paper, stained parchment",
+    "seed": 823715274
+  },
+  "the-central-column": {
+    "emblem": "a stairway of solid steps",
+    "composition": "a steep flight of blocky stone steps rising from the lower left corner toward the upper right, the steps drawn as heavy stacked slabs seen from the side; the frame above and right of the top step left empty, so the stair visibly leads into nothing",
+    "symbols": [
+      "each step a thick rectangular slab with a broad tread and a deep riser, the mass of the block heavier than any edge line",
+      "the steps widen slightly as they rise, the ascent looking easier and more gracious the higher it goes",
+      "the top two steps drawn lighter and broken — a crack through the highest slab and its forward edge crumbling away, the fragments small and sparse",
+      "the ground below the lowest step drawn as a single solid black shelf the stair stands on, grounding the whole mass"
+    ],
+    "accent": "the red wash fills the cracked top step only — the one the stair leads to",
+    "input_hash": "a3718d19afedcca5",
+    "model": "glm-5.3",
+    "prompt": "a clear ink drawing on white paper, a drawing of a stairway of solid steps: a stairway of solid steps, each step a thick rectangular slab with a broad tread and a deep riser, the mass of the block heavier than any edge line, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the red wash fills the cracked top step, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion, centred, symmetrical, symmetry, mandala, radial symmetry, concentric ornament, crest, badge, logo, ornamental decoration, patterned, tiled, repeated motif, fine stippling, dense hatching, cross-hatching, etching texture, aged paper, stained parchment",
+    "seed": 1429326636
+  },
+  "the-eastern-column": {
+    "emblem": "a hand held above a flame",
+    "composition": "a single open hand low in the frame, palm down, a broad flame rising toward it, the frame cropped by both",
+    "symbols": [
+      "one heavy open hand as a solid black mass, palm down, fingers spread",
+      "a broad solid flame rising from below toward the palm",
+      "the hand held well above the flame, clear space between them"
+    ],
+    "accent": "the flame below the hand, filled solid red",
+    "input_hash": "731e087d95af2bba",
+    "model": "glm-5.3",
+    "prompt": "a clear ink drawing on white paper, a drawing of a hand held above a flame: a hand held above a flame, one heavy open hand as a solid black mass, palm down, fingers spread, a broad solid flame rising from below toward the palm, the hand held well above the flame, clear space between them, bold black brush pen strokes, confident varying pressure, thick-to-thin tapering lines, one oxblood red accent on the flame below the hand, filled solid red, the object fully inside the picture and clearly readable, off-centre, no ornamental border around the image",
+    "negative": "photorealistic, 3d render, glossy, saturated, gradient background, airbrush, smooth vector, digital painting, anime, cartoon, watermark, signature, text, letters, glyphs, runes, numerals, border, frame, plate border, engraving, etching, fine even linework, technical drawing, blueprint, precise mechanical illustration, multiple panels, depth of field, blur, colour photography, sepia photo, vignette edges, cross, crucifix, christian cross, religious symbol, crucifixion, centred, symmetrical, symmetry, mandala, radial symmetry, concentric ornament, crest, badge, logo, ornamental decoration, patterned, tiled, repeated motif, fine stippling, dense hatching, cross-hatching, etching texture, aged paper, stained parchment",
+    "seed": 1194595590
   }
 }

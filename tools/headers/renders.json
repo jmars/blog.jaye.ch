@@ -111,6 +111,14 @@
     "seconds": 24.0,
     "seed": 1954713274
   },
+  "no-instrument-to-break": {
+    "emblem": "a cracked clay liver model",
+    "file": "content/headers/no-instrument-to-break.png",
+    "key": "37e6343fd701ac5e|sd_xl_base_1.0.safetensors|13|3f5a7a5ef45b",
+    "reroll": 0,
+    "seconds": 30.0,
+    "seed": 823715274
+  },
   "picatrix": {
     "emblem": "an open manual with a vacant chair",
     "file": "content/headers/picatrix.png",
@@ -231,6 +239,14 @@
     "seconds": 24.0,
     "seed": 850163026
   },
+  "the-central-column": {
+    "emblem": "a stairway of solid steps",
+    "file": "content/headers/the-central-column.png",
+    "key": "a3718d19afedcca5|sd_xl_base_1.0.safetensors|13|454cc1d5a4e0",
+    "reroll": 0,
+    "seconds": 24.0,
+    "seed": 1429326636
+  },
   "the-certified-frame": {
     "emblem": "a passport under a heavy stamp",
     "file": "content/headers/the-certified-frame.png",
@@ -294,6 +310,14 @@
     "reroll": 1,
     "seconds": 22.0,
     "seed": 855282031
+  },
+  "the-eastern-column": {
+    "emblem": "a hand held above a flame",
+    "file": "content/headers/the-eastern-column.png",
+    "key": "731e087d95af2bba|sd_xl_base_1.0.safetensors|13|d62cb212f1ba",
+    "reroll": 3,
+    "seconds": 30.0,
+    "seed": 1194619347
   },
   "the-empty-vessel": {
     "emblem": "a poured-out vessel",
