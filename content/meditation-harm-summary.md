@@ -34,6 +34,8 @@ A person can run it; so can anyone with something to gain from standing on the f
 - **The readings** — one book at a time, at the book's own scale: the source texts the arguments rest on,
   read whole, with what each one corrects in the rest of the blog.
 
+*The texts stand on their own; the essays are one reader's reading.*
+
 **The agentic mechanism** is published: [the worker →](/worker/) — the same collapse on a different
 substrate, measured on an agent with a task and real tools. Three arms of one agent, sixty turns, and a
 self that goes empty at its first compaction and never comes back; and the work score that did **not**

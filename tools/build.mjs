@@ -60,26 +60,6 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
-import { GROUPS, TEXTS, MODERN_EDITIONS, REPAIR_LABELS, DEFAULT_REPAIR, repairOf, repairState, isInRepair, shelfFiles, textSource, isPublished } from './library/shelf.mjs';
-import { preprocess, renderBlocks, partition, assess, countParagraphs, applyCorrections } from './library/reader.mjs';
-import {
-  hasEdition,
-  editionPath,
-  extract,
-  counts,
-  serialiseDoc,
-  plainText,
-  checkAnchors,
-  checkEdits,
-  EDIT_CLASSES,
-  anchorPath,
-  diffDocs,
-  summariseDiff,
-  loadDerivs,
-  readEdition,
-  sha256,
-} from './library/extract.mjs';
-import { agreementRows, printAgreement } from './library/derive.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -95,35 +75,16 @@ const PREVIEW = process.env.PREVIEW === '1';
 // copy — would make every social card a broken image.
 const HEADERS_INLINE = process.env.HEADERS_INLINE !== '0';
 
-/** The library's PREVIEW switch — and no longer its publication switch (plan §11
- * phase 5).
- *
- * What is published is a per-TEXT decision and it lives on the shelf entry
- * (`published: true`, tools/library/shelf.mjs): a text flips on when its edition,
- * its anchors and its repairs are green, and the entries that do not carry the
- * flag stay held back whatever else changes. A default build therefore serves the
- * published texts — and only those.
- *
- * LIBRARY=1 is what it always was underneath: build EVERY entry regardless, so a
- * reader and the tests can see the held-back shelf. Held back is still the right
- * default for the entries that have not been through the whole pipeline (their
- * scans carry long-s confusions, negation signs standing where the print has
- * none, and running heads read as body text — an unreadable page published is
- * worse than an absent one), but that is now a statement about each of them
- * rather than about the shelf as a whole.
- *
- * `LIBRARY_ON` is the derived question the site's furniture actually asks: is
- * there any library page at all? The nav entry, the command line's entries, the
- * sitemap addresses and the 404 all appear when there is one — published in a
- * default build, or previewed with LIBRARY=1 — because they read this constant
- * together. */
-const LIBRARY = process.env.LIBRARY === '1';
-const SERVED = LIBRARY ? TEXTS : TEXTS.filter(isPublished);
-const LIBRARY_ON = SERVED.length > 0;
-
 /** Canonical origin. Every absolute URL the build emits (og:url, canonical,
  * feed, sitemap, robots) is derived from this one constant. */
 const BASE = 'https://blog.jaye.ch';
+
+/** The library's home. The root texts left the blog for their own site
+ * (neoplatonic-library, extraction plan §1/§5): the blog's furniture links HERE,
+ * and the URLs the blog used to publish redirect here. One constant, so the nav,
+ * the 404, the command line, the search and the stubs cannot point at different
+ * places. */
+const LIBRARY_URL = 'https://neoplatonic-library.org';
 
 /** The series the posts are grouped into, in nav order. Labels match the home
  * page's section names exactly; a series with nothing published contributes
@@ -169,12 +130,11 @@ const rfc822 = (date) => new Date(`${date}T00:00:00Z`).toUTCString();
  * A rendered PAGE is the blog's own chrome and prose, so a phrase like "the
  * extract" or "the brief" there is workshop vocabulary and a leak.
  *
- * A rendered DATA FILE is a BOOK'S OWN TEXT — the shelf's passages, a document, a
- * feed. MEASURED: the phrase "the extract" occurs in the books themselves ("the
- * whole of the extract likewise is the result of...", "the extract from Zosimus"),
- * and `252KB` turned up inside OCR debris. A phrase rule cannot tell the blog's
- * vocabulary from a 19th-century author's, so on a data file it is a false
- * positive by construction.
+ * A rendered DATA FILE is the blog's own prose copied into a feed or into the
+ * fetched search half, or machine-readable discovery markup (sitemap, robots).
+ * MEASURED: a post quoting "the extract" is the author's sentence, not workshop
+ * vocabulary, and a phrase rule cannot tell the blog's vocabulary from a quoted
+ * author's, so on a data file it is a false positive by construction.
  *
  * So the rules are split by what they can legitimately mean. `hard` rules — a
  * path, an internal filename, a source-file extension — name the blog's
@@ -249,10 +209,9 @@ function nav(current, navPosts) {
   const link = (url, cls, label) =>
     `<a${cls ? ` class="${cls}"` : ''} href="${url}">${label}</a>`;
   const here = (url, label) =>
-    // A page under a section keeps that section's link lit: the library has a
-    // hundred addresses and one entry in the nav, so an exact match would leave
-    // every one of its pages with nothing highlighted. '/' is excluded — every
-    // path starts with it.
+    // A page under a section keeps that section's link lit: a section with many
+    // addresses and one entry in the nav would otherwise be lit nowhere below its
+    // index. '/' is excluded — every path starts with it.
     link(url, current === url || (url !== '/' && current.startsWith(url)) ? 'home' : '', label);
 
   // Series, grouped so the measured work and the arguments are never a
@@ -291,7 +250,10 @@ function nav(current, navPosts) {
     here('/map/', 'the map') +
     here('/worker/', 'the worker') +
     here('/search/', 'search') +
-    (LIBRARY_ON ? here('/library/', 'library') : '') +
+    // The library left the blog (extraction plan §5): the nav entry stays, as
+    // the blog's one link OUT to the texts' own site. Rendered as a plain link,
+    // not `here(...)` — there is no path on this site for it to light up.
+    link(LIBRARY_URL, '', 'library') +
     SERIES.map(dropdown).join('') +
     // The reader-facing theme control. Its visible word IS the current mode
     // (auto → light → dark → auto), so the state is never carried by colour
@@ -477,21 +439,7 @@ const DARK_DECLS = (root) => {
  * figure CSS, so these rules can override the things they have to (hiding a
  * figure's controls in print, re-tokening the palette for dark).
  */
-const PAGE_CSS = `/* ---------- a small tag ---------- */
-/* A pill label: the library index marks an edition's repair state with it ("in
-   repair", "repaired", "damaged"), and the text's own page uses it too. IT
-   BELONGS HERE, NOT IN design/blog.css: that file is GENERATED from the
-   blog-design submodule by tools/extract-css.mjs, so a hand-added rule there is
-   lost the next time anyone runs a full build. (MEASURED: this rule was added to
-   the generated file, a build regenerated it away, and the badge went unstyled
-   on the live index.) PAGE_CSS is the site-local layer that sits ON TOP of the
-   generated design system — anything site-specific goes here. */
-.tag {
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: .04em;
-  color: var(--dim); border: 1px solid var(--line); border-radius: 999px;
-  padding: 1px 7px; white-space: nowrap;
-}
-/* ---------- masthead reveal ---------- */
+const PAGE_CSS = `/* ---------- masthead reveal ---------- */
 /* build.mjs hero() wraps each hero word in <span class="w" style="--i:N">.
    Default state: fully visible and static — the hidden start and the animation
    exist only for readers who have NOT asked for reduced motion, so a
@@ -834,11 +782,6 @@ const PAGE_CSS = `/* ---------- a small tag ---------- */
 .sres .sr-more:hover, .sres .sr-more:focus { color: var(--accent); }
 .sres .sr-more:focus { outline: 1px solid var(--accent); outline-offset: 2px; }
 .sres .sr-rel { border-top: 1px dashed var(--line); }
-/* A shelf result is a CITATION: the edition and the division are the link, the
-   passage is quoted under it. It is styled as prose rather than as a card —
-   the passage is the thing, and the score sits with the edition line. */
-.sres .sr-shelf .sr-t { color: var(--accent); }
-.sres .sr-shelf .sr-s { margin: 0; font-style: italic; }
 /* the offer button is styled where it lands as well as in the list: the
    "did you mean" one is in the status line above the results, not in .sres */
 .sres .sr-go, .sstatus .sr-go { font: inherit; font-family: var(--mono); font-size: 12px; color: var(--accent2);
@@ -1577,20 +1520,6 @@ function paletteAssets(navPosts) {
   data.pages.push({ slug: 'map', title: 'The map', series: '', kind: 'page' });
   data.pages.push({ slug: 'worker', title: 'The worker', series: '', kind: 'page' });
   data.pages.push({ slug: 'search', title: 'Search', series: '', kind: 'page' });
-  if (LIBRARY_ON) data.pages.push({ slug: 'library', title: 'The library', series: '', kind: 'page' });
-  // The shelf itself, as command-line entries: a text page's own masthead prints
-  // `cat library/<slug>`, and a printed command that does not run is worse than
-  // no command line (the same rule the other pages' prompts follow). The slug
-  // carries the section, so `go()` opens the right URL; the shared series key
-  // makes `ls library` list the shelf.
-  // One entry per SERVED text — the published ones in a default build, all of
-  // them in a preview — because a command that cannot run is worse than no
-  // command. MEASURED, this loop put all 38 shelf titles into every page's
-  // palette data in a build the library was held back from, which is a trace of
-  // the library on the site the flag exists to keep it off.
-  for (const t of SERVED) {
-    data.pages.push({ slug: `library/${t.slug}`, title: t.title, series: 'library', kind: 'page' });
-  }
   const html =
     `<div class="palette" id="palette" role="dialog" aria-label="command line" ` +
     `data-mode="cmd" hidden>` +
@@ -2154,14 +2083,11 @@ function build404(navPosts) {
         .map((p) => `<li><a href="/${p.slug}/">${titleOf(p)}</a></li>`)
         .join('')
     : '';
-  // The library, when there is one to reach (plan §11 phase 5): the sentence
-  // below says every address on the site is one of the pages it lists, so a
-  // library page that exists and is not listed makes the sentence FALSE. It is
-  // the same derived question the nav entry and the command line ask.
-  const libraryLink = LIBRARY_ON ? `<a href="/library/">the library</a>, ` : '';
-  const libraryItem = LIBRARY_ON
-    ? `<li><a href="/library/">The library — the public-domain texts the readings rest on</a></li>`
-    : '';
+  // The library is not a page of this site any more (it left for LIBRARY_URL,
+  // extraction plan §5), so the 404 names it as the site it left for — the same
+  // outbound link the nav carries.
+  const libraryLink = `<a href="${LIBRARY_URL}">the library</a>, `;
+  const libraryItem = `<li><a href="${LIBRARY_URL}">The library — the public-domain texts the readings rest on</a></li>`;
   const body =
     `<section><div class="wrap">` +
     `<h2>Nothing here</h2>` +
@@ -3117,11 +3043,6 @@ function searchIndex(navPosts) {
   // search and degrades to today's behaviour without it.
   const deep = deepIndex(vocab, sources, STOPWORDS);
   const dTotals = deepTotals(deep);
-  // The shelf's own half, in the same fetched file: one fetch, two groups. The
-  // page's inline index is untouched by it (the build measures and reports both
-  // halves — see buildSearch).
-  const shelf = shelfIndex();
-  deep.shelf = shelf;
   return {
     data,
     deep,
@@ -3144,10 +3065,6 @@ function searchIndex(navPosts) {
       deepPositions: dTotals.positions,
       deepPassages: dTotals.passages,
       deepLongest: dTotals.longest,
-      shelfDocs: shelf.docs.length,
-      shelfPassages: shelf.pass.length,
-      shelfWords: shelf.words.postings.length,
-      shelfSkipped: shelf.skipped,
     },
   };
 }
@@ -3172,27 +3089,13 @@ function buildSearch(navPosts) {
   const deepGz = gzipSync(deepJson, { level: 9 }).length;
   writeFile('search/deep', deepJson);
   // …and through the workshop leak gate like every other emitted file. It was
-  // the one file that skipped it, and it is the one file that now carries the
-  // shelf's prose: a reader must never see how the blog is built, in the data
-  // half no less than on the page.
+  // the one file that skipped it: a reader must never see how the blog is built,
+  // in the data half no less than on the page.
   gatedFiles.push({ rel: 'search/deep', text: deepJson });
   log(
     `search deep half: ${totals.deepRows} positioned term rows, ${totals.deepPositions} body positions, ` +
       `${totals.deepPassages} passages (longest ${totals.deepLongest} chars) — ${deepBytes} bytes raw, ` +
       `${deepGz} gzipped on the wire (the server encodes)`,
-  );
-  // The shelf's half, MEASURED on its own: what it adds to the fetched file, so
-  // the cost of the second group is a number and not a shrug. (Its passages are
-  // the text itself, so the cost is the shelf's own prose, plus the word list.)
-  const shelfJson = JSON.stringify(deep.shelf).replaceAll('<', '\\u003c');
-  const shelfBytes = Buffer.byteLength(shelfJson);
-  const shelfGz = gzipSync(shelfJson, { level: 9 }).length;
-  log(
-    `search shelf half: ${totals.shelfPassages} passage(s) of ${totals.shelfDocs} text(s), ` +
-      `${totals.shelfWords} word(s) in its own list` +
-      (totals.shelfSkipped ? `, ${totals.shelfSkipped} served text(s) with no reading to cite` : '') +
-      ` — the shelf adds ${shelfBytes} bytes raw, ${shelfGz} gzipped, to a fetched half that is now ` +
-      `${deepBytes} raw / ${deepGz} gzipped (the shelf is ${((shelfGz / deepGz) * 100).toFixed(1)}% of it on the wire)`,
   );
   const json = JSON.stringify(data).replaceAll('<', '\\u003c');
   const client = stripJsComments(readFileSync(join(ROOT, 'tools', 'search', 'search.js'), 'utf8'));
@@ -3207,15 +3110,6 @@ function buildSearch(navPosts) {
 
   const prose =
     `<p>This page searches all ${totals.docs} published pieces at once` +
-    // the shelf's half, stated only when the build serves a text: a page that
-    // named a group it cannot answer with would be advertising a facet that
-    // returns nothing (the index is emitted from the same SERVED list)
-    (totals.shelfDocs
-      ? ` and, <b>below them</b>, the ${totals.shelfDocs} published library ` +
-        `${totals.shelfDocs === 1 ? 'text' : 'texts'} in the <a href="/library/">the shelf</a> — ` +
-        `${totals.shelfPassages} passages in all, cited by section and printed page and linked into the ` +
-        `book they stand in`
-      : '') +
     ` and tells you <i>which of three ` +
     `signals</i> put each result in front of you. The first is the <b>words</b>: the terms the pieces ` +
     `actually use, three characters and longer, each with the pieces it occurs in — looked up as a whole ` +
@@ -3274,31 +3168,12 @@ function buildSearch(navPosts) {
     `passages fetched once from this site. Snippets come from each piece's own words: the passage a match ` +
     `sat in when the fetched half is there, and each piece's headings, summary and opening passage when it ` +
     `is not — so a piece matched deep inside shows its opening rather than the matched line. Scores are ` +
-    `relative to the query and are not a judgement of the piece.</p>` +
-    // The shelf's own paragraph: what the second group IS, and what it does not
-    // do. Written only when there is a shelf to speak of.
-    (totals.shelfDocs
-      ? `<p><b>In the shelf.</b> The library's own texts are searched in a group of their own, ` +
-        `<b>always below the pieces</b>: a book is the source a reading argues from, not a competitor to ` +
-        `the argument, so a passage of a book never outranks a piece. The two groups are answered from two ` +
-        `separate indexes and rendered as two lists in order — the numbers are never compared across them, ` +
-        `which is what makes the order impossible to get wrong rather than merely intended. Every rule ` +
-        `holds over the shelf as over the pieces: a phrase is still adjacency, <code>~</code> still ` +
-        `corrects, <code>/a pattern/</code> still walks the words, and a hit in a text's or a section's ` +
-        `title still outranks a hit in a passage's body. A shelf result is a <b>citation</b> — the ` +
-        `edition, the section or the printed page, and the passage's own words — and it links to that ` +
-        `passage in the book. The shelf's index carries only the texts this build serves, so a result can ` +
-        `never point at a page the site does not have. The series and kind facets filter the <i>pieces</i> ` +
-        `and leave the shelf alone (a book is not filed in a blog series); the <code>where</code> control ` +
-        `shows one group on its own. The line above the results counts both groups, so the shelf is ` +
-        `visible even when a query finds nothing in it.</p>`
-      : '');
+    `relative to the query and are not a judgement of the piece.</p>`;
 
   const body =
     `<section><div class="wrap">` +
     `<div class="hint"># ${totals.docs} pieces · ${totals.vocab} words in the list · ${totals.citations} ` +
     `citations from ${totals.works} works` +
-    (totals.shelfDocs ? ` · ${totals.shelfPassages} passages in the shelf` : '') +
     ` · three signals: the words, the vectors, the links</div>` +
     `<form class="sform" id="sf" role="search">` +
     `<div class="sq-wrap">` +
@@ -3320,13 +3195,6 @@ function buildSearch(navPosts) {
     `<label for="sf-sort">order</label>` +
     `<select id="sf-sort" name="sort"><option value="">relevance</option>` +
     `<option value="new">newest first</option></select>` +
-    // the group filter exists only when there are two groups to filter
-    (totals.shelfDocs
-      ? `<label for="sf-where">where</label>` +
-        `<select id="sf-where" name="where"><option value="any">the pieces and the shelf</option>` +
-        `<option value="pieces">the pieces only</option>` +
-        `<option value="shelf">the shelf only</option></select>`
-      : '') +
     `</div>` +
     `</form>` +
     `<div class="sstatus" id="sstatus" role="status" aria-live="polite"></div>` +
@@ -3345,9 +3213,7 @@ function buildSearch(navPosts) {
     `search index: ${totals.docs} pieces, ${totals.vocab} terms (${totals.singleton} of them in exactly one piece), ` +
       `${totals.postings} term-to-piece pairs, ${totals.strong} terms in titles and headings, ` +
       `${totals.links} links, ${totals.citations} citations over ${totals.works} works, ${totals.catalogued} ` +
-      `catalogued; data block ${Buffer.byteLength(json)} bytes; ` +
-      `the shelf's group: ${totals.shelfPassages} passage(s) of ${totals.shelfDocs} text(s), ` +
-      `${totals.shelfWords} word(s) in its own list (searched separately — see tools/search/search.js)`,
+      `catalogued; data block ${Buffer.byteLength(json)} bytes`,
   );
   log(
     `search automaton: ${totals.dafsaStates} states, ${totals.dafsaEdges} transitions over ${totals.vocab} terms ` +
@@ -3361,260 +3227,17 @@ function buildSearch(navPosts) {
     description:
       `Search all ${totals.docs} pieces of blog.jaye.ch by three signals at once — a word index, a tf-idf ` +
       `vector space, and a datalog query over the blog's own citation graph — with the reason each result ` +
-      `matched` +
-      (totals.shelfDocs ? `, and the passages of the published library texts below them.` : '.'),
+      `matched.`,
     prompt: 'grep -r',
     heroTitle: 'The <span class="fx">search</span>',
     tagline:
       `every published piece, by <b>three signals</b> at once — the words, the vectors, and the links between ` +
-      `them` +
-      (totals.shelfDocs ? `; and, below them, the <b>passages</b> of the published library texts.` : '.'),
+      `them.`,
     body,
     navCurrent: '/search/',
   };
 }
 
-/* ---------- the shelf's half of the search index ----------------------------
- *
- * The search answers in TWO GROUPS and this is the second one: a PASSAGE of a
- * published library text, cited and linked, below the pieces. The blog is the
- * argument and the shelf is the source it argues from, so a passage is not a
- * competitor to a piece — it is where the argument comes from. The two groups
- * are kept apart BY CONSTRUCTION rather than by care: this half has its own word
- * list, its own automaton, its own passage numbering and its own scores, the
- * client searches it with its own provider, and the page renders the two answers
- * as two lists in order (tools/search/search.js) — no number from this half is
- * ever handed to a piece's ranking, because no code path carries one across.
- *
- * WHAT IS INDEXED is the READING VIEW of the texts the build SERVES — the same
- * `SERVED` list the library's own pages are emitted from, so the index and the
- * pages cannot disagree about which text is reachable and a result can never
- * link to a page the public cannot reach.
- *
- *   A text with a STORED EDITION is indexed from its DOCUMENT, with the recorded
- *   corrections APPLIED: the reading view is what a reader reads, and a word
- *   that only the transcription's damage spells is not a word of the book. The
- *   passages are the reader's own grouping (elm/src/Reader/Document.elm `flow`):
- *   a paragraph is a run of consecutive p/verse/ref blocks, a note is a run of
- *   notedef blocks with one number, and the front matter and the back matter
- *   are left out — as they are of the app's own in-text search. Each passage
- *   carries the document's own anchor: the paragraph label the extractor gave it
- *   (`s4-3`), else the section it stands in (`s4`), else the printed page
- *   (`p14`), else its region (`snotes`), so a result links INTO the book.
- *
- *   A text served from the shelf ALONE (no stored edition) is indexed from its
- *   transcription page's own blocks — the same reader that page is rendered with
- *   and the same `partition` call that decides its parts — so the index says what
- *   the page shows. Such a page has no section or printed-page anchors at all, so
- *   a passage links to the heading it stands under (the id the page renders), and
- *   to the page (or its part) when nothing precedes it. A text whose
- *   transcription is not worth reading is not served as text at all (the
- *   library's own `assess`) and is not indexed either.
- *
- * A passage is [doc, anchor, printed page, the section's opening, section number,
- * text, page path] — the last only when the passage is not on the text's first
- * page. The word list is the pieces' own rule over the passages (SEARCH_WORD,
- * three characters and longer, stopwords aside), held in the same kind of
- * automaton, so a query word is looked up, prefixed, fuzzed and patterned in both
- * groups by the same rules — over two word lists that are never walked together.
- * Nothing here is fetched twice: the passages carry their own text, so a result
- * renders without a second request.
- */
-
-/** One stored edition's reading view, as passages, in document order.
- *
- * The grouping is the reader's own (`flow`), reproduced here because the index
- * must be of the passages a reader sees: a note reference inside a paragraph
- * keeps the paragraph whole (the reference's own words stand where the print has
- * them), and the note definitions are grouped by number. The text of a passage is
- * the reading view's (`shownText`): the grouped run with the recorded corrections
- * applied, which is both what the app's own in-text search reads and what the
- * build's own hit table counts. */
-function shelfPassages(doc) {
-  const out = [];
-  let region = '';
-  let sec = null;         // the section NUMBER the blocks stand in
-  let secId = null;
-  let page = null;        // the printed page the blocks stand on
-  let opening = false;    // the next paragraph opens its section
-  let open = null;
-  const close = () => {
-    if (open) out.push(open);
-    open = null;
-  };
-  for (const b of doc.blocks) {
-    switch (b.t) {
-      case 'region':
-        close();
-        region = b.kind;
-        break;
-      case 'sec':
-        close();
-        secId = b.id;
-        sec = b.n;
-        opening = true;
-        break;
-      case 'pb':
-        // a page marker INSIDE a paragraph does not end it: the paragraph runs
-        // across the page break (the reader renders the marker inline), so the
-        // passage continues and keeps the page it STARTED on (`page` is captured
-        // when a passage opens). The marker still updates `page`, so the passage
-        // that opens after it — a paragraph the break does separate — carries the
-        // new page.
-        if (b.page != null) page = b.page;
-        break;
-      case 'rh':
-        // furniture: suppressed by the reading view, and it does not end a passage
-        break;
-      case 'p':
-      case 'verse': {
-        const x = b.t === 'verse' ? b.x.replace(/\n/g, ' ') : b.x;
-        // A passage is ONE paragraph: the reader groups by the extractor's own
-        // label (`at`), so two blocks continue each other only when they carry
-        // the SAME label. Joining every consecutive block instead made the index
-        // coarser than the reader — a passage spanned paragraphs the reader sets
-        // apart (MEASURED: 98 passages against 201 reader paragraphs).
-        if (open && open.k === 'p' && b.at != null && b.at === open.at) {
-          open.parts.push(x);
-        } else {
-          close();
-          open = { k: 'p', parts: [x], at: b.at || null, page, region, sec, secId, strong: opening };
-          opening = false;
-        }
-        break;
-      }
-      case 'ref': {
-        // a reference splits a paragraph in the blocks, not in the reading view:
-        // it belongs to the paragraph that is open
-        if (open && open.k === 'p') {
-          open.parts.push(b.x);
-          if (!open.at && b.at) open.at = b.at;
-        } else {
-          close();
-          open = { k: 'p', parts: [b.x], at: b.at || null, page, region, sec, secId, strong: opening };
-          opening = false;
-        }
-        break;
-      }
-      case 'notedef': {
-        // the notes are their own region and their own anchors: a note never
-        // claims the section number its blocks sit under (they sit under the
-        // last one, which is not where the note belongs)
-        if (open && open.k === 'n' && open.n === b.n) open.parts.push(b.x);
-        else {
-          close();
-          open = { k: 'n', n: b.n, id: b.id || null, parts: [b.x], page, region, sec: null, secId: null, strong: false };
-        }
-        break;
-      }
-      default:
-        break;
-    }
-  }
-  close();
-  const passages = [];
-  for (const o of out) {
-    // THE TEXT is the body and the notes. The front matter, the printer's
-    // colophon, the publisher's book list and the library's own marks are the
-    // volume's apparatus — the app's in-text search excludes them by the same
-    // region marks, and the plan's provenance says the catalogue is marked and not
-    // searched. A POSITIVE test, so a new region kind is excluded by default.
-    if (o.region !== 'body' && o.region !== 'notes') continue;
-    const text = applyCorrections(o.parts.join(o.k === 'p' ? '' : ' '), doc.corrections);
-    if (!text) continue;
-    const anchor =
-      o.k === 'n'
-        ? o.id || 'n' + o.n
-        : o.at || o.secId || (o.page != null ? `p${o.page}` : o.region === 'notes' ? 'snotes' : 'sfront');
-    passages.push({ anchor, page: o.page, strong: !!o.strong, sec: o.sec, text });
-  }
-  return passages;
-}
-
-/** A text served from the shelf alone: the blocks its own page renders, split
- * into the parts that page is emitted in. `libraryTextPages` and this read ONE
- * `partition` call over one `preprocess` result, so a passage's page path is the
- * page that really carries it. */
-function shelfTranscriptionPassages(t, src) {
-  const doc = preprocess(src, {});
-  const parts = partition(doc, LIBRARY_MAX_BYTES);
-  const out = [];
-  parts.forEach((p, i) => {
-    const base = i === 0 ? `/library/${t.slug}/` : `/library/${t.slug}/part-${i + 1}/`;
-    let head = null;      // the heading a passage stands under, if it has one
-    for (const b of p.blocks) {
-      if (b.type === 'heading') {
-        head = b.id;
-        continue;
-      }
-      out.push({ anchor: head, page: null, strong: false, sec: null, text: b.text, base: i === 0 ? '' : base });
-    }
-  });
-  return out;
-}
-
-/** The shelf index over the texts this build serves: the documents, the
- * passages, and their own word list. `only` narrows it to one text (the build's
- * own CLI mode, for a test or a shard); it does not widen the gate. */
-function shelfIndex(only = null) {
-  const texts = only ? SERVED.filter((t) => t.slug === only) : SERVED;
-  const files = texts.some((t) => !editionDocs.has(t.slug)) ? shelfFiles() : null;
-  const docs = [];
-  const pass = [];
-  let skipped = 0;
-  for (const t of texts) {
-    const doc = editionDocs.get(t.slug) || null;
-    let list;
-    if (doc) {
-      list = shelfPassages(doc);
-    } else {
-      const src = readFileSync(textSource(t, files), 'utf8');
-      // a transcription the library's own measure will not serve as text is not
-      // indexed: its page carries no reading to cite
-      if (!assess(src, t.lang).readable) {
-        skipped++;
-        continue;
-      }
-      list = shelfTranscriptionPassages(t, src);
-    }
-    if (!list.length) {
-      skipped++;
-      continue;
-    }
-    const i = docs.length;
-    docs.push({
-      slug: t.slug,
-      title: t.title,
-      author: t.author,
-      translator: t.translator || '',
-      // the section NUMBER -> its title, which is the shelf's own heading: a hit
-      // in it weighs more than a hit in a passage's body (see search.js)
-      sec: doc ? doc.toc.map((s) => [s.n, s.title]) : [],
-    });
-    for (const p of list) {
-      const row = [i, p.anchor, p.page, p.strong ? 1 : 0, p.sec, p.text];
-      if (p.base) row.push(p.base);
-      pass.push(row);
-    }
-  }
-  // the word list: the pieces' own token rule over the passages, and the
-  // postings are PASSAGE numbers — this half's own numbering, never a piece's
-  const byTerm = new Map();
-  const seen = new Set();
-  for (let i = 0; i < pass.length; i++) {
-    seen.clear();
-    for (const w of searchTerms(pass[i][5])) {
-      if (seen.has(w)) continue;
-      seen.add(w);
-      let row = byTerm.get(w);
-      if (!row) byTerm.set(w, (row = []));
-      row.push(i);
-    }
-  }
-  const terms = [...byTerm.keys()].sort();
-  const { dafsa } = dafsaOf(terms);
-  return { docs, pass, words: { dafsa, postings: terms.map((t) => byTerm.get(t)) }, skipped };
-}
 
 /* ---------- discovery files: feed, sitemap, robots ---------- */
 
@@ -3663,1340 +3286,18 @@ function feedXml(posts) {
   );
 }
 
-/* ---------- the library: the public-domain root texts ---------- */
-
-/** The one sentence a contents list shows in place of a title the transcription
- * damaged and the rules cannot read. It is stated in the list rather than repaired:
- * inventing a title is inventing a reading, and a reader who is deciding whether
- * to read on is owed the difference. The reader app carries the same sentence
- * (elm/src/Reader.elm), and the app smoke asserts it is the same one. */
-const DAMAGED_TITLE = '[the opening words are damaged in this transcription]';
-
-
-/** A single library page is capped at ~1.8 MB of prose; a text over it is
- * served as parts. Nothing is ever split mid-paragraph. */
-const LIBRARY_MAX_BYTES = 1800000;
-
-/** The extracted DOCUMENT of a stored edition, by slug, so the text's page and
- * the document it serves are built from ONE extraction: two extractions of the
- * same bytes would be two chances to disagree about the same book. */
-const editionDocs = new Map();
 
 /** Files the build writes that are neither pages nor discovery files, but must
  * pass the workshop leak gate all the same (the fetched search half). */
 const gatedFiles = [];
 
-/** Which readings cite each text.
- *
- * The SAME derivation the map is drawn from — `citations()` over the catalogue
- * and the pieces' own notes — so the library and the map cannot disagree about
- * what cites what. A text names the catalogue works it IS (its `cat` field), and
- * the readings that cite those works are the readings that cite the text. A
- * second derivation here would be a second answer to one question. */
-let libraryCitationCache = null;
-function libraryCitations(navPosts) {
-  if (libraryCitationCache && libraryCitationCache.posts === navPosts) return libraryCitationCache.byText;
-  const { works, citing } = citations(navPosts, mapGraph(navPosts).nodes);
-  const at = new Map(works.map((w, k) => [w.id, k]));
-  const byText = TEXTS.map((t) => {
-    const seen = new Set();
-    for (const id of t.cat) {
-      const k = at.get(id);
-      if (k == null) continue; // the catalogue carries no such work: nothing to cite
-      for (const i of citing[k]) seen.add(i);
-    }
-    return [...seen].sort((a, b) => a - b).map((i) => navPosts[i]);
-  });
-  libraryCitationCache = { posts: navPosts, byText };
-  return byText;
-}
-
-/** The provenance block: the edition, what was done to the text, where it is
- * cited. Required on every page — an unedited transcription that does not say
- * it is unedited, and does not say what was done to it, is not honest about
- * itself. */
-/** What a reader of THIS transcription will actually SEE, measured on the source
- * text rather than described in general terms. The library's whole claim is that
- * a reader can trust where a text came from and what was done to it; a page that
- * silently carries OCR damage while naming only the damage that is easy to
- * explain is not keeping that claim. Counts only — nothing is repaired. */
-function measureDamage(src, doc) {
-  const notSign = (src.match(/\u00ac/g) || []).length;
-  const longS = (src.match(/\u017f/g) || []).length;
-  // a word whose first letter is 'f' where the print had a long s reads as a
-  // substitution ("firft" for "first"); counting words that mix 'f' with a 't'
-  // gives a floor on that class without claiming to repair it
-  const fConfusions = (src.match(/\b[A-Za-z]*f[A-Za-z]*t[A-Za-z]*\b/g) || []).length;
-  const heads = doc && doc.blocks ? doc.blocks.filter((b) => b.type === 'heading') : [];
-  const folios = heads.filter((h) => /^[0-9]{1,4}[.,]?$/.test(String(h.text || '').trim())).length;
-  return { notSign, longS, fConfusions, folios, headings: heads.length };
-}
-
-/** What the EDITION adds over the raw transcription, for a text the repo stores a
- * stored edition of (tools/library/extract.mjs): the document beside the page,
- * what was measured while it was extracted, and what could NOT be read. Required
- * for the same reason the rest of the provenance is: a generated contents list
- * that does not say it is generated is not honest about itself (§7 of the plan),
- * and a refused page marker is a finding, not something to hide behind a
- * plausible number.
- *
- * Every count is MEASURED on the document that is served.
- */
-/**
- * The edition's provenance (plan §7): every number in it MEASURED on the document
- * that is served, and none of them a description. It states
- *
- *   - that this is a transcription of a named edition, and that the transcription
- *     is uncorrected while the reading view is produced by rules;
- *   - the pagination: how many printed page numbers were READ, how many came from
- *     a bare folio (the head's words are gone), how many were interpolated
- *     between two numbered leaves, and how many markers were REFUSED a number;
- *   - that the contents list is generated, because the print has none, and that a
- *     title the transcription damaged beyond repair is stated as a gap;
- *   - the notes: every one defined and every reference resolved;
- *   - the correction classes and their counts, and how many times the rules fire
- *     in the served text, each rule inspectable in the reader's own repairs list.
- *
- * No internal name, path or file size is printed: the counts are of the text, and
- * the text is what a reader can check them against.
- */
-function editionHtml(t, lib) {
-  const m = lib.correctionsMeta || {};
-  const cls = m.classes || {};
-  const hits = m.hits || {};
-  const damagedTitles = m.damagedTitles || [];
-  const p = [];
-  p.push(
-    `<p><b>The edition this page carries.</b> The same text is served here as an ` +
-      `edition rather than only as prose: <a href="/library/${t.slug}/t">the document</a> holds its ` +
-      `${lib.sections} numbered sections, the ${lib.pages.detected} printed page numbers recovered ` +
-      `from the volume’s own running heads and bare folios — ${lib.pages.folio} of them from a bare ` +
-      `folio whose head’s words are gone, ${lib.pages.interpolated} interpolated between two ` +
-      `numbered leaves, and ${lib.pages.refused} marker(s) left UNNUMBERED because no number could ` +
-      `be read there — its ${lib.notes} notes, every one of them defined with each of its ` +
-      `${lib.refs} references resolved in both directions, and ` +
-      `<a href="/library/${t.slug}/plain">the whole text as one plain file</a> for reading without ` +
-      `scripts and for citing. The words served are the transcription, uncorrected; the repairs ` +
-      `travel as rules rather than as a second text, so the difference between the two is a list ` +
-      `anyone can read against the words that are served.</p>`,
-  );
-  /* THE PAGE MODEL, from measured counts (plan §4.6, phase 4). What the page
-   * numbers now rest on is the volume's own leaves, and the page the leaves add
-   * to what the text could read is the one case where the two modes differ about
-   * a number — so it is stated, not left to be inferred from a lighter marker. */
-  const leaf = lib.leaf && lib.leaf.model ? lib.leaf : null;
-  if (leaf) {
-    const n = leaf.model;
-    p.push(
-      `<p><b>The pages are placed on the volume’s own leaves.</b> Every page marker above stands on the ` +
-        `leaf of the volume it was printed on, so a citation by printed page names the leaf as well as the ` +
-        `number, and a page ends where the volume’s page ends rather than where a paragraph did. ` +
-        `${n.leaves} leaves are accounted for: ${n.withText} of them carry a page of this transcription, ` +
-        `${n.numbered} carry a printed number — ${n.detected} of those read from the leaf itself and ` +
-        `${n.interpolated} filled in from the leaves on either side of it — and ${n.leaves - n.numbered} ` +
-        `carry none at all, which is what the front and the back of a book look like. Every numbered leaf ` +
-        `sits at the same distance from its printed page (${Math.abs(n.offset)} leaves — a constant, which is ` +
-        `what lets a leaf confirm a page number instead of the number being taken on trust). The volume’s own ` +
-        `heads and bare folios ` +
-        `read the ${lib.pages.detected} printed numbers this document shows` +
-        (n.agreed != null
-          ? `; the leaves’ own page numbering reads ${n.numbered}, and on all ${n.agreed} pages the two both ` +
-            `have they are the same page`
-          : '') +
-        (n.textOnly
-          ? `; on ${n.textOnly} leaf/leaves the transcription reads a number the leaves’ own numbering does not ` +
-            `have, and the transcription’s reading is the one shown`
-          : '') +
-        (n.leafOnly
-          ? `; on ${n.leafOnly} leaf/leaves the leaves’ numbering has one that nothing on the leaf reads, and ` +
-            `no number is shown for them`
-          : '') +
-        (n.disagreed
-          ? `; on ${n.disagreed} page(s) the two sources give different numbers — the transcription’s own ` +
-            `reading is the one shown, and the difference is a finding about one of the two rather than ` +
-            `something to average away`
-          : '') +
-        `. ` +
-        (leaf.reread
-          ? `${leaf.reread} page the arithmetic of the text alone had refused is confirmed by its leaf and ` +
-            `carries its number here: a folio printed at the foot of a leaf whose own division opens on it, ` +
-            `which the text’s rule could not place because the leaf before it carries no text and so no marker. `
-          : '') +
-        (leaf.structural
-          ? `${leaf.structural} page boundary stands where a leaf begins with no number shown, because ` +
-            `nothing on that leaf reads as one: the page whose running head the transcription does not have is ` +
-            `named by its leaf and left unnumbered rather than given a number from the leaves around it. `
-          : '') +
-        `${lib.pages.refused} page marker(s) the transcription itself carries remain UNNUMBERED, and the ` +
-        `volume’s own words for them stand beside the marker.</p>`,
-    );
-  }
-  p.push(
-    `<p><b>The contents list is generated.</b> The printed volume has no contents page — nothing ` +
-      `stands between its title page and its first division — so the ${lib.sections} entries above ` +
-      `are generated from the divisions the edition itself makes, each titled with its own opening ` +
-      `words and each carrying the printed page it opens on. ` +
-      (damagedTitles.length
-        ? `The opening words of ${damagedTitles.length} of those divisions are damaged in the ` +
-          `transcription by more than the repairs can restore, and those entries state the gap ` +
-          `instead of showing damaged words as a title: the transcription’s own words stand beside ` +
-          `the entry, and no title is invented for it.`
-        : `No division’s opening words are damaged in the transcription, so every title above is the ` +
-          `division’s own words.`) +
-      `</p>`,
-  );
-  p.push(
-    `<p><b>The repairs, as rules.</b> Every repair the reading view makes is a recorded rule applied ` +
-      `to the transcription’s own words — ${cls.opener} for the divisions, ` +
-      `${cls.digit} for the numbers and note markers the transcription wrote through an OCR digit ` +
-      `confusion, and ${cls.reading} for the damaged words whose reading this edition RECORDS (${hits.reading} ` +
-      `applications in this text) — ` +
-      `${Object.values(hits).reduce((a, b) => a + b, 0)} applications of those rules in all, ` +
-      `each rule firing at least once (a rule that fires nowhere is caught before this page is ` +
-      `produced, not shipped as machinery nothing reads). The reader’s own list of repairs shows each rule, the words it ` +
-      `changes, why, and how many times it fires — that list IS the difference between the two ` +
-      `views, so the repairs can be checked against the transcription word by word. ` +
-      `<b>The policy is: a recorded reading is substituted, and where none is the transcription’s own ` +
-      `characters stay.</b> The reading view therefore shows the print’s word where one is recorded and ` +
-      `the transcription’s damage where none is, and that surviving damage is counted in TWO classes, ` +
-      `stated apart because they are different things: ` +
-      `<b>${m.leftWordCount} damaged word(s)</b> no rule resolved, shown with the damage still in them and ` +
-      `named in the reader’s repairs list under “damaged words left visible”, and ` +
-      `<b>${m.leftMarkerCount} standalone marker(s)</b> — one or more damage characters standing as their ` +
-      `own token BETWEEN words (a lost space, or the scanner’s debris) — which are NOT words and are not ` +
-      `counted as any. Between them they account for every one of the ` +
-      `${m.leftDamageChars} damage character(s) the reading view still shows, over the text the reading ` +
-      `view renders (the note definitions and the unlabelled paragraphs included). ` +
-      `Every one is marked, so a reader can see that it is damage and not a typo by the author. ` +
-      `Where a reading is not determinable from this transcription, a rule records that decision ` +
-      `(${cls.review} rule(s), action “leave”) instead of deleting the marker and saying nothing, and a ` +
-      `damaged word no rule names is left the same way. The damage set the marking uses was MEASURED on ` +
-      `this transcription (every character standing inside a word that a 1917 print cannot set there), ` +
-      `not guessed: it is stated once, in the shared base policy every text's rules are written ` +
-      `under. No rule removes a damage character without recording a reading; ` +
-      `a rule that did would make the edition say something it does not, which is the one thing this ` +
-      `architecture exists to prevent.</p>`,
-  );
-  return p.join('');
-}
-
-function provenanceHtml(t, cited, stats, a, dmg, edition) {
-  const p = [];
-  /* WHAT THIS IS, said before anything else about it. A reader who arrives on a
-   * library page needs to know, in the first line, that the page is an EDITION OF
-   * A TRANSCRIPTION rather than a clean text — because the reading view shows the
-   * print's word where one could be determined and the scanner's damage where it
-   * could not, and a reader who does not know that will read the second kind as
-   * the author's error. "Repaired edition" is the honest short name for it: the
-   * transcription is the witness, the repairs are recorded rules applied to it,
-   * and nothing is repaired beyond what a witness decides. (MEASURED, this text:
-   * 115 reading rules, 3 division openers, 5 digit normalisations, and 2 damaged
-   * runs where no reading was determinable — left visible, not guessed.) */
-  p.push(
-    `<p><b>A repaired edition, not a clean text.</b> What stands here is a transcription of the printed ` +
-      `edition below — every character of it kept — with a RECORDED SET OF REPAIRS applied to the reading ` +
-      `view. Each repair is a rule with the words it changes, why, and how many times it fires; the rules ` +
-      `are applied by the view and are never baked into the words served, so the transcription is always ` +
-      `beside its repairs and the difference between the two views is the repair list itself. Where the ` +
-      `print's word could NOT be determined — from the transcription's own context or from a parallel ` +
-      `edition of the same translation — no repair is invented: the scanner's damage stays, marked, and a ` +
-      `rule records the decision to leave it. So this edition reads cleanly in most places and shows its ` +
-      `damage in the rest, and it never silently says anything the print does not.</p>`,
-  );
-  /* THE REPAIR STATE, said on the text's own page: the index states it above the
-   * list, and this is where a reader who arrived at the text directly meets it. */
-  const rep = repairOf(t);
-  if (rep) {
-    p.push(
-      `<p><b>The state of this edition: <span class="tag">${esc(REPAIR_LABELS[rep.state] || rep.state)}</span></b> ` +
-        `— ${esc(rep.note)} A site is cleared by reading the printed page itself (the page images are ` +
-        `kept with the edition); where one is still open, the reading view shows the transcription's ` +
-        `damaged characters, marked, rather than a guess.</p>`,
-    );
-  }
-  p.push(`<p><b>Edition.</b> ${esc(t.edition)}</p>`);
-  if (stats) {
-    p.push(
-      `<p><b>What was done to the text.</b> This paragraph is the MECHANICAL work, which changes ` +
-        `presentation and never a byte: what the text is corrected by is the recorded rule list, ` +
-        `described under "the repairs, as rules" below and inspectable in full in the reader's own ` +
-        `repairs panel. Nothing here is corrected against the print or modernised — the rules repair ` +
-        `the transcription's damage, they do not edit the edition, and the transcription view shows ` +
-        `the pages with no rule applied. The mechanical work, and these are all of it — paragraphs break where the ` +
-        `print leaves a blank line (${stats.parasIn} read, ${stats.parasOut} written, the same count); ` +
-        `hard line breaks inside a paragraph are joined into one line, and runs of spaces collapsed to ` +
-        `one; a word broken across a line break is rejoined, its hyphen taken as the printer’s break ` +
-        `and dropped, except where the word before it is a compound that carries a hyphen or where the ` +
-        `next line begins with a capital, and then the hyphen stays; and a short line that reads as a ` +
-        `heading becomes one (${stats.headings} in this text, ${stats.h2} at top level). Whatever was ` +
-        `not a heading is a paragraph, so no passage is lost.</p>`,
-    );
-  }
-  if (stats) {
-    p.push(
-      `<p><b>How to read this page.</b> The transcription runs in the order of the printed volume’s ` +
-        `own pages, so the digitiser’s stamp, the title pages and the book’s own contents list stand ` +
-        `where the book put them, before the text proper. The contents block at the head of the text ` +
-        `jumps to any heading in it, and every passage that is not a heading is a paragraph, so no ` +
-        `page of the volume is skipped over.</p>`,
-    );
-  }
-  if (dmg && (dmg.notSign || dmg.longS || dmg.fConfusions || dmg.folios)) {
-    const bits = [];
-    if (dmg.longS) bits.push(`${dmg.longS.toLocaleString('en')} long-s characters`);
-    if (dmg.fConfusions) {
-      bits.push(`${dmg.fConfusions.toLocaleString('en')} words that mix an "f" with a "t"`);
-    }
-    if (dmg.notSign) bits.push(`${dmg.notSign.toLocaleString('en')} negation signs (¬) standing where the print has none`);
-    if (dmg.folios) {
-      bits.push(`${dmg.folios.toLocaleString('en')} of its ${dmg.headings.toLocaleString('en')} headings are a bare page number`);
-    }
-    p.push(
-      `<p><b>What the transcription gets wrong, and you will see.</b> Measured on the text of this ` +
-        `page: ${bits.join('; ')}. These are the defects the repairs do NOT reach: a corrected text is a ` +
-        `new edition, and this page is a transcription of a printed one whose damage is repaired only ` +
-        `where a reading could be determined (see the repairs, below, for what is reached and what is ` +
-        `left). What is left is left in place AND NAMED rather than deleted. ` +
-        `A word that reads oddly is usually the transcription and not the edition: the long s of the ` +
-        `print is frequently taken for an f, and a page number of the volume stands in the running ` +
-        `text where the printer put it. Where a heading is a bare number it is the volume's own ` +
-        `pagination, not a division of the work.</p>`,
-    );
-  }
-  if (a && a.flattened) {
-    p.push(
-      `<p><b>What the transcription did to the Greek.</b> Measured on the transcription itself: it ` +
-        `carries no Greek letters at all — ${a.latinLetters.toLocaleString('en')} Latin letters ` +
-        `against ${a.greekLetters} Greek-range ones — so the Greek of this edition runs as accented ` +
-        `Latin lookalikes and reads as noise, while the Latin (Migne’s Latin of the Greek, and the ` +
-        `Latin authors gathered in the same volume) reads. That is a defect of the transcription, ` +
-        `not of the edition and not of this reader.</p>`,
-    );
-  }
-  if (edition) p.push(editionHtml(t, edition));
-  if (t.note) p.push(`<p><b>Note on this volume.</b> ${esc(t.note)}</p>`);
-  if (cited.length) {
-    const links = cited.map((x) => `<a href="/${x.slug}/">${esc(titleOf(x))}</a>`).join(', ');
-    p.push(
-      `<p><b>Where it is cited.</b> The readings whose notes name this work: ${links}. The link goes ` +
-        `to the reading, so a passage can be checked against the edition it was taken from.</p>`,
-    );
-  } else if (t.cat.length === 0) {
-    p.push(
-      `<p><b>Where it is cited.</b> No reading’s notes name this work. The citation record is the ` +
-        `readings’ own notes — the same record the site’s map is drawn from — and it does not carry ` +
-        `this work. That is a statement about the record, not a claim that no reading touches it.</p>`,
-    );
-  } else {
-    p.push(`<p><b>Where it is cited.</b> No published reading names this work yet.</p>`);
-  }
-  return p.join('');
-}
-
-/** The page for a text whose transcription cannot be read. It is still a page,
- * still linked: the honest end of the shelf is a stated gap, not a missing
- * entry the reader cannot find. */
-function unreadableHtml(t, a) {
-  return (
-    `<p>This transcription cannot be served as text, and it is not served as text here. ` +
-    `It reads as noise: measured on the file itself, ${a.greekLetters} of its letters are Greek-range ` +
-    `against ${a.latinLetters} Latin ones (${(a.greekShare * 100).toFixed(1)}% Greek-range), so an ` +
-    `English edition has come through the transcription as a substituted alphabet — the letters are ` +
-    `not the letters of the print.</p>` +
-    `<p>That is a defect of the transcription, not of the edition. It could be repaired by re-typing the ` +
-    `volume or by finding a clean scan of the same printing; neither has been done, and dressing the ` +
-    `noise as prose would hide it. The 1827 edition it is a transcription of is on this shelf as an ` +
-    `entry; the 2013 translation the readings use is in copyright and is not here by design.</p>`
-  );
-}
-
-/* ---------- the reader: the app, and the honest floor under it ---------- */
-
-/** The reader's own CSS. Small on purpose: the reading layer is design/blog.css
- * (.prose), the palette comes from the design tokens, and this only adds what a
- * page of a book needs that a blog post does not — the contents drawer, the page
- * markers, the note slides, the print range. Emitted into the page's head (the
- * one place a <style> belongs), stripped of comments like every other inlined
- * stylesheet. */
-const READER_CSS = `
-.rd-section .wrap { max-width: 1240px; }
-.rd { font-family: var(--serif); color: var(--fg); }
-.rd.scale-1 { font-size: .86rem; }
-.rd.scale-2 { font-size: .93rem; }
-.rd.scale-3 { font-size: 1rem; }
-.rd.scale-4 { font-size: 1.08rem; }
-.rd.scale-5 { font-size: 1.16rem; }
-.rd.scale-6 { font-size: 1.26rem; }
-.rd-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.rd-bar {
-  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
-  border-bottom: 1px solid var(--line);
-  font-family: var(--sans); font-size: 12px; color: var(--dim);
-  /* IT STICKS OVER THE TEXT, SO IT NEEDS TO BE OPAQUE. Without a background the
-     toolbar's controls were drawn straight over the prose and read as part of it
-     (the author's report). var(--bg) rather than the nav's translucent rgba+blur:
-     the toolbar carries buttons a reader aims at, and text showing through makes
-     them harder to read, not prettier.
-
-     The gap below the bar is PADDING, not a margin, so the background covers it
-     and the bar's height INCLUDES it — which is what lets the sidebar stick below
-     the bar (see --bar-h). A margin + a box-shadow fill was the first attempt and
-     it covered the sidebar's own top: the shadow spanned the full width, over the
-     reading-progress meter (the author's next report). */
-  padding: 8px 0 18px;
-  margin-bottom: 0;
-  background: var(--bg);
-}
-.rd-btn {
-  font: inherit; font-family: var(--sans); font-size: 12px; line-height: 1.4;
-  color: var(--fg); background: var(--bg2); border: 1px solid var(--line);
-  border-radius: 6px; padding: 3px 8px; cursor: pointer;
-}
-.rd-btn:hover { border-color: var(--dim); }
-.rd-btn[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-.rd-btn:disabled { opacity: .45; cursor: default; }
-/* a button label never wraps mid-word: a wrapped label reads as a broken control */
-.rd-btn { white-space: nowrap; }
-/* a jumped-to anchor lands BELOW the sticky nav and toolbar, not under them */
-.rd-p, .rd-sec, .rd-pb, .rd-verse, .rd-note { scroll-margin-top: calc(var(--nav-h, 52px) + var(--bar-h, 44px) + 12px); }
-.rd-x { padding: 1px 6px; }
-.rd-views { display: flex; gap: 0; }
-.rd-views .rd-btn { border-radius: 0; }
-.rd-views .rd-btn:first-child { border-radius: 6px 0 0 6px; }
-.rd-views .rd-btn:last-child { border-radius: 0 6px 6px 0; margin-left: -1px; }
-.rd-search { display: flex; align-items: center; gap: 4px; }
-.rd-search input {
-  font: inherit; font-family: var(--sans); font-size: 12px;
-  color: var(--fg); background: var(--bg); border: 1px solid var(--line);
-  border-radius: 6px; padding: 3px 7px; width: 11rem;
-}
-.rd-count, .rd-here { font-family: var(--mono); font-size: 11px; color: var(--dim); }
-.rd-pager { display: flex; align-items: center; gap: 3px; }
-.rd-jump { width: 4.2rem !important; }
-.rd-bar-right { display: flex; gap: 4px; margin-left: auto; }
-.rd-cols { display: grid; grid-template-columns: 1fr; gap: 0 28px; align-items: start; }
-.rd-main { max-width: 44rem; outline: none; }
-.rd-flow { position: relative; }
-.rd-region, .rd-sec { padding: 0; border: 0; margin: 34px 0 18px; }
-.rd-region h2, .rd-sec h2 {
-  font-family: var(--sans); font-size: 13px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: .08em; color: var(--accent);
-}
-.rd-sec h2 { text-transform: none; letter-spacing: 0; font-size: 15px; }
-.rd-sec-n { font-family: var(--mono); color: var(--fg); }
-.rd-sec-page { font-family: var(--mono); font-size: 11px; color: var(--dim); }
-.rd-p { margin-bottom: 0.9em; line-height: 1.62; color: var(--fg); }
-.rd-verse { display: block; padding-left: 1.4em; font-style: italic; }
-.rd-rh { font-family: var(--mono); font-size: 10px; color: var(--dim); border-top: 1px dashed var(--line); margin: 10px 0; padding-top: 2px; }
-.rd-rh-inline { font-family: var(--mono); font-size: 10px; color: var(--dim); }
-.rd-pb {
-  font-family: var(--mono); font-size: 10px; color: var(--dim);
-  border: 1px solid var(--line); border-radius: 999px; padding: 1px 6px;
-  margin: 0 4px; vertical-align: super; white-space: nowrap;
-  /* it sits INSIDE a paragraph now (the marker is inline at the page turn), so it
-     is inline by construction — an inline element cannot break the line it is in */
-  display: inline;
-}
-.rd-pb-interp { border-style: dashed; }
-.rd-pb-refused { border-color: var(--accent); color: var(--accent); }
-.rd-ref a { font-family: var(--mono); font-size: .72em; color: var(--accent2); text-decoration: none; padding: 0 1px; }
-.rd-ref a:hover { color: var(--accent); }
-.rd-margin { display: none; }
-.rd-note { display: grid; grid-template-columns: 2rem 1fr; gap: 8px; margin-bottom: 14px; line-height: 1.55; }
-.rd-note-n { font-family: var(--mono); font-size: 11px; color: var(--dim); padding-top: .25em; }
-.rd-note-body { font-size: .93em; }
-.rd-note-back { grid-column: 2; font-family: var(--sans); font-size: 11px; }
-.rd-note-open { background: var(--bg2); }
-.rd-hit { background: rgba(164, 38, 44, .10); }
-/* THE DAMAGE THE POLICY LEAVES VISIBLE (base policy; plan §7(d)). A character of
-   the transcription's damage set that the reading view could not resolve is
-   marked so a reader can SEE that it is damage and not a typo by the author. It
-   is styled APART from a search hit (.rd-hit, .rd mark) on purpose: this is not a
-   match, it is a hole in the print, and the two must not look alike. */
-.rd mark.rd-damage { background: none; color: var(--accent); border-bottom: 1px dotted var(--accent); font-weight: 600; }
-.rd-damage-word { color: var(--accent); }
-.rd-left td { color: var(--dim); }
-.rd-left-list { margin-top: 12px; }
-.rd-left-h { margin-bottom: 4px; }
-.rd-left-list ul { display: flex; flex-wrap: wrap; gap: 4px 14px; list-style: none; padding: 0; margin: 6px 0 0; }
-.rd mark { background: var(--accent); color: var(--bg); }
-.rd-nav {
-  position: static; top: auto; z-index: auto; background: none; border: 0;
-  backdrop-filter: none; visibility: visible; transform: none;
-  font-family: var(--sans); font-size: 12.5px;
-}
-.rd-nav h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin: 16px 0 6px; }
-.rd-nav ul, .rd-nav ol { list-style: none; padding-left: 0; }
-.rd-nav li { margin: 0 0 3px; line-height: 1.35; }
-.rd-toc a { color: var(--fg); }
-.rd-toc .rd-cur > a, .rd-toc li.rd-cur a { color: var(--accent); font-weight: 600; }
-.rd-toc-page { font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
-.rd-toc-raw { font-size: 11px; color: var(--dim); margin-top: 2px; }
-.rd-marks li { display: flex; align-items: baseline; gap: 4px; }
-.rd-pages { display: flex; flex-wrap: wrap; gap: 3px; }
-.rd-pages a { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; color: var(--fg); }
-.rd-pages li.rd-cur a { background: var(--fg); color: var(--bg); }
-.rd-progress { margin: 4px 0 12px; }
-.rd-progress-track { height: 4px; background: var(--line); border-radius: 3px; overflow: hidden; }
-.rd-progress-fill { height: 100%; background: var(--accent); }
-.rd-progress-label { font-family: var(--mono); font-size: 10.5px; color: var(--dim); }
-.rd-nav-actions { display: flex; gap: 4px; }
-.rd-foot { font-family: var(--sans); font-size: 11.5px; color: var(--dim); margin-top: 34px; padding-top: 12px; border-top: 1px solid var(--line); }
-.rd-pop {
-  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
-  width: min(38rem, 92vw); max-height: 45vh; overflow: auto;
-  background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .18); padding: 12px 14px; z-index: 60;
-  font-family: var(--serif); font-size: .95rem; line-height: 1.55;
-}
-.rd-pop-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-family: var(--sans); font-size: 12px; color: var(--dim); }
-.rd-pop-foot { display: flex; gap: 8px; align-items: baseline; margin-top: 10px; font-family: var(--sans); font-size: 11.5px; }
-/* The repairs list is an OVERLAY, like the citation panel above and the note
-   popover. It was rendered after the whole book in the flow — the same bug the
-   citation panel is documented for — so a reader at the top of the volume
-   clicked the control, the 125-row table was appended after 18 divisions and the
-   footer, and NOTHING VISIBLE HAPPENED. An overlay is the only rendering that
-   puts the list where the reader already is.
-   The geometry is chosen for a TABLE of 125 rows and five columns (class /
-   transcription / reading / fires / why), not for a note: it is a sheet the
-   width of the reading column and nearly the height of the window, and it
-   scrolls its own content. It does NOT move into the right margin the way
-   .rd-cite does — the margin is min(26rem, 30vw), about 36rem at 1920px, and the
-   why column alone is capped at 34rem, so a five-column table there would wrap
-   every justification to one word per line. The margin is right for a citation
-   (one passage, copied by eye while the passage stays visible); it is wrong for
-   a table. Centred rather than bottom-anchored like .rd-cite for the same
-   reason: the citation is anchored to the passage under the reader, this list is
-   the whole book's policy and belongs to no passage. No scrim: a scrim would
-   block the page and make a non-modal layer look modal, and the reader is meant
-   to be able to keep reading behind it. */
-.rd-diff {
-  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: min(76rem, 94vw); max-height: 82vh; overflow: auto;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, .35); z-index: 60;
-  padding: 16px 18px; background: var(--bg2);
-  border: 1px solid var(--line); border-radius: 10px;
-  font-family: var(--sans); font-size: 13px;
-}
-/* On a narrow screen there is less page to keep visible behind the sheet and
-   more table to fit, so it takes nearly the whole window. The table is five
-   columns of which two hold transcription runs that have no spaces in them (the
-   OCR damage is inside words), and those runs alone held the table 154px wider
-   than the sheet MEASURED at 420px — so at this width the long runs may break
-   anywhere rather than push the sheet sideways. */
-@media (max-width: 61.99em) {
-  .rd-diff { width: 96vw; max-height: 92vh; padding: 12px; }
-  .rd-diff td, .rd-diff code { overflow-wrap: anywhere; }
-}
-/* The citation panel is an OVERLAY, like the note popover (plan §11 phase 5).
-   It was rendered after the whole book in the flow, so opening it either showed
-   nothing (the reader is on page 15, the panel is after page 58) or — MEASURED in
-   a real browser — yanked the reader to the end of the volume when focus moved to
-   it, which moved the reader's position and so changed the citation the panel was
-   opened to give. It cites the passage the reader was at: it has to be visible
-   from where that reader is. */
-.rd-cite {
-  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
-  width: min(38rem, 92vw); max-height: 50vh; overflow: auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .18); z-index: 60;
-  padding: 16px; background: var(--bg2);
-  border: 1px solid var(--line); border-radius: 10px;
-  font-family: var(--sans); font-size: 13px;
-}
-/* On a wide screen the panel moves into the right MARGIN — the column the margin
-   notes use, which is empty except where a note floats. It then covers no prose
-   at all, which is what a citation panel is for: the reader is looking at the
-   passage they are citing while they copy the line. */
-@media (min-width: 78em) {
-  .rd-cite { left: auto; right: 16px; transform: none; width: min(26rem, 30vw); }
-}
-.rd-cite-head, .rd-diff-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-/* THE CLOSE CONTROL MUST NOT SCROLL AWAY. .rd-diff is its own scroll container
-   (overflow: auto, max-height 82vh) and the table is 341 rows; the ✕ lives in
-   the head, so scrolling the list carried the only visible close control out of
-   view and a reader had to scroll back to the top to dismiss it (MEASURED on the
-   published Cave text). The head is stuck to the top of the scrollport instead,
-   with the panel's own background so rows pass under it cleanly. The citation
-   panel is one passage high, so it is not stuck — a needless overlap there would
-   hide the passage the reader opened it to copy. */
-.rd-diff-head {
-  position: sticky; top: 0; z-index: 2;
-  background: var(--bg2);
-  padding-bottom: 6px; margin-bottom: 2px;
-  border-bottom: 1px solid var(--line);
-}
-.rd-cite h3, .rd-diff h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: 8px; }
-.rd-cite-line { font-family: var(--serif); font-size: 15px; }
-.rd-cite-url { font-family: var(--mono); font-size: 12px; }
-.rd-print-controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.rd-diff table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.rd-diff th, .rd-diff td { text-align: left; vertical-align: top; padding: 4px 6px; border-bottom: 1px solid var(--line); }
-.rd-diff code { font-family: var(--mono); font-size: 11.5px; }
-.rd-cls { font-family: var(--mono); font-size: 11px; color: var(--accent); }
-.rd-hits { font-family: var(--mono); font-size: 11px; color: var(--dim); text-align: right !important; }
-.rd-why { color: var(--dim); max-width: 34rem; }
-.rd-dim, .rd .dim { color: var(--dim); font-size: 12px; }
-.rd-live { font-family: var(--sans); font-size: 11.5px; color: var(--dim); margin-top: 8px; min-height: 1em; }
-.rd-fb-toc { font-family: var(--sans); font-size: 12.5px; margin-bottom: 26px; }
-.rd-fb-toc ol { list-style: none; padding-left: 0; columns: 2; column-gap: 28px; }
-.rd-fb-toc li { break-inside: avoid; margin-bottom: 3px; }
-.rd-status { padding: 18px 0; }
-
-@media (min-width: 62em) {
-  /* --nav-h is the site nav's MEASURED height, set by the boot script (its .wrap
-     is flex-wrap with a 52px minimum, so it grows when the links wrap). A constant
-     here put the toolbar under the header whenever the nav was taller than the
-     guess — the author's report. The fallback is the nav's minimum. */
-  .rd-bar { position: sticky; top: var(--nav-h, 52px); z-index: 45; }
-  .rd-cols { grid-template-columns: 17rem minmax(0, 1fr); }
-  .rd-nav { position: sticky; top: calc(var(--nav-h, 52px) + var(--bar-h, 44px)); max-height: 78vh; overflow: auto; padding-right: 8px; }
-  .rd-notes-index { display: block; }
-}
-@media (max-width: 61.99em) {
-  .rd-nav {
-    position: fixed; inset: 0 auto 0 0; width: min(20rem, 86vw); padding: 16px;
-    background: var(--bg); border-right: 1px solid var(--line); z-index: 70;
-    overflow: auto; visibility: hidden; transform: translateX(-102%);
-  }
-  .rd-nav.rd-nav-open { visibility: visible; transform: none; }
-}
-/* Margin notes, wide viewports only. A FLOAT against the paragraph, not an
-   absolutely positioned box: the text then flows BESIDE the note, which is what
-   a margin note is. (Measured in a render: an absolutely positioned note lands
-   on top of the line it annotates — the position is taken against the
-   superscript, which is inline, so "next to it" is "on it".) A clear to the
-   right stacks two notes in one paragraph instead of overlapping them, and the
-   negative right margin is what carries the note out into the margin of the
-   grid column. The text column is narrower than the sweep of the note, so
-   nothing is hidden under it. */
-@media (min-width: 78em) {
-  .rd-flow, .rd-main { overflow: visible; }
-  .rd-margin {
-    display: block; float: right; clear: right;
-    width: 12rem; margin: 0.1rem -13.6rem 0.5rem 1.2rem;
-    font-family: var(--serif); font-size: .78rem; line-height: 1.34;
-    color: var(--dim); text-align: left; font-style: normal;
-  }
-}
-@media print {
-  .rd-bar, .rd-nav, .rd-pop, .rd-cite, .rd-diff, .rd-foot, .rd-live, #reader-fallback { display: none !important; }
-  .rd-cols { display: block; }
-  .rd-main { max-width: none; }
-  .rd-item.rd-out { display: none; }
-  .rd-margin, .rd-rh { display: none !important; }
-  .rd-flow { position: relative; padding-right: 3.4em; }
-  .rd-pb, .rd-pb-refused {
-    position: absolute; right: 0; border: 0; padding: 0; margin: 0;
-    font-size: 9pt; color: #000;
-  }
-  .rd-note { break-inside: avoid; }
-  .rd-p { color: #000; }
-}
-`;
-
-/** The boot script: the handful of things a DOM does that Elm cannot ask for —
- * fetching the one document, scrolling, writing the fragment, keeping the stored
- * position, and putting the server-rendered copy away once the app is up. Kept
- * in the shell (not in the bundle) because every line of it is about THIS page:
- * the app receives flags and ports and knows nothing about URLs or storage. */
-const READER_BOOT = `
-(function () {
-  var node = document.getElementById('reader-app');
-  var held = document.getElementById('reader-flags');
-  if (!node || !held || typeof Elm === 'undefined' || !Elm.Reader) { return; }
-  var flags = JSON.parse(held.textContent);
-  flags.hash = window.location.hash || '';
-  flags.stored = null;
-  try {
-    var kept = window.localStorage.getItem('library:' + flags.slug);
-    if (kept) { flags.stored = JSON.parse(kept); }
-  } catch (e) { flags.stored = null; }
-  var app = Elm.Reader.init({ node: node, flags: flags });
-  /* THE STICKY OFFSET. The reader's toolbar sticks BELOW the site nav. The nav's
-     height is not a constant: its own .wrap is flex-wrap with a 52px minimum, so
-     it grows when its links wrap (a narrow window, a longer label). A hard-coded
-     a hard-coded top of 52px therefore puts the toolbar UNDER the header as soon as the nav is
-     taller than the guess — MEASURED by the author: "the blog's header covers the
-     reader's toolbar" while scrolling. The nav is measured and the offset is set
-     from it, on load and whenever it resizes. */
-  var sizeNav = function () {
-    var nav = document.querySelector('nav');
-    if (nav && nav.getBoundingClientRect) {
-      var h = nav.getBoundingClientRect().height;
-      if (h > 0) { document.documentElement.style.setProperty('--nav-h', h + 'px'); }
-    }
-    // THE TOOLBAR TOO. It wraps (flex-wrap) and its height therefore varies, and
-    // the contents sidebar sticks BELOW it — a constant there put the sidebar's
-    // own top (the reading-progress meter) under the bar.
-    var bar = document.querySelector('#reader-app .rd-bar');
-    if (bar && bar.getBoundingClientRect) {
-      var bh = bar.getBoundingClientRect().height;
-      if (bh > 0) { document.documentElement.style.setProperty('--bar-h', bh + 'px'); }
-    }
-  };
-  sizeNav();
-  window.addEventListener('resize', sizeNav);
-  if (window.ResizeObserver) {
-    try {
-      var ro = new window.ResizeObserver(sizeNav);
-      var navEl = document.querySelector('nav');
-      if (navEl) { ro.observe(navEl); }
-      // the toolbar does not exist until Elm renders it, and it grows when its
-      // controls wrap — watching the app's root catches both
-      var appEl = document.getElementById('reader-app');
-      if (appEl) { ro.observe(appEl); }
-    } catch (e) {}
-  }
-  // Elm renders on an animation frame and runs port commands during the same
-  // update, so a jump or a focus asked for now names an element that is not in
-  // the DOM yet — the scroll waits one frame. (Measured: without this the app
-  // renders and never moves: the anchor is created after the port has fired.)
-  app.ports.requestDoc.subscribe(function (url) {
-    fetch(url, { credentials: 'same-origin' }).then(function (r) {
-      if (!r.ok) { throw new Error('the document did not load'); }
-      return r.text();
-    }).then(function (text) {
-      app.ports.docReceived.send(text);
-      // the toolbar renders with the document: measure it once the frame that
-      // draws it has run (and again shortly after, for a wrapped toolbar)
-      soon(sizeNav);
-      window.setTimeout(sizeNav, 80);
-    }).catch(function (e) {
-
-      app.ports.docFailed.send('failed');
-    });
-  });
-  var soon = function (fn) {
-    if (window.requestAnimationFrame) { window.requestAnimationFrame(fn); }
-    else { window.setTimeout(fn, 0); }
-  };
-  // the server-rendered copy carries the same anchors as the app, so it is
-  // taken out of the document once the app has rendered the book: two elements
-  // with one id is invalid, and the copy's are hidden anyway
-  var dropFallback = function () {
-    var fb = document.getElementById('reader-fallback');
-    if (fb && fb.parentNode) { fb.parentNode.removeChild(fb); }
-  };
-  app.ports.jumpTo.subscribe(function (id) {
-    soon(function () {
-      dropFallback();
-      var el = document.getElementById(id);
-      if (el && el.scrollIntoView) { el.scrollIntoView({ block: 'start' }); }
-    });
-  });
-  app.ports.focusOn.subscribe(function (id) {
-    soon(function () {
-      var el = document.getElementById(id);
-      if (el) { dropFallback(); }
-    if (el && el.focus) { el.focus(); }
-    });
-  });
-  app.ports.setHash.subscribe(function (h) {
-    if (window.history && window.history.replaceState) {
-      window.history.replaceState(null, '', '#' + h);
-    } else {
-      window.location.hash = h;
-    }
-  });
-  app.ports.persist.subscribe(function (value) {
-    try { window.localStorage.setItem('library:' + flags.slug, JSON.stringify(value)); } catch (e) {}
-  });
-  window.addEventListener('hashchange', function () {
-    app.ports.hashChanged.send(window.location.hash);
-  });
-  var fallback = document.getElementById('reader-fallback');
-  if (fallback) { fallback.hidden = true; }
-
-  // Where the reader is. Derived from the DOM on every scroll, not from an
-  // IntersectionObserver: the app renders on an animation frame, so at this
-  // point there is not one [data-rd-i] in the document to observe — MEASURED, the
-  // observer was created against an empty list and the position never moved, so
-  // the progress meter read 0% at page 16 and resume was dead. Reading the DOM
-  // each time is also self-healing: the marks are re-rendered on a view change,
-  // a range print and a search jump, and a subscription does not survive that.
-  //
-  // The rule: the position is the LAST flow item whose top is above 40% of the
-  // viewport — the one the reader is looking at. The marks are in document order,
-  // so the search is a bisection.
-  var lastSent = -1;
-  var report = function () {
-    var marks = node.querySelectorAll('[data-rd-i]');
-    if (!marks.length) { return; }
-    var y = (window.innerHeight || 800) * 0.4;
-    var lo = 0;
-    var hi = marks.length - 1;
-    var best = 0;
-    while (lo <= hi) {
-      var mid = (lo + hi) >> 1;
-      if (marks[mid].getBoundingClientRect().top <= y) { best = mid; lo = mid + 1; }
-      else { hi = mid - 1; }
-    }
-    var ix = Number(marks[best].getAttribute('data-rd-i'));
-    if (ix !== lastSent) {
-      lastSent = ix;
-      app.ports.scrolled.send(ix);
-    }
-  };
-  var wantReport = false;
-  var onScroll = function () {
-    if (wantReport) { return; }
-    wantReport = true;
-    soon(function () { wantReport = false; report(); });
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-  setTimeout(report, 0);
-
-  soon(function () { if (node.childNodes.length) { dropFallback(); } });
-})();
-`;
-
-/** The compiled reader, committed. The default build inlines this file and needs
- * no Elm at all — the same contract design/blog.css has. READER=1 regenerates it
- * from elm/src/Reader.elm through tools/build-reader.mjs (make -> strip ->
- * gate-assert -> boot-assert -> write) and warns when the result differs from
- * what is checked in, because a bundle that only exists in someone's working tree
- * is not a contract. */
-const READER_BUNDLE = join(ROOT, 'tools', 'library', 'app.js');
-let readerBundleCache = null;
-function readerBundle() {
-  if (readerBundleCache) return readerBundleCache;
-  if (process.env.READER === '1') {
-    const before = existsSync(READER_BUNDLE) ? readFileSync(READER_BUNDLE, 'utf8') : null;
-    execFileSync(process.execPath, [join(ROOT, 'tools', 'build-reader.mjs')], { stdio: 'inherit' });
-    const after = readFileSync(READER_BUNDLE, 'utf8');
-    if (before !== null && before !== after) {
-      console.log('-----------------------------------------------------------------------');
-      console.log('WARNING: the regenerated reader differs from the committed tools/library/app.js.');
-      console.log('  The regenerated bundle is now in place — commit it:');
-      console.log('    git add tools/library/app.js');
-      console.log('-----------------------------------------------------------------------');
-    }
-  }
-  readerBundleCache = readFileSync(READER_BUNDLE, 'utf8');
-  return readerBundleCache;
-}
-
-/** The edition's bibliographic line, split into the fields a citation needs.
- * Derived from the shelf entry's own `edition` string rather than written out
- * again here: one place says what the edition is, and the reader quotes it. */
-function citationFields(t) {
-  const m = /\(([^:)]+):\s*([^,)]+),\s*(\d{4})\)/.exec(t.edition || '');
-  return {
-    author: t.author || '',
-    title: t.title || '',
-    translator: t.translator || '',
-    place: m ? m[1].trim() : '',
-    publisher: m ? m[2].trim() : '',
-    year: m ? m[3] : String(t.year || ''),
-  };
-}
-
-/** The complete contents list as real HTML: the regions the fragment grammar
- * reserves, then every division with the printed page it opens on. The printed
- * edition has no contents page (measured), so this is generated apparatus — and
- * the page says so, because a generated list that does not admit it is generated
- * is not honest about itself (§7 of the plan).
- *
- * The titles are the GENERATED titles (see `extract`): the division's own opening
- * words with the recorded repairs applied, because a contents list is exactly the
- * surface a reader uses to decide whether to read on and damaged words there cost
- * a section. A title the transcription damaged and the rules cannot read is NOT
- * shown as a title: the entry states the gap and carries the transcription's own
- * words beside it, so nothing is hidden and nothing is invented. MEASURED: two of
- * this volume's eighteen titles are in that state (§2, §9) and §11, whose opener
- * the rules READ, is not. */
-function readerTocHtml(doc) {
-  const items = [];
-  const regionLabel = (k) =>
-    k === 'front' ? 'The front matter' : k === 'notes' ? 'Notes' : 'The text';
-  for (const b of doc.blocks) {
-    if (b.t === 'region' && b.id) items.push({ id: b.id, label: regionLabel(b.kind), page: null });
-  }
-  for (const e of doc.toc) {
-    items.push({
-      id: e.id,
-      label: e.damaged ? `${e.n} \u00b7 ${DAMAGED_TITLE}` : `${e.n} \u00b7 ${e.title}`,
-      asides: e.damaged
-        ? [`<span class="dim">the transcription reads \u201c${esc(e.raw)}\u201d</span>`]
-        : [],
-      page: e.page,
-    });
-  }
-  return (
-    `<nav class="rd-fb-toc" aria-label="Contents">` +
-    `<ol>` +
-    items
-      .map(
-        (i) =>
-          `<li><a href="#${i.id}">${esc(i.label)}</a>` +
-          (i.page ? ` <span class="dim">p.\u00a0${i.page}</span>` : '') +
-          ((i.asides || []).length ? ` ${i.asides.join(' ')}` : '') +
-          `</li>`,
-      )
-      .join('') +
-    `</ol></nav>`
-  );
-}
-
-/** One division of the volume as plain HTML, from the served document: the
- * blocks of the section, with its note references as links and its page markers
- * where the volume has them. The words are the transcription's (no repair is
- * applied anywhere on the page), so what a reader without scripts sees is exactly
- * what the transcription holds. */
-function readerSectionHtml(doc, n) {
-  const out = [];
-  let on = false;
-  let run = [];
-  const flush = () => {
-    if (run.length) {
-      const at = run.find((r) => r.at);
-      out.push(`<p${at ? ` id="${at.at}"` : ''}>${run.map((r) => r.html).join('')}</p>`);
-    }
-    run = [];
-  };
-  for (const b of doc.blocks) {
-    if (b.t === 'region') {
-      if (on) break;
-      continue;
-    }
-    if (b.t === 'sec') {
-      if (on) break;
-      on = b.n === n;
-      if (on)
-        out.push(
-          `<h3 id="${b.id}">${b.n}.${b.page ? ` <span class="dim">p.\u00a0${b.page}</span>` : ''}</h3>`,
-        );
-      continue;
-    }
-    if (!on) continue;
-    switch (b.t) {
-      case 'p':
-        run.push({ at: b.at, html: esc(b.x) });
-        break;
-      case 'verse':
-        run.push({ at: b.at, html: esc(b.x).replace(/\n/g, '<br>') });
-        break;
-      case 'ref':
-        run.push({
-          html: `<sup><a id="${b.id || `r${b.n}`}" href="#n${b.n}">${b.n}</a></sup>`,
-        });
-        break;
-      case 'pb':
-        // the marker belongs INSIDE the paragraph it falls in (the paragraph runs
-        // across the page break) — pushing it to `out` put it between two <p>s and
-        // split the sentence the print has whole
-        run.push({
-          html:
-            b.page != null
-              ? `<span class="rd-pb" id="${b.id}" data-page="${b.page}" title="Printed page ${b.page}">${b.page}</span>`
-              : `<span class="rd-pb rd-pb-refused" title="This page marker could not be read as a number">&#10216;unnumbered page&#10217;</span>`,
-        });
-        break;
-      case 'rh':
-        // furniture the reading view suppresses; it does not break the paragraph
-        break;
-      default:
-        break;
-    }
-  }
-  flush();
-  return out.join('\n');
-}
-
-/** The shell: provenance (elsewhere), the contents list, the first division, the
- * app, and the floor under it. Order is deliberate — the app mounts first and the
- * server-rendered copy is what a reader without scripts gets, and the app hides
- * that copy once it is up (see the boot script), so nothing is shown twice. */
-function readerShell(t, doc, legacySection) {
-  const base = `/library/${t.slug}/`;
-  const flags = {
-    slug: t.slug,
-    url: `${base}t`,
-    base,
-    citation: citationFields(t),
-    // THE EDITION'S REPAIR STATE, so the reader can say it too: a reader inside
-    // the book is the one who needs to know whether it is damaged and unrepaired,
-    // being cleared, or finished (see `repairOf` — the default state is `damaged`).
-    repair: (() => {
-      const r = repairOf(t);
-      return { state: r.state, label: REPAIR_LABELS[r.state] || r.state, note: r.note || '' };
-    })(),
-  };
-  const noscript =
-    `<noscript><p><b>This page reads without scripts.</b> Below is the edition's ` +
-    `own first section, with its note references and page markers, and then the whole ` +
-    `transcription of the volume in its printed order. The same text is also served as ` +
-    `<a href="${base}plain">one plain file</a>, which needs no scripts at all.</p></noscript>`;
-  const app =
-    `<div id="reader-app"></div>\n` +
-    `<script type="application/json" id="reader-flags">${JSON.stringify(flags)}</script>\n` +
-    `<script>\n${readerBundle()}\n</script>\n` +
-    `<script>\n${stripJsComments(READER_BOOT)}\n</script>\n`;
-  // the same leak gate runs over this copy as over every other rendered block:
-  // a page of a book legitimately holds sequences a comment would use, and the
-  // character reference keeps the reader's characters identical
-  const shown = gateSafeText(readerTocHtml(doc) + `<div class="prose">` + readerSectionHtml(doc, 1) + `</div>`, t.slug);
-  const fallback =
-    `<div id="reader-fallback">` +
-    shown +
-    `<p class="dim">Every word of the volume follows, exactly as the transcription has it; ` +
-    `the reader above shows the same text with the repairs recorded as rules, which is why ` +
-    `one page of this book can read two ways.</p>` +
-    legacySection +
-    `</div>`;
-  // The app comes FIRST and the server-rendered copy after it. Both carry the
-  // same anchors — that is the point of the copy, it is the same book — and with
-  // the copy first, `getElementById('s4')` returned the COPY, so a citation link
-  // scrolled to a hidden element while the app's own s4 sat further down the page
-  // (MEASURED: the id lookup wins on document order, and the smoke's scroll check
-  // caught it). The app first makes every anchor resolve to the rendering the
-  // reader is looking at, whether or not scripts have run.
-  return (
-    `<section class="rd-section"><div class="wrap">` +
-    `<h2>The reader</h2>` +
-    `<div class="hint"># the contents list the printed edition does not have, its first section, and the app</div>` +
-    app +
-    noscript +
-    fallback +
-    `</div></section>`
-  );
-}
-
-/** One text: its page, plus one page per part when it is too big to be one. */
-function libraryTextPages(t, navPosts, cited) {
-  // The EDITION, if the repo stores one (content/library/<slug>/), and the shelf
-  // only otherwise. That is the whole point of storing it: the text this page
-  // serves is the text in this repository, and the shelf is not needed to build
-  // it — see the module header of tools/library/extract.mjs.
-  const stored = hasEdition(t.slug);
-  const src = readFileSync(stored ? editionPath(t.slug) : textSource(t, shelfFiles()), 'utf8');
-  let lib = null;
-  let edoc = null;
-  if (stored) {
-    // the pre-pass at the top of the build already extracted every served
-    // edition; the fallback is for a caller that runs this alone (the tests do)
-    edoc = editionDocs.get(t.slug) || extract(src, { entry: t, sha256: sha256(src) });
-    editionDocs.set(t.slug, edoc);
-    lib = counts(edoc);
-  }
-  const a = assess(src, t.lang);
-  const base = `/library/${t.slug}/`;
-  const title = esc(t.title);
-  const byline = `${esc(t.author)}${t.translator ? ` · <b>${esc(t.translator)}</b>` : ''} · ${t.year}`;
-  const description =
-    `${t.title} — ${t.author}${t.translator ? `, translated by ${t.translator}` : ''}, ${t.year}. ` +
-    `An unedited public-domain transcription of the printed edition, with the readings that cite it.`;
-  const page = (over) => ({
-    // The <title> tag, distinct from shareTitle: without it every library page
-    // shipped `<title>undefined</title>` (MEASURED on the published Cave text),
-    // because page() defaults it and the reader pages never passed one. The raw
-    // t.title goes here — page() escapes it once; `title` above is already
-    // escaped for use as HTML (heroTitle), and would be escaped twice.
-    title: `${t.title} — blog.jaye.ch`,
-    shareTitle: title,
-    type: 'article',
-    description,
-    prompt: `cat library/${t.slug}`,
-    heroTitle: title,
-    tagline: byline,
-    ...over,
-  });
-
-  if (!a.readable) {
-    const body =
-      section('Provenance', '# the edition, and what was done to it', provenanceHtml(t, cited, null, a)) +
-      section('Why there is no text here', '# measured on the transcription itself', unreadableHtml(t, a));
-    return {
-      urls: [base],
-      pages: [
-        {
-          rel: `library/${t.slug}/index.html`,
-          def: page({ body, navCurrent: base }),
-        },
-      ],
-    };
-  }
-
-  const doc = preprocess(src, {});
-  const stats = {
-    ...doc.stats,
-    h2: doc.blocks.filter((b) => b.type === 'heading' && b.level === 2).length,
-  };
-  const parts = partition(doc, LIBRARY_MAX_BYTES).map((p) => ({
-    title: p.title,
-    html: gateSafeText(renderBlocks(p.blocks), t.slug),
-    paragraphs: countParagraphs(p.blocks),
-    headings: p.blocks.filter((b) => b.type === 'heading').length,
-  }));
-
-  const prov = provenanceHtml(t, cited, stats, a, measureDamage(src, doc), lib);
-  const urls = [base];
-  const pages = [];
-
-  if (parts.length === 1) {
-    const hint = `# the transcription, unedited — ${stats.parasOut} paragraphs`;
-    const transcription = section('The text', hint, parts[0].html, { before: toc(parts[0].html) });
-    // A text whose EDITION the repo stores gets the reader: the document beside
-    // the page is what the app renders, and the transcription below it is what a
-    // reader without scripts gets (the app puts it away once it is up). A text
-    // served from the shelf alone has no document, so it keeps the page it has.
-    /* THE READER COMES FIRST and the provenance stands BELOW it. The page exists
-     * for the book; the apparatus — the edition, what was done to the text, the
-     * repairs, what the transcription gets wrong — is what a reader goes looking
-     * for after they have the text, not a gate in front of it. (Same correction as
-     * the library index and, before that, the map and search pages.) The heading
-     * for the provenance section is what makes the two halves findable; the
-     * reader's own contents drawer is the way into the book itself. */
-    const provSection =
-      section('Provenance', '# the edition, what was done to it, and what it gets wrong', prov);
-    const def = edoc
-      ? page({
-          body: readerShell(t, edoc, transcription) + provSection,
-          navCurrent: base,
-          head: `<style>\n${stripComments(READER_CSS)}</style>`,
-        })
-      : page({
-          body: transcription + provSection,
-          navCurrent: base,
-        });
-    pages.push({ rel: `library/${t.slug}/index.html`, def });
-    return { urls, pages };
-  }
-
-  // Too big for one page: the parent carries the provenance and the way in; each
-  // part carries its own stretch of the text and the way to its neighbours.
-  const partPath = (i) => `${base}part-${i + 1}/`;
-  const index =
-    `<ol>` +
-    parts
-      .map(
-        (p, i) =>
-          `<li><a href="${partPath(i)}">${esc(p.title || `part ${i + 1}`)}</a> ` +
-          `<span class="dim">— ${p.paragraphs} paragraphs</span></li>`,
-      )
-      .join('') +
-    `</ol>`;
-  pages.push({
-    rel: `library/${t.slug}/index.html`,
-    def: page({
-      body:
-        section('Provenance', '# the edition, and what was done to it', prov) +
-        section(
-          'The text, in parts',
-          `# this text is served in ${parts.length} parts, split where the edition itself divides`,
-          index,
-        ),
-      navCurrent: base,
-    }),
-  });
-
-  parts.forEach((p, i) => {
-    urls.push(partPath(i));
-    const pager =
-      `<div class="hint">` +
-      parts
-        .map((_, j) => (j === i ? `<b>${j + 1}</b>` : `<a href="${partPath(j)}">${j + 1}</a>`))
-        .join(' · ') +
-      ` · <a href="${base}">the whole text</a></div>`;
-    const body =
-      section('The text', `# part ${i + 1} of ${parts.length} — ${p.headings} headings`, p.html, {
-        before: toc(p.html),
-        after: pager,
-      }) +
-      section('Provenance', '# the edition, and what was done to it', prov) +
-      section('Where this part sits', '# the other parts of this text', index);
-    pages.push({
-      rel: `library/${t.slug}/part-${i + 1}/index.html`,
-      def: page({
-        heroTitle: `${title} — part ${i + 1}`,
-        prompt: `cat library/${t.slug}`,
-        body,
-        navCurrent: partPath(i),
-      }),
-    });
-  });
-  return { urls, pages };
-}
-
-/** Every library page, in shelf order, with the URLs the sitemap needs. Only the
- * SERVED texts get a page (phase 5): the published ones in a default build, all
- * of them under LIBRARY=1. The citation list stays indexed by the shelf, so a
- * text's citations are the same ones whatever is served. */
-function libraryPages(navPosts) {
-  const cited = libraryCitations(navPosts);
-  const out = { urls: [], pages: [] };
-  SERVED.forEach((t) => {
-    const r = libraryTextPages(t, navPosts, cited[TEXTS.indexOf(t)]);
-    out.urls.push(...r.urls);
-    out.pages.push(...r.pages);
-  });
-  return out;
-}
-
-/** The index: the groups, in the order of the argument, each with its own one
- * line saying what it is. */
-function buildLibraryIndex() {
-  const groupHtml = (g) => {
-    const items = SERVED.filter((t) => t.group === g.key)
-      .map((t) => {
-        const by = [t.author, t.translator ? `tr. ${t.translator}` : '', t.year]
-          .filter(Boolean)
-          .join(', ');
-        const state = t.slug === 'orphic-hymns-1827' ? ' <span class="dim">— not readable: see below</span>' : '';
-        // THE REPAIR BADGE, beside the title: a reader deciding what to open is
-        // entitled to know whether the edition is finished before they open it.
-        const rep = repairOf(t);
-        const badge = rep ? ` <span class="tag">${esc(REPAIR_LABELS[rep.state] || rep.state)}</span>` : '';
-        return `<li><a href="/library/${t.slug}/">${esc(t.title)}</a>${badge} <span class="dim">— ${esc(by)}</span>${state}</li>`;
-      })
-      .join('');
-    return (
-      `<section><div class="wrap"><h2 id="group-${g.key}">${esc(g.label)}</h2>` +
-      `<div class="hint"># ${esc(g.line)}</div>` +
-      `<div class="prose"><ul>${items}</ul></div></div></section>`
-    );
-  };
-  const groups = GROUPS.filter((g) => SERVED.some((t) => t.group === g.key)).map(groupHtml).join('');
-
-  const modern = MODERN_EDITIONS.map((m) => `${m.who}’s ${m.what}`).join('; ');
-  /* What is served HERE, when it is not the whole shelf (phase 5). The paragraphs
-   * below describe the shelf as it stands — all of its entries, including the
-   * texts that are held back and the modern editions that are not free — so a
-   * reader of an index that serves one text out of thirty-eight has to be told
-   * which of them are served, or the description reads as a claim about the page
-   * in front of them. MEASURED counts, from the shelf itself, and the paragraph is
-   * absent when there is nothing held back to state. */
-  const heldBack = TEXTS.filter((t) => !SERVED.includes(t));
-  const servedNow = heldBack.length
-    ? `<p><b>What is served here now.</b> The shelf holds ${TEXTS.length} texts. ` +
-      `${SERVED.length} of them ${SERVED.length === 1 ? 'is' : 'are'} served here — ` +
-      `${SERVED.map((t) => `<a href="/library/${t.slug}/">${esc(t.title)}</a>`).join(', ')} — and ` +
-      `${heldBack.length} ${heldBack.length === 1 ? 'is' : 'are'} held back until its transcription is ` +
-      `worth reading. The paragraphs below describe the shelf as a whole, the held-back entries included; ` +
-      `a text is served when its own entry is marked published, not when the library as a whole is.</p>`
-    : '';
-  const preamble =
-    servedNow +
-    `<p>This is the shelf the readings rest on: the public-domain editions of the works the blog’s ` +
-    `argument is made of, arranged in the order of the argument rather than in the order of a library ` +
-    `catalogue. Each one is a transcription of a printed book — the scanner’s own characters, kept — and ` +
-    `some carry REPAIRS, applied by the reading view and never baked into the words served. A repaired ` +
-    `edition reads cleanly where a reading could be determined from a witness — the transcription’s own ` +
-    `context, or a parallel edition of the same translation — and shows its damage, marked, where none ` +
-    `could be: it never silently says anything the print does not. Every repair is a rule with the words ` +
-    `it changes, why, and how often it fires, listed in the reader, so the two views can be read against ` +
-    `each other and the difference between them is that list.</p>` +
-    `<p>The four groups are the site’s own axis — the ascent from inside, the ascent performed, the ` +
-    `ascent argued, and the counter-texts. Two more hold what is not on that line at all: the dialogues ` +
-    `and commentaries the argument reads, and the other ascents, which walk the same route in other ` +
-    `languages. Every text page says which edition it is, what was done to it and what was not, and ` +
-    `which readings cite that work — so a quotation can be checked against the edition it came from.</p>` +
-    `<p><b>What is not here, and why.</b> The modern scholarly editions are not here: ${esc(modern)}, and ` +
-    `the current occult presses’ editions. They are not absent by oversight. They carry a living ` +
-    `translator’s or publisher’s rights, they belong to the people who made them, and this shelf stops ` +
-    `where their work begins. What the shelf can hold is what nobody owns any more.</p>` +
-    `<p>Six of the roots have no public-domain English translation at all — Ficino’s three books on life, ` +
-    `Proclus’s commentary on the Parmenides, Paracelsus’s defence of his medicine, Evagrius, Symeon the ` +
-    `New Theologian and Hildegard of Bingen — so what is served for them is the original language. For a ` +
-    `seventh, the Kālāma Sutta, the only English rendering is a translation of 1932, still in copyright, ` +
-    `and the free layer is the Pali. Two more volumes here — the Patrologia Graeca of Evagrius and of ` +
-    `Symeon — came through their transcription with the Greek flattened to Latin lookalikes: their Greek ` +
-    `reads as noise and only their Latin is legible, which their pages state.</p>` +
-    `<p>One text cannot be read at all. The 1827 Orphic Hymns came through as a substituted alphabet — ` +
-    `the letters are not the letters of the print — so it is served as a stated gap rather than as noise ` +
-    `dressed as prose.</p>`;
-
-  /* THE TEXTS COME FIRST. A reader arrives wanting the book, not an account of the
-   * shelf — the same mistake the map and the search pages were fixed for. So the
-   * groups are the page: each one a heading and its texts, immediately. The
-   * provenance, the axis, what is absent and why, and the stated gaps stand BELOW
-   * them, where they answer the questions a reader has after meeting the shelf. */
-  const notes =
-    `<section><div class="wrap"><h2 id="about-the-shelf">About this shelf</h2>` +
-    `<div class="hint"># what it is, what was done to the texts, and what is not here</div>` +
-    `<div class="prose">${preamble}</div></div></section>`;
-  /* WHAT A READER NEEDS BEFORE THEY OPEN A TEXT, stated ABOVE the list: some of
-   * these editions are readable and NOT FINISHED. The full provenance stays below
-   * the groups (a reader arrives wanting the book), but this is a fact about the
-   * texts in front of them, and it belongs where they meet them. */
-  const byState = (st) => SERVED.filter((t) => repairState(t) === st);
-  const inRepair = byState('in-repair');
-  const damaged = byState('damaged');
-  const repaired = byState('repaired');
-  const names = (ts) => ts.map((t) => `<a href="/library/${t.slug}/">${esc(t.title)}</a>`).join(', ');
-  const tag = (st) => `<span class="tag">${esc(REPAIR_LABELS[st])}</span>`;
-  /* THE REPAIR STATE, above the list, covering EVERY state a served text is in —
-   * and the text that has not been worked on, which is the one a reader is most
-   * likely to mistake for a finished edition. FAILS IF: a state is present among
-   * the served texts and the paragraph does not name it. */
-  const sentences = [];
-  if (damaged.length) {
-    sentences.push(
-      `${damaged.length === 1 ? 'One is' : `${damaged.length} are`} ${tag('damaged')} — ${names(damaged)}: ` +
-        `readable, damaged, and not yet repaired, so the reading view shows the transcription's own characters ` +
-        `throughout.`,
-    );
-  }
-  if (inRepair.length) {
-    sentences.push(
-      `${inRepair.length === 1 ? 'One is' : `${inRepair.length} are`} ${tag('in-repair')} — ${names(inRepair)}: ` +
-        `readable end to end and NOT finished, with damage that neither the transcription's own context nor a ` +
-        `parallel edition of the same translation could settle, each place being cleared against the printed page ` +
-        `itself. Until a site is settled the reader shows the transcription's own damaged characters, marked — ` +
-        `it never guesses in the print's name.`,
-    );
-  }
-  if (repaired.length) {
-    sentences.push(
-      `${repaired.length === 1 ? 'One is' : `${repaired.length} are`} ${tag('repaired')} — ${names(repaired)}: ` +
-        `finished, every residue settled or deliberately left and recorded.`,
-    );
-  }
-  const heldBackNote = heldBack.length
-    ? ` The ${heldBack.length} held back are not served as editions yet, and none has been repaired: ` +
-      `they are ${tag('damaged')} — every transcription here carries the scanner's damage, and these have not ` +
-      `been worked on.`
-    : '';
-  const unfinished = damaged.length + inRepair.length;
-  const head = unfinished
-    ? `<b>Some of these editions are not finished.</b> `
-    : `<b>These editions are ${esc(REPAIR_LABELS[repaired.length ? 'repaired' : 'damaged'])}.</b> `;
-  const repairNote = sentences.length
-    ? `<section><div class="wrap"><div class="prose"><p>` +
-      head +
-      `An edition here can be readable and not yet repaired, being repaired, or finished, and the tag beside its ` +
-      `name says which. ` +
-      sentences.join(' ') +
-      heldBackNote +
-      ` The tag is repeated on each text's own page, where the reader's repairs panel also lists the ` +
-      `corrections that edition carries.</p></div></div></section>`
-    : '';
-  const body =
-    repairNote +
-    groups +
-    notes;
-
-  return {
-    title: 'The library — blog.jaye.ch',
-    shareTitle: 'The library',
-    type: 'website',
-    description:
-      'The public-domain root texts the readings rest on, by the blog’s own axis: the ascent from inside, the ascent performed, the ascent argued, and the counter-texts — with the modern editions, and the reasons, named as absent.',
-    prompt: 'ls library',
-    heroTitle: 'The <span class="fx">library</span>',
-    tagline: 'the public-domain roots, <b>in the order of the argument</b>.',
-    body,
-    navCurrent: '/library/',
-  };
-}
 
 /** Absolute URLs for the home page, the timeline, and every published post.
  * `lastmod` carries the post's day (date-only, per the sitemap spec), from the
- * same manifest field the feed uses. `extra` adds the generated pages that are
- * not posts (the library) — they carry no date of their own, so they take the
- * newest post's day. */
-function sitemapXml(posts, extra = []) {
+ * same manifest field the feed uses. The library's own addresses are NOT here:
+ * those pages left the blog (extraction plan §5), and the standalone site keeps
+ * its own sitemap. */
+function sitemapXml(posts) {
   const newest = posts.map((p) => p.date).sort().pop() || null;
   const urls = [
     { loc: BASE + '/', lastmod: null },
@@ -5004,8 +3305,6 @@ function sitemapXml(posts, extra = []) {
     { loc: `${BASE}/map/`, lastmod: newest },
     { loc: `${BASE}/worker/`, lastmod: newest },
     { loc: `${BASE}/search/`, lastmod: newest },
-    ...(LIBRARY_ON ? [{ loc: `${BASE}/library/`, lastmod: newest }] : []),
-    ...extra.map((rel) => ({ loc: `${BASE}${rel}`, lastmod: newest })),
     ...posts.map((p) => ({ loc: `${BASE}/${p.slug}/`, lastmod: p.date })),
   ]
     .map(
@@ -5740,68 +4039,11 @@ checkFootnotes();
 checkDates(manifest);
 checkFeatured(manifest);
 
-/* THE SHELF INDEX ON ITS OWN — a mode for the tests and for a shard.
- *
- * `node tools/build.mjs --shelf-index[=/path/to.json] [--only=<slug>]` builds the
- * shelf's half of the search index and NOTHING ELSE: no page, no dist, no
- * deletion — it prints what it built, or writes it where it was asked to. Two
- * reasons it exists as a mode of THE BUILD rather than as a test fixture: the
- * index a test holds to account is then the index the build produces (one
- * builder, one gate), and a shelf of many texts can be indexed one at a time.
- * The gate is the build's own: a text is indexed when the build SERVES it, so
- * under the default gate `--only=<held-back>` refuses — which is what makes the
- * difference between a default build and LIBRARY=1 provable rather than asserted.
- */
-{
-  const arg = process.argv.find((a) => a === '--shelf-index' || a.startsWith('--shelf-index='));
-  if (arg) {
-    const out = arg === '--shelf-index' ? '' : arg.slice('--shelf-index='.length);
-    const only = (process.argv.find((a) => a.startsWith('--only=')) || '').slice('--only='.length);
-    if (only && !SERVED.some((t) => t.slug === only)) {
-      console.error(
-        `build: '${only}' is not served by this build — ${SERVED.length} text(s) are ` +
-          `(${LIBRARY ? 'LIBRARY=1 previews the whole shelf' : 'the published ones; LIBRARY=1 previews the whole shelf'})`,
-      );
-      process.exit(1);
-    }
-    const saved = SERVED.slice();
-    for (const t of only ? saved.filter((x) => x.slug === only) : saved) {
-      if (!hasEdition(t.slug)) continue;
-      const src = readFileSync(editionPath(t.slug), 'utf8');
-      editionDocs.set(t.slug, extract(src, { entry: t, sha256: sha256(src) }));
-    }
-    const shelf = shelfIndex(only || null);
-    const json = JSON.stringify(shelf).replaceAll('<', '\\u003c');
-    const bytes = Buffer.byteLength(json);
-    const gz = gzipSync(json, { level: 9 }).length;
-    if (out) writeFileSync(out, json);
-    console.log(
-      `shelf index: ${shelf.pass.length} passage(s) of ${shelf.docs.length} text(s), ` +
-        `${shelf.words.postings.length} word(s)` +
-        (shelf.skipped ? `, ${shelf.skipped} text(s) skipped` : '') +
-        ` — ${shelf.docs.map((d) => d.slug).join(', ') || 'none'}`,
-    );
-    console.log(`shelf index bytes: ${bytes} raw, ${gz} gzipped${out ? ` — written to ${out}` : ''}`);
-    process.exit(0);
-  }
-}
-
 rmSync(DIST, { recursive: true, force: true });
 // The feed, the sitemap and robots are built from the PUBLISHED posts even in a
 // PREVIEW build: a preview is a local approximation of the site, and the
 // discovery files describe the public one.
 const livePosts = published(manifest);
-
-/* The served EDITIONS, extracted once, before anything that reads them: the
- * search's shelf half and the library's own pages are then built from the SAME
- * documents, so the two cannot disagree about which text is served or what it
- * says. `libraryTextPages` reuses these (editionDocs) instead of extracting
- * again; a text that has no stored edition is not extracted at all. */
-for (const t of SERVED) {
-  if (!hasEdition(t.slug)) continue;
-  const src = readFileSync(editionPath(t.slug), 'utf8');
-  editionDocs.set(t.slug, extract(src, { entry: t, sha256: sha256(src) }));
-}
 
 const written = [];
 written.push({ rel: 'index.html', html: writePage('index.html', buildHome(manifest), navPosts) });
@@ -5819,158 +4061,19 @@ written.push({
 written.push({ rel: 'map/index.html', html: writePage('map/index.html', buildMap(navPosts), navPosts) });
 written.push({ rel: 'worker/index.html', html: writePage('worker/index.html', buildWorker(), navPosts) });
 written.push({ rel: 'search/index.html', html: writePage('search/index.html', buildSearch(navPosts), navPosts) });
-// The library (plan §11 phase 5): a text is served when its own shelf entry is
-// PUBLISHED, and LIBRARY=1 (see the constant) only widens that to the whole
-// shelf for a preview. Nothing is emitted for a text that is not served, and
-// nothing points at one — nav, command line, sitemap and the 404 all read the
-// same derived question.
-const library = LIBRARY_ON ? libraryPages(navPosts) : { pages: [], urls: [] };
-if (LIBRARY_ON) {
-  written.push({ rel: 'library/index.html', html: writePage('library/index.html', buildLibraryIndex(), navPosts) });
-  for (const { rel, def } of library.pages) written.push({ rel, html: writePage(rel, def, navPosts) });
-  log(
-    `library: ${library.pages.length} page(s) for ${SERVED.length} text(s) — ` +
-      `${SERVED.map((t) => t.slug).join(', ')} — ${library.urls.length} address(es) in the sitemap` +
-      (LIBRARY ? ` (PREVIEW: every one of the shelf's ${TEXTS.length} entries is built)` : ''),
-  );
-} else {
-  log(
-    `library: held back — ${TEXTS.length} texts on the shelf, none published ` +
-      `(mark a text published in tools/library/shelf.mjs; LIBRARY=1 previews them all)`,
-  );
-}
+/* The library's old addresses (/library/ and /library/<slug>/) are no longer part
+ * of this build at all: the library left the blog (extraction plan §5) and the
+ * 301s that hand those URLs to LIBRARY_URL are served by the web server (Caddy
+ * on node-infra), not by generated stubs here. The posts' citation links of the
+ * form /library/<slug>/#sN are deliberately left as they are — the server's
+ * redirect preserves the fragment. */
 
 const writtenFiles = [];
 const writeDiscovery = (rel, text) => { writeFile(rel, text); writtenFiles.push({ rel, text }); };
 writeDiscovery('feed.xml', feedXml(livePosts));
-writeDiscovery('sitemap.xml', sitemapXml(livePosts, library.urls));
+writeDiscovery('sitemap.xml', sitemapXml(livePosts));
 writeDiscovery('robots.txt', robotsTxt());
 
-/**
- * THE PAGE MODEL, AS THE BUILD STATES IT (plan §4.6, phase 4).
- *
- * Phase 4 re-derives the PAGE MODEL, not the text: the document is the same
- * document, and what changed is that every page boundary now names the LEAF it
- * belongs to and that the three signals about each page have been reconciled.
- * This prints, for the one text that has a leaf model:
- *
- *   - what the model IS (from the artifact's own counts: leaves, leaves with
- *     text, leaves carrying a printed number and in what state, the leaf→page
- *     offset);
- *   - the AGREEMENT TABLE, one row per leaf of the numbered span: what the item's
- *     page-number pass has, what the transcription reads, and the verdict. A
- *     `disagree` row is a finding about one of the two sources and is never merged
- *     into the other;
- *   - the DIFF against the txt-mode page model: every difference, so the change
- *     from phase 1 to phase 4 is accounted for rather than asserted;
- *   - every FINDING the extraction recorded about a page (a marker that does not
- *     stand at its leaf's first line, a reading the leaf re-read, a boundary the
- *     transcription carries nothing for).
- */
-function logPageModel(t, doc, src) {
-  const model = loadDerivs(t.slug, sha256(src));
-  if (!model) {
-    log(
-      `library: ${t.slug}: the page model rests on the volume's own running heads and bare folios alone — ` +
-        `no leaf model is stored for this text. Build one from the item's own derivatives with ` +
-        `node tools/library/derive.mjs ${t.slug}`,
-    );
-    return;
-  }
-  const s = model.totals;
-  log(
-    `library: ${t.slug}: leaf-accurate page model — ${s.leaves} leaf/leaves, ${s.withText} of them carrying ` +
-      `text, ${s.numbered} carrying a printed number (${s.detected} detected on the leaf, ${s.interpolated} ` +
-      `filled in from the leaf sequence) and ${s.refused} carrying none; every numbered leaf sits at the same ` +
-      `leaf→page offset (${s.offset})`,
-  );
-  log(`library: ${t.slug}: the agreement table — the item's page-number pass against the volume's own heads:`);
-  printAgreement(agreementRows(model), (line) => log(`library: ${line.trimEnd()}`));
-  const a = model.agreement;
-  log(
-    `library:   ${a.agree} page(s) both sources agree on, ${a.textOnly} the transcription reads and the item's pass ` +
-      `does not, ${a.refusedAgree} reading(s) the stride rule refused that the leaf confirms, ${a.refusedDisagree} ` +
-      `it refuses and the leaf does not, ${a.leafOnly} the item's pass numbers with nothing read on the leaf (NOT ` +
-      `served as a number), ${a.refusedOnly} refused with nothing to confirm them, ${a.unread} neither has, ` +
-      `${a.disagree} disagreement(s)`,
-  );
-  // the diff against the txt-mode page model: the same text read with the leaf
-  // model and without it, difference by difference
-  const txt = extract(src, { entry: t, sha256: sha256(src), leaf: false });
-  const diff = diffDocs(txt, doc);
-  log(`library: ${t.slug}: against the txt-mode page model (reading the text with no leaves): ${diff.length} difference(s)`);
-  for (const line of summariseDiff(diff)) log(`library:   ${line}`);
-  for (const f of doc.findings) log(`library:   finding: ${f}`);
-}
-
-/* ---------- the stored editions: the document, the plain text, the anchors ----------
- *
- * A text whose edition the repo stores gets two more files beside its page: the
- * DOCUMENT (its sections, printed pages, notes and rules — the extensionless
- * name is deliberate: it is data, not a file anyone opens by name) and the whole
- * text as one plain file for reading without scripts and for citing. Both are
- * written through `writeDiscovery`, so the workshop-leak gate scans them exactly
- * as it scans every other emitted file.
- *
- * The anchor gate runs BEFORE anything is written: it hashes the sections, pages
- * and notes into a manifest in the repo, and a build that moves one of them
- * fails, because a link that already exists would rot. */
-if (LIBRARY_ON) {
-  let anchorsPinned = 0;
-  for (const t of SERVED) {
-    const doc = editionDocs.get(t.slug);
-    if (!doc) continue;
-    /* THE ACCEPTANCE RULE (plan §7): every rule must fire at least once in the
-     * served text, or the build stops here and names it. The hit table is
-     * printed in full — one line per rule, with the fields it fires in — because
-     * a table that is only checked is a table nobody reviews, and the rules are
-     * what a reader's reading view IS. */
-    const report = checkEdits(doc);
-    const policy = doc.correctionsMeta || {};
-    const leftWords = policy.leftWordCount != null ? policy.leftWordCount : '?';
-    const leftMarkers = policy.leftMarkerCount != null ? policy.leftMarkerCount : '?';
-    log(
-      `library: ${t.slug}: ${report.length} correction rule(s) — ` +
-        `${EDIT_CLASSES.map((k) => `${report.filter((r) => r.cls === k).length} ${k}`).join(', ')} — ` +
-        `every one of them fires; ${report.reduce((a, r) => a + r.hits, 0)} application(s) in the served text; ` +
-        `policy substitute-if-known-else-leave: ${(policy.readings || {}).occurrences} reading(s) applied, ` +
-        `${leftWords} damaged word(s) and ${leftMarkers} standalone marker(s) left visible, ` +
-        `accounting for all ${policy.leftDamageChars} damage character(s) the reading view shows`,
-    );
-    const grouped = EDIT_CLASSES;
-    for (const cls of grouped) {
-      for (const r of report.filter((x) => x.cls === cls)) {
-        log(
-          `library:   ${cls.padEnd(6)} ${String(r.hits).padStart(2)} hit${r.hits === 1 ? ' ' : 's'} ` +
-            `in ${r.kinds.join('/')}  ${JSON.stringify(r.find)} → ${JSON.stringify(r.repl)}` +
-            (r.hits > 1 ? '   (fires more than once: a rule that matches more than intended is named here)' : ''),
-        );
-      }
-    }
-    if (doc.correctionsMeta.damagedTitles.length) {
-      log(
-        `library:   title(s) the transcription damaged and the rules cannot read: ` +
-          `${doc.correctionsMeta.damagedTitles.join(', ')} — stated in the contents list and in the provenance, not invented`,
-      );
-    }
-    const pinned = checkAnchors(doc);
-    if (pinned.pinned) anchorsPinned++;
-    const c = counts(doc);
-    logPageModel(t, doc, readEdition(t.slug));
-    writeDiscovery(`library/${t.slug}/t`, serialiseDoc(doc));
-    writeDiscovery(`library/${t.slug}/plain`, plainText(doc, t));
-    log(
-      `library: ${t.slug}: document ${c.blocks} block(s) — ${c.sections} sections, ` +
-        `${c.notes} notes, ${c.pages.detected} page number(s) read (${c.pages.folio} from a bare folio), ` +
-        `${c.pages.refused} refused, ${c.pages.interpolated} interpolated; ` +
-        `anchors pinned at tools/library/anchors/${t.slug}.json` +
-        (pinned.pinned ? ' (written now)' : ''),
-    );
-  }
-  if (anchorsPinned) {
-    log(`library: ${anchorsPinned} anchor manifest(s) written — commit them: they are the promise that a citation keeps resolving`);
-  }
-}
 log(
   `discovery files list ${livePosts.length} published post(s)` +
     (PREVIEW && livePosts.length !== manifest.posts.length
@@ -6000,42 +4103,6 @@ log(
     for (const f of banners) copyFileSync(join(bannerSrc, f), join(destDir, 'banner', f));
     log(`HEADERS_INLINE=0: copied ${banners.length} banner(s) -> dist/headers/banner/`);
   }
-}
-
-/** Neutralise, in library text only, the sequences the leak gate reads as
- * workshop tokens — by replacing ONE character of each with its numeric HTML
- * character reference.
- *
- * The gate is the site's promise that a reader never sees how the blog is
- * built, and it is a byte test on the emitted page. A 400-page scan of a book
- * legitimately contains byte sequences a *comment* would use: an asterisk
- * against a slash in a footnote, and — the ones that actually occur here — the
- * English words the gate's authoring rule names. Neither is a leak; both would
- * fail the build. The character reference makes the emitted bytes different and
- * the RENDERED page identical: the reader sees exactly the character the
- * transcription holds, because that is what `&#47;` renders as. Nothing is
- * dropped and nothing is reworded — the text is the text; only its serialisation
- * differs. Counts are logged, so a text that needed this is visible in the build
- * log rather than silently patched. */
-function gateSafeText(html, what) {
-  let out = html;
-  let n = 0;
-  for (let pass = 0; pass < 4; pass++) {
-    let changed = false;
-    for (const [re] of GATE_PATTERNS) {
-      const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
-      out = out.replace(g, (m) => {
-        const i = m.search(/[A-Za-z0-9/]/);
-        if (i < 0) return m;
-        changed = true;
-        n++;
-        return m.slice(0, i) + `&#${m.charCodeAt(i)};` + m.slice(i + 1);
-      });
-    }
-    if (!changed) break;
-  }
-  if (n) log(`library: ${what}: ${n} sequence(s) written as character references so the leak gate reads no workshop token`);
-  return out;
 }
 
 /** The workshop-leak gate: a page must not tell the reader how the blog is

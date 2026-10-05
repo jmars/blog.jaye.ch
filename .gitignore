@@ -2,7 +2,6 @@
 dist/
 elm-stuff/
 elm/ExtractCss.js
-elm/Reader.js
 screenshots/
 
 # Local, unpublished scope rules (specific names live here, not in the repo)
@@ -27,7 +26,3 @@ content/headers/*.png
 
 # Internal plans — the repo is public (keep them out of git)
 plans/
-
-# Scan page images (PD, but bulky and re-fetchable by tools/library/scan.mjs)
-content/library/*/scans/
-content/library/.words/
